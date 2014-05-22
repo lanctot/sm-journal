@@ -59,7 +59,7 @@
 \usepackage{nopageno}
 
 \usepackage[algo2e, noend, noline, linesnumbered]{algorithm2e}
-\DontPrintSemicolon
+%\DontPrintSemicolon
 
 \makeatletter
 \newcommand{\pushline}{\Indp}% Indent
@@ -97,8 +97,15 @@
 \newcommand{\mwinands}[1]{{\small \color{blue} $\blacksquare$ \refstepcounter{mwNoteCounter}\textsf{[RGG]$_{\arabic{mwNoteCounter}}$:{#1}}}}
 \newcommand{\mlanctot}[1]{{\small \color{darkgreen} $\blacksquare$ \refstepcounter{mlNoteCounter}\textsf{[ML]$_{\arabic{mlNoteCounter}}$:{#1}}}}
 \newcommand{\vlisy}[1]{{\small \color{red} $\blacktriangle$ \refstepcounter{vlNoteCounter}\textsf{[VL]$_{\arabic{vlNoteCounter}}$:{#1}}}}
-\newcommand{\bbosansky}[1]{{\small \color{orange} $\blacktriangle$ \refstepcounter{bbNoteCounter}\textsf{[BB]$_{\arabic{vlNoteCounter}}$:{#1}}}}
+\newcommand{\bbosansky}[1]{{\small \color{orange} $\blacktriangle$ \refstepcounter{bbNoteCounter}\textsf{[BB]$_{\arabic{bbNoteCounter}}$:{#1}}}}
 
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
 
 %% The amsthm package provides extended theorem environments
 %% \usepackage{amsthm}
@@ -251,6 +258,8 @@ $u_i : \cZ \mapsto [v_{\min}, v_{\max}] \subseteq \mathbb{R}$ gives the utility 
 $v_{min}$ and $v_{\max}$ denoting the minimum and maximum possible utility respectively. We assume constant-sum 
 games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$. 
 The game begins in an initial state $s_0$. 
+\bbosansky{redefine stochastic successors $\Delta_c:\cS \mapsto \Delta(\cS)$ (identity for non-chance nodes)}
+\bbosansky{define value of the matrix games}
 
 \begin{figure}[b!]
 \centering
@@ -306,9 +315,13 @@ events. Examples of such games are depicted in Figure~\ref{fig:example}.
 
 \section{Offline Strategy Computation}
 
-\subsection{Classical Backward Induction}
+\input{offline.tex}
 
 \section{Online Search}
+
+\subsection{Iterative Deepening Backward Induction Algorithms}
+
+\subsection{Online Outcome Sampling}
 
 \section{Empirical Evaluation}
 
