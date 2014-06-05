@@ -86,7 +86,7 @@ $v_s \leftarrow$ solve matrix game $A$\;
 Solving a matrix game can be further improved by using iterative double-oracle algorithm~\cite{McMahan03Planning}. 
 First of all, we describe the main principles of the double-oracle algorithm in normal-form games, following by describing the application of the algorithm in simultaneous-move game~\cite{Bosansky13Using}.
 
-\subsubsection{Double-oracle Algorithm for Matrix Games}
+\subsubsection{Double-oracle Algorithm for Matrix Games}\label{sec:doab}
 \begin{figure}
 \centering
 \includegraphics[width=0.8\textwidth]{figures/DO-scheme}
@@ -201,4 +201,52 @@ $\lambda_{a_i}$ is calculated by subtracting from the current best response valu
 If the currently evaluated action $a_i$ can still be the best response, the value of the successor is determined (first by comparing the bounds). Once the expected outcome against all actions of the opponent is evaluated, the expected value of action $a_i$ is compared against the current best-response value (line~\ref{alg:br:max}) and saved, if the expected utility is higher~(line~\ref{alg:br:save}).
 
 
-\subsection{Outcome Sampling}
+\subsection{Simultaneous-Move Monte Carlo Tree Search (SM-MCTS)}
+Monte Carlo Tree Search (MCTS) is a simulation-based state space search algorithm often used
+in game trees. The nodes in the tree represent game states. The main idea is to iteratively run
+simulations to a terminal state, incrementally growing a tree rooted at the initial state of the game. In
+its simplest form, the tree is initially empty and a single leaf is added each iteration. Each iteration
+starts by visiting nodes in the tree, selecting which actions to take based on a selection function and
+information maintained in the node. Consequently, the algorithm transitions to a successor state. When a
+node is visited whose immediate children are not all in the tree, the node is expanded by adding a
+new leaf to the tree. Then, \emph{a rollout policy} (e.g., random action selection) is applied from the new
+leaf to a terminal state. The outcome of the simulation is then returned as a reward to the new leaf
+and the information stored in the tree is updated.
+
+\begin{algorithm2e}[t]
+\small
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\Input{$s$ -- current state of the game; $i$ -- current player}
+\If{$s \in \cZ$} {
+	\Return $u_i(s)$
+}
+\If{$s \in T \wedge \exists(a_i, a_{-i}) \in \cA(s)$~not previously visited} {
+	choose one of the previously unselected $(a_i, a_{-i})$\;
+	$s' \leftarrow \cT(s,a_i,a_{-i})$\;
+	$T \leftarrow T \cup \lbrace s' \rbrace$\;
+	$v_{s'} \leftarrow $ \emph{\underline{Rollout}}($s'$)\;
+	$X_{s'} \leftarrow X_{s'} + v_{s'}$\;
+	$n_{s'} \leftarrow n_{s'} + 1$\;
+	\emph{\underline{Update}}$(s,a_i,a_{-i},v_{s'})$\;\label{alg:smmcts:up1}
+	\Return \emph{\underline{RetVal}}$(v_{s'}, X_{s'}, n_{s'})$ 	
+}
+\Else{
+	$(a_i, a_{-i}) \leftarrow$ \emph{\underline{Select}}$(s)$\;\label{alg:smmcts:select}
+	$s' \leftarrow \cT(s,a_i,a_{-i})$\;
+	$v_{s'} \leftarrow $ SM-MCTS($s',i$)\;
+	$X_{s} \leftarrow X_{s} + v_{s'}$\;
+	$n_{s} \leftarrow n_{s} + 1$\;
+	\emph{\underline{Update}}$(s,a_i,a_{-i},v_{s'})$\;\label{alg:smmcts:up2}
+	\Return \emph{\underline{RetVal}}$(v_{s'}, X_{s}, n_{s})$ 	
+}
+\caption{Simultaneous Move Monte Carlo Tree Search}\label{alg:smmmcts}
+\end{algorithm2e}
+
+Algorithm~\ref{alg:smmmcts} describes a single iteration of SM-MCTS. $T$ represents the MCTS tree in which
+each state is represented by one node. Every node $s$ maintains a cumulative reward sum over all
+simulations through it, $X_s$, and a visit count $n_s$. Both are initially set to $0$. The critical parts of the
+algorithm are the updates on lines~\ref{alg:smmcts:up1} and \ref{alg:smmcts:up2} and the selection on line \ref{alg:smmcts:select}. 
+Different algorithms can be used as selection functions (e.g., UCB~\cite{UCB}, Exp3~\cite{Auer2003Exp3}, or regret matching~\cite{Hart00}) and we describe them in the following sections. 
+Moreover, different selection functions need different statistics kept in each node; hence, function \emph{\underline{Update}} also differs. 
+Finally, the algorithm returns a value based on \emph{\underline{RetVal}} function. 
+In our algorithms we consider two different return value functions: the algorithm either directly returns value of the current state $v_{s'}$, or mean value $v_{s'}/n_{s'}$.
