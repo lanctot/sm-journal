@@ -1,14 +1,62 @@
+
 \section{Related Work}
-There is a number of algorithms designed for simultaneous-move games that can be classified into two categories: 
-(1) exact algorithms, 
-(2) approximative sampling algorithms.
-\bbosansky{Add RW for Markov Games.}
 
-\subsection{Exact Algorithms}
-Exact algorithms are typically based on backward induction algorithm (e.g., see \cite{buro2003} \bbosansky{We do need some better reference here.}). 
-The algorithm searches through the game tree in the depth-first manner and after computing the values of all the succeeding sub-games, it solves the normal-form game corresponding to this state (i.e., computes a NE of the matrix game in the current state of the game), and propagates the calculated value to the predecessor. The result of the backward-induction algorithm is a refinement of NE called \emph{subgame-perfect Nash equilibrium}.
+There is a number of algorithms designed for simultaneous-move games that can be classified into three categories: 
+(1) iterative learning algorithms, 
+(2) exact backard induction algorithms, 
+(3) approximative sampling algorithms.
+The first type computes strategies through iterated self-play.
+The second type computes a Nash equilibrium strategy of the game. 
+The third type computes strategies by approximating utilities using sampling. 
 
-There are two notable algorithms that improves the standard backward induction. 
+%\bbosansky{Add RW for Markov Games.}
+% mlanctot: started on this
+
+\subsection{Iterative Learning Algorithms}
+
+% mlanctot: I put this first because I thought historically it kind of made more sense.
+%           Also, then it kind of leads into the ones that we will look at. 
+
+% http://students.cs.byu.edu/~cs670ta/Fall2009/MinimaxQLearning.pdf
+% http://www.ualberta.ca/~szepesva/papers/ml96.ps.pdf
+% http://www.cogsci.rpi.edu/~rsun/si-mal/article3.pdf
+% http://www.cs.duke.edu/~parr/uai2002.ps.gz
+
+There was a significant amount of interest in simultaneous moves games generated through initial work 
+on multiagent reinforcement learning. In multiagent reinforcement learning, each agent acts simultaneously and 
+the joint action determines how the state changes. Littman introduced Markov games to model these interactions 
+as well as variant of Q-learning called MiniMaxQ to compute strategies~\cite{Littman94markovgames,Littman01Value}.
+As is common in these settings, the goal of each agent is to maximize their expected utility. 
+In zero-sum Markov games, an optimal policy corresponds to a Nash equilibrium strategy, which assures the agent 
+the highest worst-case expected payoff. Initial results provided conditions under which approximate dynamic 
+programming could be used to guarantee convergence to the optimal value function and 
+policies~\cite{Littman96ageneralized}. Lagoudakis \& Parr later provided stronger bounds and convergence guarantees
+for least squares temporal different learning using linear function approximation~\cite{Lagoudakis02}. 
+
+At around this same time period, gradient ascent methods were introduced as for playing 
+repeated games~\cite{Singh20Nash,Bowling01WoLF}. These algorithms update strategies in a direction of the strategy space 
+that increases expected payoff with respect to the opponent's strategy. These were then generalized and combined, and 
+shown to minimize regret over time~\cite{Zinkevich03Online,Bowling05Convergence}, leading to strong convergence 
+guarantees in multiagent learning. More no-regret algorithms followed and were applied to an imperfect information 
+games in sequence-form (One-Card Poker)~\cite{Gordon06No}. Soon later, counterfactual regret (CFR) minimization was 
+introduced for large imperfect information games~\cite{CFR}. CFR has gained much attention due to its success in 
+computing Poker AI strategies, and in this paper we analyze its effectiveness for the first time in simultaneous 
+move games. 
+
+As we focus on zero-sum simultaneous move games in this paper, the work on multiagent learning in general-sum and 
+cooperative games has been omitted. A modern elaborate survey of the relevant previous work in multiagent 
+reinforcement learning and game theory (including the zero-sum case) is presented in~\cite{Nowe12MARLchapter}. 
+
+\subsection{Exact Backward Induction Algorithms}
+
+The techniques in this section are based on the backward induction algorithm~\cite{Shoham09}.
+Backward induction is a form of dynamic programming~\cite{Bellman57} applied often presented for purely sequential games, 
+but can also be applied to simultaneous move games (e.g., see \cite{Ross71Goofspiel,buro2003,Rhoads12Computer}). 
+%\bbosansky{We do need some better reference here.}) 
+% mlanctot: added the Ross 1971 paper; as far as I know it's the earliest one. Would be nice to have a text book cover this.
+The algorithm searches through the game tree in the depth-first manner and after computing the values of all the succeeding sub-games, it solves the normal-form game corresponding to this state (i.e., computes a NE of the matrix game in the current state of the game), and propagates the calculated value to the predecessor. The result of the backward-induction algorithm is a refinement of NE called \emph{subgame-perfect Nash equilibrium}. 
+
+There are two notable algorithms that improves the standard backward induction in simultaneous move games. 
 Saffidine et al.~\cite{Saffidine12SMAB} termed simultaneous-move alpha-beta algorithm (SMAB). 
 The main idea of the algorithm is to reduce the number of the recursive calls of the backward-induction algorithm by removing dominated actions in every stage game. The algorithm keeps bounds on the utility value for each successor in a game state. 
 The lower and upper bounds represent the threshold values, for which neither of the actions of the player is dominated by any other action in the current matrix game. These bounds are calculated by linear programs in the state given existing exact values (or appropriate bounds) of the utility values of all the other successors of the state. If they form an empty interval (the lower bound is higher than the upper bound), a pruning occurs and the dominated action is not considered in this state any more. 
@@ -22,6 +70,7 @@ This algorithm is described in details in Section~\ref{sec:doab}, however, the m
 Finally, since simultaneous-move games can be seen as standard extensive-form games with imperfect information, one can use state-of-the-art algorithms for solving generic extensive-form games with imperfect information that are based on sequence form linear programming~\cite{koller1996,bosansky2013-aamas}. However, these algorithms do not exploit the specific structure of simultaneous-move games causing, as we will show in the experiments, weak performance in practice.
 
 \subsection{Approximative Sampling Algorithms}
+
 Monte Carlo Tree Search (MCTS) is a simulation-based state space search technique often used in extensive-form games \cite{Coulom06,UCT}. 
 Having first seen practical success in computer Go \cite{Gelly12}, MCTS has since been applied successfully to simultaneous-move games as well. 
 Most of the successful applications use classical exploration/exploitation formula Upper Confidence Bounds (UCB)~\cite{UCB} as a selection strategy. These variants of MCTS are also known as UCT (UCB applied on trees). The first application of MCTS to simultaneous move games was in general game playing (GGP) \cite{Cadiaplayer} programs: the Cadiaplayer \cite{Cadiaplayer,Finnsson12} uses UCB selection strategy for each player in a single game tree. The success of MCTS algorithm was demonstrated by success of Cadiaplayer that was the top performing player of the GGP competition
@@ -30,3 +79,6 @@ between 2007 and 2009.
 Despite this success, Shafiei et al. in \cite{Shafiei09} provide a counter-example showing that this straightforward application of UCT does not
 converge to NE even in the simplest simultaneous move games and that a player playing a NE can exploit this strategy. Another variant of UCT, which has been applied to the simultaneous move game Tron~\cite{Samothrakis10Tron}, builds the tree as if the players were moving sequentially giving one of the player unrealistic informational advantage. This approach also cannot converge to NE in general. For this reason, other variants of MCTS were considered for simultaneous move games. Teytaud and Flory describe a search algorithm for games with short-term imperfect information~\cite{Teytaud11Upper}, which are a generalization of simultaneous move games. Their algorithm uses a different selection strategy called Exp3~\cite{Auer2003Exp3} for the simultaneous moves and was shown to work well in the Internet card game Urban Rivals. 
 A more thorough experimental investigation of different selection policies including UCB, UCB1-Tuned, UCB1-greedy, Exp3, and more is reported in the game of Tron \cite{Perick12Comparison}. Finally, works by Lanctot et al.~\cite{Lanctot13Goofspiel} and by Lisy et al.~\cite{lisy2013-nips} present variants of MCTS that provably converge to Nash equilibria in simultaneous move games.
+
+\mlanctot{TODO: Add summary and ref to new papers: BNAIC 2013 Tron paper, CIG 2014 GGP paper}
+
