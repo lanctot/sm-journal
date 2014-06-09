@@ -49,9 +49,10 @@ reinforcement learning and game theory (including the zero-sum case) is presente
 
 \subsection{Exact Backward Induction Algorithms}
 
-The techniques in this section are based on the backward induction algorithm~\cite{Shoham09}.
-Backward induction is a form of dynamic programming~\cite{Bellman57} applied often presented for purely sequential games, 
-but can also be applied to simultaneous move games (e.g., see \cite{Ross71Goofspiel,buro2003,Rhoads12Computer}). 
+The techniques in this section are based on the backward induction algorithm (cf. \cite{Shoham09}), 
+a form of dynamic programming~\cite{Bellman57} often presented for purely sequential games. 
+A slightly modified variant of the algorithm can also be applied to simultaneous move 
+games (e.g., see \cite{Ross71Goofspiel,buro2003,Rhoads12Computer}). 
 %\bbosansky{We do need some better reference here.}) 
 % mlanctot: added the Ross 1971 paper; as far as I know it's the earliest one. Would be nice to have a text book cover this.
 The algorithm searches through the game tree in the depth-first manner and after computing the values of all the succeeding sub-games, it solves the normal-form game corresponding to this state (i.e., computes a NE of the matrix game in the current state of the game), and propagates the calculated value to the predecessor. The result of the backward-induction algorithm is a refinement of NE called \emph{subgame-perfect Nash equilibrium}. 
@@ -64,7 +65,7 @@ The lower and upper bounds represent the threshold values, for which neither of 
 SMAB outperforms classical backward induction, however, the computation speed-up is not that dramatic. 
 The reason is that computing dominated actions is a costly operations that does not prune many actions; hence, a lot of the game tree is still fully evaluated. The authors propose further enhancements in their work~\cite{Saffidine12SMAB}, however, these improvements are heuristic and do not significantly change the overall performance of the algorithm. Since other exact algorithms achieve computation speed-up in several orders of magnitude compared to backward induction (as we will show in experimental section of this chapter), we do not explicitly use SMAB in our experiments.
 
-Second exact algorithm that is significantly faster compared to the classical backward induction was introduced in~\cite{Bosansky13Using}.
+The second exact algorithm that is significantly faster compared to the classical backward induction was introduced in~\cite{Bosansky13Using}.
 This algorithm is described in details in Section~\ref{sec:doab}, however, the main idea is to integrate two key components: (1) instead of evaluating all successors in each state of the game and solving a normal-form game, the algorithm exploits the iterative framework known in game theory as double-oracle algorithm~\cite{McMahan03Planning}; (2) the algorithm computes bounds on the utility values of the successors by serializing the sub-games and running a standard alpha-beta algorithm. 
 
 Finally, since simultaneous-move games can be seen as standard extensive-form games with imperfect information, one can use state-of-the-art algorithms for solving generic extensive-form games with imperfect information that are based on sequence form linear programming~\cite{koller1996,bosansky2013-aamas}. However, these algorithms do not exploit the specific structure of simultaneous-move games causing, as we will show in the experiments, weak performance in practice.
@@ -78,7 +79,18 @@ between 2007 and 2009.
 
 Despite this success, Shafiei et al. in \cite{Shafiei09} provide a counter-example showing that this straightforward application of UCT does not
 converge to NE even in the simplest simultaneous move games and that a player playing a NE can exploit this strategy. Another variant of UCT, which has been applied to the simultaneous move game Tron~\cite{Samothrakis10Tron}, builds the tree as if the players were moving sequentially giving one of the player unrealistic informational advantage. This approach also cannot converge to NE in general. For this reason, other variants of MCTS were considered for simultaneous move games. Teytaud and Flory describe a search algorithm for games with short-term imperfect information~\cite{Teytaud11Upper}, which are a generalization of simultaneous move games. Their algorithm uses a different selection strategy called Exp3~\cite{Auer2003Exp3} for the simultaneous moves and was shown to work well in the Internet card game Urban Rivals. 
-A more thorough experimental investigation of different selection policies including UCB, UCB1-Tuned, UCB1-greedy, Exp3, and more is reported in the game of Tron \cite{Perick12Comparison}. Finally, works by Lanctot et al.~\cite{Lanctot13Goofspiel} and by Lisy et al.~\cite{lisy2013-nips} present variants of MCTS that provably converge to Nash equilibria in simultaneous move games.
+A more thorough experimental investigation of different selection policies including UCB, UCB1-Tuned, UCB1-greedy, Exp3, and more is reported in the game of Tron \cite{Perick12Comparison}. The work of by Lanctot et al.~\cite{Lanctot13Goofspiel} compares some of these variants and proposes Online Outcome Sampling, a search version of Monte Carlo CFR~\cite{Lanctot09Sampling}, which computes an approximate equilibrium strategy with high probability. Lisy et al.~\cite{lisy2013-nips} present variants of MCTS that provably converge to Nash equilibria in simultaneous move games, in general, using any regret-minimizing algorithm at each stage, showing observed worst-case behavior of in several cases. 
 
-\mlanctot{TODO: Add summary and ref to new papers: BNAIC 2013 Tron paper, CIG 2014 GGP paper}
+%\mlanctot{TODO: Add summary and ref to new papers: BNAIC 2013 Tron paper, CIG 2014 GGP paper}
+
+There have been two recent studies that examine the head-to-head performance of these variants in practice. 
+The first builds on previous work in Tron~\cite{Lanctot13Tron} by varying the shape of the initial board, 
+comparing previous serialized variants of simultaneous move MCTS. The authors found that UCB1-Tuned worked 
+particularly well in Tron when using knowledge-based playout policies. The success of UCB1-Tuned differed in 
+a similar study of the same variants across nine domains~\cite{Tak14smmcts} without domain knowledge. In this 
+work, the chosen games were ones inspired by previous work in general game playing and did not include chance elements. 
+Results indicate that parameter-tuning landscapes do not seem as smooth as in the purely sequence case. 
+Generally, head-to-head performance of UCB variants perform well, despite their theoretical shortcomings, with
+Goofspiel being a particularly notable exception. 
+
 
