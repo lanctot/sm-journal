@@ -201,7 +201,8 @@ $\lambda_{a_i}$ is calculated by subtracting from the current best response valu
 If the currently evaluated action $a_i$ can still be the best response, the value of the successor is determined (first by comparing the bounds). Once the expected outcome against all actions of the opponent is evaluated, the expected value of action $a_i$ is compared against the current best-response value (line~\ref{alg:br:max}) and saved, if the expected utility is higher~(line~\ref{alg:br:save}).
 
 
-\subsection{Simultaneous-Move Monte Carlo Tree Search (SM-MCTS)}
+\subsection{Simultaneous-Move Monte Carlo Tree Search (SM-MCTS)}\label{sec:smmcts}
+
 Monte Carlo Tree Search (MCTS) is a simulation-based state space search algorithm often used
 in game trees. The nodes in the tree represent game states. The main idea is to iteratively run
 simulations to a terminal state, incrementally growing a tree rooted at the initial state of the game. In
