@@ -33,13 +33,15 @@ Once the algorithm evaluates the value of each possible subgame following the cu
 Using the linear programming, the algorithm computes the value of the matrix game, which is propagated to the predecessor~(line~\ref{alg:bi:stop2}). 
 If the algorithm evaluates a terminal state, it directly returns the utility value of the state~(line~\ref{alg:bi:stop1}).
 
+Solving the linear programs is the main computational bottleneck of the backward induction algorithm. Therefore, in the following algorithms, we try to avoid this step of the computation even for the price of multiple traversal of the game tree.
+
 \subsection{Backward Induction with Serialized Alpha-Beta Bounds}\label{sec:algs:biab}
 Backward induction algorithm can be easily enhanced by using bounds on the value of sub-games. 
 These bounds can be calculated very quickly by using a transformation of a simultaneous-move game into a perfect information extensive-form game.
 Consider a matrix game representing a simultaneous choice of both players.
 This matrix can be serialized by discarding the notion of information sets; hence, letting one player to play first following by the play of the second player. 
 The crucial difference between a serialized and a simultaneous-move matrix game is that the second player to move has an advantage of knowing what action has been played in a serialized game.
-Therefore, the value of a serialized game where player $i$ is second to move is an upper bound on the value 
+Therefore, the value of a serialized game where player $i$ is second to move is an upper bound on the value of the matrix game. 
 
 \begin{figure}
 \includegraphics[width=0.45\textwidth]{figures/serialization1-1.png}
@@ -47,14 +49,14 @@ Therefore, the value of a serialized game where player $i$ is second to move is 
 \caption{Different serialization of a simultaneous move game.}\label{fig:serialization}
 \end{figure}
 
-An example of this serialization is depicted in Figure~\ref{fig:serialization} with the utility value in the leaves depicted only for a single player. 
-If this player moves first (the left subfigure), then the value of this serialized game is the lower bound of the value of the game; if this player moves second (the right subfigure), then the value of this serialized game is the upper bound of the value of the game.
+An example of this serialization is depicted in Figure~\ref{fig:serialization} with the utility value in the leaves depicted only for the first player. 
+If this player moves first (the left subfigure), then the value of this serialized game is the lower bound of the value of the game; if this player moves second (the right subfigure), then the value of this serialized game is the upper bound of the value of the game.\vlisy{Write (gray) values into the inner nodes.}
 Since the serialized games are zero-sum perfect-information games in the extensive form, they can be solved very quickly by using classical AI algorithm such as alpha-beta or negascout.
 If the values of both serialized games are equal, then this is equal also to the value of the game. This situation occurs in our example in Figure~\ref{fig:serialization}, where both serialized games have value equal to $3$.
 
 Obtaining these bounds can speed-up the backward induction algorithm. 
 Algorithm~\ref{alg:backwardinduction-ab} depicts the pseudocode.
-When the backward induction starts evaluating successors of the current state, the algorithm calculates upper and lower bounds using alpha-beta algorithm on serialized variants of the subgame rooted in the successor $s'$ (lines~\ref{alg:biab:ab1}-\ref{alg:biab:ab2}). The serialized game is solved using standard alpha-beta algorithm, where the second player 
+When the backward induction starts evaluating successors of the current state, the algorithm calculates upper and lower bounds using alpha-beta algorithm on serialized variants of the subgame rooted in the successor $s'$ (lines~\ref{alg:biab:ab1}-\ref{alg:biab:ab2}). The serialized game is solved using standard alpha-beta algorithm, where the second player \vlisy{Unfinished sentence?}
 If the bounds are equal, the algorithm stores the value (line~\ref{alg:biab:saving}) instead of performing a recursive call~(line~\ref{alg:biab:recursive}).
 
 \begin{algorithm2e}[t]
@@ -84,7 +86,7 @@ $v_s \leftarrow$ solve matrix game $A$\;
 
 \subsection{Backward Induction with Double Oracle and Serialized Bounds}\label{sec:algs:doab}
 Solving a matrix game can be further improved by using iterative double-oracle algorithm~\cite{McMahan03Planning}. 
-First of all, we describe the main principles of the double-oracle algorithm in normal-form games, following by describing the application of the algorithm in simultaneous-move game~\cite{Bosansky13Using}.
+First of all, we describe the main principles of the double-oracle algorithm in matrix games, following by describing the application of the algorithm in simultaneous-move game~\cite{Bosansky13Using}.
 
 \subsubsection{Double-oracle Algorithm for Matrix Games}\label{sec:doab}
 \begin{figure}
@@ -94,7 +96,7 @@ First of all, we describe the main principles of the double-oracle algorithm in 
 \end{figure}
 
 The main goal of the double-oracle algorithm is to find a solution of a matrix game without a need to construct the complete linear program that solves this game. 
-The main idea is to create a restricted game by restricting the players to choose only from a limited set of actions to play.
+The main idea is to create a restricted game by restricting the players to choose only from a limited set of actions.
 Then the algorithm iteratively expands the restricted game by allowing the players to choose from new actions.
 The new actions are allowed in iterations; each iteration a best response to an optimal strategy of the opponent in the current restricted game is allowed to be played in the restricted game.
 
@@ -219,35 +221,100 @@ and the information stored in the tree is updated.
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \Input{$s$ -- current state of the game; $i$ -- current player}
 \If{$s \in \cZ$} {
-	\Return $u_i(s)$
+	\Return \emph{\underline{RetValLeaf}}($u_i(s)$)
 }
-\If{$s \in T \wedge \exists(a_i, a_{-i}) \in \cA(s)$~not previously visited} {
-	choose one of the previously unselected $(a_i, a_{-i})$\;
-	$s' \leftarrow \cT(s,a_i,a_{-i})$\;
-	$T \leftarrow T \cup \lbrace s' \rbrace$\;
-	$v_{s'} \leftarrow $ \emph{\underline{Rollout}}($s'$)\;
-	$X_{s'} \leftarrow X_{s'} + v_{s'}$\;
-	$n_{s'} \leftarrow n_{s'} + 1$\;
-	\emph{\underline{Update}}$(s,a_i,a_{-i},v_{s'})$\;\label{alg:smmcts:up1}
-	\Return \emph{\underline{RetVal}}$(v_{s'}, X_{s'}, n_{s'})$ 	
-}
-\Else{
+\If{$s \in T$} {
 	$(a_i, a_{-i}) \leftarrow$ \emph{\underline{Select}}$(s)$\;\label{alg:smmcts:select}
 	$s' \leftarrow \cT(s,a_i,a_{-i})$\;
 	$v_{s'} \leftarrow $ SM-MCTS($s',i$)\;
-	$X_{s} \leftarrow X_{s} + v_{s'}$\;
-	$n_{s} \leftarrow n_{s} + 1$\;
-	\emph{\underline{Update}}$(s,a_i,a_{-i},v_{s'})$\;\label{alg:smmcts:up2}
-	\Return \emph{\underline{RetVal}}$(v_{s'}, X_{s}, n_{s})$ 	
+	$v_{s} \leftarrow$ \emph{\underline{Update}}$(s,a_i,a_{-i},v_{s'})$\;\label{alg:smmcts:up}
+	\Return $v_{s}$
 }
+\Else{
+	$T \leftarrow T \cup \lbrace s \rbrace$\;
+	$v_{s} \leftarrow $ \emph{\underline{Rollout}}($s$)\;
+	\Return $v_{s}$
+}
+
+%\If{$s \in T \wedge \exists(a_i, a_{-i}) \in \cA(s)$~not previously visited} {
+%	choose one of the previously unselected $(a_i, a_{-i})$\;
+%	$s' \leftarrow \cT(s,a_i,a_{-i})$\;
+%	$T \leftarrow T \cup \lbrace s' \rbrace$\;
+%	$v_{s'} \leftarrow $ \emph{\underline{Rollout}}($s'$)\;
+%	$X_{s'} \leftarrow X_{s'} + v_{s'}$\;
+%	$n_{s'} \leftarrow n_{s'} + 1$\;
+%	\emph{\underline{Update}}$(s,a_i,a_{-i},v_{s'})$\;\label{alg:smmcts:up1}
+%	\Return \emph{\underline{RetVal}}$(v_{s'}, X_{s'}, n_{s'})$ 	
+%}
+%\Else{
+%	$(a_i, a_{-i}) \leftarrow$ \emph{\underline{Select}}$(s)$\;\label{alg:smmcts:select}
+%	$s' \leftarrow \cT(s,a_i,a_{-i})$\;
+%	$v_{s'} \leftarrow $ SM-MCTS($s',i$)\;
+%	$X_{s} \leftarrow X_{s} + v_{s'}$\;
+%	$n_{s} \leftarrow n_{s} + 1$\;
+%	\emph{\underline{Update}}$(s,a_i,a_{-i},v_{s'})$\;\label{alg:smmcts:up2}
+%	\Return \emph{\underline{RetVal}}$(v_{s'}, X_{s}, n_{s})$ 	
+%}
 \caption{Simultaneous Move Monte Carlo Tree Search}\label{alg:smmmcts}
 \end{algorithm2e}
 
-Algorithm~\ref{alg:smmmcts} describes a single iteration of SM-MCTS. $T$ represents the MCTS tree in which
-each state is represented by one node. Every node $s$ maintains a cumulative reward sum over all
-simulations through it, $X_s$, and a visit count $n_s$. Both are initially set to $0$. The critical parts of the
-algorithm are the updates on lines~\ref{alg:smmcts:up1} and \ref{alg:smmcts:up2} and the selection on line \ref{alg:smmcts:select}. 
-Different algorithms can be used as selection functions (e.g., UCB~\cite{UCB}, Exp3~\cite{Auer2003Exp3}, or regret matching~\cite{Hart00}) and we describe them in the following sections. 
+We first present a generic template of MCTS algorithms for simultaneous move games (SM-MCTS) and then explain specific algorithms derived form this template. Algorithm~\ref{alg:smmmcts} describes a single iteration of the SM-MCTS. $T$ represents the MCTS tree, in which
+each state is represented by one node. Every node $s$ maintains algorithm-specific statistics about the iterations that previously used this node. The template can be instanciated by specific implementations of the updates of the statistics on line~\ref{alg:smmcts:up} and the selection based on these statistics on line \ref{alg:smmcts:select}. 
+Different algorithms can be the bases for the selection functions (e.g., UCB~\cite{UCB}, Exp3~\cite{Auer2003Exp3}, regret matching~\cite{Hart00}, or CFR~\cite{}) and we describe them in the following sections. 
 Moreover, different selection functions need different statistics kept in each node; hence, function \emph{\underline{Update}} also differs. 
-Finally, the algorithm returns a value based on \emph{\underline{RetVal}} function. 
-In our algorithms we consider two different return value functions: the algorithm either directly returns value of the current state $v_{s'}$, or mean value $v_{s'}/n_{s'}$.
+Finally, some algorthms require collecting statistics form more then just the current node during the iteration.
+These statistics are returned be the main iteration function, they can be initialized in \emph{\underline{RetValLeaf}} and further updated as a part of the \emph{\underline{Update}} function.
+For the most basic SM-MCTS algorithms, only the curent sample value is returned by the function and none of these functions modifies it.
+
+\subsubsection{Decoupled Upper-confidence Bound applied to Trees}
+
+The most common selection function for SM-MCTS is the Decoupled Upper-confidence Bound applied to Trees(DUCT). For selection and updates, it executes the well-known UCT \cite{kocsis2006} algorithm independently for each of the players in each nodes. The statistics stored in search nodes are independently computed for each action of each player. For player $i\in N$ and action $a_i \in A_i(s)$ the reward sums $X_{a_i}$ and the number of times the action was used $n_{a_i}$ are maintained. When a joint action needs to be selected on line 
+\ref{alg:select}, an action that maximizes the UCB value over their reward estimates is selected for each player independently:
+\[ a_i = \argmax_{a \in A_i(s)}{ \left\{ \bar{X}_{a_i} + C_i \sqrt{\frac{\log n_s}{n_{a_i}}} \right\} }, 
+  \mbox{ where } \bar{X}_{a_i} = \frac{X_{a_i}}{n_{a_i}} \mbox{ and } n_s=\sum_{a_j} n_{a_j}. \] 
+\noindent The update policy increases the visit count and rewards for each player $i$ using $X_{a_i} \leftarrow X_{a_i} + u_i$ 
+and $n_{a_i} \leftarrow n_{a_i} + 1$. The \emph{\underline{RetValLeaf}} and  \emph{\underline{Rollout}} just return the value of the leaf node reach and  \emph{\underline{Update}} does not modify this value. The same value is back-propagated to the root of the MCTS tree.
+
+After all the simulations are done, there are two options how to determine the resulting action to play. The more standard opttion is to choose for each state the joint move that maximizes $n_{a_i}$ for each player $i$ independently.
+This is suitable mainly for games, in which using mixed strategy is often not necessary.
+Alternatively, the action to play in each state can be determined based on the mixed strategy obtained by normalizing the visit counts of each action ($n_{a_i}$).
+Using the first method will certainly not make the algorithm converge to a Nash equilibirum, because the game may require a mixed strategy.
+The second has been shown not to converge to a Nash equilibrium as well; a counter-example in Rock, Paper, Scissors with biased payoffs is shown in \cite{Shafei09}. 
+
+Even though DUCT is not guaranteed to converge to the optimal solution, it is often very successful in practice.
+It has been used in and general game playing~\cite{Finnsson12}, in the Internet card game Urban Rivals~\cite{Teytaud11Upper},
+and in the simultaneous move game Tron~\cite{Perick12Comparison}. 
+\mlanctot{Is there an earlier Tron paper where it was used?}
+Note that DUCT is different than UCT run on a game that is transformed to perfect information by serialization of the simultaneous moves, 
+because in the latter case one player has the advantage of knowing what the other player chose at every stage.
+
+
+\subsubsection{Decoupled Exponential weights for Exploration and Exploitation}\label{sec:exp3}
+
+The second most common instantiation of SM-MCTS is to use the Exponential weights for Exploration and Exploitation (Exp3) algorithm \cite{Auer2003Exp3} independently for each of the players. In Exp3, a player maintains an estimate of the sum of rewards for each action, denoted $\hat{X}_{a_i}$. The joint action selected on line \ref{alg:select} is composed of an action independently selected for each player. The probability of sampling action $a_i$ in \emph{\underline{Select}} is proportional to the exponential of the reward estimate:
+\begin{equation}\label{eq:exp3select}
+\sigma^s(a_i) = \frac{(1-\gamma) \exp(\eta \hat{X}_{a_i})}{\sum_{b_i \in A_i(s)} \exp(\eta \hat{X}_{a_i})} + \frac{\gamma}{|A_i(s)|},
+  \mbox{ where } \eta = \frac{\gamma}{|A_i(h)|}.
+\end{equation}
+
+This standard formulation of Exp3 is suitable for proving its properties, but straightforward implementation of this formula leads to problems with numerical stability. Both the numerator and denominator of the fraction are too large. For this reason, numerically more stable formulations has been suggested, e.g., in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS}. We use the following reformulation from \cite{Cowling12ISMCTS}:
+\begin{equation}
+\sigma^s(a_i) = \frac{(1-\gamma)}{\sum_{b_i \in A_i(s)}\exp(\eta(\hat{X}_{b_i}-\hat{X}_{a_i}))}
+\end{equation}
+
+
+The \underline{Update} after selecting actions $(i,j)$ and obtaining a result $(u_1,u_2)$ updates the visits count ($n_{h,i} \leftarrow n_{h,i} + 1$) and adds to the corresponding reward sum estimates the reward divided by the probability that the action was played by the player ($x_{h,i} \leftarrow x_{h,i} + u_1/\sigma^s(h,i)$). 
+%The rewards are assumed to be normalized to the unit interval. 
+Dividing the value by the probability of selecting the corresponding action makes $x_{h,i}$ estimate the sum of rewards over all iterations, not only the once where action $i$ was selected. 
+%We are using a numerically more stable version of the formula for computing the distribution presented in \cite{Cowling12ISMCTS}, which is equivalent to the original one \cite{Auer2003Exp3}.
+
+%The mixed (\ie randomized) strategy used by player $i$ after the simulations are done is given by the frequencies of visit counts of the actions: $\sigma^{final}(h,i) = n_{h,i}/\sum_{i' \in A_i(h)} n_{h,i'}$. Previous work \cite{Teytaud11Upper} suggests first removing the samples caused by the exploration. This modification proved to be useful also in our experiments, so before computing the resulting final mixed strategy, we set
+%\begin{equation}
+%n_{h,i} \leftarrow \max\left(0,n_{h,i} - \frac{\gamma}{|A_i(h)|}\sum_{i' \in A_i(h)}n_{h,i'}\right).
+%\end{equation}
+
+
+\subsubsection{Regret Matching}
+
+\subsubsection{Online Counter-factual Regret Minimization}
+

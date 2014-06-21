@@ -165,6 +165,7 @@
 %% \fntext[label3]{}
 
 \title{Algorithms for Computing Strategies in Two-Player Simultaneous Move Games}
+% Offline and Online Strategy Computation in Zero-Sum Simultaneous Move Games
 
 %% use optional labels to link authors explicitly to addresses:
 %% \author[label1,label2]{<author name>}
@@ -231,7 +232,7 @@ Today, agent interactions occur in many diverse situations, such as e-commerce, 
 general-purpose robotics, each of which create complex problems that arise from conflicting agent 
 preferences. 
 
-Much research has been devoted to developing algorithms that reason about or learn multistep 
+Much research has been devoted to developing algorithms that reason about or learn in multistep 
 interactions. For example, adversarial search has been a central topic of artificial intelligence 
 since the inception of the field itself, leading to very strong rational behavior in 
 Chess~\cite{Campbell02deepblue}. Advances in machine learning for multistep interactions 
@@ -251,6 +252,8 @@ agents must search online. We are concerned both with the quality of strategies 
 their worst-case performance in theory and their obversed performance in practice. We compare and 
 contrast the algorithms and choices in the offline and online cases, and thoroughly evaluate each 
 algorithm on a suite of games. 
+\vlisy{Arguments for relevance of the class of games and examples of games we solve are missing. I would also mention the need for mixing in this game, which makes them fundamentally different form sequential games.}
+
 
 \input{related.tex}
 
@@ -271,7 +274,17 @@ $v_{min}$ and $v_{\max}$ denoting the minimum and maximum possible utility respe
 games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$. 
 The game begins in an initial state $s_0$. 
 \bbosansky{redefine stochastic successors $\Delta_c:\cS \mapsto \Delta(\cS)$ (identity for non-chance nodes)}
-\bbosansky{define value of the matrix games}
+
+
+\begin{figure}[t!]
+\centering
+\begin{tabular}{c|c|c|}
+ \multicolumn{1}{c}{~} & \multicolumn{1}{c}{H}  &  \multicolumn{1}{c}{T}\\\cline{2-3}
+H &  1  &  0\\\cline{2-3}
+T  & 0  &  1\\\cline{2-3}
+\end{tabular}
+\caption{Matrix game of Matching Pennies.\label{fig:matchinPennies}}
+\end{figure}
 
 \begin{figure}[b!]
 \centering
@@ -289,7 +302,7 @@ The dark squares are terminal states. The values shown are optimal values that c
 A {\it matrix game} is a single step simultaneous move game with action sets $\cA_1$ and $\cA_2$. 
 Each entry in the matrix $A_{rc}$ where $(r,c) \in A_1 \times A_2$ corresponds to a payoff (to player 1) if row $r$ is 
 chosen by player 1 and column $c$ by player 2. 
-For example, in Matching Pennies, each player has two actions (heads or tails). The row player receives a payoff of 1 
+For example, in Matching Pennies in Figure~\ref{fig:matchinPennies}, each player has two actions (heads or tails). The row player receives a payoff of 1 
 if both players choose the same action and 0 if they do not match. 
 Two-player simultaneous move games are sometimes called {\it stacked matrix games} because at every state 
 $s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$ that either leads to a terminal state or (possibly after a 
@@ -307,7 +320,10 @@ V^* = \max_{\sigma_1 \in \Sigma_1} \min_{\sigma_2 \in \Sigma_2} \bE_{z \sim \sig
 \end{equation}
 In other words, none of the players can improve their utility by deviating unilaterally. 
 For example, the Matching Pennies matrix game has a single state and the only equilibrium strategy is to mix equally between 
-both actions, \ie play with a {\it mixed strategy} (distribution) of $(0.5, 0.5)$ giving an expected payoff of $V^* = 0.5$. 
+both actions, \ie play with a {\it mixed strategy} (distribution) of $(0.5, 0.5)$ giving an expected payoff of $V^* = 0.5$.
+Note that using a randomized (often called mixed) strategy is necessary in this game.
+Any deterministic strategy of one mplayer can be exploited by the opponent. 
+For the same reason, randomized strategies are often necessary also in the multi-stage simultaneous move games. 
 If the strategies also optimize Equation \ref{eq:ne} in each subgame starting in an arbitrary state, the equilibrium strategy 
 is termed subgame perfect.
 
