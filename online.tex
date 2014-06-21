@@ -1,0 +1,95 @@
+
+In this section, we describe online adaptations of the algorithms above and their application 
+to search under limited time settings. 
+
+\subsection{Iterative Deepening Backward Induction Algorithms} \label{sec:idbi}
+
+Minimax search~\cite{AIbook} has been used with much success in sequential perfect information games, 
+leading to superhuman strength in computer chess game play, one of the key advances of artifical 
+intelligence. 
+Minimax search is an online application of backward induction run on approximated game. 
+The game is approximated by searching to a fixed depth limit $d$, treating the states at depth $d$
+as terminal states, evaluating their values using a heuristic evaluation function, $v(s)$. 
+The main focus is to compute an optimal strategy for this heuristic approximation of the true game. 
+
+Under limited time settings, a search algorithm is given a fixed time budget to compute a strategy. 
+Since it is difficult to predict in advance the highest depth that can run in the alotted time, 
+{\it interative deepening} is employed~\cite{Marsland83}. The main idea is to run several depth-limited 
+minimax searches, starting at a low depth and iterativel increasing the depth of each successive search. 
+In sequential perfect information games, several enhancements can applied due to researching the same 
+nodes, most of which are not immediately applicable in simultaneous move games. However, whether new 
+enhancements can be defined for this class of games remains an open research question. 
+
+In our search experiments, we use a depth-limited online version of Algorithm \ref{alg:doab}. To the 
+best of our knowledge, this is the first time that depth-limited backward induction has been used for 
+online search in simultaneous move games. 
+
+\subsection{Online Outcome Sampling} \label{sec:oos}
+
+Online Outcome Sampling (OOS) is a version of outcome sampling MCCFR described in 
+Section~\ref{sec:algs:cfros}. It resembles MCTS in that it builds its tree incrementally, however it 
+is based on outcome sampling MCCFR rather than on UCB. The algorithm as applied to full imperfect information
+games is found in~\cite{Lanctot14OOS}. Here, we describe a simplified version specifically designed for 
+simultaneous move games. 
+
+\begin{algorithm2e}[t]
+\small
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\Input{$h$ -- current state of the game; $i$ -- current player; $\pi_i$ -- reach probability for player $i$; $\pi_{-i}$ -- reach probability for opponent of $i$, $s$ -- sample reach probability}
+  \lIf{$h \in Z$}{\Return $(s, u_i(z))$} \label{alg:terminal}
+  \ElseIf{$h$ is a chance node}{
+    Sample outcome $a$ with probability $\Pr(a)$ \;
+    \Return OOS$(ha, i, \pi_i, \pi_{-i}, s \cdot \Pr(a))$\;
+  }
+  $I \gets $ information set of player $P(h)$ at $h$ \;
+  Sample $a \sim \Phi(I, i, \epsilon)$ with prob. $\Pr(a)$ \; \label{alg:sample}
+  \If{$I$ is not in memory}{
+    Add $I$ to memory \;
+    $\sigma(I) \leftarrow \mbox{Unif}(A(I))$ \;
+    $(q(z), u_i(z)) \gets $ Playout$(ha, s \cdot \Pr(a))$ \;         \label{alg:playout}
+  }
+  \Else{
+    $\sigma(I) \gets $ RegretMatching$(R_I)$ \;
+    $\pi_{P(h)}' \gets \sigma(I,a)\pi_{P(h)}$ \;    \label{alg:newreaches1}
+    $\pi_{-P(h)}' \gets \pi_{-P(h)}$ \;             \label{alg:newreaches2}
+    $(q(z), u_i(z)) \gets$ OOS$(ha, i, \pi_i', \pi_{-i}', s \cdot \Pr(a))$ \;
+  }
+  \For{$a' \in A(I)$}{
+    \If{$P(h) = i$}{
+      Update $R_I[a']$ for each $a' \in A(I)$ using $\tilde{r}^t(I,a)$ according to Eq.~\ref{eq:scv}
+    }
+    \Else{
+      Update $S_I[a'] \gets S_I[a'] + \frac{1}{s} \pi_{-i} \sigma(I,a')$ for each $a' \in A(I)$ \;  \label{alg:avgstrat}
+    }
+  }
+  \Return $(q(z), u_i(z))$ \;   \label{alg:returnend}
+  \vspace{0.1cm}
+  \caption{Simultaneous Move Online Outcome Sampling. \label{alg:oos}}
+\end{algorithm2e}
+
+
+
+One iteration of the algorithm requires, as input, the current state of the game and a player role $i$. 
+Each iteration the player role $i$ is alternated. As the algorithm is applied to the imperfect information 
+representation of the simultaneous move game (described in Section~\ref{sec:smg}), we use histories $h$ 
+and information sets $I$ rather than states. 
+
+An information set tree is incrementally built, starting with the searching player's root information set.
+An information set stores two tables: $R_I$ stores the cumulative regret $R^T(I,a)$ for each action, 
+and average strategy table $S_I$ which stores the cumulative average strategy contribution for each action. 
+An $\epsilon$-on-policy sampling distribution used to sample actions, defined as
+\begin{equation*}
+\label{eq:ossample}
+\Phi(I,i,\epsilon) = \left\{
+\begin{array}{ll}
+\epsilon \cdot \mbox{Unif}(A(I)) + (1-\epsilon)\sigma_i(I) & \mbox{if } P(I) = i\\ 
+\sigma_i(I)                                          & \mbox{otherwise,}
+\end{array} \right.
+\end{equation*}
+and denote $\Phi(I,i,\epsilon,a)$ the probability of sampling $a \in A(I)$.
+
+
+
+
+
+

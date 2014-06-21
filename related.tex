@@ -109,12 +109,12 @@ in the simultaneous move game directly.
 However, in one of the first papers on real-time strategy games, strategy simulation
 from scripts was used to build a single matrix of values from which an equilibrium strategy was 
 computed using linear programming~\cite{Sailor07adversarial}.  
-Using Simultaneous Move MCTS, presented in Subsection~\ref{sec:smmcts}, this search could be extended 
+Using Simultaneous Move MCTS, presented in Subsection~\ref{sec:algs:smmcts}, this search could be extended 
 to multiple nodes where internal nodes would correspond to scripts being interrupted to replan. 
 In later work, alpha-beta search was run on a serialized (sequential) version of the 
 simultaneous move game for combat scenarios~\cite{Churchill2012Fast}. The benefit of serializing the game is that bounds 
 on the correct minimax value can be obtained for the underlying simultaneous move game. These bounds can be used to cut out
-parts of the game tree in backward induction algorithms, as explained in Subsection~\ref{sec:algs:biab}.
+parts of the game tree in backward induction algorithms, as will be explained in detail in Subsection~\ref{sec:algs:biab}.
 
 
 
