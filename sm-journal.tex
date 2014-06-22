@@ -88,6 +88,7 @@
 \newcommand{\cZ}{\mathcal{Z}}
 \newcommand{\eg}{{\it e.g.,}~}
 \newcommand{\ie}{{\it i.e.,}~}
+\newcommand{\defword}[1]{\textbf{\boldmath{#1}}}
 
 \definecolor{darkgreen}{RGB}{0,125,0}
 \newcounter{mwNoteCounter}
@@ -257,7 +258,7 @@ algorithm on a suite of games.
 
 \input{related.tex}
 
-\section{Simultaneous Move Games \label{sec:smg}}
+\section{Simultaneous Move Games}  \label{sec:smg}
 
 A finite game with simultaneous moves and chance can be described by a tuple 
 $(\cN, \cS = \cD\cup\cC\cup\cZ, \cA, \cT, \Delta_c, u_i, s_0)$.
@@ -335,11 +336,33 @@ The value $V^*$ is known as the minimax-optimal value of the game
 and is the same for every equilibrium profile by von Neumann's minimax theorem.
 
 A two-player simultaneous move game is a specific type of two-player imperfect information extensive-form game. 
-In imperfect information games, states are grouped into {\it information sets}: two states $s, s' \in I$ if the player 
+In imperfect information\footnote{In this paper, we use the term {\it imperfect information} to refer to games that have situations 
+where one player knows something that some of the other players do not know. However, every player knows which game they are playing, 
+the distribution of chance event outcomes, and every player's utility function. This is in contrast to 
+{\it imcomplete information} games in which players may also not know (or be fully certain of) the utility functions of their opponents 
+or precisely how nature affects the game.} 
+games, states are grouped into {\it information sets}: two states $s, s' \in I$ if the player 
 to act at $I$ cannot distinguish which of these states the game is currently in. Any simultaneous move game can be modeled 
-using an information set to represent a half-completed transition, \ie $\cT(s, a_1, ?)$ or $\cT(s, ?, a_2)$. 
+using information sets to represent a half-completed transition, \ie $\cT(s, a_1, ?)$ or $\cT(s, ?, a_2)$. 
+For example, the matrix game of Rock, Paper, Scissors can be thought of as a two-step process where the first player commits
+to a choice, writing it on a face-down piece of paper, and then second player responds. Figure~\ref{fig:rps-equiv} shows this
+transormation, which can generally be applied to every state in a simultaneous move game by placing to root of subgame following 
+both players' decisions, or a successor chance node outcome. 
+Therefore, algorithms intended for two-player zero-sum imperfect information games may also be applied to the 
+simultaneous move game's equivalent extensive form. 
 
-The model described above is similar to a two-player finite horizon Markov Game~\cite{Littman94markovgames} with chance 
+\begin{figure}
+\begin{center}
+\begin{tabular}{ccc}
+\includegraphics[scale=1.4]{figures/rps-nfg} & ~~~~~ & \includegraphics[scale=1.0]{figures/rps-efg} \\
+\end{tabular}
+\end{center}
+\caption{The matrix game of Rock, Paper, Scissors (left) and its equivalent extensive-form game representation (right). The extensive 
+game has four states, two information sets ($I_1$ and $I_2$), 
+and nine terminal histories: $\{ Rr, Rp, Rs, Pr, Pp, Ps, Sr, Sp, Ss \}$. \label{fig:rps-equiv}}
+\end{figure}
+
+The model described here is equivalent to two-player finite-horizon Markov Games with chance 
 events. Examples of such games are depicted in Figure~\ref{fig:example}. More examples and recent work 
 can be found in \cite[Chapter 5]{Saffidine2013thesis}.
 
@@ -349,15 +372,11 @@ can be found in \cite[Chapter 5]{Saffidine2013thesis}.
 
 \section{Online Search}
 
-\mlanctot{Planning to fill this over the weekend. Why is SM-MCTS in the offline part?}
-
-\subsection{Iterative Deepening Backward Induction Algorithms}
-
-\subsection{Online Outcome Sampling}
+\input{online.tex}
 
 \section{Empirical Evaluation}
 
-\subsection{Domains}
+\input{evaluation.tex}
 
 \section{Conclusion}
 

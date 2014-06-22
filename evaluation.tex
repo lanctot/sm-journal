@@ -1,0 +1,45 @@
+
+\subsection{Domains}
+
+In this subsection, we describe the domains used in our experiments.
+
+\begin{description}
+\item[Biased Rock, Paper, Scissors] is a payoff-skewed version of the one-shot game Rock, Paper, Scissors shown in 
+Figure~\ref{fig:brps}. This game was introduced in \cite{Shafiei09}, and shown that the visit count distribution of 
+DUCT does converge to a fixed balanced situation, but not one that 
+corresponds to the optimal mixed strategy of $(\frac{1}{16},\frac{10}{16},\frac{5}{16})$. 
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=1.0]{figures/biased-rps}
+\end{center}
+\caption{Biased Rock, Paper, Scissors matrix game from~\cite{Shafiei09}. \label{fig:brps}}
+\end{figure}
+
+\item[Goofspiel] is a card game where each player gets 13 cards marked 1-13, and there is a face down
+point-card stack (also 1-13). Every turn, the {\it upcard} (top card of the point-card stack is turned face up,
+Each player chooses a {\it bid} card from their hand simultaneously.
+The player with the higher bid takes the upcard. The bid cards are then discarded and a new round starts.
+At the end of 13 rounds, the player with the highest number of points wins, a tie ends in a draw.
+
+\item[Oshi-Zumo]$(N,K,M)$ is a wrestling simulation game played on a discrete single-dimensional grid with
+$2K+1$ positions, where each player starts with $N$ coins~\cite{buro2003}. A wrestler token begins in the middle
+position. Every turn,
+each player bids $b \ge M$ coins. The coins bid are then discarded and the player bidding the most coins pushes the
+wrestler one position closer to the goal for that player. 
+
+\item[Pursuit Evasion Games]
+
+\item[Random/Synthetic Games]
+
+\item[Tron] is a two-player game played on discrete grid possibly obstructed by walls. At each
+step in Tron both players move to adjacent cells, and a wall is placed in the cells the players started on that turn.
+Both players try to survive as long as possible. If both players can only move into a wall, can only move off the board or move into each other at the same turn, the game ends  in a draw. 
+\end{description}
+
+\subsection{Offline Equilibrium Computation}
+
+\subsection{Online Search}
+
+
+

@@ -3,7 +3,9 @@ The baseline algorithm for solving simultaneous-move games is backward induction
 Therefore, we start our description of the algorithms focusing on algorithms based on the backward induction, then we introduce algorithms based on no-regret learning and Monte Carlo sampling.
 After formally describing the backward induction we present a modification that exploits quick calculation of upper and lower bounds in a simultaneous-move game~(Section~\ref{sec:algs:biab}).
 Then, we further improve the algorithm by speeding up the calculation of NE in stage games, exploiting the iterative framework known as the double-oracle algorithm~(Seciton~\ref{sec:algs:doab}).
-\bbosansky{CFR/MCTS introduction}
+In Section~\ref{sec:algs:cfros} we present counterfactual regret minimization and its sampling variant outcome sampling. 
+Finally, we describe Monte Carlo tree search for simultaneous move games in Section~\ref{sec:algs:smmcts}. 
+%\bbosansky{CFR/MCTS introduction}
 
 \subsection{Backward Induction}\label{sec:algs:bi}
 Standard backward induction algorithm is based on the depth-first search that in each state of the game evaluates all successors, creates matrix game for the current state, solves the matrix game, and propagates back the value of the matrix game. The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:backwardinduction}. When there is a chance node succeeding the current state $s$, the algorithm directly evaluates all successors of this chance node calculating an expected utility: the value of each subgame rooted in node $s'$ calculated by recursive call is weighted by the probability of the stochastic transition $\Delta_{\cT(s,r,c)}$~(line~\ref{alg:bi:recursive}).
@@ -202,8 +204,78 @@ $\lambda_{a_i}$ is calculated by subtracting from the current best response valu
 
 If the currently evaluated action $a_i$ can still be the best response, the value of the successor is determined (first by comparing the bounds). Once the expected outcome against all actions of the opponent is evaluated, the expected value of action $a_i$ is compared against the current best-response value (line~\ref{alg:br:max}) and saved, if the expected utility is higher~(line~\ref{alg:br:save}).
 
+\subsection{Counterfactual Regret Minimization and Outcome Sampling} \label{sec:algs:cfros}
 
-\subsection{Simultaneous-Move Monte Carlo Tree Search (SM-MCTS)}\label{sec:smmcts}
+Counterfactual Regret (CFR) is a notion of regret at the information set level for extensive-form games with imperfect information~\cite{CFR}.
+The CFR algorithm iteratively learns strategies in self-play, producing approximate equilibrium strategues over time. 
+
+Define a {\it history} as a sequence of actions taken by all players (including chance) that starts from the beginning of the game. 
+A history $h'$ is a prefix of another history $h$, denoted $h' \sqsubset h$, if $h$ contains $h'$ (as a prefix sequence of actions).  
+The {\it counterfactual value} of reaching information set $I$ is the expected payoff given that player $i$ played to reach $I$, the opponents played
+$\sigma_{-i}$ and both players played $\sigma$ after $I$ was reached:
+\begin{equation}
+\label{eq:cfv}
+v_i(I,\sigma) = \sum_{(h,z) \in Z_I} \pi^{\sigma}_{-i}(h) \pi^{\sigma}_{i}(h,z) u_i(z), 
+\end{equation}
+where $Z_I = \{ (h,z)~|~z \in Z, h \in I, h \sqsubset z \}$.
+Suppose, at time $t$, player $i$ plays with strategy $\sigma^t_i$.
+Define $\sigma^t_{I \rightarrow a}$ as identical to $\sigma^t$ except at $I$ action $a$ is taken with probability $1$.
+The counterfactual regret of not taking $a \in A(I)$ at time $t$ is $r^t(I,a) = v_i(I,\sigma^t_{I \rightarrow a}) - v_i(I,\sigma^t)$.
+The CFR algorithm maintains the cumulative regret $R^T(I,a) = \sum_{t=1}^T r^t(I,a)$, for every action at every information set.
+Then, the distribution at each information set for the next iteration $\sigma^{T+1}(I)$ is obtained individually using
+regret-matching~\cite{Hart00}. The distribution is proportional to the positive portion of the individual actions' regret:
+\begin{equation*}
+\label{eq:rm}
+\sigma^{T+1}(I,a) = \left\{
+\begin{array}{ll}
+R^{T,+}(I,a) / R^{T,+}_{sum}(I) & \mbox{if } R^{T,+}_{sum}(I) > 0 \\ 
+1 / |A(I)|                   & \mbox{otherwise,}
+\end{array} \right.
+\end{equation*}
+where $x^+ = \max(0,x)$ for any term $x$, and $R^{T,+}_{sum}(I) = \sum_{a' \in A(I)} R^{T,+}(I,a')$. 
+Furthermore, the algorithm maintains for each information set the average   strategy profile
+\begin{equation}
+%\bar{\sigma}^T(I,a) = \frac{1}{T}\sum_{t=1}^T \sigma^t(I,a).
+\bar{\sigma}^T(I,a) = \frac{\sum_{t=1}^T \pi^{\sigma^t}_i(I) \sigma^t(I,a)}{\sum_{t=1} \pi^{\sigma^t}_i(I)}, 
+\end{equation}
+where $\pi^{\sigma^t}_i(I) = \sum_{h \in I}\pi^{\sigma^t}_i(h)$.
+The combination of the counterfactual regret minimizers in individual information sets also minimizes the overall 
+average regret \cite{CFR}, and hence the average profile is a  $2\epsilon$-equilibrium, with $\epsilon \rightarrow 0$
+as $T \rightarrow \infty$.
+
+Monte Carlo Counterfactual Regret Minimization (MCCFR) applies CFR to sampled portions of the games~\cite{Lanctot09Sampling}.
+In the {\it outcome sampling} (OS) variant, a single terminal history $z\in Z$ is sampled in each iteration.
+The algorithm updates the regret in the information sets visited along $z$ using the
+{\it sampled counterfactual value},
+\begin{equation*}
+\tilde{v}_i(I,\sigma) = \left\{
+\begin{array}{ll}
+\frac{1}{q(z)} \pi^{\sigma}_{-i}(z) \pi^{\sigma}_{i}(h,z) u_i(z) & \mbox{if } (h,z) \in Z_I\\
+0  & \mbox{otherwise,}
+\end{array} \right.
+\label{eq:scv}
+\end{equation*}
+where $q(z)$ is the probability of sampling $z$.
+As long as every $z \in Z$ has non-zero probability of being sampled, $\tilde{v}_i(I,\sigma)$ is an unbiased estimate of $v(I,\sigma)$
+due to the importance sampling correction ($1/q(z)$). For this reason, applying CFR updates using these sampled counterfactual regrets
+$\tilde{r}^t(I,a) = \tilde{v}_i(I,\sigma^t_{I \rightarrow a}) - \tilde{v}_i(I,\sigma^t)$
+on the sampled information sets values also eventually converges to the approximate equilibrium of the game with high probability.
+The required number of iterations for convergence is much larger, but each iteration is much faster.
+
+Pseudocode of outcome sampling is presented in Section~\ref{sec:oos}.
+
+% Will put pseudocode in the Online part..?
+%\begin{algorithm2e}[t]
+%\small
+%\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+%\Input{game $g$}
+%\Return 1
+%\caption{Outcome Sampling MCCFR}\label{alg:os}
+%\end{algorithm2e}
+
+
+
+\subsection{Simultaneous-Move Monte Carlo Tree Search (SM-MCTS)} \label{sec:algs:smmcts}
 
 Monte Carlo Tree Search (MCTS) is a simulation-based state space search algorithm often used
 in game trees. The nodes in the tree represent game states. The main idea is to iteratively run
@@ -219,102 +291,153 @@ and the information stored in the tree is updated.
 \begin{algorithm2e}[t]
 \small
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\Input{$s$ -- current state of the game; $i$ -- current player}
+\Input{$s$ -- current state of the game}
 \If{$s \in \cZ$} {
-	\Return \emph{\underline{RetValLeaf}}($u_i(s)$)
+	\Return $u_1(s)$\;
+}
+\If{$s \in \cC$} {
+        Sample $s' \sim \Delta_c(s)$\;
+	\Return SM-MCTS($s'$)\;
 }
 \If{$s \in T$} {
-	$(a_i, a_{-i}) \leftarrow$ \emph{\underline{Select}}$(s)$\;\label{alg:smmcts:select}
-	$s' \leftarrow \cT(s,a_i,a_{-i})$\;
-	$v_{s'} \leftarrow $ SM-MCTS($s',i$)\;
-	$v_{s} \leftarrow$ \emph{\underline{Update}}$(s,a_i,a_{-i},v_{s'})$\;\label{alg:smmcts:up}
-	\Return $v_{s}$
+	$(a_1, a_2) \leftarrow$ \emph{\underline{Select}}$(s)$\;\label{alg:smmcts:select}
+	$s' \leftarrow \cT(s,a_1,a_2)$\;
+	$v_{s'} \leftarrow $ SM-MCTS($s'$)\;
+	\emph{\underline{Update}}$(s,a_1,a_2,v_{s'})$\;\label{alg:smmcts:up}
+	\Return $v_{s'}$\;
 }
 \Else{
 	$T \leftarrow T \cup \lbrace s \rbrace$\;
-	$v_{s} \leftarrow $ \emph{\underline{Rollout}}($s$)\;
-	\Return $v_{s}$
+	$v_{s} \leftarrow$ Rollout($s$)\;
+	\Return $v_{s}$\;
 }
-
-%\If{$s \in T \wedge \exists(a_i, a_{-i}) \in \cA(s)$~not previously visited} {
-%	choose one of the previously unselected $(a_i, a_{-i})$\;
-%	$s' \leftarrow \cT(s,a_i,a_{-i})$\;
-%	$T \leftarrow T \cup \lbrace s' \rbrace$\;
-%	$v_{s'} \leftarrow $ \emph{\underline{Rollout}}($s'$)\;
-%	$X_{s'} \leftarrow X_{s'} + v_{s'}$\;
-%	$n_{s'} \leftarrow n_{s'} + 1$\;
-%	\emph{\underline{Update}}$(s,a_i,a_{-i},v_{s'})$\;\label{alg:smmcts:up1}
-%	\Return \emph{\underline{RetVal}}$(v_{s'}, X_{s'}, n_{s'})$ 	
-%}
-%\Else{
-%	$(a_i, a_{-i}) \leftarrow$ \emph{\underline{Select}}$(s)$\;\label{alg:smmcts:select}
-%	$s' \leftarrow \cT(s,a_i,a_{-i})$\;
-%	$v_{s'} \leftarrow $ SM-MCTS($s',i$)\;
-%	$X_{s} \leftarrow X_{s} + v_{s'}$\;
-%	$n_{s} \leftarrow n_{s} + 1$\;
-%	\emph{\underline{Update}}$(s,a_i,a_{-i},v_{s'})$\;\label{alg:smmcts:up2}
-%	\Return \emph{\underline{RetVal}}$(v_{s'}, X_{s}, n_{s})$ 	
-%}
 \caption{Simultaneous Move Monte Carlo Tree Search}\label{alg:smmmcts}
 \end{algorithm2e}
 
-We first present a generic template of MCTS algorithms for simultaneous move games (SM-MCTS) and then explain specific algorithms derived form this template. Algorithm~\ref{alg:smmmcts} describes a single iteration of the SM-MCTS. $T$ represents the MCTS tree, in which
-each state is represented by one node. Every node $s$ maintains algorithm-specific statistics about the iterations that previously used this node. The template can be instanciated by specific implementations of the updates of the statistics on line~\ref{alg:smmcts:up} and the selection based on these statistics on line \ref{alg:smmcts:select}. 
-Different algorithms can be the bases for the selection functions (e.g., UCB~\cite{UCB}, Exp3~\cite{Auer2003Exp3}, regret matching~\cite{Hart00}, or CFR~\cite{}) and we describe them in the following sections. 
-Moreover, different selection functions need different statistics kept in each node; hence, function \emph{\underline{Update}} also differs. 
-Finally, some algorthms require collecting statistics form more then just the current node during the iteration.
-These statistics are returned be the main iteration function, they can be initialized in \emph{\underline{RetValLeaf}} and further updated as a part of the \emph{\underline{Update}} function.
-For the most basic SM-MCTS algorithms, only the curent sample value is returned by the function and none of these functions modifies it.
+We first present a generic template of MCTS algorithms for simultaneous move games (SM-MCTS) and then explain specific algorithms derived form this template.
+Algorithm~\ref{alg:smmmcts} describes a single iteration of the SM-MCTS. 
+$T$ represents the MCTS tree, in which each state is represented by one node.
+Every node $s$ maintains algorithm-specific statistics about the iterations that previously used this node.
+The template can be instanciated by specific implementations of the updates of the statistics on line~\ref{alg:smmcts:up} and the selection based on these statistics on line \ref{alg:smmcts:select}.
+In the terminal states, the algorithm returns the value of the state for the first player (line 2).
+In the chance nodes, the algorithm selects one of the possible next stated based on the chance distribution (line 4).
+If the current state has a node in the current MCTS tree $T$, the statistics in the node are used to select an action for each player (line~\ref{alg:smmcts:select}.
+These actions are executed (line 8) and the algorithm is called recursively on the resulting state (line 9).
+The result of this call is used to update the statistics maintained for state $s$ (line~\ref{alg:smmcts:up}).
+If the current state is not stored in tree $T$, it is added to the tree (line 13) and its value is estimated usinf the rollout policy (line 14).
 
-\subsubsection{Decoupled Upper-confidence Bound applied to Trees}
+Different algorithms can be the bases for the selection functions (e.g., UCB~\cite{UCB}, Exp3~\cite{Auer2003Exp3}).
+We now present the variants of SM-MCTS that were consistently the most successful in previous works, though more variants can be found in~\cite{Perick12Comparison,Lanctot13Tron,Tak14smmcts}.
+Several examples are depicted in \cite{Tak14smmcts}. 
 
-The most common selection function for SM-MCTS is the Decoupled Upper-confidence Bound applied to Trees(DUCT). For selection and updates, it executes the well-known UCT \cite{kocsis2006} algorithm independently for each of the players in each nodes. The statistics stored in search nodes are independently computed for each action of each player. For player $i\in N$ and action $a_i \in A_i(s)$ the reward sums $X_{a_i}$ and the number of times the action was used $n_{a_i}$ are maintained. When a joint action needs to be selected on line 
-\ref{alg:select}, an action that maximizes the UCB value over their reward estimates is selected for each player independently:
-\[ a_i = \argmax_{a \in A_i(s)}{ \left\{ \bar{X}_{a_i} + C_i \sqrt{\frac{\log n_s}{n_{a_i}}} \right\} }, 
-  \mbox{ where } \bar{X}_{a_i} = \frac{X_{a_i}}{n_{a_i}} \mbox{ and } n_s=\sum_{a_j} n_{a_j}. \] 
-\noindent The update policy increases the visit count and rewards for each player $i$ using $X_{a_i} \leftarrow X_{a_i} + u_i$ 
-and $n_{a_i} \leftarrow n_{a_i} + 1$. The \emph{\underline{RetValLeaf}} and  \emph{\underline{Rollout}} just return the value of the leaf node reach and  \emph{\underline{Update}} does not modify this value. The same value is back-propagated to the root of the MCTS tree.
+\subsubsection{Decoupled Upper-confidence Bound applied to Trees}\label{sec:duct}
 
-After all the simulations are done, there are two options how to determine the resulting action to play. The more standard opttion is to choose for each state the joint move that maximizes $n_{a_i}$ for each player $i$ independently.
-This is suitable mainly for games, in which using mixed strategy is often not necessary.
-Alternatively, the action to play in each state can be determined based on the mixed strategy obtained by normalizing the visit counts of each action ($n_{a_i}$).
+The most common selection function for SM-MCTS is the Decoupled Upper-confidence Bound applied to Trees(DUCT).
+For selection and updates, it executes the well-known UCT \cite{UCT} algorithm independently for each of the players in each nodes.
+The statistics stored in search nodes are independently computed for each action of each player. For player $i\in \cN$ and action $a_i \in \cA_i(s)$ the reward sums $X_{a_i}$ and the number of times the action was used $n_{a_i}$ are maintained.
+When a joint action needs to be selected by the \emph{\underline{Select}} function, an action that maximizes the UCB value over their reward estimates is selected for each player independently:
+\begin{equation}
+a_i = \argmax_{a \in \cA_i(s)}{ \left\{ \bar{X}_{a_i} + C_i \sqrt{\frac{\log n_s}{n_{a_i}}} \right\} },
+  \mbox{ where } \bar{X}_{a_i} = \frac{X_{a_i}}{n_{a_i}} \mbox{ and } n_s=\sum_{a_j} n_{a_j}.
+\end{equation}
+\noindent The \emph{\underline{Update}} function increases the visit count and rewards for each player $i$ and its selected action $a_i$ using $X_{a_i} \leftarrow X_{a_i} + u_i$
+and $n_{a_i} \leftarrow n_{a_i} + 1$.
+%The \emph{\underline{RetValLeaf}} and  \emph{\underline{Rollout}} just return the value of the leaf node reach and  \emph{\underline{Update}} does not modify this value. The same value is back-propagated to the root of the MCTS tree.
+
+After all the simulations are done, there are two options how to determine the resulting action to play.
+The more standard opttion is to choose for each state the action $a_i$ that maximizes $n_{a_i}$ for each player $i$.
+This is suitable mainly for games, in which using mixed strategy is not necessary.
+Alternatively, the action to play in each state can be determined based on the mixed strategy obtained by normalizing the visit counts of each action 
+\begin{equation}
+\sigma_i(a_i) = \frac{n_{a_i}}{\sum_{b_i\in \cA_i(s)} n_{b_i}}.
+\end{equation}
+We call the former DUCT(max) and the latter DUCT(mix).
 Using the first method will certainly not make the algorithm converge to a Nash equilibirum, because the game may require a mixed strategy.
-The second has been shown not to converge to a Nash equilibrium as well; a counter-example in Rock, Paper, Scissors with biased payoffs is shown in \cite{Shafei09}. 
+The second has been shown not to converge to a Nash equilibrium as well; a counter-example in Rock, Paper, Scissors with biased payoffs is shown in \cite{Shafiei09}.\vlisy{Marc defined DUCT(max) as plaxing argmax $X_{a_i}$. We should discuss it.}
 
 Even though DUCT is not guaranteed to converge to the optimal solution, it is often very successful in practice.
 It has been used in and general game playing~\cite{Finnsson12}, in the Internet card game Urban Rivals~\cite{Teytaud11Upper},
-and in the simultaneous move game Tron~\cite{Perick12Comparison}. 
+and in the simultaneous move game Tron~\cite{Perick12Comparison}.
 \mlanctot{Is there an earlier Tron paper where it was used?}
-Note that DUCT is different than UCT run on a game that is transformed to perfect information by serialization of the simultaneous moves, 
+Note that DUCT is different than UCT run on a game that is transformed to perfect information by serialization of the simultaneous moves,
 because in the latter case one player has the advantage of knowing what the other player chose at every stage.
+\vlisy{Mention the randomized exploration and possibly convergence in games with pure strategies.}
 
+\subsubsection{Exponential-weight algorithm for Exploration and Exploitation}\label{sec:exp3}
 
-\subsubsection{Decoupled Exponential weights for Exploration and Exploitation}\label{sec:exp3}
-
-The second most common instantiation of SM-MCTS is to use the Exponential weights for Exploration and Exploitation (Exp3) algorithm \cite{Auer2003Exp3} independently for each of the players. In Exp3, a player maintains an estimate of the sum of rewards for each action, denoted $\hat{X}_{a_i}$. The joint action selected on line \ref{alg:select} is composed of an action independently selected for each player. The probability of sampling action $a_i$ in \emph{\underline{Select}} is proportional to the exponential of the reward estimate:
+The second most common instantiation of SM-MCTS is to use the Exponential-weight algorithm for Exploration and Exploitation (Exp3) algorithm \cite{Auer2003Exp3} independently for each of the players.
+In Exp3, each player maintains an estimate of the sum of rewards for each action, denoted $\hat{X}_{a_i}$. The joint action produced by \emph{\underline{Select}} is composed of an action independently selected for each player.
+The probability of using action $a_i$ is proportional to the exponential of the reward estimates:
 \begin{equation}\label{eq:exp3select}
-\sigma^s(a_i) = \frac{(1-\gamma) \exp(\eta \hat{X}_{a_i})}{\sum_{b_i \in A_i(s)} \exp(\eta \hat{X}_{a_i})} + \frac{\gamma}{|A_i(s)|},
-  \mbox{ where } \eta = \frac{\gamma}{|A_i(h)|}.
+\sigma^s(a_i) = \frac{(1-\gamma) \exp(\eta \hat{X}_{a_i})}{\sum_{b_i \in \cA_i(s)} \exp(\eta \hat{X}_{b_i})} + \frac{\gamma}{|\cA_i(s)|},
+  \mbox{ where } \eta = \frac{\gamma}{|\cA_i(s)|}.
 \end{equation}
 
-This standard formulation of Exp3 is suitable for proving its properties, but straightforward implementation of this formula leads to problems with numerical stability. Both the numerator and denominator of the fraction are too large. For this reason, numerically more stable formulations has been suggested, e.g., in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS}. We use the following reformulation from \cite{Cowling12ISMCTS}:
+This standard formulation of Exp3 is suitable for deriving its properties, but a straightforward implementation of this formula leads to problems with numerical stability. Both the numerator and denominator of the fraction can quickly become too large. For this reason, numerically more stable formulations has been suggested, e.g., in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS}. We use the following quivalent formulation from \cite{Cowling12ISMCTS}:
 \begin{equation}
-\sigma^s(a_i) = \frac{(1-\gamma)}{\sum_{b_i \in A_i(s)}\exp(\eta(\hat{X}_{b_i}-\hat{X}_{a_i}))}
+\sigma_i(a_i) = \frac{(1-\gamma)}{\sum_{b_i \in A_i(s)}\exp(\eta(\hat{X}_{b_i}-\hat{X}_{a_i}))}
 \end{equation}
 
+The update after selecting actions $(a_1,a_2)$ and obtaining a simulation result $v_1$ normalizes the result to the unit interval for each player by
+\begin{equation}
+u_1 \leftarrow \frac{(v_1 - v_{min})}{v_{max} - v_{min}};\;\; u_2 \leftarrow (1-u_1)
+\end{equation}
+and adds to the corresponding reward sum estimates the reward divided by the probability that the action was played by the player using
+\begin{equation}
+\hat{X}_{a_i} \leftarrow \hat{X}_{a_i} + \frac{u_i}{\sigma_i(a_i)}.
+\end{equation}
+Dividing the value by the probability of selecting the corresponding action makes $\hat{x}_{a_i}$ estimate the sum of rewards over all
+iterations, not only the once where $a_i$ was selected.
 
-The \underline{Update} after selecting actions $(i,j)$ and obtaining a result $(u_1,u_2)$ updates the visits count ($n_{h,i} \leftarrow n_{h,i} + 1$) and adds to the corresponding reward sum estimates the reward divided by the probability that the action was played by the player ($x_{h,i} \leftarrow x_{h,i} + u_1/\sigma^s(h,i)$). 
-%The rewards are assumed to be normalized to the unit interval. 
-Dividing the value by the probability of selecting the corresponding action makes $x_{h,i}$ estimate the sum of rewards over all iterations, not only the once where action $i$ was selected. 
-%We are using a numerically more stable version of the formula for computing the distribution presented in \cite{Cowling12ISMCTS}, which is equivalent to the original one \cite{Auer2003Exp3}.
+As the final strategy after all iterations are executed, the algorithm computes the \emph{average strategy} of the Exp3 algorithm over all iterations for each player. After $n$ iterations, it is
+\begin{equation}
+\bar{\sigma}_i(a_i) = \tfrac{1}{n}\sum_{t=1}^n \sigma_i(a_i).
+\end{equation}
+In our implementation, we maintain the cummulative sum and normalize it to obtain the average strategy after the iterations.
 
-%The mixed (\ie randomized) strategy used by player $i$ after the simulations are done is given by the frequencies of visit counts of the actions: $\sigma^{final}(h,i) = n_{h,i}/\sum_{i' \in A_i(h)} n_{h,i'}$. Previous work \cite{Teytaud11Upper} suggests first removing the samples caused by the exploration. This modification proved to be useful also in our experiments, so before computing the resulting final mixed strategy, we set
-%\begin{equation}
-%n_{h,i} \leftarrow \max\left(0,n_{h,i} - \frac{\gamma}{|A_i(h)|}\sum_{i' \in A_i(h)}n_{h,i'}\right).
-%\end{equation}
+Previous work \cite{Teytaud11Upper} suggests first removing the samples caused by the exploration.
+This modification proved to be useful also in our experiments and it has been shown not to reduce the performance substantially in the worst case \cite{kovarik}, so as the resulting final mixed strategy, we use
+\begin{equation}
+\bar{\sigma}_i(a_i) \leftarrow \max\left(0, \bar{\sigma}_i(a_i) - \frac{\gamma}{|\cA_i(s)|}\right),
+\end{equation}
+normalized to sum to one.
 
+\subsection{Regret Matching} \label{sec:rm}
 
-\subsubsection{Regret Matching}
+This variant applies regret matching \cite{Hart00} to the current estimated matrix game at each stage.
+Suppose iterations are numbered from $t \in \{ 1, 2, 3, \cdots \}$ and at each iteration and each decision node $s$
+there is a mixed strategy $\sigma_i^t(s)$ used by each player $i$ for each node $s$ in the tree, initially set to
+uniform random: $\sigma^0_i(s,a) = 1 / |\cA(s)|$.
+Each player $i$ maintains a cumulative regret $r^i_s[a]$ for having played $\sigma_i^t(s)$ instead of $a \in \cA_i(s)$.
+In addition, a table for the average strategy is maintained per player as
+well $\bar{\sigma}^i_s[a]$. The values in both tables are initially set to 0.
 
-\subsubsection{Online Counter-factual Regret Minimization}
+On iteration $t$, the selection policy (line \ref{alg:smmcts:select} in Algorithm~\ref{alg:smmcts}) first builds
+the player's current strategies from the cumulative regret. Define $x^+ = \max(x,0)$,
+\begin{equation}
+\label{eq:rm}
+\sigma^t_i(s,a) = \frac{r^i_s[a]}{R^+_{sum}} \mbox{ if } R^+_{sum} > 0 
+\mbox{ oth. } \frac{1}{|\cA_i(s)|}, \mbox{ where } R^+_{sum} = \sum_{a \in \cA_i(s)}{r^{i,+}_s[a]}. 
+\end{equation}
+The main idea is to adjust the strategy by assigning higher weight proportionally to actions based on the regret of
+having not taken them over the long-term.
+To ensure exploration, an $\gamma$-on-policy sampling procedure similar to Equation~\ref{eq:exp3select} is used
+choosing action $a$ with probability $\gamma/|\cA(s)| + (1-\gamma) \sigma^t_i(s,a)$.
+
+The updates on line \ref{alg:smmcts:up1} and \ref{alg:smmcts:up2} add regret accumulated at the iteration to
+the regret tables $r^i_s$ and the average strategy $\bar{\sigma}^i_s[a]$. Suppose joint action $(a_1,a_2)$ is
+sampled from the selection policy and utility $u_i$ is returned from the recursive call on line~\ref{alg:smmcts:reccall}.
+Label the current child $(i,j)$ estimate $\bar{X}_{s,i,j}$ and the $reward(i,j) = \bar{X}_{s,i,j}$ if
+$(i,j) \not= (a_1,a_2)$, or $u_i$ otherwise. The updates to the regret are:
+\begin{eqnarray*}
+\forall a_1' \in \cA_1(s), ~~  r^1_s[a_1'] \leftarrow r^1_s[a_1'] + ( reward(a_1', a_2) - u_1 ),\\
+\forall a_2' \in \cA_2(s), ~~  r^2_s[a_2'] \leftarrow r^2_s[a_2'] + ( reward(a_1, a_2') - u_2 ),
+\end{eqnarray*}
+\noindent and average strategy updates for each player, $\bar{\sigma}^i_s[a] \leftarrow \bar{\sigma}^i_s[a] + \sigma^t_i(s,a).$
+
+The regret values $r^i_s[a_i]$ are maintained separately by each player, as in DUCT. 
+However, the updates and specifically the reward uses a value that is a function of the joint action space.
+
+After the simulations, a move for the root $s$ is chosen by sampling over the strategy obtained by
+normalizing the values in $\bar{\sigma}_s^i$.
 
