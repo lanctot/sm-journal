@@ -247,14 +247,14 @@ Monte Carlo Counterfactual Regret Minimization (MCCFR) applies CFR to sampled po
 In the {\it outcome sampling} (OS) variant, a single terminal history $z\in Z$ is sampled in each iteration.
 The algorithm updates the regret in the information sets visited along $z$ using the
 {\it sampled counterfactual value},
-\begin{equation*}
+\begin{equation}
 \tilde{v}_i(I,\sigma) = \left\{
 \begin{array}{ll}
 \frac{1}{q(z)} \pi^{\sigma}_{-i}(z) \pi^{\sigma}_{i}(h,z) u_i(z) & \mbox{if } (h,z) \in Z_I\\
 0  & \mbox{otherwise,}
 \end{array} \right.
 \label{eq:scv}
-\end{equation*}
+\end{equation}
 where $q(z)$ is the probability of sampling $z$.
 As long as every $z \in Z$ has non-zero probability of being sampled, $\tilde{v}_i(I,\sigma)$ is an unbiased estimate of $v(I,\sigma)$
 due to the importance sampling correction ($1/q(z)$). For this reason, applying CFR updates using these sampled counterfactual regrets
