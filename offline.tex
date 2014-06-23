@@ -302,7 +302,7 @@ and the information stored in the tree is updated.
 \If{$s \in T$} {
 	$(a_1, a_2) \leftarrow$ \emph{\underline{Select}}$(s)$\;\label{alg:smmcts:select}
 	$s' \leftarrow \cT(s,a_1,a_2)$\;
-	$v_{s'} \leftarrow $ SM-MCTS($s'$)\;
+	$v_{s'} \leftarrow $ SM-MCTS($s'$)\;\label{alg:smmcts:reccall}
 	\emph{\underline{Update}}$(s,a_1,a_2,v_{s'})$\;\label{alg:smmcts:up}
 	\Return $v_{s'}$\;
 }
@@ -311,11 +311,11 @@ and the information stored in the tree is updated.
 	$v_{s} \leftarrow$ Rollout($s$)\;
 	\Return $v_{s}$\;
 }
-\caption{Simultaneous Move Monte Carlo Tree Search}\label{alg:smmmcts}
+\caption{Simultaneous Move Monte Carlo Tree Search}\label{alg:smmcts}
 \end{algorithm2e}
 
 We first present a generic template of MCTS algorithms for simultaneous move games (SM-MCTS) and then explain specific algorithms derived form this template.
-Algorithm~\ref{alg:smmmcts} describes a single iteration of the SM-MCTS. 
+Algorithm~\ref{alg:smmcts} describes a single iteration of the SM-MCTS. 
 $T$ represents the MCTS tree, in which each state is represented by one node.
 Every node $s$ maintains algorithm-specific statistics about the iterations that previously used this node.
 The template can be instanciated by specific implementations of the updates of the statistics on line~\ref{alg:smmcts:up} and the selection based on these statistics on line \ref{alg:smmcts:select}.
@@ -396,7 +396,7 @@ As the final strategy after all iterations are executed, the algorithm computes 
 In our implementation, we maintain the cummulative sum and normalize it to obtain the average strategy after the iterations.
 
 Previous work \cite{Teytaud11Upper} suggests first removing the samples caused by the exploration.
-This modification proved to be useful also in our experiments and it has been shown not to reduce the performance substantially in the worst case \cite{kovarik}, so as the resulting final mixed strategy, we use
+This modification proved to be useful also in our experiments and it has been shown not to reduce the performance substantially in the worst case \cite{kovarik}, \mlanctot{Add missing reference} so as the resulting final mixed strategy, we use
 \begin{equation}
 \bar{\sigma}_i(a_i) \leftarrow \max\left(0, \bar{\sigma}_i(a_i) - \frac{\gamma}{|\cA_i(s)|}\right),
 \end{equation}
@@ -424,7 +424,7 @@ having not taken them over the long-term.
 To ensure exploration, an $\gamma$-on-policy sampling procedure similar to Equation~\ref{eq:exp3select} is used
 choosing action $a$ with probability $\gamma/|\cA(s)| + (1-\gamma) \sigma^t_i(s,a)$.
 
-The updates on line \ref{alg:smmcts:up1} and \ref{alg:smmcts:up2} add regret accumulated at the iteration to
+The update on line \ref{alg:smmcts:up} adds regret accumulated at the iteration to
 the regret tables $r^i_s$ and the average strategy $\bar{\sigma}^i_s[a]$. Suppose joint action $(a_1,a_2)$ is
 sampled from the selection policy and utility $u_i$ is returned from the recursive call on line~\ref{alg:smmcts:reccall}.
 Label the current child $(i,j)$ estimate $\bar{X}_{s,i,j}$ and the $reward(i,j) = \bar{X}_{s,i,j}$ if
