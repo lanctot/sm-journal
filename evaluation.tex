@@ -16,21 +16,60 @@ corresponds to the optimal mixed strategy of $(\frac{1}{16},\frac{10}{16},\frac{
 \caption{Biased Rock, Paper, Scissors matrix game from~\cite{Shafiei09}. \label{fig:brps}}
 \end{figure}
 
-\item[Goofspiel] is a card game where each player gets 13 cards marked 1-13, and there is a face down
-point-card stack (also 1-13). Every turn, the {\it upcard} (top card of the point-card stack is turned face up,
-Each player chooses a {\it bid} card from their hand simultaneously.
-The player with the higher bid takes the upcard. The bid cards are then discarded and a new round starts.
-At the end of 13 rounds, the player with the highest number of points wins, a tie ends in a draw.
+%\item[Goofspiel] is a card game where each player gets 13 cards marked 1-13, and there is a face down
+%point-card stack (also 1-13). Every turn, the {\it upcard} (top card of the point-card stack is turned face up,
+%Each player chooses a {\it bid} card from their hand simultaneously.
+%The player with the higher bid takes the upcard. The bid cards are then discarded and a new round starts.
+%At the end of 13 rounds, the player with the highest number of points wins, a tie ends in a draw.
+\item[Goofspiel] 
+Card game Goofspiel appear in many works dedicated to simultaneous-move games (e.g., \cite{Saffidine12SMAB,Rhoads12Computer,Lanctot13Goofspiel}). 
+There are $3$ identical decks of cards with values $\{1,\dots, d\}$ (one for nature and one for each player), where $d$ is a parameter of the game (classical goofspiel is played with $13$ cards). 
+The game is played in rounds: at the beginning of each round, nature reveals one card from its deck and both players bid for the card by simultaneously selecting (and removing) a card from their hands. 
+A player that selects a higher card wins the round and receives a number of points equal to the value of the nature's card. In case both players select the card with the same value, the nature's card is discarded. 
+When there are no more cards to be played, the winner of the game is chosen based on the sum of card values he received during the whole game. 
+We follow the assumption made in \cite{Saffidine12SMAB} that both players know the sequence of the nature's cards. 
+The game is win-loss; hence, the players receive utility from set $\lbrace -1, 0, 1 \rbrace$.
 
-\item[Oshi-Zumo]$(N,K,M)$ is a wrestling simulation game played on a discrete single-dimensional grid with
-$2K+1$ positions, where each player starts with $N$ coins~\cite{buro2003}. A wrestler token begins in the middle
-position. Every turn,
-each player bids $b \ge M$ coins. The coins bid are then discarded and the player bidding the most coins pushes the
-wrestler one position closer to the goal for that player. 
+
+
+%\item[Oshi-Zumo]$(N,K,M)$ is a wrestling simulation game played on a discrete single-dimensional grid with
+%$2K+1$ positions, where each player starts with $N$ coins~\cite{buro2003}. A wrestler token begins in the middle
+%position. Every turn,
+%each player bids $b \ge M$ coins. The coins bid are then discarded and the player bidding the most coins pushes the
+%wrestler one position closer to the goal for that player.
+\item[Oshi-Zumo] 
+Oshi-Zumo is a board game analyzed from the perspective of computational game theory in \cite{buro2003}.
+There two players in the game, both starting with $N$ number of coins, and there is a playing board represented as a one-dimensional playing field. 
+There are $2K+1$ locations on the field, where $K$ is another parameter of the game.
+At the beginning, there is a stone (or a wrestler) located in the center of the playing field (i.e., at position $K+1$).
+During each move, both players simultaneously place their bid from the amount of coins they have (but at least $M$ if they still have some coins).
+Afterwards, the bids are revealed, both bids are subtracted from the number of coins of the players, and the highest bidder can push the wrestler one location towards the opponent's side.
+If the bids are the same, the wrestler does not move. 
+The game proceeds until the money runs out for both players, or the wrestler is pushed out of the field. 
+The winner is determined based on the position of the wrestler -- the player in whose half the wrestler is located looses the game. 
+If the final position of the wrestler at in the center, the game is a draw.
+Again, the utility values are restricted to $\lbrace -1, 0, 1 \rbrace$.
+In the experiments we varied number of coins and parameter $K$.
 
 \item[Pursuit Evasion Games]
+Another important class of games is pursuit-evasion games (see for example~\cite{nguyen2013monte}).
+There is a single evader and a pursuer that controls 2 pursuing units in our pursuit-evasion game. 
+Since all units move simultaneously, the game has larger branching factor (up to $64$ joint actions).
+The evader wins, if she successfully avoids the units of the pursuer for the whole game; pursuer wins, if her units successfully capture the evader. The evader is captured if either her position is the same as the position of a pursuing unit, or the evader used the same edge as a pursuing unit (in the opposite direction). 
+Again, the game is win-loss and the players receive utility from set $\lbrace -1, 0, 1 \rbrace$.
+We used grid-graphs for the experiments without any obstacles or holes.
+In the experiments we varied the allowed number of moves $d$ and we altered the starting positions of the players (the distance between the pursuers and the evader was always at most $\left\lfloor\frac{2}{3} d\right\rfloor$ moves, in order to provide a possibility for the pursuers to capture the evader).
+
 
 \item[Random/Synthetic Games]
+We also use randomly generated games to be able to experiment with additional parameters of the game, mainly larger utility values and their correlation.
+In randomly generated games, we fixed the number of actions that players can play in each stage to $4$ and $5$ (the results were similar for different branching factors) and we varied depth of the game tree. 
+We use $2$ different methods for randomly assigning the utility values to the terminal states of the game: 
+(1) the utility values are uniformly selected from the interval $\left[0,1\right]$; 
+(2) we randomly assign either $-1$ or $+1$ value to action and the utility value in a leaf is a sum of all values on edges on the path from the root of the game tree to the leaf; 
+The first method produces extremely difficult games for pruning using either alpha-beta search, or double-oracle methods, since there is no correlation between actions and utility values in sibling leafs. 
+The two latter methods are based on random \emph{T-games} \cite{smith1995}, that create more realistic games using the intuition of good and bad moves.
+
 
 \item[Tron] is a two-player game played on discrete grid possibly obstructed by walls. At each
 step in Tron both players move to adjacent cells, and a wall is placed in the cells the players started on that turn.
@@ -38,6 +77,134 @@ Both players try to survive as long as possible. If both players can only move i
 \end{description}
 
 \subsection{Offline Equilibrium Computation}
+We first compare the offline performance of the algorithm -- i.e., we measure overall computation time for each of the algorithms. 
+The reported results are means of several runs of the algorithms -- we used at least $30$ runs for each of the variant of our algorithm. 
+Where necessary, we also discuss the confidence intervals. 
+
+\subsubsection{Goofspiel}
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{figures/GS.pdf}
+\caption{Comparison of running times on Goofspiel with increasing size of the deck.} \label{fig:off:res:gs}
+\end{figure}
+
+Figure~\ref{fig:off:res:gs} depicts the results for the card game Goofspiel (note the logarithmic y-scale).
+The results show that a significant number of sub-games has a pure sub-game Nash equilibrium that can be computed using serialized alpha-beta algorithms.
+Therefore, the performance of $\biab$ and $\doab$ is fairly similar and the gap only slowly increases in favor of $\doab$ with the increasing size of the game.
+Both of these algorithms significantly reduce the number of states visited by the backward induction algorithm (i.e., excluding the number of states evaluated by serialized alpha-beta algorithm).
+While \textsc{BI} algorithm evaluates on average more than $32\cdot10^6$ nodes in the setting with $7$ cards in more than $3$ hours, $\biab$ evaluates only $198986$ nodes in less than $5$ minutes. 
+The performance is further improved by $\doab$ that evaluates on average $51035$ nodes in less than $4$ minutes.
+However, the overhead of the algorithm is slightly higher in case of $\doab$; hence, the difference between $\doab$ and $\biab$ is relatively small in this case.
+Finally, the results show that even simple \textsc{DO} algorithm without serialized alpha-beta search can improves the performance of \textsc{BI}.
+In the setting with $7$ cards, \textsc{DO} evaluates more than $6\cdot10^6$ nodes which takes on average almost 40 minutes.
+
+The results on Goofspiel highly contrast with the Goofspiel results of the pruning algorithm SMABS presented in \cite{Saffidine12SMAB}.
+In their work, the number of evaluated nodes was at best around $20\%$, and the running time improvement was only marginal. 
+
+\begin{figure}
+\centering
+\includegraphics[width=0.85\textwidth]{figures/convergence-gs.pdf}
+\caption{Convergence comparison of different sampling algorithms on Goofspiel with $5$ cards. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:gs}
+\end{figure}
+
+\subsubsection{Pursuit-Evasion Games}
+\begin{figure}
+\centering
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=1\textwidth]{figures/PEG4x4.pdf}\caption{}\label{fig:off:res:peg4}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=1\textwidth]{figures/PEG5x5.pdf}\caption{}\label{fig:off:res:peg5}
+	\end{subfigure}
+\caption{Comparison of running times on pursuit-evasion game with increasing number of moves: sub-figure (a) depicts the results on $4\times4$ grid graph, (b) depicts results for $5\times5$ grid.} \label{fig:off:res:peg}
+\end{figure}
+
+The results on pursuit-evasion games show more significant improvement when comparing $\doab$ and $\biab$ (see Figure~\ref{fig:off:res:peg}). For both graph the $\doab$ is significantly the fastest. When we compare the performance on graph $5\times5$ with depth set to $6$, \textsc{BI} evaluates more than $49\cdot10^6$ nodes that takes more than $13$ hours. On the other hand, $\biab$ evaluates on average $42001$ nodes taking almost $10$ minutes ($584$ seconds). Interestingly, the benefits of pure integration with alpha-beta search is not that helpful in this game.
+This is apparent from results of \textsc{DO} algorithm that evaluates less than $2\cdot10^6$ nodes but it takes slightly over $9$ minutes on average ($547$ seconds). Finally, $\doab$ evaluates only $6692$ nodes and it takes the algorithm less than $3$ minutes.
+
+Large parts of pursuit-evasion game can be solved by serialized alpha-beta algorithms.
+These parts typically corresponds to clearly winning, or clearly loosing positions for a player.
+However, since there are only two pursuit units, it is still necessary to use mixed strategies for final coordination (capturing the evader close to edge of the graph), and thus mixing strategy occurs near the end of the game tree. 
+Therefore, serialized alpha-beta is not able to solve all sub-games, while double-oracle provides additional pruning and cause the improvement in computation time for $\doab$ compared to $\biab$ and all the other algorithms.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.85\textwidth]{figures/convergence-peg.pdf}
+\caption{Convergence comparison of different sampling algorithms on pursuit-evasion game, on $4\times4$ graph, with depth set to $4$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:peg}
+\end{figure}
+
+\subsubsection{Oshi-Zumo}
+\begin{figure}
+\centering
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=1\textwidth]{figures/OZ-K3.pdf}\caption{}\label{fig:off:res:oz3}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=1\textwidth]{figures/OZ-K4.pdf}\caption{}\label{fig:off:res:oz4}
+	\end{subfigure}
+\caption{Comparison of running times on the Oshi-Zumo game with increasing number of coins: sub-figure (a) depicts the results on with $K$ set to $3$, (b) depicts the results with $K=4$.} \label{fig:off:res:oz}
+\end{figure}
+
+Many instances of the Oshi-Zumo game have Nash equilibria in pure strategies. 
+Although this does not hold for all the instances, the size of the sub-games with pure NE are rather large and cause dramatic computation speed-up for both algorithms using serialized alpha-beta search.
+If the game does not have equilibria in pure strategies, the mixed strategies are still required only near the root node and large end-games are solved using alpha-beta search.
+Note that this is different to pursuit-evasion games, where mixed strategies were necessary close to the end of the game tree.
+Figure~\ref{fig:off:res:oz} depicts the results for two different setting of the playing field $K$ is either set to $3$ or $4$.
+In both cases, the graphs clearly highlights when the whole game does not have an equilibrium in pure strategies -- for $K$ equal to $3$, the change occurs when the number of coins increase from $11$ to $12$, for $K=4$ the first setting with non-pure equilibria is in case with $15$ coins for each player.
+
+The consequence of the advantage of $\biab$ and $\doab$ algorithms that exploit serialized variants of alpha-beta algorihtms is dramatic in Oshi-Zumo game. 
+We can see that both \textsc{BI} and \textsc{DO} scale rather badly.
+The algorithms were able to scale up to $13$ coins in reasonable time. 
+For setting with $K=4$ and $13$ coins, it takes almost $2$ hours for \textsc{BI} to solve the game (the algorithm evaluates $15\cdot10^6$ nodes).
+\textsc{DO} improves the performance slightly (the algorithm evaluates nearly $6\cdot10^6$ nodes in $40$ minutes), however, the difference between alpha-beta algorithm is dramatic. 
+Both $\biab$ and $\doab$ are in essence solved by executing a single alpha-beta search on each serialization.
+Therefore, their performance is identical and it takes $21$ seconds to solve the game.
+With an increasing number of coins the algorithms need to find mixed Nash equilibria, however, their performance is in both cases very similar.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.85\textwidth]{figures/convergence-oz.pdf}
+\caption{Convergence comparison of different sampling algorithms on Oshi-Zumo game, with $10$ coins, $K=3$, and $M=1$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:oz}
+\end{figure}
+
+\subsubsection{Random Games}
+Finally we turn to randomly generated games.
+In the first variant of the randomly generated games we used games with utility values randomly drawn from a uniform distribution $[0,1]$. 
+Such games represent an extreme case, where neither alpha-beta search, nor double-oracle algorithm can save much computation time, since each action can lead to arbitrarily good or bad terminal state. 
+In these games, \textsc{BI} algorithm is typically the fastest.
+Even though both $\biab$ and $\doab$ evaluate marginally less nodes ($\approx90\%$), the overhead of the algorithms causes the slower runtime performance.
+
+The situation changes dramatically, when we use the intuition of good and bad moves and thus add correlation to the utility values.
+Figure~\ref{fig:off:res:rg} depicts the results for two different branching factors $4$ and $5$ for each player and increasing depth.
+The results show that $\doab$ significantly outperforms all remaining algorithms and similarly to the larger graph in pursuit-evasion games, \textsc{DO} algorithm is comparable, or slightly better than $\biab$.
+
+The fact that serialized alpha-beta is less successful in randomly generated games is noticeable also when comparing the number of evaluated nodes.
+For case with branching factor set to $4$ for both players, and depth $7$, \textsc{BI} evaluates almost $18\cdot10^6$ nodes in almost $3.5$ hours, while $\biab$ evaluates slightly over $\approx5.2\cdot10^6$ nodes in approximately $1.5$ hour. 
+Although \textsc{DO} evaluates slightly more nodes compared to $\biab$ ($\approx5.7\cdot10^6$), it is marginally faster by $4$ minutes compared to $\biab$. 
+Finally, $\doab$ evaluates only $345237$ nodes on average and it takes the algorithm slightly over $15$ minutes.
+\begin{figure}
+\centering
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=1\textwidth]{figures/RG-BF4-BIN-FALSE.pdf}\caption{}\label{fig:off:res:rgbf4}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=1\textwidth]{figures/RG-BF5-BIN-FALSE.pdf}\caption{}\label{fig:off:res:rgbf5}
+	\end{subfigure}
+\caption{Comparison of running times on randomly generated games with increasing depth: sub-figure (a) depicts the results with branching factor set to $4$ actions for each player, (b) depicts the results with branching factor $5$.} \label{fig:off:res:rg}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.85\textwidth]{figures/convergence-rg.pdf}
+\caption{Convergence comparison of different sampling algorithms on random game with branching factor $4$ and depth $5$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:rg}
+\end{figure}
+
+\subsubsection{Tron}
+\begin{figure}
+\centering
+\includegraphics[width=0.85\textwidth]{figures/convergence-tron.pdf}
+\caption{Convergence comparison of different sampling algorithms on Tron on grid $5\times6$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:rg}
+\end{figure}
 
 \begin{figure}
 \begin{tabular}{|r|rrrrrr|}\hline
