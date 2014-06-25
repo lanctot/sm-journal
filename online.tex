@@ -39,7 +39,7 @@ simultaneous move games.
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \Input{$h$ -- current state of the game; $i$ -- current player; $\pi_i$ -- reach probability for player $i$; $\pi_{-i}$ -- reach probability for opponent of $i$, $s$ -- sample reach probability}
   \lIf{$h \in Z$}{\Return $(s, u_i(z))$} \label{alg:terminal}
-  \ElseIf{$h$ is a chance node}{
+  \ElsIf{$h$ is a chance node}{
     Sample outcome $a$ with probability $\Pr(a)$ \;
     \Return OOS$(ha, i, \pi_i, \pi_{-i}, s \cdot \Pr(a))$\;
   }
