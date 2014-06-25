@@ -3,8 +3,8 @@
 
 In this subsection, we describe the domains used in our experiments.
 
-\begin{description}
-\item[Biased Rock, Paper, Scissors] is a payoff-skewed version of the one-shot game Rock, Paper, Scissors shown in 
+\paragraph{\textbf{Biased Rock, Paper, Scissors}} 
+BRPS is a payoff-skewed version of the one-shot game Rock, Paper, Scissors shown in 
 Figure~\ref{fig:brps}. This game was introduced in \cite{Shafiei09}, and shown that the visit count distribution of 
 DUCT does converge to a fixed balanced situation, but not one that 
 corresponds to the optimal mixed strategy of $(\frac{1}{16},\frac{10}{16},\frac{5}{16})$. 
@@ -21,7 +21,7 @@ corresponds to the optimal mixed strategy of $(\frac{1}{16},\frac{10}{16},\frac{
 %Each player chooses a {\it bid} card from their hand simultaneously.
 %The player with the higher bid takes the upcard. The bid cards are then discarded and a new round starts.
 %At the end of 13 rounds, the player with the highest number of points wins, a tie ends in a draw.
-\item[Goofspiel] 
+\paragraph{\textbf{Goofspiel}}
 Card game Goofspiel appear in many works dedicated to simultaneous-move games (e.g., \cite{Saffidine12SMAB,Rhoads12Computer,Lanctot13Goofspiel}). 
 There are $3$ identical decks of cards with values $\{1,\dots, d\}$ (one for nature and one for each player), where $d$ is a parameter of the game (classical goofspiel is played with $13$ cards). 
 The game is played in rounds: at the beginning of each round, nature reveals one card from its deck and both players bid for the card by simultaneously selecting (and removing) a card from their hands. 
@@ -37,7 +37,7 @@ The game is win-loss; hence, the players receive utility from set $\lbrace -1, 0
 %position. Every turn,
 %each player bids $b \ge M$ coins. The coins bid are then discarded and the player bidding the most coins pushes the
 %wrestler one position closer to the goal for that player.
-\item[Oshi-Zumo] 
+\paragraph{\textbf{Oshi-Zumo}}
 Oshi-Zumo is a board game analyzed from the perspective of computational game theory in \cite{buro2003}.
 There two players in the game, both starting with $N$ number of coins, and there is a playing board represented as a one-dimensional playing field. 
 There are $2K+1$ locations on the field, where $K$ is another parameter of the game.
@@ -51,7 +51,7 @@ If the final position of the wrestler at in the center, the game is a draw.
 Again, the utility values are restricted to $\lbrace -1, 0, 1 \rbrace$.
 In the experiments we varied number of coins and parameter $K$.
 
-\item[Pursuit Evasion Games]
+\paragraph{\textbf{Pursuit Evasion Games}}
 Another important class of games is pursuit-evasion games (see for example~\cite{nguyen2013monte}).
 There is a single evader and a pursuer that controls 2 pursuing units in our pursuit-evasion game. 
 Since all units move simultaneously, the game has larger branching factor (up to $64$ joint actions).
@@ -61,7 +61,7 @@ We used grid-graphs for the experiments without any obstacles or holes.
 In the experiments we varied the allowed number of moves $d$ and we altered the starting positions of the players (the distance between the pursuers and the evader was always at most $\left\lfloor\frac{2}{3} d\right\rfloor$ moves, in order to provide a possibility for the pursuers to capture the evader).
 
 
-\item[Random/Synthetic Games]
+\paragraph{\textbf{Random/Synthetic Games}}
 We also use randomly generated games to be able to experiment with additional parameters of the game, mainly larger utility values and their correlation.
 In randomly generated games, we fixed the number of actions that players can play in each stage to $4$ and $5$ (the results were similar for different branching factors) and we varied depth of the game tree. 
 We use $2$ different methods for randomly assigning the utility values to the terminal states of the game: 
@@ -71,10 +71,10 @@ The first method produces extremely difficult games for pruning using either alp
 The two latter methods are based on random \emph{T-games} \cite{smith1995}, that create more realistic games using the intuition of good and bad moves.
 
 
-\item[Tron] is a two-player game played on discrete grid possibly obstructed by walls. At each
+\paragraph{\textbf{Tron}} is a two-player game played on discrete grid possibly obstructed by walls. At each
 step in Tron both players move to adjacent cells, and a wall is placed in the cells the players started on that turn.
 Both players try to survive as long as possible. If both players can only move into a wall, can only move off the board or move into each other at the same turn, the game ends  in a draw. 
-\end{description}
+
 
 \subsection{Offline Equilibrium Computation}
 We first compare the offline performance of the algorithm -- i.e., we measure overall computation time for each of the algorithms. 
@@ -206,39 +206,49 @@ Finally, $\doab$ evaluates only $345237$ nodes on average and it takes the algor
 \caption{Convergence comparison of different sampling algorithms on Tron on grid $5\times6$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:rg}
 \end{figure}
 
+\subsection{Online Search}
+
 \begin{figure}
 \begin{tabular}{|r|rrrrrr|}\hline
-Goof(100) & DOAB & OOS & UCT & RM  & Exp3 & Rand\\\hline
-DOAB &      &-0.23&     &     &      &0.81 \\ 
-OOS  &0.22  &     & 0.05&     &      &0.50 \\
-UCT  &      &0.02 &     &     &      &     \\
+Goof & DOAB & OOS & UCT & RM  & Exp3 & Rand\\\hline
+DOAB &      &-0.29&     &     &      &0.75 \\ 
+OOS  &0.16  &     &-0.07&     &      &0.36 \\
+UCT  &      &0.05 &     &     &      &     \\
 RM   &      &     &     &     &      &     \\
 Exp3 &      &     &     &     &      &     \\
-Rand &-0.84 &-0.34&     &     &      &     \\\hline
+Rand &-0.83 &-0.31&     &     &      &     \\\hline
 \end{tabular}
 
 \begin{tabular}{|r|rrrrrr|}\hline
-Tron(57) & DOAB & OOS & UCT & RM  & Exp3 & Rand\\\hline
-DOAB &      &0.33 &     &1.00 &      &0.88 \\ 
-OOS  &-0.82 &     &-0.50&     &      &0.88 \\
-UCT  &      &0.56 &     &     &      &     \\
-RM   &-0.22 &     &     &     &      &     \\
+Oshi & DOAB & OOS & UCT & RM  & Exp3 & Rand\\\hline
+DOAB &      &-0.49&     &     &      & 0.92\\ 
+OOS  & -1.00&     &0.04 &     &      & 0.96\\
+UCT  &      &0.32 &     &     &      &     \\
+RM   &      &     &     &     &      &     \\
 Exp3 &      &     &     &     &      &     \\
-Rand &-0.90 &-0.90&     &     &      &     \\\hline
+Rand &-1.00 &-0.97&     &     &      &     \\\hline
 \end{tabular}
 
+
 \begin{tabular}{|r|rrrrrr|}\hline
-Rand(80) & DOAB & OOS & UCT & RM  & Exp3 & Rand\\\hline
-DOAB &      &1.00 &     &1.00 &      &1.00 \\ 
-OOS  &0.91  &     &0.98 &     &      &1.00 \\
+Rand & DOAB & OOS & UCT & RM  & Exp3 & Rand\\\hline
+DOAB &      &0.99 &     &1.00 &      &0.98 \\ 
+OOS  &0.93  &     &0.98 &     &      &1.00 \\
 UCT  &      &1.00 &     &     &      &     \\
-RM   &1.00  &     &     &     &      &     \\
+RM   &0.99  &     &     &     &      &     \\
 Exp3 &      &     &     &     &      &     \\
-Rand &-0.58 &-0.24&     &     &      &     \\\hline
+Rand &-0.58 &-0.29&     &     &      &     \\\hline
 \end{tabular}
-\end{figure}
 
-\subsection{Online Search}
+\begin{tabular}{|r|rrrrrr|}\hline
+Tron & DOAB & OOS & UCT & RM  & Exp3 & Rand\\\hline
+DOAB &      &0.38 &     &1.00 &      &0.90 \\ 
+OOS  &-0.67 &     &-0.48&     &      &0.87 \\
+UCT  &      &0.50 &     &     &      &     \\
+RM   &-0.20 &     &     &     &      &     \\
+Exp3 &      &     &     &     &      &     \\
+Rand &-0.91 &-0.92&     &     &      &     \\\hline
+\end{figure}
 
 
 
