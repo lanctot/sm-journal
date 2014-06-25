@@ -337,15 +337,25 @@ For selection and updates, it executes the well-known UCT \cite{UCT} algorithm i
 The statistics stored in search nodes are independently computed for each action of each player. For player $i\in \cN$ and action $a_i \in \cA_i(s)$ the reward sums $X_{a_i}$ and the number of times the action was used $n_{a_i}$ are maintained.
 When a joint action needs to be selected by the \emph{\underline{Select}} function, an action that maximizes the UCB value over their reward estimates is selected for each player independently:
 \begin{equation}
-a_i = \argmax_{a \in \cA_i(s)}{ \left\{ \bar{X}_{a_i} + C_i \sqrt{\frac{\log n_s}{n_{a_i}}} \right\} },
-  \mbox{ where } \bar{X}_{a_i} = \frac{X_{a_i}}{n_{a_i}} \mbox{ and } n_s=\sum_{a_j} n_{a_j}.
+a_i = \argmax_{a_i \in \cA_i(s)}{ \left\{ \bar{X}_{a_i} + C_i \sqrt{\frac{\log n_s}{n_{a_i}}} \right\} },
+  \mbox{ where } \bar{X}_{a_i} = \frac{X_{a_i}}{n_{a_i}} \mbox{ and } n_s=\sum_{b_i \in \cA_i(s)} n_{b_i}.
 \end{equation}
 \noindent The \emph{\underline{Update}} function increases the visit count and rewards for each player $i$ and its selected action $a_i$ using $X_{a_i} \leftarrow X_{a_i} + u_i$
 and $n_{a_i} \leftarrow n_{a_i} + 1$.
-%The \emph{\underline{RetValLeaf}} and  \emph{\underline{Rollout}} just return the value of the leaf node reach and  \emph{\underline{Update}} does not modify this value. The same value is back-propagated to the root of the MCTS tree.
+
+
+
+Note that UCT does not define what happens which action is selected if multiple actions have identical value in the maximization. It is not relevant in sequential games, but it can have large impact in simultaneous move games. Consider the following matrix game
+\begin{tiny}
+$\left(\begin{array}{cc}
+0 & 1\\
+-1 & 0
+\end{array}\right)$
+\end{tiny}.
+It has only one NE, such that both players play the first action. However, DUC selecting the first or the last action among the options with the same value will always get only the rewards 0 and the bias term will cause the players to round-robin over the diagonal indefinitely. This is clearly not optimal, as each player can than improve by playing first action with probability 1. However, if we choose the action to play randomly among the once with the same probability, DUCT will quickly converge to the optimal solution. Therefore, we use the randomized variant in our implementation.
 
 After all the simulations are done, there are two options how to determine the resulting action to play.
-The more standard opttion is to choose for each state the action $a_i$ that maximizes $n_{a_i}$ for each player $i$.
+The more standard option is to choose for each state the action $a_i$ that maximizes $n_{a_i}$ for each player $i$.
 This is suitable mainly for games, in which using mixed strategy is not necessary.
 Alternatively, the action to play in each state can be determined based on the mixed strategy obtained by normalizing the visit counts of each action 
 \begin{equation}
@@ -353,7 +363,7 @@ Alternatively, the action to play in each state can be determined based on the m
 \end{equation}
 We call the former DUCT(max) and the latter DUCT(mix).
 Using the first method will certainly not make the algorithm converge to a Nash equilibirum, because the game may require a mixed strategy.
-The second has been shown not to converge to a Nash equilibrium as well; a counter-example in Rock, Paper, Scissors with biased payoffs is shown in \cite{Shafiei09}.\vlisy{Marc defined DUCT(max) as plaxing argmax $X_{a_i}$. We should discuss it.}
+The second has been shown not to converge to a Nash equilibrium as well; a counter-example in Rock, Paper, Scissors with biased payoffs is shown in \cite{Shafiei09}.
 
 Even though DUCT is not guaranteed to converge to the optimal solution, it is often very successful in practice.
 It has been used in and general game playing~\cite{Finnsson12}, in the Internet card game Urban Rivals~\cite{Teytaud11Upper},
@@ -361,7 +371,7 @@ and in the simultaneous move game Tron~\cite{Perick12Comparison}.
 \mlanctot{Is there an earlier Tron paper where it was used?}
 Note that DUCT is different than UCT run on a game that is transformed to perfect information by serialization of the simultaneous moves,
 because in the latter case one player has the advantage of knowing what the other player chose at every stage.
-\vlisy{Mention the randomized exploration and possibly convergence in games with pure strategies.}
+\vlisy{Possibly mention convergence in games with pure strategies.}
 
 \subsubsection{Exponential-weight algorithm for Exploration and Exploitation}\label{sec:exp3}
 
@@ -369,13 +379,13 @@ The second most common instantiation of SM-MCTS is to use the Exponential-weight
 In Exp3, each player maintains an estimate of the sum of rewards for each action, denoted $\hat{X}_{a_i}$. The joint action produced by \emph{\underline{Select}} is composed of an action independently selected for each player.
 The probability of using action $a_i$ is proportional to the exponential of the reward estimates:
 \begin{equation}\label{eq:exp3select}
-\sigma^s(a_i) = \frac{(1-\gamma) \exp(\eta \hat{X}_{a_i})}{\sum_{b_i \in \cA_i(s)} \exp(\eta \hat{X}_{b_i})} + \frac{\gamma}{|\cA_i(s)|},
+\sigma_i(a_i) = \frac{(1-\gamma) \exp(\eta \hat{X}_{a_i})}{\sum_{b_i \in \cA_i(s)} \exp(\eta \hat{X}_{b_i})} + \frac{\gamma}{|\cA_i(s)|},
   \mbox{ where } \eta = \frac{\gamma}{|\cA_i(s)|}.
 \end{equation}
 
 This standard formulation of Exp3 is suitable for deriving its properties, but a straightforward implementation of this formula leads to problems with numerical stability. Both the numerator and denominator of the fraction can quickly become too large. For this reason, numerically more stable formulations has been suggested, e.g., in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS}. We use the following quivalent formulation from \cite{Cowling12ISMCTS}:
 \begin{equation}
-\sigma_i(a_i) = \frac{(1-\gamma)}{\sum_{b_i \in A_i(s)}\exp(\eta(\hat{X}_{b_i}-\hat{X}_{a_i}))}
+\sigma^t_i(a_i) = \frac{(1-\gamma)}{\sum_{b_i \in A_i(s)}\exp(\eta(\hat{X}_{b_i}-\hat{X}_{a_i}))}
 \end{equation}
 
 The update after selecting actions $(a_1,a_2)$ and obtaining a simulation result $v_1$ normalizes the result to the unit interval for each player by
@@ -386,14 +396,14 @@ and adds to the corresponding reward sum estimates the reward divided by the pro
 \begin{equation}
 \hat{X}_{a_i} \leftarrow \hat{X}_{a_i} + \frac{u_i}{\sigma_i(a_i)}.
 \end{equation}
-Dividing the value by the probability of selecting the corresponding action makes $\hat{x}_{a_i}$ estimate the sum of rewards over all
+Dividing the value by the probability of selecting the corresponding action makes $\hat{X}_{a_i}$ estimate the sum of rewards over all
 iterations, not only the once where $a_i$ was selected.
 
-As the final strategy after all iterations are executed, the algorithm computes the \emph{average strategy} of the Exp3 algorithm over all iterations for each player. After $n$ iterations, it is
+As the final strategy, after all iterations are executed, the algorithm computes the \emph{average strategy} of the Exp3 algorithm over all iterations for each player. After $n$ iterations in the particular node, it is
 \begin{equation}
-\bar{\sigma}_i(a_i) = \tfrac{1}{n}\sum_{t=1}^n \sigma_i(a_i).
+\bar{\sigma}^t_i(a_i) = \frac{1}{n}\sum_{t=1}^n \sigma^t_i(a_i).
 \end{equation}
-In our implementation, we maintain the cummulative sum and normalize it to obtain the average strategy after the iterations.
+In our implementation, we maintain the cumulative sum and normalize it to obtain the average strategy after the iterations.
 
 Previous work \cite{Teytaud11Upper} suggests first removing the samples caused by the exploration.
 This modification proved to be useful also in our experiments and it has been shown not to reduce the performance substantially in the worst case \cite{kovarik}, \mlanctot{Add missing reference} so as the resulting final mixed strategy, we use
@@ -404,40 +414,29 @@ normalized to sum to one.
 
 \subsection{Regret Matching} \label{sec:rm}
 
-This variant applies regret matching \cite{Hart00} to the current estimated matrix game at each stage.
-Suppose iterations are numbered from $t \in \{ 1, 2, 3, \cdots \}$ and at each iteration and each decision node $s$
-there is a mixed strategy $\sigma_i^t(s)$ used by each player $i$ for each node $s$ in the tree, initially set to
-uniform random: $\sigma^0_i(s,a) = 1 / |\cA(s)|$.
-Each player $i$ maintains a cumulative regret $r^i_s[a]$ for having played $\sigma_i^t(s)$ instead of $a \in \cA_i(s)$.
-In addition, a table for the average strategy is maintained per player as
-well $\bar{\sigma}^i_s[a]$. The values in both tables are initially set to 0.
+This variant applies regret matching \cite{Hart00} to the current estimated matrix game at each stage. The statistics stored by this algorithm in each node are the use count of each joint action ($n_{a_1a_2}$), the sum of rewards for each joint action ($X_{a_1a_2}$). Furthermore, the algorithm for each player $i$ maintains a cumulative regret $r^i_{a_i}$ for having played $\sigma_i^t$ instead of $a_i \in \cA_i(s)$ on iteration $t$, initially set to 0. The regret values $r^i_{a_i}$ are maintained separately by each player, as in DUCT. However, the updates uses a value that is a function of the joint action space. 
 
-On iteration $t$, the selection policy (line \ref{alg:smmcts:select} in Algorithm~\ref{alg:smmcts}) first builds
-the player's current strategies from the cumulative regret. Define $x^+ = \max(x,0)$,
+On iteration $t$, function \emph{\underline{Select}} first builds
+each player's current strategies from the cumulative regrets. Define $x^+ = \max(x,0)$,
 \begin{equation}
 \label{eq:rm}
-\sigma^t_i(s,a) = \frac{r^i_s[a]}{R^+_{sum}} \mbox{ if } R^+_{sum} > 0 
-\mbox{ oth. } \frac{1}{|\cA_i(s)|}, \mbox{ where } R^+_{sum} = \sum_{a \in \cA_i(s)}{r^{i,+}_s[a]}. 
+\sigma^t_i(a_i) = \frac{r^{i+}_{a_i}}{R^+_{sum}} \mbox{ if } R^+_{sum} > 0 
+\mbox{ oth. } \frac{1}{|\cA_i(s)|}, \mbox{ where } R^+_{sum} = \sum_{b_i \in \cA_i(s)}{r^{i+}_{b_i}}.
 \end{equation}
-The main idea is to adjust the strategy by assigning higher weight proportionally to actions based on the regret of
-having not taken them over the long-term.
+The main idea is to adjust the strategy by assigning higher weight proportionally to actions based on the regret of having not taken them over the long-term.
 To ensure exploration, an $\gamma$-on-policy sampling procedure similar to Equation~\ref{eq:exp3select} is used
-choosing action $a$ with probability $\gamma/|\cA(s)| + (1-\gamma) \sigma^t_i(s,a)$.
+choosing action $a_i$ with probability $\gamma/|\cA(s)| + (1-\gamma) \sigma^t_i(a_i)$.
 
-The update on line \ref{alg:smmcts:up} adds regret accumulated at the iteration to
-the regret tables $r^i_s$ and the average strategy $\bar{\sigma}^i_s[a]$. Suppose joint action $(a_1,a_2)$ is
-sampled from the selection policy and utility $u_i$ is returned from the recursive call on line~\ref{alg:smmcts:reccall}.
-Label the current child $(i,j)$ estimate $\bar{X}_{s,i,j}$ and the $reward(i,j) = \bar{X}_{s,i,j}$ if
-$(i,j) \not= (a_1,a_2)$, or $u_i$ otherwise. The updates to the regret are:
-\begin{eqnarray*}
-\forall a_1' \in \cA_1(s), ~~  r^1_s[a_1'] \leftarrow r^1_s[a_1'] + ( reward(a_1', a_2) - u_1 ),\\
-\forall a_2' \in \cA_2(s), ~~  r^2_s[a_2'] \leftarrow r^2_s[a_2'] + ( reward(a_1, a_2') - u_2 ),
-\end{eqnarray*}
-\noindent and average strategy updates for each player, $\bar{\sigma}^i_s[a] \leftarrow \bar{\sigma}^i_s[a] + \sigma^t_i(s,a).$
+\emph{\underline{Update}} adds regret accumulated at the iteration to
+the regret tables $r^i$. Suppose joint action $(a_1,a_2)$ is
+sampled from the selection policy and utility $v_1$ is returned from the recursive call on line~\ref{alg:smmcts:reccall}.
+Label $reward(b_1,b_2) = \frac{X_{b_1b_2}}{n_{b_1b_2}}$ if
+$(b_1,b_2) \not= (a_1,a_2)$, or $v_1$ otherwise. The updates to the regret are:
+\begin{eqnarray}
+\forall b_1 \in \cA_1(s), ~~  r^1_{b_1} \leftarrow r^1_{b_1} + ( reward(b_1, a_2) - v_1 ),\\
+\forall b_2 \in \cA_2(s), ~~  r^2_{b_2} \leftarrow r^2_{b_2} - ( reward(a_1, b_2) - v_1).
+\end{eqnarray}
+%\noindent and average strategy updates for each player, $\bar{\sigma}^i_s[a] \leftarrow \bar{\sigma}^i_s[a] + \sigma^t_i(s,a).$
 
-The regret values $r^i_s[a_i]$ are maintained separately by each player, as in DUCT. 
-However, the updates and specifically the reward uses a value that is a function of the joint action space.
-
-After the simulations, a move for the root $s$ is chosen by sampling over the strategy obtained by
-normalizing the values in $\bar{\sigma}_s^i$.
+After all simulations, the strategy to play in state $s$ is defined by the mean strategy used in the corresponding node as in case of Exp3.
 
