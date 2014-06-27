@@ -1,3 +1,11 @@
+\subsection{Experimental Settings}
+\bbosansky{The following text is only sketched; hence, it is in the comments. Anyone with time can make a nice text out of it :)}\\
+\bbosansky{What do we compare: 1. offline exact algorithms 2. offline convergence for complete strategy (2a. BRPS, 2b. other games), 3. offline regret for the first move, 4. online head-to-head performance}\\
+\bbosansky{Re 2) what does it mean to compute error for sampling algorithms: 
+The error of the algorithms is calculated as a sum of best-response values -- one for each strategy of a player.
+In zero-sum games, this sum converges to zero.}\\
+\bbosansky{Re 3) We create a simple matrix game for the first move for each offline games used for overall convergence, where each value of the matrix will be calculated using DOAB (which should be quick). In the framework this should be relatively easy to implement -- we just create a dummy domain that will take a parameter for any other domain and will simulate all this. Then, all machinery for computing convergence should work without any modifications and the experiments should be relatively quick. What we are hoping for are some results that will be closer to online results since currently there is very small correlation which weakens the paper.}\\
+\bbosansky{Algorithms settings: offline case -- for BI-based, no settings; for sampling: we compared several (at least $3$ different exploration constants), in the results we use only the best setting for each algorithm. Typically, UCT was the most affected with the changes of the exploration factor, while for all other remaining algorithms, the best results were achieved with the same exploration values set to $0.1$ for EXP3 and RM, and to $0.6$ for OOS. The higher the exploration factor for EXP3 and RM, the larger was the final error. Smaller exploration constant causes slower convergence.}
 
 \subsection{Domains}
 
@@ -85,7 +93,6 @@ Both players try to survive as long as possible. If both players can only move i
 \subsection{Offline Equilibrium Computation}
 We first compare the offline performance of the algorithm -- i.e., we measure overall computation time for each of the algorithms. 
 The reported results are means of several runs of the algorithms -- we used at least $30$ runs for each of the variant of our algorithm. 
-Where necessary, we also discuss the confidence intervals. 
 
 \subsubsection{Goofspiel}
 \begin{figure}
@@ -113,6 +120,19 @@ In their work, the number of evaluated nodes was at best around $20\%$, and the 
 \caption{Convergence comparison of different sampling algorithms on Goofspiel with $5$ cards. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:gs}
 \end{figure}
 
+Next we focus on the convergence of sampling algorithms -- i.e., their ability to approximate Nash equilibrium strategies of the complete game. 
+Figure~\ref{fig:off:conv:gs} depicts the results in this offline settings for Goofspiel game with $5$ cards (note the logarithmic x-scale).
+We compare MCTS algorithms with three different selection functions (UCT, EXP3, and RM), and OOS algorithm. 
+The results are means out of $20$ runs of each algorithm.
+The results show that OOS is the fastest out of all sampling algorithms during the whole time. 
+MCTS with Regret Matching selection function is only slightly slower, however, other two selection functions perform worse. 
+While EXP3 eventually converges close to $0$, UCT is not able to reach error lower than $0.5$ (the minimum error was $0.37$ out of all runs and all samples).
+These results confirm theoretical findings for the algorithms -- convergence is not guaranteed for UCT, and can be expensive (i.e., slow) for EXP3. 
+On the other hand, both OOS and RM confirm their quick convergence with is aligned with previous existing results~\cite{}.
+The vertical lines represent times for exact algorithms.
+In Goofspiel $5$, $\biab$ is slightly faster and finishes first in less than $1$ second, following by $\doab$ ($1.52$ seconds), \textsc{DO} ($4.25$ seconds), and \textsc{BI} ($7.11$).
+
+
 \subsubsection{Pursuit-Evasion Games}
 \begin{figure}
 \centering
@@ -138,6 +158,17 @@ Therefore, serialized alpha-beta is not able to solve all sub-games, while doubl
 \includegraphics[width=0.85\textwidth]{figures/convergence-peg.pdf}
 \caption{Convergence comparison of different sampling algorithms on pursuit-evasion game, on $4\times4$ graph, with depth set to $4$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:peg}
 \end{figure}
+
+We turn to convergence of the sampling algorithms.
+The results are depicted in Figure~\ref{fig:off:conv:peg} for the smaller $4\times4$ graph and $4$ number of moves for each player (note again the logarithmic x-scale).
+The results again show that OOS is overall the fastest out of all sampling algorithms, however, during the first iterations both UCT and RM are faster and their exploitability is slightly smaller. 
+On the other hand, while OOS is able to keep the convergence rate and reach almost $0$ exploitability, UCT again converges to exploitable strategy with error $0.73$ at best. 
+The convergence of RM is much better, however the best final error is $0.13$.
+Finally, EXP3 converges even more slowly compared to the goofspiel.
+The main difference between the games is the size of the branching factor for the second player (pursuer controls two simultaneously moving units), which can cause more difficulties for the sampling algorithms to estimate good strategies.
+
+As before, the vertical lines represent times for exact algorithms.
+In pursuit-evasion game of this setting, $\doab$ is slightly faster and finishes first in $2.77$ seconds, following by $\biab$ ($2.89$ seconds), \textsc{DO} ($5.48$ seconds), and \textsc{BI} ($12.5$).
 
 \subsubsection{Oshi-Zumo}
 \begin{figure}
@@ -173,7 +204,12 @@ With an increasing number of coins the algorithms need to find mixed Nash equili
 \caption{Convergence comparison of different sampling algorithms on Oshi-Zumo game, with $10$ coins, $K=3$, and $M=1$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:oz}
 \end{figure}
 
+Figure~\ref{fig:off:conv:oz} depicts results for convergence of the sampling algorithms for the game with $10$ coins, $K$ set to $3$ and minimum bid set to $1$. This is an easy game for $\doab$ and $\biab$ with pure strategy and both of these algorithms are able to solve the game in less than a second ($0.73$). However, due to large branching factor for both players ($10$ actions at the root node for each player) all sampling algorithms converge extremely slowly. Again, OOS is the best one, however, in a given time limit ($500$ seconds) the algorithm converged to error slightly below $0.5$ ($0.41$). On the other hand, all of the other sampling algorithms perform significantly worse -- RM ends with error slightly over $1$, UCT with $1.78$, and EXP3 with $1.88$.
+This confirms our findings from the previous experiment that increasing branching factor slows down the convergence rate.
+Secondly, since there is a pure Nash equilibrium, the convergence of the algorithms is also slower since they essentially mix the strategy during the iterations in order to explore the unvisited parts of the game tree. Since none of the sampling algorithms can exploit the fact, their performance in offline solving games like Oshi-Zumo is quite is not compelling.
+
 \subsubsection{Random Games}
+\bbosansky{I will rewrite these based on new results -- we had a bug in random games (they were not that random) so I am currently re-running all the experiments.}
 Finally we turn to randomly generated games.
 In the first variant of the randomly generated games we used games with utility values randomly drawn from a uniform distribution $[0,1]$. 
 Such games represent an extreme case, where neither alpha-beta search, nor double-oracle algorithm can save much computation time, since each action can lead to arbitrarily good or bad terminal state. 
