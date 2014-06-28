@@ -197,10 +197,10 @@ domains previously used in the literature and over a spectrum of randomly genera
 
 \begin{keyword}
 %% keywords here, in the form: keyword \sep keyword
+simultaneous move games \sep backward induction \sep Monte Carlo tree search \sep Nash equilibrium
 
 %% MSC codes here, in the form: \MSC code \sep code
 %% or \MSC[2008] code \sep code (2000 is the default)
-
 \end{keyword}
 
 \end{frontmatter}
@@ -231,7 +231,7 @@ domains previously used in the literature and over a spectrum of randomly genera
 \label{sec:intro}
 
 Strategic decision-making in multiagent environments is an important problem in artificial intelligence. 
-With the growing number of automated agents interacting with humans and with each other, the need to 
+With the growing number of agents interacting with humans and with each other, the need to 
 understand these strategic interactions at a fundamental level is becoming increasingly important. 
 Today, agent interactions occur in many diverse situations, such as e-commerce, social networking, and 
 general-purpose robotics, each of which create complex problems that arise from conflicting agent 
@@ -247,7 +247,7 @@ in Backgammon~\cite{Tesauro95TDGammon}.
 The most common model for these multistage environments is one with strictly {\it sequential} 
 interactions. That is, each player chooses an action when it is their turn to act, and the environment 
 generates a new state, with the next player's turn to act, and so on. This model is sufficient in many 
-settings, such as Chess and Backgammon, but is not a good representation of the environment when agents 
+settings, such as Chess and Backgammon~\cite{AIbook}, but is not a good representation of the environment when agents 
 are allowed to act simultaneously, such as in real-world situations like auctions and autonomous driving. 
 
 In this paper, we present several algorithms for computing strategies in adversarial settings where
@@ -267,115 +267,14 @@ and whether the agents need to use mixed strategies in order to play optimally.
 
 \bbosansky{Say something about the algorithm? Something about the results?}
 \bbosansky{Outline}
-\input{related.tex}
 
 \section{Simultaneous Move Games}  \label{sec:smg}
 
-A finite game with simultaneous moves and chance can be described by a tuple 
-$(\cN, \cS = \cD\cup\cC\cup\cZ, \cA, \cT, \Delta_c, u_i, s_0)$.
-The player set $\cN = \{ 1, 2, c \}$ contains player labels, where 
-$c$ denotes the chance player and by convention a player is denoted $i \in \cN$.
-$\cS$ is a set of states, with $\cZ$ denoting the terminal states, $\cD$ the states where players make decisions, 
-and $\cC$ the possibly empty set of states where chance events occur. $\cA = \cA_1 \times \cA_2$ is the set of 
-joint actions of individual players. We denote $\cA_i(s)$ the actions available to player $i$ in state $s \in \cS$. 
-The transition function $\cT : \cS \times \cA_1 \times \cA_2 \mapsto \cS$ defines the successor state given a current 
-state and actions for both players. $\Delta_c:\cC \mapsto \Delta(\cS)$ describes a probability distribution over 
-possible successor states of the chance event. The utility functions 
-$u_i : \cZ \mapsto [v_{\min}, v_{\max}] \subseteq \mathbb{R}$ gives the utility of player $i$, with 
-$v_{min}$ and $v_{\max}$ denoting the minimum and maximum possible utility respectively. We assume constant-sum 
-games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$. 
-The game begins in an initial state $s_0$. 
-\bbosansky{redefine stochastic successors $\Delta_c:\cS \mapsto \Delta(\cS)$ (identity for non-chance nodes)}
+\input{smgames.tex} \label{sec:smgames}
 
+\section{Related Work}
 
-\begin{figure}[t!]
-\centering
-\begin{tabular}{c|c|c|}
- \multicolumn{1}{c}{~} & \multicolumn{1}{c}{H}  &  \multicolumn{1}{c}{T}\\\cline{2-3}
-H &  1  &  0\\\cline{2-3}
-T  & 0  &  1\\\cline{2-3}
-\end{tabular}
-\caption{Matrix game of Matching Pennies.\label{fig:matchinPennies}}
-\end{figure}
-
-\begin{figure}[b!]
-\centering
-\begin{subfigure}{12cm}
-\centering
-\includegraphics[width=8.0cm]{figures/tree}\\
-\includegraphics[width=10.0cm]{figures/goof3}\\
-\end{subfigure}%\\
-\caption{Examples of a two-player simultaneous game without chance nodes (top) which has Matching Pennies as a 
-subgame, and a portion of 3-card Goofspiel including chance nodes (bottom).
-The dark squares are terminal states. The values shown are optimal values that could be obtained by backward induction.\\
-\label{fig:example}}
-\end{figure}
-
-A {\it matrix game} is a single step simultaneous move game with action sets $\cA_1$ and $\cA_2$. 
-Each entry in the matrix $A_{rc}$ where $(r,c) \in A_1 \times A_2$ corresponds to a payoff (to player 1) if row $r$ is 
-chosen by player 1 and column $c$ by player 2. 
-For example, in Matching Pennies in Figure~\ref{fig:matchinPennies}, each player has two actions (heads or tails). The row player receives a payoff of 1 
-if both players choose the same action and 0 if they do not match. 
-Two-player simultaneous move games are sometimes called {\it stacked matrix games} because at every state 
-$s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$ that either leads to a terminal state or (possibly after a 
-chance transition) to a subgame which is itself another stacked matrix game. 
-
-A {\it behavioral strategy} for player $i$ is a mapping from states $s \in \cS$
-to a probability distribution over the actions $\cA_i(s)$, denoted $\sigma_i(s)$. 
-Given a profile $\sigma = (\sigma_1, \sigma_2)$, define the probability of reaching a terminal state $z$ under $\sigma$ as 
-$\pi^\sigma(z) = \pi_1(z) \pi_2(z) \pi_c(z)$, where each $\pi_i(z)$ is a product of probabilities of the actions taken 
-by player $i$ along the path to $z$ ($c$ being chance's probabilities). Define $\Sigma_i$ to be the set of behavioral 
-strategies for player $i$. A Nash equilibrium profile in this case is a pair of behavioral strategies optimizing
-\begin{equation}\label{eq:ne}
-V^* = \max_{\sigma_1 \in \Sigma_1} \min_{\sigma_2 \in \Sigma_2} \bE_{z \sim \sigma}[u_1(z)]
-   = \max_{\sigma_1 \in \Sigma_1} \min_{\sigma_2 \in \Sigma_2} \sum_{z \in Z} \pi^\sigma(z) u_1(z).
-\end{equation}
-In other words, none of the players can improve their utility by deviating unilaterally. 
-For example, the Matching Pennies matrix game has a single state and the only equilibrium strategy is to mix equally between 
-both actions, \ie play with a {\it mixed strategy} (distribution) of $(0.5, 0.5)$ giving an expected payoff of $V^* = 0.5$.
-Note that using a randomized (often called mixed) strategy is necessary in this game.
-Any deterministic strategy of one mplayer can be exploited by the opponent. 
-For the same reason, randomized strategies are often necessary also in the multi-stage simultaneous move games. 
-If the strategies also optimize Equation \ref{eq:ne} in each subgame starting in an arbitrary state, the equilibrium strategy 
-is termed subgame perfect.
-
-In two-player constant sum games a (subgame perfect) Nash equilibrium strategy is often considered to be optimal. It guarantees 
-the payoff of at least $V^*$ against any opponent. Any non-equilibrium strategy has its nemesis, which will make it win less 
-than $V^*$ in expectation. Moreover, subgame perfect NE strategy can earn more than $V^*$ against weak opponents. After the 
-opponent makes a sub-optimal move, the strategy will never allow it to gain the loss back.
-The value $V^*$ is known as the minimax-optimal value of the game
-and is the same for every equilibrium profile by von Neumann's minimax theorem.
-
-A two-player simultaneous move game is a specific type of two-player imperfect information extensive-form game. 
-In imperfect information\footnote{In this paper, we use the term {\it imperfect information} to refer to games that have situations 
-where one player knows something that some of the other players do not know. However, every player knows which game they are playing, 
-the distribution of chance event outcomes, and every player's utility function. This is in contrast to 
-{\it imcomplete information} games in which players may also not know (or be fully certain of) the utility functions of their opponents 
-or precisely how nature affects the game.} 
-games, states are grouped into {\it information sets}: two states $s, s' \in I$ if the player 
-to act at $I$ cannot distinguish which of these states the game is currently in. Any simultaneous move game can be modeled 
-using information sets to represent a half-completed transition, \ie $\cT(s, a_1, ?)$ or $\cT(s, ?, a_2)$. 
-For example, the matrix game of Rock, Paper, Scissors can be thought of as a two-step process where the first player commits
-to a choice, writing it on a face-down piece of paper, and then second player responds. Figure~\ref{fig:rps-equiv} shows this
-transormation, which can generally be applied to every state in a simultaneous move game by placing to root of subgame following 
-both players' decisions, or a successor chance node outcome. 
-Therefore, algorithms intended for two-player zero-sum imperfect information games may also be applied to the 
-simultaneous move game's equivalent extensive form. 
-
-\begin{figure}
-\begin{center}
-\begin{tabular}{ccc}
-\includegraphics[scale=1.4]{figures/rps-nfg} & ~~~~~ & \includegraphics[scale=1.0]{figures/rps-efg} \\
-\end{tabular}
-\end{center}
-\caption{The matrix game of Rock, Paper, Scissors (left) and its equivalent extensive-form game representation (right). The extensive 
-game has four states, two information sets ($I_1$ and $I_2$), 
-and nine terminal histories: $\{ Rr, Rp, Rs, Pr, Pp, Ps, Sr, Sp, Ss \}$. \label{fig:rps-equiv}}
-\end{figure}
-
-The model described here is equivalent to two-player finite-horizon Markov Games with chance 
-events. Examples of such games are depicted in Figure~\ref{fig:example}. More examples and recent work 
-can be found in \cite[Chapter 5]{Saffidine2013thesis}.
+\input{related.tex}
 
 \section{Offline Strategy Computation}
 
@@ -385,12 +284,18 @@ can be found in \cite[Chapter 5]{Saffidine2013thesis}.
 
 \input{online.tex}
 
-\section{Empirical Evaluation}
+\section{Empirical Evaluation} \label{sec:eval}
 
 \input{evaluation.tex}
 
 \section{Conclusion}
 
+{\bf Acknowledgements.} This work is partially funded by the Czech Science Foundation (grant no. P202/12/2054), the Grant
+Agency of the Czech Technical University in Prague (grant no. OHK3-060/12), and the Netherlands
+Organisation for Scientific Research (NWO) in the framework of the project Go4Nature, grant number 612.000.938. 
+The access to computing and storage facilities owned by parties and projects contributing to the National Grid 
+Infrastructure MetaCentrum, provided under the 
+programme ``Projects of Large Infrastructure for Research, Development, and Innovations'' (LM2010005) is appreciated.
 
 \bibliographystyle{model1-num-names}
 \bibliography{sm-journal}

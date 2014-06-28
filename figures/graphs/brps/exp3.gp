@@ -2,9 +2,8 @@ set terminal epslatex color colortext standalone header "\\usepackage[T1]{fonten
 set out 'exp3.tex'
 set key out vert
 set key right
-set title 'Exploitability of MCTS-Exp3 in Biased Rock, Paper, Scissors'
+set title 'Exploitability of MCTS-Exp3 in Biased RPS'
 set xlabel 'Iteration'
-set ylabel 'Exploitability'
 set xrange [100000:105000000]
 plot "mcts-exp3-c0.5.dat" using 1:2 with linespoints lt 1 lw 3 title '$\gamma=0.5$', \
      "mcts-exp3-c0.3.dat" using 1:2 with linespoints lt 3 lw 3 title '$\gamma=0.3$', \

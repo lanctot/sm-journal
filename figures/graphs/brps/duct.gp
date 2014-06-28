@@ -2,10 +2,10 @@ set terminal epslatex color colortext standalone header "\\usepackage[T1]{fonten
 set out 'duct.tex'
 set key out vert
 set key right
-set title 'Exploitability of MCTS-UCT in Biased Rock, Paper, Scissors'
+set title 'Exploitability of MCTS-UCT in Biased RPS'
 set xlabel 'Iteration'
-set ylabel 'Exploitability'
 set xrange [100000:105000000]
+set yrange [0.0:]
 plot "mcts-uct-c2.0.dat" using 1:2 with linespoints lt 1 lw 3 title '$C=2.0$', \
      "mcts-uct-c1.8.dat" using 1:2 with linespoints lt 3 lw 3 title '$C=1.8$', \
      "mcts-uct-c1.6.dat" using 1:2 with linespoints lt 4 lw 3 title '$C=1.6$', \

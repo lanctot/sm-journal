@@ -2,9 +2,8 @@ set terminal epslatex color colortext standalone header "\\usepackage[T1]{fonten
 set out 'rm.tex'
 set key out vert
 set key right
-set title 'Exploitability of MCTS-RM in Biased Rock, Paper, Scissors'
+set title 'Exploitability of MCTS-RM in Biased RPS'
 set xlabel 'Iteration'
-set ylabel 'Exploitability'
 set yrange [0:0.11]
 set xrange [100000:105000000]
 plot "mcts-rm-c0.5.dat" using 1:2 with linespoints lt 1 lw 3 title '$\gamma=0.5$', \
