@@ -1,4 +1,5 @@
-This section focuses on problems of offline solving simultaneous-move games. 
+
+This section focuses on algorithms that compute strategies for simultaneous move games. 
 The baseline algorithm for solving simultaneous-move games is backward induction~(Section~\ref{sec:algs:bi}).
 Therefore, we start our description of the algorithms focusing on algorithms based on the backward induction, then we introduce algorithms based on no-regret learning and Monte Carlo sampling.
 After formally describing the backward induction we present a modification that exploits quick calculation of upper and lower bounds in a simultaneous-move game~(Section~\ref{sec:algs:biab}).
@@ -204,77 +205,6 @@ $\lambda_{a_i}$ is calculated by subtracting from the current best response valu
 
 If the currently evaluated action $a_i$ can still be the best response, the value of the successor is determined (first by comparing the bounds). Once the expected outcome against all actions of the opponent is evaluated, the expected value of action $a_i$ is compared against the current best-response value (line~\ref{alg:br:max}) and saved, if the expected utility is higher~(line~\ref{alg:br:save}).
 
-\subsection{Counterfactual Regret Minimization and Outcome Sampling} \label{sec:algs:cfros}
-
-Counterfactual Regret (CFR) is a notion of regret at the information set level for extensive-form games with imperfect information~\cite{CFR}.
-The CFR algorithm iteratively learns strategies in self-play, producing approximate equilibrium strategues over time. 
-
-Define a {\it history} as a sequence of actions taken by all players (including chance) that starts from the beginning of the game. 
-A history $h'$ is a prefix of another history $h$, denoted $h' \sqsubset h$, if $h$ contains $h'$ (as a prefix sequence of actions).  
-The {\it counterfactual value} of reaching information set $I$ is the expected payoff given that player $i$ played to reach $I$, the opponents played
-$\sigma_{-i}$ and both players played $\sigma$ after $I$ was reached:
-\begin{equation}
-\label{eq:cfv}
-v_i(I,\sigma) = \sum_{(h,z) \in Z_I} \pi^{\sigma}_{-i}(h) \pi^{\sigma}_{i}(h,z) u_i(z), 
-\end{equation}
-where $Z_I = \{ (h,z)~|~z \in Z, h \in I, h \sqsubset z \}$.
-Suppose, at time $t$, player $i$ plays with strategy $\sigma^t_i$.
-Define $\sigma^t_{I \rightarrow a}$ as identical to $\sigma^t$ except at $I$ action $a$ is taken with probability $1$.
-The counterfactual regret of not taking $a \in A(I)$ at time $t$ is $r^t(I,a) = v_i(I,\sigma^t_{I \rightarrow a}) - v_i(I,\sigma^t)$.
-The CFR algorithm maintains the cumulative regret $R^T(I,a) = \sum_{t=1}^T r^t(I,a)$, for every action at every information set.
-Then, the distribution at each information set for the next iteration $\sigma^{T+1}(I)$ is obtained individually using
-regret-matching~\cite{Hart00}. The distribution is proportional to the positive portion of the individual actions' regret:
-\begin{equation*}
-\label{eq:rm}
-\sigma^{T+1}(I,a) = \left\{
-\begin{array}{ll}
-R^{T,+}(I,a) / R^{T,+}_{sum}(I) & \mbox{if } R^{T,+}_{sum}(I) > 0 \\ 
-1 / |A(I)|                   & \mbox{otherwise,}
-\end{array} \right.
-\end{equation*}
-where $x^+ = \max(0,x)$ for any term $x$, and $R^{T,+}_{sum}(I) = \sum_{a' \in A(I)} R^{T,+}(I,a')$. 
-Furthermore, the algorithm maintains for each information set the average   strategy profile
-\begin{equation}
-%\bar{\sigma}^T(I,a) = \frac{1}{T}\sum_{t=1}^T \sigma^t(I,a).
-\bar{\sigma}^T(I,a) = \frac{\sum_{t=1}^T \pi^{\sigma^t}_i(I) \sigma^t(I,a)}{\sum_{t=1} \pi^{\sigma^t}_i(I)}, 
-\end{equation}
-where $\pi^{\sigma^t}_i(I) = \sum_{h \in I}\pi^{\sigma^t}_i(h)$.
-The combination of the counterfactual regret minimizers in individual information sets also minimizes the overall 
-average regret \cite{CFR}, and hence the average profile is a  $2\epsilon$-equilibrium, with $\epsilon \rightarrow 0$
-as $T \rightarrow \infty$.
-
-Monte Carlo Counterfactual Regret Minimization (MCCFR) applies CFR to sampled portions of the games~\cite{Lanctot09Sampling}.
-In the {\it outcome sampling} (OS) variant, a single terminal history $z\in Z$ is sampled in each iteration.
-The algorithm updates the regret in the information sets visited along $z$ using the
-{\it sampled counterfactual value},
-\begin{equation}
-\tilde{v}_i(I,\sigma) = \left\{
-\begin{array}{ll}
-\frac{1}{q(z)} \pi^{\sigma}_{-i}(z) \pi^{\sigma}_{i}(h,z) u_i(z) & \mbox{if } (h,z) \in Z_I\\
-0  & \mbox{otherwise,}
-\end{array} \right.
-\label{eq:scv}
-\end{equation}
-where $q(z)$ is the probability of sampling $z$.
-As long as every $z \in Z$ has non-zero probability of being sampled, $\tilde{v}_i(I,\sigma)$ is an unbiased estimate of $v(I,\sigma)$
-due to the importance sampling correction ($1/q(z)$). For this reason, applying CFR updates using these sampled counterfactual regrets
-$\tilde{r}^t(I,a) = \tilde{v}_i(I,\sigma^t_{I \rightarrow a}) - \tilde{v}_i(I,\sigma^t)$
-on the sampled information sets values also eventually converges to the approximate equilibrium of the game with high probability.
-The required number of iterations for convergence is much larger, but each iteration is much faster.
-
-Pseudocode of outcome sampling is presented in Section~\ref{sec:oos}.
-
-% Will put pseudocode in the Online part..?
-%\begin{algorithm2e}[t]
-%\small
-%\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-%\Input{game $g$}
-%\Return 1
-%\caption{Outcome Sampling MCCFR}\label{alg:os}
-%\end{algorithm2e}
-
-
-
 \subsection{Simultaneous-Move Monte Carlo Tree Search (SM-MCTS)} \label{sec:algs:smmcts}
 
 Monte Carlo Tree Search (MCTS) is a simulation-based state space search algorithm often used
@@ -412,7 +342,7 @@ This modification proved to be useful also in our experiments and it has been sh
 \end{equation}
 normalized to sum to one.
 
-\subsection{Regret Matching} \label{sec:rm}
+\subsubsection{Regret Matching} \label{sec:rm}
 
 This variant applies regret matching \cite{Hart00} to the current estimated matrix game at each stage. The statistics stored by this algorithm in each node are the use count of each joint action ($n_{a_1a_2}$), the sum of rewards for each joint action ($X_{a_1a_2}$). Furthermore, the algorithm for each player $i$ maintains a cumulative regret $r^i_{a_i}$ for having played $\sigma_i^t$ instead of $a_i \in \cA_i(s)$ on iteration $t$, initially set to 0. The regret values $r^i_{a_i}$ are maintained separately by each player, as in DUCT. However, the updates uses a value that is a function of the joint action space. 
 
@@ -439,4 +369,143 @@ $(b_1,b_2) \not= (a_1,a_2)$, or $v_1$ otherwise. The updates to the regret are:
 %\noindent and average strategy updates for each player, $\bar{\sigma}^i_s[a] \leftarrow \bar{\sigma}^i_s[a] + \sigma^t_i(s,a).$
 
 After all simulations, the strategy to play in state $s$ is defined by the mean strategy used in the corresponding node as in case of Exp3.
+
+\subsection{Counterfactual Regret Minimization and Outcome Sampling} \label{sec:algs:cfros}
+
+Counterfactual Regret (CFR) is a notion of regret at the information set level for extensive-form games with imperfect information~\cite{CFR}.
+The CFR algorithm iteratively learns strategies in self-play, producing approximate equilibrium strategues over time. 
+
+Define a {\it history} as a sequence of actions taken by all players (including chance) that starts from the beginning of the game. 
+A history $h'$ is a prefix of another history $h$, denoted $h' \sqsubset h$, if $h$ contains $h'$ (as a prefix sequence of actions).  
+The {\it counterfactual value} of reaching information set $I$ is the expected payoff given that player $i$ played to reach $I$, the opponents played
+$\sigma_{-i}$ and both players played $\sigma$ after $I$ was reached:
+\begin{equation}
+\label{eq:cfv}
+v_i(I,\sigma) = \sum_{(h,z) \in Z_I} \pi^{\sigma}_{-i}(h) \pi^{\sigma}_{i}(h,z) u_i(z), 
+\end{equation}
+where $Z_I = \{ (h,z)~|~z \in Z, h \in I, h \sqsubset z \}$.
+Suppose, at time $t$, player $i$ plays with strategy $\sigma^t_i$.
+Define $\sigma^t_{I \rightarrow a}$ as identical to $\sigma^t$ except at $I$ action $a$ is taken with probability $1$.
+The counterfactual regret of not taking $a \in A(I)$ at time $t$ is $r^t(I,a) = v_i(I,\sigma^t_{I \rightarrow a}) - v_i(I,\sigma^t)$.
+The CFR algorithm maintains the cumulative regret $R^T(I,a) = \sum_{t=1}^T r^t(I,a)$, for every action at every information set.
+Then, the distribution at each information set for the next iteration $\sigma^{T+1}(I)$ is obtained individually using
+regret-matching~\cite{Hart00}. The distribution is proportional to the positive portion of the individual actions' regret:
+\begin{equation*}
+\label{eq:rm}
+\sigma^{T+1}(I,a) = \left\{
+\begin{array}{ll}
+R^{T,+}(I,a) / R^{T,+}_{sum}(I) & \mbox{if } R^{T,+}_{sum}(I) > 0 \\ 
+1 / |A(I)|                   & \mbox{otherwise,}
+\end{array} \right.
+\end{equation*}
+where $x^+ = \max(0,x)$ for any term $x$, and $R^{T,+}_{sum}(I) = \sum_{a' \in A(I)} R^{T,+}(I,a')$. 
+Furthermore, the algorithm maintains for each information set the average   strategy profile
+\begin{equation}
+%\bar{\sigma}^T(I,a) = \frac{1}{T}\sum_{t=1}^T \sigma^t(I,a).
+\bar{\sigma}^T(I,a) = \frac{\sum_{t=1}^T \pi^{\sigma^t}_i(I) \sigma^t(I,a)}{\sum_{t=1} \pi^{\sigma^t}_i(I)}, 
+\end{equation}
+where $\pi^{\sigma^t}_i(I) = \sum_{h \in I}\pi^{\sigma^t}_i(h)$.
+The combination of the counterfactual regret minimizers in individual information sets also minimizes the overall 
+average regret \cite{CFR}, and hence the average profile is a  $2\epsilon$-equilibrium, with $\epsilon \rightarrow 0$
+as $T \rightarrow \infty$.
+
+Monte Carlo Counterfactual Regret Minimization (MCCFR) applies CFR to sampled portions of the games~\cite{Lanctot09Sampling}.
+In the {\it outcome sampling} (OS) variant, a single terminal history $z\in Z$ is sampled in each iteration.
+The algorithm updates the regret in the information sets visited along $z$ using the
+{\it sampled counterfactual value},
+\begin{equation}
+\tilde{v}_i(I,\sigma) = \left\{
+\begin{array}{ll}
+\frac{1}{q(z)} \pi^{\sigma}_{-i}(z) \pi^{\sigma}_{i}(h,z) u_i(z) & \mbox{if } (h,z) \in Z_I\\
+0  & \mbox{otherwise,}
+\end{array} \right.
+\label{eq:scv}
+\end{equation}
+where $q(z)$ is the probability of sampling $z$.
+As long as every $z \in Z$ has non-zero probability of being sampled, $\tilde{v}_i(I,\sigma)$ is an unbiased estimate of $v(I,\sigma)$
+due to the importance sampling correction ($1/q(z)$). For this reason, applying CFR updates using these sampled counterfactual regrets
+$\tilde{r}^t(I,a) = \tilde{v}_i(I,\sigma^t_{I \rightarrow a}) - \tilde{v}_i(I,\sigma^t)$
+on the sampled information sets values also eventually converges to the approximate equilibrium of the game with high probability.
+The required number of iterations for convergence is much larger, but each iteration is much faster.
+
+%Pseudocode of outcome sampling is presented in the next subsection.
+
+% Will put pseudocode in the Online part..?
+%\begin{algorithm2e}[t]
+%\small
+%\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+%\Input{game $g$}
+%\Return 1
+%\caption{Outcome Sampling MCCFR}\label{alg:os}
+%\end{algorithm2e}
+
+\subsubsection{Online Outcome Sampling} \label{sec:oos}
+
+Online Outcome Sampling (OOS) is a version of outcome sampling MCCFR described in 
+Section~\ref{sec:algs:cfros}. It resembles MCTS in that it builds its tree incrementally, however it 
+is based on outcome sampling MCCFR rather than on UCB. The algorithm as applied to full imperfect information
+games is found in~\cite{Lanctot14OOS}. Here, we describe a simplified version specifically designed for 
+simultaneous move games. 
+
+% Note, mlanctot: \ElsIf breaks compilation for me but \ElseIf works
+%bb: Interestingly, \ElseIf does not work for me, but \ElsIf does ... maybe different versions of algorithm2e ?
+\begin{algorithm2e}[t]
+\small
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\Input{$h$ -- current state of the game; $i$ -- current player; $\pi_i$ -- reach probability for player $i$; $\pi_{-i}$ -- reach probability for opponent of $i$, $s$ -- sample reach probability}
+  \lIf{$h \in Z$}{\Return $(s, u_i(z))$} \label{alg:terminal}
+  \ElsIf{$h$ is a chance node}{
+    Sample outcome $a$ with probability $\Pr(a)$ \;
+    \Return OOS$(ha, i, \pi_i, \pi_{-i}, s \cdot \Pr(a))$\;
+  }
+  $I \gets $ information set of player $P(h)$ at $h$ \;
+  Sample $a \sim \Phi(I, i, \epsilon)$ with prob. $\Pr(a)$ \; \label{alg:sample}
+  \If{$I$ is not in memory}{
+    Add $I$ to memory \;
+    $\sigma(I) \leftarrow \mbox{Unif}(A(I))$ \;
+    $(q(z), u_i(z)) \gets $ Playout$(ha, s \cdot \Pr(a))$ \;         \label{alg:playout}
+  }
+  \Else{
+    $\sigma(I) \gets $ RegretMatching$(R_I)$ \;
+    $\pi_{P(h)}' \gets \sigma(I,a)\pi_{P(h)}$ \;    \label{alg:newreaches1}
+    $\pi_{-P(h)}' \gets \pi_{-P(h)}$ \;             \label{alg:newreaches2}
+    $(q(z), u_i(z)) \gets$ OOS$(ha, i, \pi_i', \pi_{-i}', s \cdot \Pr(a))$ \;
+  }
+  \For{$a' \in A(I)$}{
+    \If{$P(h) = i$}{
+      Update $R_I[a']$ for each $a' \in A(I)$ using $\tilde{r}^t(I,a)$ according to Eq.~\ref{eq:scv}
+    }
+    \Else{
+      Update $S_I[a'] \gets S_I[a'] + \frac{1}{s} \pi_{-i} \sigma(I,a')$ for each $a' \in A(I)$ \;  \label{alg:avgstrat}
+    }
+  }
+  \Return $(q(z), u_i(z))$ \;   \label{alg:returnend}
+  \vspace{0.1cm}
+  \caption{Simultaneous Move Online Outcome Sampling. \label{alg:oos}}
+\end{algorithm2e}
+
+
+
+One iteration of the algorithm requires, as input, the current state of the game and a player role $i$. 
+Each iteration the player role $i$ is alternated. As the algorithm is applied to the imperfect information 
+representation of the simultaneous move game (described in Section~\ref{sec:smg}), we use histories $h$ 
+and information sets $I$ rather than states. 
+
+An information set tree is incrementally built, starting with the searching player's root information set.
+An information set stores two tables: $R_I$ stores the cumulative regret $R^T(I,a)$ for each action, 
+and average strategy table $S_I$ which stores the cumulative average strategy contribution for each action. 
+An $\epsilon$-on-policy sampling distribution used to sample actions, defined as
+\begin{equation*}
+\label{eq:ossample}
+\Phi(I,i,\epsilon) = \left\{
+\begin{array}{ll}
+\epsilon \cdot \mbox{Unif}(A(I)) + (1-\epsilon)\sigma_i(I) & \mbox{if } P(I) = i\\ 
+\sigma_i(I)                                          & \mbox{otherwise,}
+\end{array} \right.
+\end{equation*}
+and denote $\Phi(I,i,\epsilon,a)$ the probability of sampling $a \in A(I)$.
+
+
+
+
 
