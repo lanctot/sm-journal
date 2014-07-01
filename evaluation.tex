@@ -207,21 +207,24 @@ This confirms our findings from the previous experiment that increasing branchin
 Secondly, since there is a pure Nash equilibrium, the convergence of the algorithms is also slower since they essentially mix the strategy during the iterations in order to explore the unvisited parts of the game tree. Since none of the sampling algorithms can exploit the fact, their performance in offline solving games like Oshi-Zumo is quite is not compelling.
 
 \subsubsection{Random Games}
-\bbosansky{I will rewrite these based on new results -- we had a bug in random games (they were not that random) so I am currently re-running all the experiments.}
-Finally we turn to randomly generated games.
 In the first variant of the randomly generated games we used games with utility values randomly drawn from a uniform distribution $[0,1]$. 
 Such games represent an extreme case, where neither alpha-beta search, nor double-oracle algorithm can save much computation time, since each action can lead to arbitrarily good or bad terminal state. 
 In these games, \textsc{BI} algorithm is typically the fastest.
-Even though both $\biab$ and $\doab$ evaluate marginally less nodes ($\approx90\%$), the overhead of the algorithms causes the slower runtime performance.
+Even though both $\biab$ and $\doab$ evaluate marginally less nodes ($\approx90\%$), the overhead of the algorithms (repeated calculation of alpha-beta algorithm, repeatedly solving linear programs, etc.) causes slower runtime performance in this case.
 
-The situation changes dramatically, when we use the intuition of good and bad moves and thus add correlation to the utility values.
+However, completely random games are rarely instances that need to be solved in practice.
+The situation changes, when we use the intuition of good and bad moves and thus add correlation to the utility values.
 Figure~\ref{fig:off:res:rg} depicts the results for two different branching factors $4$ and $5$ for each player and increasing depth.
-The results show that $\doab$ significantly outperforms all remaining algorithms and similarly to the larger graph in pursuit-evasion games, \textsc{DO} algorithm is comparable, or slightly better than $\biab$.
+The results show that $\doab$ outperforms all remaining algorithms, although the difference is rather small (still statistically significant).
+On the other hand, \textsc{DO} without serialized alpha-beta is not able to outperform \textsc{BI}. 
+This is most likely caused by a larger support in mixed sub-game equilibria that cause enumerating most of the actions by the double-oracle algorithm. 
+Moreover, this is also demonstrated by the performance of $\biab$ that is only slightly better compared to \textsc{BI}.
 
 The fact that serialized alpha-beta is less successful in randomly generated games is noticeable also when comparing the number of evaluated nodes.
-For case with branching factor set to $4$ for both players, and depth $7$, \textsc{BI} evaluates almost $18\cdot10^6$ nodes in almost $3.5$ hours, while $\biab$ evaluates slightly over $\approx5.2\cdot10^6$ nodes in approximately $1.5$ hour. 
-Although \textsc{DO} evaluates slightly more nodes compared to $\biab$ ($\approx5.7\cdot10^6$), it is marginally faster by $4$ minutes compared to $\biab$. 
-Finally, $\doab$ evaluates only $345237$ nodes on average and it takes the algorithm slightly over $15$ minutes.
+For case with branching factor set to $4$ for both players, and depth $7$, \textsc{BI} evaluates almost $18\cdot10^6$ nodes in almost $3.5$ hours, while $\biab$ evaluates more than $\approx10\cdot10^6$ nodes in almost $3$ hours. 
+\textsc{DO} evaluates even more nodes compared to $\biab$ ($\approx12\cdot10^6$) and it is slower compared to both \textsc{BI} and $\biab$. 
+Finally, $\doab$ evaluates $\approx2\cdot10^6$ nodes on average and it takes the algorithm slightly over $80$ minutes.
+
 \begin{figure}
 \centering
 	\begin{subfigure}{0.49\textwidth}
