@@ -15,10 +15,12 @@ The main focus is to compute an optimal strategy for this heuristic approximatio
 Under limited time settings, a search algorithm is given a fixed time budget to compute a strategy. 
 Since it is difficult to predict in advance the highest depth that can run in the alotted time, 
 {\it interative deepening} is employed~\cite{Marsland83}. The main idea is to run several depth-limited 
-minimax searches, starting at a low depth and iterativel increasing the depth of each successive search. 
-In sequential perfect information games, several enhancements can applied due to researching the same 
+minimax searches, starting at a low depth and iteratively increasing the depth of each successive search. Note that the depth limit of $d$ means that the algorithm will evaluate $d$ pairs of simultaneous actions, each pair preceded by action of nature if present.  
+In sequential perfect information games, several enhancements can be applied due to researching the same 
 nodes, most of which are not immediately applicable in simultaneous move games. However, whether new 
 enhancements can be defined for this class of games remains an open research question. 
+
+Furthermore we exploit the fact that the solution in a state $s$ with the depth limit of $d$ contains all the solutions in states $\cT(s)$ with the depth limit $d - 1$ (when omitting pruning techniques). This allows us to start the iterative deepening in any state $s' \in \cT(s)$ with depth $d$, reusing the result from previous computation if the time limit does not allow full evaluation of the subgame with the root in $s'$. 
 
 In our search experiments, we use a depth-limited online version of Algorithm \ref{alg:doab}. To the 
 best of our knowledge, this is the first time that depth-limited backward induction has been used for 

@@ -60,7 +60,7 @@ If the values of both serialized games are equal, then this is equal also to the
 Obtaining these bounds can speed-up the backward induction algorithm. 
 Algorithm~\ref{alg:backwardinduction-ab} depicts the pseudocode.
 When the backward induction starts evaluating successors of the current state, the algorithm calculates upper and lower bounds using alpha-beta algorithm on serialized variants of the subgame rooted in the successor $s'$ (lines~\ref{alg:biab:ab1}-\ref{alg:biab:ab2}). The serialized game is solved using standard alpha-beta algorithm, where the second player \vlisy{Unfinished sentence?}
-If the bounds are equal, the algorithm stores the value (line~\ref{alg:biab:saving}) instead of performing a recursive call~(line~\ref{alg:biab:recursive}).
+If the bounds are equal, the algorithm stores the value (line~\ref{alg:biab:saving}) instead of performing a recursive call~(line~\ref{alg:biab:recursive}). \jcermak{The only part mentioning strategy retrieval, should it be moved to online alg. description?} When such a cut-off occurs, one needs to extract the strategy from alpha-beta. Since the alpha-beta operates on a serialized version of the game, the actions played by the player with the additional information caused by observing the choice of his opponent cannot be used. This player is not forced to play according to the Nash equilibrium of the original non-serialized game, because the serialized game permits him to choose different action for every choice of the first player. And so one needs to extract the strategy for player $i$ from alpha-beta where $i$ plays first. The same goes for the strategy of $-i$.
 
 \begin{algorithm2e}[t]
 \small
