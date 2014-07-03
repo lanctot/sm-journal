@@ -1,11 +1,40 @@
 \subsection{Experimental Settings}
-\bbosansky{The following text is only sketched; hence, it is in the comments. Anyone with time can make a nice text out of it :)}\\
-\bbosansky{What do we compare: 1. offline exact algorithms 2. offline convergence for complete strategy (2a. BRPS, 2b. other games), 3. offline regret for the first move, 4. online head-to-head performance}\\
-\bbosansky{Re 2) what does it mean to compute error for sampling algorithms: 
-The error of the algorithms is calculated as a sum of best-response values -- one for each strategy of a player.
-In zero-sum games, this sum converges to zero.}\\
-\bbosansky{Re 3) We create a simple matrix game for the first move for each offline games used for overall convergence, where each value of the matrix will be calculated using DOAB (which should be quick). In the framework this should be relatively easy to implement -- we just create a dummy domain that will take a parameter for any other domain and will simulate all this. Then, all machinery for computing convergence should work without any modifications and the experiments should be relatively quick. What we are hoping for are some results that will be closer to online results since currently there is very small correlation which weakens the paper.}\\
-\bbosansky{Algorithms settings: offline case -- for BI-based, no settings; for sampling: we compared several (at least $3$ different exploration constants), in the results we use only the best setting for each algorithm. Typically, UCT was the most affected with the changes of the exploration factor, while for all other remaining algorithms, the best results were achieved with the same exploration values set to $0.1$ for EXP3 and RM, and to $0.6$ for OOS. The higher the exploration factor for EXP3 and RM, the larger was the final error. Smaller exploration constant causes slower convergence.}
+We now turn to thorough experimental evaluation of the described algorithms.
+We analyze both offline and online case on a collection of games that are inspired by games used for experimental evaluation in previous works, and randomly generated games.
+After describing the rules of the games, we present the results for the offline case. 
+
+First of all we begin with the experimental evaluation of a well-known example of biased rock-paper-scissors~\cite{Shafiei09} that often serves as an example that MCTS with UCT selection function does not converge to a Nash equilibrium.~\bbosansky{In the description of UCT we need to suggest that there are two things how to do it (deterministically, randomly) -- in the experiments only refer to this.} 
+We reproduce this experiment and show the differences in performance of the sampling algorithms -- primarily the impact of randomization in UCT.
+Next we compare the offline performance of the algorithms on other domains.
+For each domain we at first analyze exact algorithms and measure the computation time it takes the algorithms to solve given instance of the game. 
+We compute mean out of at least $30$ runs for each game settings. 
+Afterwards we analyze the convergence of the approximative algorithms.
+For each algorithm we sample actual strategy in selected time steps and calculate the current error of the algorithm -- i.e., a sum of best-response values (one for each strategy of a player).
+This value converges to $0$ as the algorithm converges to a Nash equilibrium in zero-sum games.
+In each offline convergence setting, the reported values are means out of $20$ runs of each sampling algorithm on a single instance of the game.
+
+Finally, we turn to the comparison of the algorithms in the online setting and we present head-to-head tournament on each domain.
+We used larger instances of games and calculated win-rate for each algorithm.
+We use two different restrictions to computation time per move: 1 second and 5 seconds. 
+The first one is more common in previous works focused on online comparison of the algorithms~\cite{XXX}\bbosansky{Reference missing -- ideally several works with different authors that use this settings.}, second one allow us to see the difference if the algorithms have more computation time.
+As indicated before, online algorithms based on the backward induction need to use domain-specific evaluation function in the online settings.
+This may gave these algorithms an advantage if the evaluation function is very precise.
+Therefore, for selected domains we also run sampling-based algorithms with an evaluation function compare the algorithms in a more fair settings.
+Reported results are mean of at least $1000$ matches for the $1$ second case, and at least $100$ matches for the $5$ second case.
+Where necessary, we run additional experiments to obtain statistically significant results.
+
+Each of the described algorithms were implemented in a generic framework for modeling and solving extensive-form games\footnote{Source codes are available at \texttt{http://agents.felk.cvut.cz/topics/Computational\_\newline game\_theory}.}.
+We are interested in the performance of the algorithms and their ability to find or approximate the optimal behavior.
+Therefore, with the exception of the evaluation function used in selected online experiments, no algorithm is using any domain-specific knowledge.
+
+
+%\bbosansky{The following text is only sketched; hence, it is in the comments. Anyone with time can make a nice text out of it :)}\\
+%\bbosansky{What do we compare: 1. offline exact algorithms 2. offline convergence for complete strategy (2a. BRPS, 2b. other games), 3. online head-to-head performance}\\
+%\bbosansky{Re 2) what does it mean to compute error for sampling algorithms: 
+%The error of the algorithms is calculated as a sum of best-response values -- one for each strategy of a player.
+%In zero-sum games, this sum converges to zero.}\\
+%\bbosansky{Re 3) We create a simple matrix game for the first move for each offline games used for overall convergence, where each value of the matrix will be calculated using DOAB (which should be quick). In the framework this should be relatively easy to implement -- we just create a dummy domain that will take a parameter for any other domain and will simulate all this. Then, all machinery for computing convergence should work without any modifications and the experiments should be relatively quick. What we are hoping for are some results that will be closer to online results since currently there is very small correlation which weakens the paper.}\\
+%\bbosansky{Algorithms settings: offline case -- for BI-based, no settings; for sampling: we compared several (at least $3$ different exploration constants), in the results we use only the best setting for each algorithm. Typically, UCT was the most affected with the changes of the exploration factor, while for all other remaining algorithms, the best results were achieved with the same exploration values set to $0.1$ for EXP3 and RM, and to $0.6$ for OOS. The higher the exploration factor for EXP3 and RM, the larger was the final error. Smaller exploration constant causes slower convergence.}
 
 \subsection{Domains}
 
@@ -253,16 +282,6 @@ Finally, $\doab$ evaluates $\approx2\cdot10^6$ nodes on average and it takes the
 
 \begin{figure}
 \begin{tiny}
-%\begin{tabular}{|r|rrrrrr|r|}\hline
-%Goof&DOAB&OOS&UCT&EXP3&RM&RAND&Param\\\hline
-%DOAB&0.31(0.30)&-0.10(0.31)&-0.20(0.30)&-0.57(0.24)&0.73(0.21)&0.70(0.22)&eval1\\
-%OOS&0.27(0.29)&0.01(0.31)&-0.01(0.31)&-0.19(0.30)&0.66(0.24)&0.35(0.29)&0.6\\
-%UCT&0.43(0.28)&-0.16(0.31)&-0.06(0.30)&0.06(0.30)&0.67(0.23)&0.23(0.30)&2\\
-%EXP3&0.68(0.22)&0.13(0.29)&-0.12(0.30)&0.02(0.12)&0.96(0.08)&0.26(0.29)&0.2\\
-%RM&0.62(0.24)&0.20(0.29)&-0.22(0.29)&-0.07(0.12)&0.99(0.03)&0.66(0.23)&0.4\\
-%RAND&-0.68(0.23)&-0.38(0.28)&-0.13(0.31)&-0.41(0.28)&0.52(0.25)&-0.10(0.31)&\\\hline
-%\end{tabular}
-
 \begin{tabular}{|r|rrrrrr|r|}\hline
 Goof&DOAB&OOS&UCT&EXP3&RM&RAND&Param\\\hline
 DOAB&49.5(3.2)&35.1(3.0)&25.5(2.8)&13.8(2.2)&18.9(2.5)&91.2(1.8)&eval2\\
