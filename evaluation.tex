@@ -116,6 +116,42 @@ The two latter methods are based on random \emph{T-games} \cite{smith1995}, that
 step in Tron both players move to adjacent cells, and a wall is placed in the cells the players started on that turn.
 Both players try to survive as long as possible. If both players can only move into a wall, can only move off the board or move into each other at the same turn, the game ends  in a draw. 
 
+\subsection{Non-Convergence and Random Tie-Breaking in DUCT} 
+
+As mentioned above, a counter-example was given in \cite{Shafiei09} showing that 
+DUCT does not converge to an equilibrium strategy in Biased Rock, Paper, Scissors 
+when using a mixed strategy by normalizing the visit count.
+In our last experiment, we revisit and expand upon on this result, showing an interesting 
+synchronization effect when the UCT selection mechanism is fully deterministic.
+
+We run MCTS with UCT, Exp3, and Regret Matching variants on Biased Rock, Paper, Scissors
+for 100 million ($10^8$) iterations, measuring the exploitability of the strategy recommended by 
+each variant at regular intervals. The results are shown in Figure~\ref{fig:expl-brps}.
+
+\begin{figure}[t]
+\begin{tabular}{cc}
+\hspace{-1cm} \includegraphics[scale=0.56]{figures/graphs/brps/duct} & \includegraphics[scale=0.56]{figures/graphs/brps/duct-nondet}\\
+\hspace{-1cm} \includegraphics[scale=0.56]{figures/graphs/brps/exp3} & \includegraphics[scale=0.56]{figures/graphs/brps/rm}\\
+\end{tabular}
+\caption{Exploitability of strategies of recommended by MCTS over time. Vertical axis represents exploitability. \label{fig:expl-brps}}
+\end{figure}
+
+The first observation is that UCT does not seem to converge to a low-exploitability strategy. The exploitability of the strategies of 
+Exp3 and RM variants do converge to low-exploitability strategies, and rate and resulting the approximation depend on the amount of exploration. 
+If less exploration is used, then the resulting strategy is less exploitable, which is natural in the case of a single state. RM does seem to 
+converge slightly faster than Exp3, as seen in the full simultaneous games as well. 
+
+We then tried adding a stochastic tie-breaking rule to the UCT selection mechanism typically used in MCTS implementations, that chooses an 
+action randomly when the scores of the best values are ``tied'' (less than $0.01$ apart.)
+One particularly striking observation is that this simple addition leads to a large drop in resulting exploitability, where exploitability
+ranges from $[0.5,0.8]$ in the deterministic case, compared to $[0.01,0.05]$ with stochastic tie-breaking. 
+
+We investigated this further and found a possible
+explanation of this behavior. Consider the matrix game on the right of Figure~\ref{fig:egMatrixGames} in Section~\ref{sec:smgames}.
+Suppose DUCT is run on this game and players deterministically prefer the left-action. 
+DUCT will always recieve rewards 0 and the exploration bias term will cause the players to round-robin over the actions indefinitely. 
+However, each player can than improve by playing first action with probability 1. Breaking ties stochastically will lead the algorithm to 
+discover the 1 and -1 rewards with high probability and allow the algorithm the break out or avoid this synchronization trap.
 
 \subsection{Offline Equilibrium Computation}
 We first compare the offline performance of the algorithm -- i.e., we measure overall computation time for each of the algorithms. 
@@ -138,7 +174,7 @@ However, the overhead of the algorithm is slightly higher in case of $\doab$; he
 Finally, the results show that even simple \textsc{DO} algorithm without serialized alpha-beta search can improves the performance of \textsc{BI}.
 In the setting with $7$ cards, \textsc{DO} evaluates more than $6\cdot10^6$ nodes which takes on average almost 40 minutes.
 
-The results on Goofspiel highly contrast with the Goofspiel results of the pruning algorithm SMABS presented in \cite{Saffidine12SMAB}.
+The results on Goofspiel highly contrast with the Goofspiel results of the pruning algorithm SMAB presented in \cite{Saffidine12SMAB}.
 In their work, the number of evaluated nodes was at best around $20\%$, and the running time improvement was only marginal. 
 
 \begin{figure}
@@ -278,9 +314,11 @@ Finally, $\doab$ evaluates $\approx2\cdot10^6$ nodes on average and it takes the
 \caption{Convergence comparison of different sampling algorithms on Tron on grid $5\times6$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:rg}
 \end{figure}
 
+
 \subsection{Online Search}
 
 \begin{figure}
+\centering
 \begin{footnotesize}
 \begin{tabular}{|r|rrrrrr|}\hline
 Goof&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
@@ -374,43 +412,6 @@ RAND&3.1(1.1)&28.3(2.8)&30.8(2.9)&1.6(0.8)&1.5(0.8)&71.0(2.8)\\
 \end{footnotesize}
 \caption{Goof,PE, Oshi, Rand, Tron with 1000 runs, TronE 150 runs, DOAB with bugs in Good and Tron. TronE with evaluation function. PE from 10 different starts, RG 10 different games. Parameters always OOS:0.6,UCT:2,EXP3:0.2,RM:0.1.}
 \end{figure}
-
-\subsection{Non-Convergence and Random Tie-Breaking in DUCT} 
-
-As mentioned above, a counter-example was given in \cite{Shafiei09} showing that 
-DUCT does not converge to an equilibrium strategy in Biased Rock, Paper, Scissors 
-when using a mixed strategy by normalizing the visit count.
-In our last experiment, we revisit and expand upon on this result, showing an interesting 
-synchronization effect when the UCT selection mechanism is fully deterministic.
-
-We run MCTS with UCT, Exp3, and Regret Matching variants on Biased Rock, Paper, Scissors
-for 100 million ($10^8$) iterations, measuring the exploitability of the strategy recommended by 
-each variant at regular intervals. The results are shown in Figure~\ref{fig:expl-brps}.
-
-\begin{figure}[t]
-\begin{tabular}{cc}
-\hspace{-1cm} \includegraphics[scale=0.56]{figures/graphs/brps/duct} & \includegraphics[scale=0.56]{figures/graphs/brps/duct-nondet}\\
-\hspace{-1cm} \includegraphics[scale=0.56]{figures/graphs/brps/exp3} & \includegraphics[scale=0.56]{figures/graphs/brps/rm}\\
-\end{tabular}
-\caption{Exploitability of strategies of recommended by MCTS over time. Vertical axis represents exploitability. \label{fig:expl-brps}}
-\end{figure}
-
-The first observation is that UCT does not seem to converge to a low-exploitability strategy. The exploitability of the strategies of 
-Exp3 and RM variants do converge to low-exploitability strategies, and rate and resulting the approximation depend on the amount of exploration. 
-If less exploration is used, then the resulting strategy is less exploitable, which is natural in the case of a single state. RM does seem to 
-converge slightly faster than Exp3, as seen in the full simultaneous games as well. 
-
-We then tried adding a stochastic tie-breaking rule to the UCT selection mechanism typically used in MCTS implementations, that chooses an 
-action randomly when the scores of the best values are ``tied'' (less than $0.01$ apart.)
-One particularly striking observation is that this simple addition leads to a large drop in resulting exploitability, where exploitability
-ranges from $[0.5,0.8]$ in the deterministic case, compared to $[0.01,0.05]$ with stochastic tie-breaking. 
-
-We investigated this further and found a possible
-explanation of this behavior. Consider the matrix game on the right of Figure~\ref{fig:egMatrixGames} in Section~\ref{sec:smgames}.
-Suppose DUCT is run on this game and players deterministically prefer the left-action. 
-DUCT will always recieve rewards 0 and the exploration bias term will cause the players to round-robin over the actions indefinitely. 
-However, each player can than improve by playing first action with probability 1. Breaking ties stochastically will lead the algorithm to 
-discover the 1 and -1 rewards with high probability and allow the algorithm the break out or avoid this synchronization trap.
 
 
 
