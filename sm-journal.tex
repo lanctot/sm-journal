@@ -267,8 +267,15 @@ in the previous work, but we also performed experiments on randomly generated ga
 in number of possible actions, number of moves before the game ends, variance of the utility values,
 and whether the agents need to use mixed strategies in order to play optimally.
 
-\bbosansky{Say something about the algorithm? Something about the results?}
-\bbosansky{Outline}
+Experimental comparison show differing performance of the algorithms in both cases.
+In the offline case, the fastest exact algorithms based on backward induction are able to solve the game very quickly, however, these algorithms are less competitive in the online settings. 
+On the other hand, approximative sampling algorithms can perform very well in the online setting and find very good strategies to play within a few seconds, however, they are not well suited for offline solving games. 
+As we will show, even for a small game they may not converge to an exact solution in a reasonable time.
+
+We begin our paper with a formal introduction of simultaneous-move games and we follow with a list and analysis of the existing algorithms in the related work.
+Afterwards, we describe in details selected exact and approximative algorithms.
+We first describe the algorithms in the offline setting, following by necessary modifications used in the online case.
+Finally, we turn to the experimental evaluation and present our results of comparison of the algorithms.
 
 \section{Simultaneous Move Games}  \label{sec:smg}
 
