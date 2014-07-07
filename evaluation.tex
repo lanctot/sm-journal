@@ -1,4 +1,4 @@
-\subsection{Experimental Settings}
+mu\subsection{Experimental Settings}
 We now turn to thorough experimental evaluation of the described algorithms.
 We analyze both offline and online case on a collection of games that are inspired by games used for experimental evaluation in previous works, and randomly generated games.
 After describing the rules of the games, we present the results for the offline case. 
@@ -121,7 +121,7 @@ Both players try to survive as long as possible. If both players can only move i
 As mentioned above, a counter-example was given in \cite{Shafiei09} showing that 
 DUCT does not converge to an equilibrium strategy in Biased Rock, Paper, Scissors 
 when using a mixed strategy by normalizing the visit count.
-In our last experiment, we revisit and expand upon on this result, showing an interesting 
+In our first experiment, we revisit and expand upon on this result, showing an interesting 
 synchronization effect when the UCT selection mechanism is fully deterministic.
 
 We run MCTS with UCT, Exp3, and Regret Matching variants on Biased Rock, Paper, Scissors
@@ -137,12 +137,12 @@ each variant at regular intervals. The results are shown in Figure~\ref{fig:expl
 \end{figure}
 
 The first observation is that UCT does not seem to converge to a low-exploitability strategy. The exploitability of the strategies of 
-Exp3 and RM variants do converge to low-exploitability strategies, and rate and resulting the approximation depend on the amount of exploration. 
+Exp3 and RM variants do converge to low-exploitability strategies, and the resulting approximation depend on the amount of exploration. 
 If less exploration is used, then the resulting strategy is less exploitable, which is natural in the case of a single state. RM does seem to 
 converge slightly faster than Exp3, as seen in the full simultaneous games as well. 
 
 We then tried adding a stochastic tie-breaking rule to the UCT selection mechanism typically used in MCTS implementations, that chooses an 
-action randomly when the scores of the best values are ``tied'' (less than $0.01$ apart.)
+action randomly when the scores of the best values are ``tied'' (less than $0.01$ apart).
 One particularly striking observation is that this simple addition leads to a large drop in resulting exploitability, where exploitability
 ranges from $[0.5,0.8]$ in the deterministic case, compared to $[0.01,0.05]$ with stochastic tie-breaking. 
 
@@ -155,7 +155,7 @@ discover the 1 and -1 rewards with high probability and allow the algorithm the 
 
 \subsection{Offline Equilibrium Computation}
 We first compare the offline performance of the algorithm -- i.e., we measure overall computation time for each of the algorithms. 
-The reported results are means of several runs of the algorithms -- we used at least $30$ runs for each of the variant of our algorithm. 
+The reported results are means of at least $30$ runs for each algorithm. 
 
 \subsubsection{Goofspiel}
 \begin{figure}
@@ -189,11 +189,11 @@ We compare MCTS algorithms with three different selection functions (UCT, EXP3, 
 The results are means out of $20$ runs of each algorithm.
 The results show that OOS is the fastest out of all sampling algorithms during the whole time. 
 MCTS with Regret Matching selection function is only slightly slower, however, other two selection functions perform worse. 
-While EXP3 eventually converges close to $0$, UCT is not able to reach error lower than $0.5$ (the minimum error was $0.37$ out of all runs and all samples).
+While EXP3 eventually converges close to $0$, UCT is not able to reach error lower than $0.5$ (the minimum error was $0.37$ out of all runs and all samples).\vlisy{update}
 These results confirm theoretical findings for the algorithms -- convergence is not guaranteed for UCT, and can be expensive (i.e., slow) for EXP3. 
-On the other hand, both OOS and RM confirm their quick convergence with is aligned with previous existing results~\cite{}.
+On the other hand, both OOS and RM confirm their quick convergence, witch is aligned with previous existing results~\cite{}.
 The vertical lines represent times for exact algorithms.
-In Goofspiel $5$, $\biab$ is slightly faster and finishes first in less than $1$ second, following by $\doab$ ($1.52$ seconds), \textsc{DO} ($4.25$ seconds), and \textsc{BI} ($7.11$).
+In Goofspiel $5$, $\biab$ is slightly faster and finishes first in less than $1$ second, following by $\doab$ ($1.52$ seconds), \textsc{DO} ($4.25$ seconds), and \textsc{BI} ($7.11$).\vlisy{legend for BI algorithms still missing}
 
 
 \subsubsection{Pursuit-Evasion Games}
@@ -208,7 +208,7 @@ In Goofspiel $5$, $\biab$ is slightly faster and finishes first in less than $1$
 \caption{Comparison of running times on pursuit-evasion game with increasing number of moves: sub-figure (a) depicts the results on $4\times4$ grid graph, (b) depicts results for $5\times5$ grid.} \label{fig:off:res:peg}
 \end{figure}
 
-The results on pursuit-evasion games show more significant improvement when comparing $\doab$ and $\biab$ (see Figure~\ref{fig:off:res:peg}). For both graph the $\doab$ is significantly the fastest. When we compare the performance on graph $5\times5$ with depth set to $6$, \textsc{BI} evaluates more than $49\cdot10^6$ nodes that takes more than $13$ hours. On the other hand, $\biab$ evaluates on average $42001$ nodes taking almost $10$ minutes ($584$ seconds). Interestingly, the benefits of pure integration with alpha-beta search is not that helpful in this game.
+The results on pursuit-evasion games show more significant improvement when comparing $\doab$ and $\biab$ (see Figure~\ref{fig:off:res:peg}). In all settings, the $\doab$ is significantly the fastest. When we compare the performance on graph $5\times5$ with depth set to $6$, \textsc{BI} evaluates more than $49\cdot10^6$ nodes that takes more than $13$ hours. On the other hand, $\biab$ evaluates on average $42001$ nodes taking almost $10$ minutes ($584$ seconds). Interestingly, the benefits of pure integration with alpha-beta search is not that helpful in this game.
 This is apparent from results of \textsc{DO} algorithm that evaluates less than $2\cdot10^6$ nodes but it takes slightly over $9$ minutes on average ($547$ seconds). Finally, $\doab$ evaluates only $6692$ nodes and it takes the algorithm less than $3$ minutes.
 
 Large parts of pursuit-evasion game can be solved by serialized alpha-beta algorithms.
@@ -223,11 +223,11 @@ Therefore, serialized alpha-beta is not able to solve all sub-games, while doubl
 \end{figure}
 
 We turn to convergence of the sampling algorithms.
-The results are depicted in Figure~\ref{fig:off:conv:peg} for the smaller $4\times4$ graph and $4$ number of moves for each player (note again the logarithmic x-scale).
+The results are depicted in Figure~\ref{fig:off:conv:peg} for the smaller $4\times4$ graph and $4$ number of moves for each player (note again the logarithmic y-scale).
 The results again show that OOS is overall the fastest out of all sampling algorithms, however, during the first iterations both UCT and RM are faster and their exploitability is slightly smaller. 
-On the other hand, while OOS is able to keep the convergence rate and reach almost $0$ exploitability, UCT again converges to exploitable strategy with error $0.73$ at best. 
-The convergence of RM is much better, however the best final error is $0.13$.
-Finally, EXP3 converges even more slowly compared to the goofspiel.
+On the other hand, while OOS is able to keep the convergence rate and reach almost $0$ exploitability, UCT again converges to exploitable strategy with error $0.73$ at best.\vlisy{update} 
+The convergence of RM is much better, however the best final error is $0.13$ in the given time.
+Finally, EXP3 converges even more slowly compared to the Goofspiel.
 The main difference between the games is the size of the branching factor for the second player (pursuer controls two simultaneously moving units), which can cause more difficulties for the sampling algorithms to estimate good strategies.
 
 As before, the vertical lines represent times for exact algorithms.
@@ -269,7 +269,7 @@ With an increasing number of coins the algorithms need to find mixed Nash equili
 
 Figure~\ref{fig:off:conv:oz} depicts results for convergence of the sampling algorithms for the game with $10$ coins, $K$ set to $3$ and minimum bid set to $1$. This is an easy game for $\doab$ and $\biab$ with pure strategy and both of these algorithms are able to solve the game in less than a second ($0.73$). However, due to large branching factor for both players ($10$ actions at the root node for each player) all sampling algorithms converge extremely slowly. Again, OOS is the best one, however, in a given time limit ($500$ seconds) the algorithm converged to error slightly below $0.5$ ($0.41$). On the other hand, all of the other sampling algorithms perform significantly worse -- RM ends with error slightly over $1$, UCT with $1.78$, and EXP3 with $1.88$.
 This confirms our findings from the previous experiment that increasing branching factor slows down the convergence rate.
-Secondly, since there is a pure Nash equilibrium, the convergence of the algorithms is also slower since they essentially mix the strategy during the iterations in order to explore the unvisited parts of the game tree. Since none of the sampling algorithms can exploit the fact, their performance in offline solving games like Oshi-Zumo is quite is not compelling.
+Secondly, since there is a pure Nash equilibrium, the convergence of the algorithms is also slower since they essentially mix the strategy during the iterations in order to explore the unvisited parts of the game tree. Since none of the sampling algorithms can exploit the fact, their performance in offline solving games like Oshi-Zumo is not compelling.
 
 \subsubsection{Random Games}
 In the first variant of the randomly generated games we used games with utility values randomly drawn from a uniform distribution $[0,1]$. 
@@ -277,7 +277,7 @@ Such games represent an extreme case, where neither alpha-beta search, nor doubl
 In these games, \textsc{BI} algorithm is typically the fastest.
 Even though both $\biab$ and $\doab$ evaluate marginally less nodes ($\approx90\%$), the overhead of the algorithms (repeated calculation of alpha-beta algorithm, repeatedly solving linear programs, etc.) causes slower runtime performance in this case.
 
-However, completely random games are rarely instances that need to be solved in practice.
+However, completely random games are rarely instances that do not need to be solved in practice.
 The situation changes, when we use the intuition of good and bad moves and thus add correlation to the utility values.
 Figure~\ref{fig:off:res:rg} depicts the results for two different branching factors $4$ and $5$ for each player and increasing depth.
 The results show that $\doab$ outperforms all remaining algorithms, although the difference is rather small (still statistically significant).
@@ -317,9 +317,103 @@ Finally, $\doab$ evaluates $\approx2\cdot10^6$ nodes on average and it takes the
 
 \subsection{Online Search}
 
+This sections compares the performance of all the algorithms in head-to-head matches in large instances of the same games as we used in equilibrium computation experiments. Each algorithm has a strictly limited computational time per move set to one or five seconds. After this time, it has to output an action to be played in the current game state and afterwards, it is informed about the action selected by its opponent. The game proceeds to the following state and the algorithm have additional time for computation. As described in Section~\ref{sec:online}, all algorithms keep results of previous computations and do not start form scratch in the following move. 
+We use only \doab as a representative of backward induction algorithms in this comparison, because it was clearly the fastest algorithm in all the considered games and it provides practically the same solution with a fixed search depth.
+In the following experiments, we aim to identify the algorithms that are most suitable in the online search setting and study the relation of the performance in approximating the equilibrium in the offline setting and actual game playing performance in the matches. In this section, we report mainly the win rates of the algorithms, in which a tie is counted as half win.
+
+
 \begin{figure}
 \centering
-\begin{footnotesize}
+\begin{scriptsize}
+\begin{tabular}{|r|rrrrrr|}\hline
+Goof*&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
+DOAB&&49.6(3.0)&37.1(2.0)&24.0(1.8)&28.2(1.9)&88.7(1.3)\\
+OOS&52.9(3.0)&&45.9(3.0)&42.1(2.9)&42.3(2.9)&73.8(2.6)\\
+UCT&62.4(2.9)&53.9(3.0)&48.3(3.0)&50.6(2.9)&50.7(2.9)&66.3(2.8)\\
+EXP3&76.3(2.5)&57.5(2.9)&48.3(2.9)&51.4(2.4)&42.9(2.6)&66.3(2.8)\\
+RM&71.6(2.7)&57.8(2.9)&49.0(2.9)&56.1(2.6)&50.0(2.9)&66.2(2.8)\\
+RAND&8.6(1.7)&26.2(2.6)&34.3(2.8)&29.1(2.7)&35.0(2.8)&49.6(3.1)\\
+\hline
+\end{tabular}
+\begin{tabular}{|r|rrrrrr|}\hline
+Oshi&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
+DOAB&50.0(0.0)&91.1(1.2)&89.1(1.3)&89.2(1.3)&85.1(1.5)&98.8(0.5)\\
+OOS&12.9(1.4)&53.5(3.0)&52.0(2.1)&56.9(2.0)&31.4(1.9)&97.3(0.7)\\
+UCT&11.7(1.4)&53.8(2.1)&50.5(3.0)&55.3(2.1)&32.3(1.9)&94.0(1.0)\\
+EXP3&11.1(1.3)&47.3(2.1)&45.1(2.1)&48.9(3.0)&26.0(1.8)&94.2(0.9)\\
+RM&13.8(1.5)&73.1(1.8)&67.8(1.9)&75.5(1.8)&48.1(3.0)&99.0(0.4)\\
+RAND&1.3(0.5)&3.4(0.7)&5.6(1.0)&5.3(0.9)&0.7(0.3)&48.5(2.9)\\
+\hline
+\end{tabular}
+\begin{tabular}{|r|rrrrrr|}\hline
+OshiE&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
+DOAB&50.0(0.0)&83.2(2.3)&28.8(2.8)&66.1(2.9)&56.8(3.0)&98.8(0.7)\\
+OOS&33.8(2.9)&59.5(2.9)&30.9(2.8)&40.0(3.0)&29.4(2.7)&96.6(1.1)\\
+UCT&69.8(2.8)&80.9(2.4)&46.5(3.0)&74.8(2.6)&62.0(3.0)&97.8(0.9)\\
+EXP3&30.3(2.8)&63.9(2.9)&25.2(2.6)&52.7(3.0)&43.7(3.0)&96.2(1.2)\\
+RM&42.2(3.0)&80.5(2.4)&43.2(3.0)&56.9(3.0)&48.7(3.0)&99.2(0.5)\\
+RAND&1.4(0.7)&3.0(1.0)&2.6(1.0)&4.6(1.2)&0.5(0.4)&49.0(2.9)\\
+\hline
+\end{tabular}
+\begin{tabular}{|r|rrrrrr|}\hline
+Rand&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
+DOAB&51.5(2.9)&65.5(2.8)&57.7(2.9)&54.0(2.9)&54.0(2.9)&88.8(1.8)\\
+OOS&39.7(2.8)&51.1(2.9)&40.2(2.8)&37.1(2.7)&36.0(2.7)&82.8(2.2)\\
+UCT&47.4(2.9)&57.1(2.9)&52.5(2.9)&46.9(2.8)&47.9(2.8)&85.7(2.1)\\
+EXP3&48.2(2.8)&65.3(2.7)&54.5(2.9)&49.2(2.9)&51.5(2.9)&91.5(1.6)\\
+RM&50.4(2.9)&64.8(2.7)&55.1(2.9)&54.0(2.9)&55.0(2.9)&87.1(1.9)\\
+RAND&11.8(1.9)&19.7(2.3)&17.4(2.2)&11.1(1.8)&12.4(1.9)&49.9(2.9)\\
+\hline
+\end{tabular}
+%\begin{tabular}{|r|rrrrrr|}\hline
+%RG(5,15)&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
+%DOAB&&53.3(2.7)&53.8(2.7)&56.7(2.7)&51.5(2.7)&68.2(2.6)\\
+%OOS&48.0(2.7)&&49.6(2.7)&47.9(2.7)&48.4(2.7)&65.7(2.6)\\
+%UCT&49.2(2.7)&51.2(2.7)&&52.0(2.8)&47.3(2.7)&66.1(2.6)\\
+%EXP3&48.1(2.7)&57.3(2.7)&54.5(2.7)&&49.1(2.7)&69.5(2.5)\\
+%RM&51.9(2.7)&55.0(2.7)&56.1(2.6)&54.7(2.7)&&69.0(2.6)\\
+%RAND&34.0(2.6)&39.8(2.7)&40.0(2.7)&34.4(2.6)&33.6(2.6)&\\
+%\hline
+%\end{tabular}
+\begin{tabular}{|r|rrrrrr|}\hline
+Tron&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
+DOAB&51.9(0.8)&90.5(1.5)&76.2(2.2)&64.4(2.5)&62.9(2.3)&98.8(0.5)\\
+OOS&10.3(1.5)&50.6(3.0)&27.9(2.3)&23.9(2.3)&19.4(2.0)&93.7(1.2)\\
+UCT&20.4(1.9)&69.5(2.3)&46.7(2.7)&43.5(2.4)&35.2(2.3)&97.0(0.8)\\
+EXP3&29.8(2.2)&74.3(2.3)&58.4(2.4)&49.8(2.6)&43.5(2.3)&97.3(0.7)\\
+RM&32.4(2.0)&80.1(2.0)&62.5(2.3)&58.7(2.2)&50.4(2.5)&97.0(0.7)\\
+RAND&1.9(0.6)&6.0(1.2)&3.3(0.8)&2.4(0.7)&3.0(0.7)&49.2(3.3)\\
+\hline
+\end{tabular}
+\begin{tabular}{|r|rrrrrr|}\hline
+TronE&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
+DOAB&50.2(0.3)&66.0(2.3)&51.1(2.0)&45.3(2.3)&42.0(2.1)&98.9(0.5)\\
+OOS&40.6(1.8)&52.6(2.3)&43.9(1.7)&44.1(1.7)&40.2(1.8)&95.6(1.1)\\
+UCT&50.0(1.8)&56.6(1.9)&50.2(0.7)&48.6(0.9)&45.1(1.3)&97.6(0.7)\\
+EXP3&61.2(2.5)&56.2(1.9)&51.1(1.0)&50.6(0.8)&45.9(1.0)&98.6(0.6)\\
+RM&58.4(2.2)&62.1(1.9)&55.2(1.1)&54.6(1.0)&49.9(0.7)&98.6(0.6)\\
+RAND&3.2(0.8)&5.5(1.3)&2.5(0.8)&1.6(0.6)&1.8(0.7)&47.1(3.3)\\
+\hline
+\end{tabular}
+\begin{tabular}{|r|rrrrrr|}\hline
+PE&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
+DOAB&91.7(1.7)&95.2(0.4)&93.1(0.5)&89.0(0.6)&81.8(0.8)&99.6(0.1)\\
+OOS&51.8(1.0)&76.6(3.7)&82.0(0.7)&67.6(0.9)&58.3(1.0)&98.1(0.3)\\
+UCT&78.7(0.8)&93.1(0.5)&91.9(1.7)&86.5(0.7)&78.0(0.8)&98.8(0.2)\\
+EXP3&76.1(0.8)&94.2(0.5)&91.7(0.5)&86.6(2.1)&78.9(0.8)&99.3(0.2)\\
+RM&86.1(0.7)&94.9(0.4)&93.4(0.5)&90.2(0.6)&81.3(2.4)&99.2(0.2)\\
+RAND&1.9(0.3)&30.7(0.9)&38.1(0.9)&8.0(0.5)&3.9(0.4)&70.9(2.8)\\
+\hline
+\end{tabular}
+\end{scriptsize}
+\caption{Win-rate in head-to-head matches between all pairs of algorithms with one second per move. The ``E'' in game names denote the use of evaluation function in sampling algorithm. Results are mean of at least 1000 matches with half of 95\% confidence interval in brackets. The parameters of the algorithms are OOS:0.6,UCT:2,EXP3:0.2,RM:0.1.}\label{fig:matches1}
+\end{figure}
+
+
+
+\begin{figure}
+\centering
+\begin{scriptsize}
 \begin{tabular}{|r|rrrrrr|}\hline
 Goof&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
 DOAB&49.5(3.2)&35.1(3.0)&25.5(2.8)&13.8(2.2)&18.9(2.5)&91.2(1.8)\\
@@ -418,102 +512,13 @@ RAND&3.1(1.1)&28.3(2.8)&30.8(2.9)&1.6(0.8)&1.5(0.8)&71.0(2.8)\\
 \hline
 \end{tabular}
 
-\end{footnotesize}
-\caption{5s per move. All tables with 1000 runs, few DOAB runs still with bugs. TronE, OZE with evaluation function. PE from 10 different starts, RG 10 different games. Parameters always OOS:0.6,UCT:2,EXP3:0.2,RM:0.1.}
+\end{scriptsize}
+%All tables with 1000 runs, few DOAB runs still with bugs. TronE, OZE with evaluation function. PE from 10 different starts, RG 10 different games. Parameters always OOS:0.6,UCT:2,EXP3:0.2,RM:0.1.
+\caption{Win-rate in head-to-head matches between all pairs of algorithms with five second per move. The ``E'' in game names denote the use of evaluation function in sampling algorithm. Results are mean of at least 1000 matches with half of 95\% confidence interval in brackets. The parameters of the algorithms are OOS:0.6,UCT:2,EXP3:0.2,RM:0.1.}\label{fig:matches5}
 \end{figure}
 
-
 \begin{figure}
-\centering
-\begin{footnotesize}
-\begin{tabular}{|r|rrrrrr|}\hline
-Goof*&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
-DOAB&&49.6(3.0)&37.1(2.0)&24.0(1.8)&28.2(1.9)&88.7(1.3)\\
-OOS&52.9(3.0)&&45.9(3.0)&42.1(2.9)&42.3(2.9)&73.8(2.6)\\
-UCT&62.4(2.9)&53.9(3.0)&48.3(3.0)&50.6(2.9)&50.7(2.9)&66.3(2.8)\\
-EXP3&76.3(2.5)&57.5(2.9)&48.3(2.9)&51.4(2.4)&42.9(2.6)&66.3(2.8)\\
-RM&71.6(2.7)&57.8(2.9)&49.0(2.9)&56.1(2.6)&50.0(2.9)&66.2(2.8)\\
-RAND&8.6(1.7)&26.2(2.6)&34.3(2.8)&29.1(2.7)&35.0(2.8)&49.6(3.1)\\
-\hline
-\end{tabular}
-\begin{tabular}{|r|rrrrrr|}\hline
-Oshi&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
-DOAB&50.0(0.0)&91.1(1.2)&89.1(1.3)&89.2(1.3)&85.1(1.5)&98.8(0.5)\\
-OOS&12.9(1.4)&53.5(3.0)&52.0(2.1)&56.9(2.0)&31.4(1.9)&97.3(0.7)\\
-UCT&11.7(1.4)&53.8(2.1)&50.5(3.0)&55.3(2.1)&32.3(1.9)&94.0(1.0)\\
-EXP3&11.1(1.3)&47.3(2.1)&45.1(2.1)&48.9(3.0)&26.0(1.8)&94.2(0.9)\\
-RM&13.8(1.5)&73.1(1.8)&67.8(1.9)&75.5(1.8)&48.1(3.0)&99.0(0.4)\\
-RAND&1.3(0.5)&3.4(0.7)&5.6(1.0)&5.3(0.9)&0.7(0.3)&48.5(2.9)\\
-\hline
-\end{tabular}
-\begin{tabular}{|r|rrrrrr|}\hline
-OshiE&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
-DOAB&50.0(0.0)&83.2(2.3)&28.8(2.8)&66.1(2.9)&56.8(3.0)&98.8(0.7)\\
-OOS&33.8(2.9)&59.5(2.9)&30.9(2.8)&40.0(3.0)&29.4(2.7)&96.6(1.1)\\
-UCT&69.8(2.8)&80.9(2.4)&46.5(3.0)&74.8(2.6)&62.0(3.0)&97.8(0.9)\\
-EXP3&30.3(2.8)&63.9(2.9)&25.2(2.6)&52.7(3.0)&43.7(3.0)&96.2(1.2)\\
-RM&42.2(3.0)&80.5(2.4)&43.2(3.0)&56.9(3.0)&48.7(3.0)&99.2(0.5)\\
-RAND&1.4(0.7)&3.0(1.0)&2.6(1.0)&4.6(1.2)&0.5(0.4)&49.0(2.9)\\
-\hline
-\end{tabular}
-\begin{tabular}{|r|rrrrrr|}\hline
-Rand&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
-DOAB&51.5(2.9)&65.5(2.8)&57.7(2.9)&54.0(2.9)&54.0(2.9)&88.8(1.8)\\
-OOS&39.7(2.8)&51.1(2.9)&40.2(2.8)&37.1(2.7)&36.0(2.7)&82.8(2.2)\\
-UCT&47.4(2.9)&57.1(2.9)&52.5(2.9)&46.9(2.8)&47.9(2.8)&85.7(2.1)\\
-EXP3&48.2(2.8)&65.3(2.7)&54.5(2.9)&49.2(2.9)&51.5(2.9)&91.5(1.6)\\
-RM&50.4(2.9)&64.8(2.7)&55.1(2.9)&54.0(2.9)&55.0(2.9)&87.1(1.9)\\
-RAND&11.8(1.9)&19.7(2.3)&17.4(2.2)&11.1(1.8)&12.4(1.9)&49.9(2.9)\\
-\hline
-\end{tabular}
-%\begin{tabular}{|r|rrrrrr|}\hline
-%RG(5,15)&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
-%DOAB&&53.3(2.7)&53.8(2.7)&56.7(2.7)&51.5(2.7)&68.2(2.6)\\
-%OOS&48.0(2.7)&&49.6(2.7)&47.9(2.7)&48.4(2.7)&65.7(2.6)\\
-%UCT&49.2(2.7)&51.2(2.7)&&52.0(2.8)&47.3(2.7)&66.1(2.6)\\
-%EXP3&48.1(2.7)&57.3(2.7)&54.5(2.7)&&49.1(2.7)&69.5(2.5)\\
-%RM&51.9(2.7)&55.0(2.7)&56.1(2.6)&54.7(2.7)&&69.0(2.6)\\
-%RAND&34.0(2.6)&39.8(2.7)&40.0(2.7)&34.4(2.6)&33.6(2.6)&\\
-%\hline
-%\end{tabular}
-\begin{tabular}{|r|rrrrrr|}\hline
-Tron&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
-DOAB&51.9(0.8)&90.5(1.5)&76.2(2.2)&64.4(2.5)&62.9(2.3)&98.8(0.5)\\
-OOS&10.3(1.5)&50.6(3.0)&27.9(2.3)&23.9(2.3)&19.4(2.0)&93.7(1.2)\\
-UCT&20.4(1.9)&69.5(2.3)&46.7(2.7)&43.5(2.4)&35.2(2.3)&97.0(0.8)\\
-EXP3&29.8(2.2)&74.3(2.3)&58.4(2.4)&49.8(2.6)&43.5(2.3)&97.3(0.7)\\
-RM&32.4(2.0)&80.1(2.0)&62.5(2.3)&58.7(2.2)&50.4(2.5)&97.0(0.7)\\
-RAND&1.9(0.6)&6.0(1.2)&3.3(0.8)&2.4(0.7)&3.0(0.7)&49.2(3.3)\\
-\hline
-\end{tabular}
-\begin{tabular}{|r|rrrrrr|}\hline
-TronE&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
-DOAB&50.2(0.3)&66.0(2.3)&51.1(2.0)&45.3(2.3)&42.0(2.1)&98.9(0.5)\\
-OOS&40.6(1.8)&52.6(2.3)&43.9(1.7)&44.1(1.7)&40.2(1.8)&95.6(1.1)\\
-UCT&50.0(1.8)&56.6(1.9)&50.2(0.7)&48.6(0.9)&45.1(1.3)&97.6(0.7)\\
-EXP3&61.2(2.5)&56.2(1.9)&51.1(1.0)&50.6(0.8)&45.9(1.0)&98.6(0.6)\\
-RM&58.4(2.2)&62.1(1.9)&55.2(1.1)&54.6(1.0)&49.9(0.7)&98.6(0.6)\\
-RAND&3.2(0.8)&5.5(1.3)&2.5(0.8)&1.6(0.6)&1.8(0.7)&47.1(3.3)\\
-\hline
-\end{tabular}
-\begin{tabular}{|r|rrrrrr|}\hline
-PE&DOAB&OOS&UCT&EXP3&RM&RAND\\\hline
-DOAB&91.7(1.7)&95.2(0.4)&93.1(0.5)&89.0(0.6)&81.8(0.8)&99.6(0.1)\\
-OOS&51.8(1.0)&76.6(3.7)&82.0(0.7)&67.6(0.9)&58.3(1.0)&98.1(0.3)\\
-UCT&78.7(0.8)&93.1(0.5)&91.9(1.7)&86.5(0.7)&78.0(0.8)&98.8(0.2)\\
-EXP3&76.1(0.8)&94.2(0.5)&91.7(0.5)&86.6(2.1)&78.9(0.8)&99.3(0.2)\\
-RM&86.1(0.7)&94.9(0.4)&93.4(0.5)&90.2(0.6)&81.3(2.4)&99.2(0.2)\\
-RAND&1.9(0.3)&30.7(0.9)&38.1(0.9)&8.0(0.5)&3.9(0.4)&70.9(2.8)\\
-\hline
-\end{tabular}
-
-\end{footnotesize}
-\caption{1s per move}
-\end{figure}
-
-
-\begin{figure}
-\begin{footnotesize}
+\begin{scriptsize}
 \begin{tabular}{|r|rrrrrr|}\hline
 Time&\multicolumn{6}{|c|}{OOS}\\
 &\textbf{0.6}&0.5&0.4&0.3&0.2&0.1\\
@@ -532,7 +537,32 @@ Time&\multicolumn{6}{|c|}{OOS}\\
 1s&18.0(4.3)&26.7(4.9)&21.0(4.6)&11.5(4.3)&13.8(1.5)&12.3(3.7)\\
 5s&17.5(5.2)&15.0(7.0)&13.0(5.3)&11.5(6.2)&14.4(1.5)&16.0(5.0)\\\hline
 \end{tabular}
-\end{footnotesize}
-\caption{Parameter tuning on Oshi Zumo 50 3 1 against DOAB.}
+\end{scriptsize}
+\caption{Parameter tuning in Oshi Zumo 50 3 1 against DOAB.}\label{fig:tuning}
 \end{figure}
 
+\subsubsection{Goofspiel}
+
+In head-to-head comparison, we use Goofspiel with 13 cards, as it is played by humans. However, for the sake of consistency with the offline results, we assume a fixed known (decreasing)\vlisy{check with brano} sequence of the cards of the nature player. The game has still more than $3.8\times 10^19$ leaf nodes. The results with one second per move are presented in Figure~\ref{fig:matches1}.
+
+Even though \doab uses a domain-specific evaluation function, it does not win significantly against any of the sampling algorithms not using any domain knowledge. It tied with OOS and it lost by the largest margin to the MCTS-Exp3. With five seconds per move (see Figure~\ref{fig:matches5}), even OOS is winning against \doab with Exp3 still being its strongest opponent.
+
+The differences in the performance of sampling algorithms are relatively small. Even though OOS converges the fastest in the offline experiment (see Figure~\ref{fig:off:conv:gs}), it is losing against all other algorithms with 1 second per move. Its performance improves with 5 seconds per move, but it still does not significantly outperform any other sampling algorithm. With both time settings, RM seems to perform slightly the best. Its performance against other algorithms is very similar to Exp3, but it significantly wins in their mutual matches.
+
+\subsubsection{Oshi-Zumo}
+
+In Oshi-Zumo, we use the setting with 50 coins, K=3 fields on each side of the board and minimal bet of 1. We chose this parameters to be consistent with \cite{} and to have a game with larger branching factor.\vlisy{can we estimate game size?}
+
+In this game, the evaluation function used by \doab is much stronger than in Goofspiel and all the sampling algorithms without domain specific knowledge perform poorly against this algorithm (see Figures~\ref{fig:matches1} and~\ref{fig:matches5}). The loss is even higher with 5 seconds per move. None of the sampling algorithms perform significantly better than the others.
+
+In the offline experiment (Figure~\ref{fig:off:conv:oz}), none of the sampling algorithms was able to converge anywhere close to the equilibirum in short time and the game there was many orders of magnitude smaller. With one second per move, RM is clearly the strongest sampling algorithm, having the strongest opponent among the sampling algorithms in UCT loosing 67.8\% of games. OOS and UCT tie for the second place and Exp3 is the weakest sampling algorithm in this game. With five seconds per move, the differences among the algorithms are a little smaller but the same ranking of the algorithms holds.
+
+Because of high quality of the evaluation function in this game, we allowed the sampling algorithms to use it instead of simulation. The tables for this variant are labelled OshiE in the figures. Even when both players use evaluation function, \doab still wins over OOS and RM in both time settings. UCT is clearly the best
+
+Why UCT?
+Why more time hurts RM and helps Exp3?
+
+Discussion: 
+-low exploitability not necessary correlated to quality of play, possibly other solution concept, such as non-dominated strategies.
+-sampling algorihtms perform coloser to each other with more time per move
+-evaluatin function does not help OOS that much
