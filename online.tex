@@ -1,6 +1,5 @@
-
 In this section, we describe online adaptations of the algorithms above and their application 
-to search with limited resources (time and memory). 
+to search within a limited time. 
 
 \subsection{Iterative Deepening Backward Induction Algorithms} \label{sec:idbi}
 
@@ -10,24 +9,26 @@ intelligence.
 Minimax search is an online application of backward induction run on approximated game. 
 The game is approximated by searching to a fixed depth limit $d$, treating the states at depth $d$
 as terminal states, evaluating their values using a heuristic evaluation function, $v(s)$. 
-The main focus is to compute an optimal strategy for this heuristic approximation of the true game. 
+The main focus is to compute an optimal strategy for this heuristic approximation of the original game. 
 
 Under limited time settings, a search algorithm is given a fixed time budget to compute a strategy. 
-Since it is difficult to predict in advance the highest depth that can run in the alotted time, 
-{\it interative deepening} is employed~\cite{Marsland83}. The main idea is to run several depth-limited 
-minimax searches, starting at a low depth and iteratively increasing the depth of each successive search. Note that the depth limit of $d$ means that the algorithm will evaluate $d$ pairs of simultaneous actions, each pair preceded by action of nature if present.  
-In sequential perfect information games, several enhancements can be applied due to researching the same 
-nodes, most of which are not immediately applicable in simultaneous move games. However, whether new 
-enhancements can be defined for this class of games remains an open research question. 
+We use a classical approach of {\it interative deepening}~\cite{AIbook} that runs several depth-limited 
+minimax searches, starting at a low depth and iteratively increasing the depth of each successive search. 
+Note that the depth limit of $d$ means that the algorithm will evaluate $d$ pairs of simultaneous actions, each pair possibly preceded by action of nature if present.  
+%In sequential perfect information games, several enhancements can be applied due to researching the same 
+%nodes, most of which are not immediately applicable in simultaneous move games. However, whether new 
+%enhancements can be defined for this class of games remains an open research question. 
+In our implementation of iterative deepening we follow a natural observation that a solution computed in state $s$ and player $i$ to depth $d-1$ contains solutions in possible next states $\cT(s,a_i,?)$, where $a_i$ is the selected action to player for player $i$.
+This allows us to start the iterative deepening in any state $s' \in \cT(s,a_i,?)$ with depth $d$.
+If the time limit does not allow full evaluation of the subgame with the root in $s'$, the algorithm reuses the result from previous computation.
+In case there is no strategy stored for the state $s'$ due to pruning, iterative deepening is started with $d = 1$.
 
-Furthermore we exploit the fact that the solution in a state $s$ with the depth limit of $d$ contains all the solutions in states $\cT(s)$ with the depth limit $d - 1$ (when omitting pruning techniques). This allows us to start the iterative deepening in any state $s' \in \cT(s)$ with depth $d$, reusing the result from previous computation if the time limit does not allow full evaluation of the subgame with the root in $s'$. 
+\subsection{Online Search using Sampling Algorithms}
+\bbosansky{The following subsection is quite wordy -- Marc/Vilo, feel free to make it more compact and technical.}
+Using sampling algorithms in an online settings is simpler compared to the algorithms based on the backward induction, since no significant changes are needed and the algorithms do not need an evaluation function.
+The algorithms are stopped after given time limit and found strategy is extracted as described in each sampling algorithm.
+There are two concepts that need to be discussed. 
+First of all, the algorithms can re-use all information and statistics gained in previous iterations; hence, after returning a move and advancing to a succeeding state of the game $s'$, the subtree rooted in $s'$ of the incrementally built game tree $T$ is preserved and used in the next iterations. 
+Note that usage of the previously gathered statistics in the nodes of subtree rooted in $s'$ has no potentially negative effect on any variant of the MCTS algorithms since the behavior of the algorithm is exactly the same when the iteration is started in this node, or this node reached from its predecessor. On the other hand, this does not in general hold for OOS, where the regret values are weighted by the reach probability depending on the strategy of the in the preceding nodes. However, this fact does not negatively affect the convergence of the algorithm.\bbosansky{It would be nice to explain why.}
 
-In our search experiments, we use a depth-limited online version of Algorithm \ref{alg:doab}. To the 
-best of our knowledge, this is the first time that depth-limited backward induction has been used for 
-online search in simultaneous move games. 
-
-
-
-
-
-
+Secondly, even though the sampling algorithms do not require to use domain-specific knowledge for online search, they often incorporate this type of knowledge to better guide the sampling and thus to evaluate more relevant parts of the state space~\cite{}\bbosansky{Add some references for using MCTS with domain knowledge}. When directly comparing sampling-based algorithms with the backward-induction algorithms that are clearly dependent on the evaluation function, the outcome of such a comparison strictly depends on the quality of the evaluation function -- in case of a very large game a backward induction algorithm with precise evaluation function will be significantly better (we will see such examples in the experimental evaluation). Therefore, we also use sampling algorithms with evaluation function. The integration is done via replacing random sampling that leads to the end of the game by directly using value of the evaluation function in the current state for MCTS or OOS algorithms. Again, such a modification do not generally affect theoretical properties of the algorithms -- the proofs of the convergence assume that a whole game tree is eventually built, in which no evaluation function is called.

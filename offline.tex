@@ -35,6 +35,7 @@ Once the algorithm computes the value of each possible subgame following the cur
 \end{eqnarray}
 Using the linear programming, the algorithm computes the value of the matrix game, which is propagated to the predecessor~(line~\ref{alg:bi:stop2}). 
 If the algorithm evaluates a terminal state, it directly returns the utility value of the state~(line~\ref{alg:bi:stop1}).
+A strategy can be easily extracted from the algorithm by keeping the equilibrium strategies from matrix games $A$ in each state.
 
 Evaluating each successor and solving the linear programs in each state of the game is the main computational bottleneck of the backward induction algorithm. 
 The following algorithms try to prune certain branches of the tree in order to avoid this step even for the price of multiple traversals of the game tree.
@@ -73,7 +74,12 @@ When the backward induction starts evaluating successors of the current state, t
 The serialized game is solved using standard alpha-beta algorithm, where the second player to move in the serialization is the player in the argument of the method.
 If the bounds are equal, the algorithm stores the value (line~\ref{alg:biab:saving}) instead of performing a recursive call~(line~\ref{alg:biab:recursive}). 
 
-%\jcermak{The only part mentioning strategy retrieval, should it be moved to online alg. description?} 
+We distinguish two cases when extracting the equilibrium strategies from the backward induction with alpha-beta search.
+In case that a state was fully evaluated by the algorithm (i.e., a linear program was built and solved for this state), we proceed as before and keep the pair of equilibrium strategies in this state.
+However, the algorithms prunes certain branches and does not create a linear program for all states.
+In this case, the algorithm keeps the strategy calculated by serialized alpha-beta algorithm.
+More precisely, for player~$i$ the algorithm keeps the pure strategy computed by alpha-beta($s$, $-i$), where the opponent has an advantage of knowing the moves of player $i$. 
+Such a strategy provides guarantees for player~$i$ that is not exploitable and due to the cut-off we know that there is no better strategy for player~$i$ with higher expected utility.
 %When such a cut-off occurs, one needs to extract the strategy from alpha-beta. 
 %Since the alpha-beta operates on a serialized version of the game, the actions played by the player with the additional information caused by observing the choice of his opponent cannot be used. 
 %This player is not forced to play according to the Nash equilibrium of the original non-serialized game, because the serialized game permits him to choose different action for every choice of the first player. 
@@ -226,6 +232,9 @@ If this value is strictly higher than the upper bound of the successor (i.e., th
 $\lambda_{a_i}$ is calculated by subtracting from the current best response value ($v_i^{BR}$) upper bound of the expected value against all other actions of the opponent ($v^i_{\cT(s,a_i,a'_{-i})}$). Recall, that these values are updated once the algorithm calculates exact values.
 
 If the currently evaluated action $a_i$ can still be the best response, the value of the successor is determined (first by comparing the bounds). Once the expected outcome against all actions of the opponent is evaluated, the expected value of action $a_i$ is compared against the current best-response value (line~\ref{alg:br:max}) and saved, if the expected utility is higher~(line~\ref{alg:br:save}). The best response actions are allowed in the next iteration of the double-oracle algorithm and the algorithm progresses further as described.
+
+When extracting strategies from the double-oracle algorithm with serialized alpha-beta, we proceed exactly as in the case of $\biab$: either a double-oracle is initialized and solved for certain matrix game and we keep equilibrium strategies from the final restricted game, or the strategy is extracted from the serialized alpha-beta algorithms as before.
+
 
 \subsection{Simultaneous-Move Monte Carlo Tree Search (SM-MCTS)} \label{sec:algs:smmcts}
 In the following sections we move to approximative algorithms.
