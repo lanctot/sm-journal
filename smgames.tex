@@ -7,13 +7,12 @@ $\cS$ is a set of states, with $\cZ$ denoting the terminal states, $\cD$ the sta
 and $\cC$ the possibly empty set of states where chance events occur. $\cA = \cA_1 \times \cA_2$ is the set of 
 joint actions of individual players. We denote $\cA_i(s)$ the actions available to player $i$ in state $s \in \cS$. 
 The transition function $\cT : \cS \times \cA_1 \times \cA_2 \mapsto \cS$ defines the successor state given a current 
-state and actions for both players. $\Delta_c:\cC \mapsto \Delta(\cS)$ describes a probability distribution over 
-possible successor states of the chance event. The utility functions 
-$u_i : \cZ \mapsto [v_{\min}, v_{\max}] \subseteq \mathbb{R}$ gives the utility of player $i$, with 
+state and actions for both players. $\Delta_c:\cS \mapsto \Delta(\cS)$ describes a probability distribution over 
+possible successor states of the chance event. If node $s$ is not a chance node ($s \in \cD$), $\Delta_c(s)$ assigns $s$ with probability $1$.
+The utility functions $u_i : \cZ \mapsto [v_{\min}, v_{\max}] \subseteq \mathbb{R}$ gives the utility of player $i$, with 
 $v_{min}$ and $v_{\max}$ denoting the minimum and maximum possible utility respectively. We assume constant-sum 
 games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$. 
 The game begins in an initial state $s_0$. 
-\bbosansky{redefine stochastic successors $\Delta_c:\cS \mapsto \Delta(\cS)$ (identity for non-chance nodes)}
 
 
 \begin{figure}[t!]
