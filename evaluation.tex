@@ -145,7 +145,7 @@ If both players can only move into a wall, can only move off the board or move i
 In the experiments we used an empty grid with no obstacles and varying size of the grid.
 
 \bbosansky{Marc, could you please describe the evaluation function for Tron here with a reference, if the evaluation function you have used is described somewhere.}
-\mlanctot{Yes, no problem.}
+\mlanctot{Yup, will do.}
 
 \subsection{Non-Convergence and Random Tie-Breaking in DUCT}\label{sec:exp:brps} 
 
@@ -163,10 +163,12 @@ each variant at regular intervals. The results are shown in Figure~\ref{fig:expl
 \begin{tabular}{cc}
 %\hspace{-1cm} \includegraphics[scale=0.56]{figures/graphs/brps/duct} & \includegraphics[scale=0.56]{figures/graphs/brps/duct-nondet}\\
 %\hspace{-1cm} \includegraphics[scale=0.56]{figures/graphs/brps/exp3} & \includegraphics[scale=0.56]{figures/graphs/brps/rm}\\
-\hspace{-1cm}\includegraphics[width=0.55\textwidth]{figures/brps-MCTS-UCT.pdf} & \includegraphics[width=0.55\textwidth]{figures/brps-MCTS-UCT-NONDET.pdf}\\
-\hspace{-1cm}\includegraphics[width=0.55\textwidth]{figures/brps-MCTS-EXP3.pdf} & \includegraphics[width=0.55\textwidth]{figures/brps-MCTS-RM.pdf}
+\hspace{-0.85cm}{\small MCTS-UCT (fully deterministic)} & {\small MCTS-UCT with stochastic tie-breaking} \\ 
+\hspace{-0.85cm}\includegraphics[width=0.55\textwidth]{figures/brps-MCTS-UCT.pdf} & \includegraphics[width=0.55\textwidth]{figures/brps-MCTS-UCT-NONDET.pdf}\\
+\hspace{-0.85cm}{\small MCTS-Exp3} & {\small MCTS-RM} \\
+\hspace{-0.85cm}\includegraphics[width=0.55\textwidth]{figures/brps-MCTS-EXP3.pdf} & \includegraphics[width=0.55\textwidth]{figures/brps-MCTS-RM.pdf}
 \end{tabular}
-\caption{Exploitability of strategies of recommended by MCTS over time. Vertical axis represents exploitability. \label{fig:expl-brps}}
+\caption{Exploitability of strategies of recommended by MCTS over time in Biased Rock, Paper, Scissors. Vertical axis represents exploitability. \label{fig:expl-brps}}
 \end{figure}
 
 The first observation is that UCT does not seem to converge to a low-exploitability strategy. The exploitability of the strategies of 
