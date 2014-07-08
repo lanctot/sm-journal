@@ -177,7 +177,7 @@ One particularly striking observation is that this simple addition leads to a la
 ranges from $[0.5,0.8]$ in the deterministic case, compared to $[0.01,0.05]$ with stochastic tie-breaking. 
 
 We investigated this further and found a possible
-explanation of this behavior. Consider the matrix game on the right of Figure~\ref{fig:egMatrixGames} in Section~\ref{sec:smgames}.
+explanation of this behavior. Consider the matrix game on the right of Figure~\ref{fig:egMatrixGames} in Section~\ref{sec:smg}.
 Suppose DUCT is run on this game and players deterministically prefer the left-action. 
 DUCT will always recieve rewards 0 and the exploration bias term will cause the players to round-robin over the actions indefinitely. 
 However, each player can than improve by playing first action with probability 1. Breaking ties stochastically will lead the algorithm to 

@@ -1,15 +1,16 @@
 
 This section focuses on algorithms that compute strategies for simultaneous move games. 
-The baseline algorithm for solving simultaneous-move games is backward induction~(Section~\ref{sec:algs:bi}).
+The baseline algorithm for solving simultaneous move games is backward induction~(Section~\ref{sec:algs:bi}).
 %Therefore, we start our description of the algorithms focusing on algorithms based on the backward induction, then we introduce algorithms based on no-regret learning and Monte Carlo sampling.
-Afterwards we present a modification that exploits quick calculation of upper and lower bounds in a simultaneous-move game~(Section~\ref{sec:algs:biab}).
+Afterwards we present a modification that exploits quick calculation of upper and lower bounds in a simultaneous move game~(Section~\ref{sec:algs:biab}).
 Then, we further improve the algorithm by speeding up the calculation of NE in stage games, exploiting the iterative framework known as the double-oracle algorithm~(Seciton~\ref{sec:algs:doab}).
 In Section~\ref{sec:algs:smmcts} we describe Monte Carlo tree search for simultaneous move games. 
 Finally, we present counterfactual regret minimization and its sampling variant outcome sampling in Section~\ref{sec:algs:cfros}. 
 
 
 \subsection{Backward Induction}\label{sec:algs:bi}
-Standard backward induction algorithm is based on the depth-first search that in each state of the game evaluates all successors, creates matrix game for the current state, solves the matrix game, and propagates back the value of the matrix game. The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:backwardinduction}. If the succeeding node $\cT(s,r,c)$ is a chance node, the algorithm directly evaluates all successors of this chance node computing an expected utility: the value of each subgame rooted in node $s''$ calculated by recursive call is weighted by the probability of the stochastic transition $\Delta_c(\cT(s,r,c),s')$~(line~\ref{alg:bi:recursive}).
+
+Standard backward induction algorithm is based on the depth-first search that at each state of the game evaluates all successors, creates matrix game for the current state, solves the matrix game, and propagates back the value of the matrix game. The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:backwardinduction}. If the succeeding node $\cT(s,r,c)$ is a chance node, the algorithm directly evaluates all successors of this chance node computing an expected utility: the value of each subgame rooted in node $s''$ calculated by recursive call is weighted by the probability of the stochastic transition $\Delta_c(\cT(s,r,c),s')$~(line~\ref{alg:bi:recursive}).
 
 \begin{algorithm2e}[t]
 \small
@@ -41,11 +42,13 @@ Evaluating each successor and solving the linear programs in each state of the g
 The following algorithms try to prune certain branches of the tree in order to avoid this step even for the price of multiple traversals of the game tree.
 
 \subsection{Backward Induction with Serialized Alpha-Beta Bounds}\label{sec:algs:biab}
-Backward induction algorithm can be easily enhanced by using bounds on the value of sub-games. 
-These bounds can be calculated very quickly by using a transformation of a simultaneous-move game into a perfect information extensive-form game.
+
+Backward induction algorithm can be easily enhanced by using bounds on the value of subgames. 
+These bounds can be calculated very quickly by using a transformation of a simultaneous move game into a perfect information extensive-form game.
 Consider a matrix game representing a simultaneous choice of both players.
 This matrix can be serialized by discarding the notion of information sets; hence, letting one player to play first following by the play of the second player. 
-The crucial difference between a serialized and a simultaneous-move matrix game is that the second player to move has an advantage of knowing what action has been played in a serialized game.
+The crucial difference between a serialized and a simultaneous move matrix game is the serialized game that the second player to move has an advantage of knowing 
+what action the first player chose. 
 Therefore, the value of a serialized game where player $i$ is second to move is an upper bound on the value of the matrix game from the perspective of player~$i$. 
 
 \begin{figure}
@@ -65,7 +68,7 @@ An example of this serialization is depicted in Figure~\ref{fig:serialization}.
 There is a simple matrix game for two players (the circle and the box player; the utility values are depicted for the circle player i.e., the box player in the column is minimizing this value) and two ways this game can be transformed into a serialized perfect-information extensive-form game.
 If the circle player moves first (the left game tree), then the value of this serialized game is the lower bound of the value of the game; if this player moves second (the right game tree), then the value of this serialized game is the upper bound of the value of the game.
 Since the serialized games are zero-sum perfect-information games in the extensive form, they can be solved very quickly by using classical AI algorithm such as alpha-beta or negascout.
-If the values of both serialized games are equal, then this value is also equal to the value of the original simultaneous-move game. 
+If the values of both serialized games are equal, then this value is also equal to the value of the original simultaneous move game. 
 This situation occurs in our example in Figure~\ref{fig:serialization}, where both serialized games have value equal to~$3$.
 
 By using bounds calculated in this way we can speed-up the backward induction algorithm (denoted $\biab$). 
@@ -111,8 +114,9 @@ $v_s \leftarrow$ solve matrix game $A$\;
 \end{algorithm2e}
 
 \subsection{Backward Induction with Double Oracle and Serialized Bounds}\label{sec:algs:doab}
+
 Solving a matrix game can be further improved by using iterative double-oracle algorithm~\cite{McMahan03Planning}. 
-First of all, we describe the main principles of the double-oracle algorithm in matrix games, following by describing the application of the algorithm in simultaneous-move game~\cite{Bosansky13Using} (denoted $\doab$).
+First of all, we describe the main principles of the double-oracle algorithm in matrix games, following by describing the application of the algorithm in simultaneous move game~\cite{Bosansky13Using} (denoted $\doab$).
 
 \subsubsection{Double-oracle Algorithm for Matrix Games}\label{sec:doab}
 \begin{figure}[t!]
@@ -121,10 +125,11 @@ First of all, we describe the main principles of the double-oracle algorithm in 
 \caption{Schematic of the double-oracle algorithm for a normal-form game.}\label{fig:do-scheme}
 \end{figure}
 
-The main goal of the double-oracle algorithm is to find a solution of a matrix game without necessarily constructing the complete linear program that solves this game. 
-The main idea is to create a restricted game by restricting the players to choose only from a limited set of actions.
-Then the algorithm iteratively expands the restricted game by allowing the players to choose from new actions.
-The new actions are allowed in iterations; each iteration a best response to an optimal strategy of the opponent in the current restricted game is allowed to be played in the restricted game.
+The goal of the double-oracle algorithm is to find a solution of a matrix game without necessarily constructing the complete linear program that solves this game. 
+The main idea is to create a restricted game where the players can only choose from a limited set of actions.
+Then, the algorithm iteratively expands the restricted game by allowing the players to choose from new actions.
+The new actions are added incrementally; each iteration, a best response to an optimal strategy of the opponent in the current restricted game is 
+allowed to be played in the restricted game.
 
 Figure~\ref{fig:do-scheme} shows a visualization of the main structure of the algorithm, where the following three steps repeat until convergence:
 \begin{enumerate}
@@ -132,11 +137,12 @@ Figure~\ref{fig:do-scheme} shows a visualization of the main structure of the al
 \item compute a pair of Nash equilibrium strategies in this restricted game using linear programming
 \item for each player, compute a pure best response strategy against the equilibrium strategy of the opponent; pure best response can be \emph{any} action from the original unrestricted game
 \end{enumerate}
-The best response strategies computed in step 3 are added to the restricted game, the game matrix is expanded by adding new rows and columns, and the algorithm follows with the next iteration. The algorithm terminates if neither of the players can improve the outcome of the game by adding a new strategy to the restricted game; hence, players play best response strategies to the strategy of the opponent. The algorithm maintains the values of expected utilities of the best-response strategies throughout the iterations of the algorithm. These values provide bounds on the value of the original game $v^*$
+The best response strategies computed in step 3 are added to the restricted game, the game matrix is expanded by adding new rows and columns, and the algorithm follows with the next iteration. The algorithm terminates if neither of the players can improve the outcome of the game by adding a new strategy to the restricted game; hence, players play best response strategies to the strategy of the opponent. The algorithm maintains the values of expected utilities of the best-response strategies throughout the iterations of the algorithm. These values provide bounds on the value of the original game $v^*$ \mlanctot{sentence not terminated..?}
 
 \subsubsection{Integrating Double-Oracle with Backward Induction}
 
 Double-oracle algorithm for matrix games can be directly incorporated into the backward induction -- instead of immediately evaluating each of the successors of the current game state and solving the linear program, the algorithm can exploit the double-oracle algorithm. Pseudocode in Algorithm~\ref{alg:doab} depicts this integration. 
+\mlanctot{Shouldn't the recursive call in 14 of Algorithm \ref{alg:doab} be $\doab(...)$ rather than double-oracle written out?}
 
 In each state of the game, the algorithm initializes the restricted game with an arbitrary action (line~\ref{alg:doab:init}) -- $A'$ represents the restricted matrix game, $\cA'_i$ represents the restricted set of available actions to player~$i$. 
 Afterwards, the algorithm starts the iterations of the double-oracle algorithm.
@@ -178,7 +184,7 @@ initialize $\cA'_i$, $\cA'_{-i}$ with arbitrary actions from $\cA_i, \cA_{-i}$\;
 	$\cA'_{-i} \leftarrow \cA'_{-i} \cup \lbrace a^{BR}_{-i} \rbrace$ \label{alg:doab:expand}
 }
 \Return $v_s$ \label{alg:doab:stop2}
-\caption{Double Oracle with Serialized Bounds ($\doab$).}\label{alg:doab}
+\caption{Double Oracle with Serialized Bounds ($\doab$).} \label{alg:doab}
 \end{algorithm2e}
 
 
@@ -220,6 +226,7 @@ $a_i^{BR} \leftarrow \textbf{null}$ \;
 
 Now we describe the algorithm for calculating the best responses. 
 The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:br}.
+\mlanctot{Shouldn't the recursive call in 12 of Algorithm \ref{alg:br} be something line BR(...) rather the double-oracle(...)? Also, the function name should be put into the caption as with the other ones.}
 The goal of the algorithm is to find the best action from the original unrestricted game against current strategy of the opponent $\delta'$. 
 Throughout the algorithm we use, as before, $v^i_{s'}$ to denote the upper bound of the value of the sub-game rooted in state $s'$ calculated using alpha-beta$(s',i)$. These values are calculated on demand, i.e., they are calculated once needed and cached until the game for state $s$ is not solved.
 Moreover, once the algorithm calculates the exact value of a particular subgame, both upper and lower bounds are updated to be equal to actual value of the game. 
@@ -228,8 +235,8 @@ The algorithm iteratively tries all actions of player $i$ from the unrestricted 
 Every action $a_i$ is evaluated against the actions of the opponent that are used in the optimal strategy from the restricted game (line~\ref{alg:br:opp}).
 Before evaluating against an action of the opponent the algorithm determines, whether the current action of the searching player, $a_i$, can still be the best response action (line~\ref{alg:br:bound}). 
 The value $\lambda_{a_i}$ represents the lowest possible expected utility this action must gain against the current action of the opponent $a_{-i}$. 
-If this value is strictly higher than the upper bound of the successor (i.e., the value $v^i_{\cT(s,a_i,a_{-i})}$) than the algorithm knows that the action $a_i$ can never be the best response action, and the algorithm proceeds with the next action.
-$\lambda_{a_i}$ is calculated by subtracting from the current best response value ($v_i^{BR}$) upper bound of the expected value against all other actions of the opponent ($v^i_{\cT(s,a_i,a'_{-i})}$). Recall, that these values are updated once the algorithm calculates exact values.
+If this value is strictly higher than the upper bound of the successor (i.e., the value $v^i_{\cT(s,a_i,a_{-i})}$) then the algorithm knows that the action $a_i$ can never be the best response action, and the algorithm proceeds with the next action.
+$\lambda_{a_i}$ is calculated by subtracting from the current best response value ($v_i^{BR}$) upper bound of the expected value against all other actions of the opponent ($v^i_{\cT(s,a_i,a'_{-i})}$). Recall that these values are updated once the algorithm calculates exact values.
 
 If the currently evaluated action $a_i$ can still be the best response, the value of the successor is determined (first by comparing the bounds). Once the expected outcome against all actions of the opponent is evaluated, the expected value of action $a_i$ is compared against the current best-response value (line~\ref{alg:br:max}) and saved, if the expected utility is higher~(line~\ref{alg:br:save}). The best response actions are allowed in the next iteration of the double-oracle algorithm and the algorithm progresses further as described.
 
@@ -237,7 +244,9 @@ When extracting strategies from the double-oracle algorithm with serialized alph
 
 
 \subsection{Simultaneous-Move Monte Carlo Tree Search (SM-MCTS)} \label{sec:algs:smmcts}
-\bbosansky{It seems to me that the two parts (BI / sampling) are quite uneven in terms of details and readability. The first part is quite verbose with examples, while MCTS and OOS are quite condensed and more difficult to follow. It would be good to rewrite add some more text description and intuition into MCTS/OOS (it is encouraged in the AIJ submission info to be less heavy and provide intuition).}
+
+\bbosansky{It seems to me that the two parts (BI / sampling) are quite uneven in terms of details and readability. The first part is quite verbose with examples, while MCTS and OOS are quite condensed and more difficult to follow. It would be good to rewrite add some more text description and intuition into MCTS/OOS (it is encouraged in the AIJ submission info to be less heavy and provide intuition).} 
+\mlanctot{Agree. I will do this.}
 In the following sections we move to approximative algorithms.
 Monte Carlo Tree Search (MCTS) is a simulation-based state space search algorithm often used
 in game trees. The nodes in the tree represent game states. The main idea is to iteratively run
@@ -261,7 +270,7 @@ and the information stored in the tree is updated.
         Sample $s' \sim \Delta_c(s)$\;
 	\Return SM-MCTS($s'$)\;
 }
-\If{$s \in T$} {
+\If{$s$ is in the MCTS tree} {
 	$(a_1, a_2) \leftarrow$ \emph{\underline{Select}}$(s)$\;\label{alg:smmcts:select}
 	$s' \leftarrow \cT(s,a_1,a_2)$\;
 	$v_{s'} \leftarrow $ SM-MCTS($s'$)\;\label{alg:smmcts:reccall}
@@ -269,7 +278,7 @@ and the information stored in the tree is updated.
 	\Return $v_{s'}$\;
 }
 \Else{
-	$T \leftarrow T \cup \lbrace s \rbrace$\;
+	Add $s$ as a new child in the MCTS tree\;
 	$v_{s} \leftarrow$ Rollout($s$)\;
 	\Return $v_{s}$\;
 }
@@ -278,15 +287,17 @@ and the information stored in the tree is updated.
 
 We first present a generic template of MCTS algorithms for simultaneous move games (SM-MCTS) and then explain specific algorithms derived form this template.
 Algorithm~\ref{alg:smmcts} describes a single iteration of the SM-MCTS. 
-$T$ represents the MCTS tree, in which each state is represented by one node.\bbosansky{I'd use $\cS'$ or something based on $\cS$ instead of $T$.}
-Every node $s$ maintains algorithm-specific statistics about the iterations that previously used this node.
+The ``MCTS tree'' is an explicit tree data structure that stores the nodes of the search tree maintained in memory. 
+% mlanctot: actually I hardly used it so I just wrote it out explicitly, one less symbol to remember
+%\bbosansky{I'd use $\cS'$ or something based on $\cS$ instead of $T$.}
+Every node $s$ in the tree maintains algorithm-specific statistics about the iterations that previously used this node.
 The template can be instanciated by specific implementations of the updates of the statistics on line~\ref{alg:smmcts:up} and the selection based on these statistics on line \ref{alg:smmcts:select}.
 In the terminal states, the algorithm returns the value of the state for the first player (line 2).
 In the chance nodes, the algorithm selects one of the possible next stated based on the chance distribution (line 4).
-If the current state has a node in the current MCTS tree $T$, the statistics in the node are used to select an action for each player (line~\ref{alg:smmcts:select}).
+If the current state has a node in the current MCTS tree, the statistics in the node are used to select an action for each player (line~\ref{alg:smmcts:select}).
 These actions are executed (line 8) and the algorithm is called recursively on the resulting state (line 9).
 The result of this call is used to update the statistics maintained for state $s$ (line~\ref{alg:smmcts:up}).
-If the current state is not stored in tree $T$, it is added to the tree (line 13) and its value is estimated usinf the rollout policy (line 14).
+If the current state is not stored in tree, it is added to the tree (line 13) and its value is estimated usinf the rollout policy (line 14).
 
 Different algorithms can be the bases for the selection functions (e.g., UCB~\cite{UCB}, Exp3~\cite{Auer2003Exp3}).
 We now present the variants of SM-MCTS that were consistently the most successful in previous works, though more variants can be found in~\cite{Perick12Comparison,Lanctot13Tron,Tak14smmcts}.
@@ -335,14 +346,18 @@ Therefore, unless stated otherwise, we use the randomized variant in our impleme
 Even though UCT is not guaranteed to converge to the optimal solution, it is often very successful in practice.
 It has been used in and general game playing~\cite{Finnsson12}, in the Internet card game Urban Rivals~\cite{Teytaud11Upper},
 and in the simultaneous move game Tron~\cite{Perick12Comparison}.
-\mlanctot{Is there an earlier Tron paper where it was used?}
-Note that UCT described in this section is different than UCT run on a game that is transformed to perfect information by serialization of the simultaneous moves, because in the latter case one player has the advantage of knowing what the other player chose at every stage.
-\vlisy{Possibly mention convergence in games with pure strategies.}\bbosansky{I'd remove this last sentence of this para.}
+
+% mlanctot: removed, was confusing.
+%Note that UCT described in this section is different than UCT run on a game that is transformed to perfect information by serialization of the simultaneous moves, because in the latter case one player has the advantage of knowing what the other player chose at every stage.
+%\vlisy{Possibly mention convergence in games with pure strategies.}\bbosansky{I'd remove this last sentence of this para.}
 
 \subsubsection{Exponential-weight algorithm for Exploration and Exploitation}\label{sec:exp3}
-\bbosansky{$\gamma$ not defined}
+
+%\bbosansky{$\gamma$ not defined}
+
 The second most common instantiation of SM-MCTS is to use the Exponential-weight algorithm for Exploration and Exploitation (Exp3) algorithm \cite{Auer2003Exp3} independently for each of the players.
 In Exp3, each player maintains an estimate of the sum of rewards for each action, denoted $\hat{X}_{a_i}$. The joint action produced by \emph{\underline{Select}} is composed of an action independently selected for each player.
+Define $\gamma$ to be the probability of exploring, \ie choosing an action uniformly. 
 The probability of using action $a_i$ is proportional to the exponential of the reward estimates:
 \begin{equation}\label{eq:exp3select}
 \sigma_i(a_i) = \frac{(1-\gamma) \exp(\eta \hat{X}_{a_i})}{\sum_{b_i \in \cA_i(s)} \exp(\eta \hat{X}_{b_i})} + \frac{\gamma}{|\cA_i(s)|},
@@ -372,7 +387,7 @@ As the final strategy, after all iterations are executed, the algorithm computes
 In our implementation, we maintain the cumulative sum and normalize it to obtain the average strategy after the iterations.
 
 Previous work \cite{Teytaud11Upper} suggests first removing the samples caused by the exploration.
-This modification proved to be useful also in our experiments and it has been shown not to reduce the performance substantially in the worst case \cite{kovarik}, \mlanctot{Add missing reference} so as the resulting final mixed strategy, we use
+This modification proved to be useful also in our experiments and it has been shown not to reduce the performance substantially in the worst case \cite{kovarik}, \mlanctot{@Vilo, please add the missing reference; I don't know which paper you wanted to cite here} so as the resulting final mixed strategy, we use
 \begin{equation}
 \bar{\sigma}_i(a_i) \leftarrow \max\left(0, \bar{\sigma}_i(a_i) - \frac{\gamma}{|\cA_i(s)|}\right),
 \end{equation}
