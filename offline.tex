@@ -340,7 +340,7 @@ Note that UCT described in this section is different than UCT run on a game that
 \vlisy{Possibly mention convergence in games with pure strategies.}\bbosansky{I'd remove this last sentence of this para.}
 
 \subsubsection{Exponential-weight algorithm for Exploration and Exploitation}\label{sec:exp3}
-
+\bbosansky{$\gamma$ not defined}
 The second most common instantiation of SM-MCTS is to use the Exponential-weight algorithm for Exploration and Exploitation (Exp3) algorithm \cite{Auer2003Exp3} independently for each of the players.
 In Exp3, each player maintains an estimate of the sum of rewards for each action, denoted $\hat{X}_{a_i}$. The joint action produced by \emph{\underline{Select}} is composed of an action independently selected for each player.
 The probability of using action $a_i$ is proportional to the exponential of the reward estimates:
