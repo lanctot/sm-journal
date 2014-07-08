@@ -39,6 +39,9 @@ Therefore, with the exception of the evaluation function used in selected online
 \subsection{Domains}
 
 In this subsection, we describe the domains used in our experiments.
+For each domain we also describe the evaluation function used in the online experiments. 
+Note that we are not seeking for the best-performing algorithm for a particular game; hence, we have not aimed for the most accurate evaluation functions for each game.
+We intentionally use evaluation functions of different quality that allow us to compare the differences between the algorithms from this perspective as well.
 
 \paragraph{\textbf{Biased Rock, Paper, Scissors}} 
 BRPS is a payoff-skewed version of the one-shot game Rock, Paper, Scissors shown in 
@@ -73,6 +76,12 @@ When there are no more cards to be played, the winner of the game is chosen base
 We follow the assumption made in \cite{Saffidine12SMAB} that both players know the sequence of the nature's cards. 
 The game is win-loss; hence, the players receive utility from set $\lbrace -1, 0, 1 \rbrace$.
 
+The evaluation function used in goofspiel takes into consideration two components: (1) the difference in the current score for both players weighted by the current round in the game, and (2) the remaining cards in the deck weighted by a chance of winning these cards depending on the remaining cards on hand for each player. Formally:
+$$
+eval(s) = \tanh\left(\frac{\textrm{score}_1 - \textrm{score}_2}{\textrm{score}_1 + \textrm{score}_2}\cdot\frac{\textrm{round}}{d} + \frac{\textrm{remCards}_1 - \textrm{remCards}_2}{\textrm{remCards}_1 + \textrm{remCards}_2}\cdot\frac{\textrm{remCards}_c}{0.5\cdot d(d+1)}\right)
+$$
+$eval(s)$ is equal to $0$ in the beginning of the game (i.e., when $\textrm{score}_1 + \textrm{score}_2$ is $0$) and to the utility value of the game at the end (i.e., when $\textrm{remCards}_1 + \textrm{remCards}_2$ is $0$). We use $\tanh$ to scale the evaluation function into the interval $[-1,1]$.
+Moreover, if the position is clearly winning for one of the players (there is not enough cards to change the current score), the evaluation function is set to $1$, or $-1$.
 %\item[Oshi-Zumo]$(N,K,M)$ is a wrestling simulation game played on a discrete single-dimensional grid with
 %$2K+1$ positions, where each player starts with $N$ coins~\cite{buro2003}. A wrestler token begins in the middle
 %position. Every turn,
@@ -92,6 +101,14 @@ If the final position of the wrestler at in the center, the game is a draw.
 Again, the utility values are restricted to $\lbrace -1, 0, 1 \rbrace$.
 In the experiments we varied number of coins and parameter $K$.
 
+The evaluation function used in Oshi-Zumo takes into consideration two components: (1) the current position of the wrestler and, (2) the remaining coins for each player. Formally:
+$$
+eval(s) = \tanh\left(\frac{b}{2}+\frac{1}{3}\left(\frac{\textrm{coins}_1 - \textrm{coins}_2}{M} + \textrm{wrestler} - K\right)\right)
+$$
+where $b$ equals to 1 if $\textrm{coins}_1 \geq \textrm{coins}_2$ and $wrestler \geq K$, and at least one of the inequalities is strict;
+$b$ equals to $-1$, if $\textrm{coins}_1 \leq \textrm{coins}_2$ and $wrestler \leq K$, and at least one of the inequalities is strict.
+Again, we use $\tanh$ to scale the evaluation function into the interval $[-1,1]$.
+
 \paragraph{\textbf{Pursuit Evasion Games}}
 Another important class of games is pursuit-evasion games (see for example~\cite{nguyen2013monte}).
 There is a single evader and a pursuer that controls 2 pursuing units in our pursuit-evasion game. 
@@ -101,20 +118,33 @@ Again, the game is win-loss and the players receive utility from set $\lbrace -1
 We used grid-graphs for the experiments without any obstacles or holes.
 In the experiments we varied the allowed number of moves $d$ and we altered the starting positions of the players (the distance between the pursuers and the evader was always at most $\left\lfloor\frac{2}{3} d\right\rfloor$ moves, in order to provide a possibility for the pursuers to capture the evader).
 
+The evaluation function used in pursuit-evasion games takes into consideration the distance between the units of the pursuer and evader (denoted $\textrm{distance}_j$ for the distance in moves of the game between the $j-th$ unit of the pursuer and the evader). Formally:
+$$
+eval(s) = \frac{\min(\textrm{distance}_1,\textrm{distance}_2) + 0.01\cdot\max(\textrm{distance}_1,\textrm{distance}_2)}{1.01*(w+l)}
+$$
+where $w$ and $l$ are dimensions of the grid graph.
 
 \paragraph{\textbf{Random/Synthetic Games}}
 We also use randomly generated games to be able to experiment with additional parameters of the game, mainly larger utility values and their correlation.
 In randomly generated games, we fixed the number of actions that players can play in each stage to $4$ and $5$ (the results were similar for different branching factors) and we varied depth of the game tree. 
 We use $2$ different methods for randomly assigning the utility values to the terminal states of the game: 
 (1) the utility values are uniformly selected from the interval $\left[0,1\right]$; 
-(2) we randomly assign either $-1$ or $+1$ value to action and the utility value in a leaf is a sum of all values on edges on the path from the root of the game tree to the leaf; 
+(2) we randomly assign either $-1$, $0$, or $+1$ value to action and the utility value in a leaf is a sum of all values on edges on the path from the root of the game tree to the leaf; 
 The first method produces extremely difficult games for pruning using either alpha-beta search, or double-oracle methods, since there is no correlation between actions and utility values in sibling leafs. 
 The two latter methods are based on random \emph{T-games} \cite{smith1995}, that create more realistic games using the intuition of good and bad moves.
 
+Only the second type of randomly generated games is used in the online setting. 
+The evaluation function used in this case is calculated similarly as the utility value and it is equal to the sum of values on the edges from the root to the current node.
 
-\paragraph{\textbf{Tron}} is a two-player game played on discrete grid possibly obstructed by walls. At each
-step in Tron both players move to adjacent cells, and a wall is placed in the cells the players started on that turn.
-Both players try to survive as long as possible. If both players can only move into a wall, can only move off the board or move into each other at the same turn, the game ends  in a draw. 
+\paragraph{\textbf{Tron}} 
+Tron is a two-player simultaneous-move game played on a discrete grid, possibly obstructed by walls. 
+At each step in Tron both players move to adjacent cells, and a wall is placed in the cells the players started on that turn.
+A player looses if he hits the wall.
+The goal of both players is to survive as long as possible. 
+If both players can only move into a wall, can only move off the board or move into each other at the same turn, the game ends in a draw. 
+In the experiments we used an empty grid with no obstacles and varying size of the grid.
+
+\bbosansky{Mark, could you please describe the evaluation function for Tron here with a reference, if the evaluation function you have used is described somewhere.}
 
 \subsection{Non-Convergence and Random Tie-Breaking in DUCT}\label{sec:exp:brps} 
 
@@ -189,11 +219,12 @@ We compare MCTS algorithms with three different selection functions (UCT, EXP3, 
 The results are means out of $20$ runs of each algorithm.
 The results show that OOS is the fastest out of all sampling algorithms during the whole time. 
 MCTS with Regret Matching selection function is only slightly slower, however, other two selection functions perform worse. 
-While EXP3 eventually converges close to $0$, UCT is not able to reach error lower than $0.5$ (the minimum error was $0.37$ out of all runs and all samples).\vlisy{update}
-These results confirm theoretical findings for the algorithms -- convergence is not guaranteed for UCT, and can be expensive (i.e., slow) for EXP3. 
-On the other hand, both OOS and RM confirm their quick convergence, witch is aligned with previous existing results~\cite{}.
+While EXP3 eventually converges close to $0$, the exploitability of UCT decreases rather slowly and it was still over $0.35$ at the time limit of $300$ seconds. 
+These results confirm theoretical properties for the algorithms, where it can be quite slow for EXP3 and UCT.
+Moreover, when we have not used randomization in UCT, the algorithm was not able to converge to error lower than $0.5$ in the time limit. 
+On the other hand, both OOS and RM confirm their quick convergence, witch is aligned with previous existing results~\cite{Lanctot13Goofspiel}.
 The vertical lines represent times for exact algorithms.
-In Goofspiel $5$, $\biab$ is slightly faster and finishes first in less than $1$ second, following by $\doab$ ($1.52$ seconds), \textsc{DO} ($4.25$ seconds), and \textsc{BI} ($7.11$).\vlisy{legend for BI algorithms still missing}
+In Goofspiel $5$, $\biab$ is slightly faster and finishes first in less than $1$ second, following by $\doab$ ($1.52$ seconds), \textsc{DO} ($4.25$ seconds), and \textsc{BI} ($7.11$).\vlisy{legend for BI algorithms still missing}\bbosansky{I am working on that.}
 
 
 \subsubsection{Pursuit-Evasion Games}
@@ -224,9 +255,10 @@ Therefore, serialized alpha-beta is not able to solve all sub-games, while doubl
 
 We turn to convergence of the sampling algorithms.
 The results are depicted in Figure~\ref{fig:off:conv:peg} for the smaller $4\times4$ graph and $4$ number of moves for each player (note again the logarithmic y-scale).
-The results again show that OOS is overall the fastest out of all sampling algorithms, however, during the first iterations both UCT and RM are faster and their exploitability is slightly smaller. 
-On the other hand, while OOS is able to keep the convergence rate and reach almost $0$ exploitability, UCT again converges to exploitable strategy with error $0.73$ at best.\vlisy{update} 
-The convergence of RM is much better, however the best final error is $0.13$ in the given time.
+The starting positions were selected such that there does not exist a pure NE strategy in the game.
+The results again show that OOS is overall the fastest out of all sampling algorithms, however, during the first iterations both UCT and RM are faster and their exploitability is smaller. 
+On the other hand, while OOS is able to keep the convergence rate and reach almost $0$ exploitability, UCT again converges to an exploitable strategy with error $1.16$ at best in the time limit of $500$ seconds.
+The convergence of RM is much better, however the best final error is $0.14$ in the given time.
 Finally, EXP3 converges even more slowly compared to the Goofspiel.
 The main difference between the games is the size of the branching factor for the second player (pursuer controls two simultaneously moving units), which can cause more difficulties for the sampling algorithms to estimate good strategies.
 
@@ -267,9 +299,9 @@ With an increasing number of coins the algorithms need to find mixed Nash equili
 \caption{Convergence comparison of different sampling algorithms on Oshi-Zumo game, with $10$ coins, $K=3$, and $M=1$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:oz}
 \end{figure}
 
-Figure~\ref{fig:off:conv:oz} depicts results for convergence of the sampling algorithms for the game with $10$ coins, $K$ set to $3$ and minimum bid set to $1$. This is an easy game for $\doab$ and $\biab$ with pure strategy and both of these algorithms are able to solve the game in less than a second ($0.73$). However, due to large branching factor for both players ($10$ actions at the root node for each player) all sampling algorithms converge extremely slowly. Again, OOS is the best one, however, in a given time limit ($500$ seconds) the algorithm converged to error slightly below $0.5$ ($0.41$). On the other hand, all of the other sampling algorithms perform significantly worse -- RM ends with error slightly over $1$, UCT with $1.78$, and EXP3 with $1.88$.
+Figure~\ref{fig:off:conv:oz} depicts results for convergence of the sampling algorithms for the game with $10$ coins, $K$ set to $3$ and minimum bid set to $1$. This is an easy game for $\doab$ and $\biab$ with pure strategy and both of these algorithms are able to solve the game in less than a second ($0.73$). However, due to large branching factor for both players ($10$ actions at the root node for each player) all sampling algorithms converge extremely slowly. Again, OOS is the best one, however, in a given time limit ($500$ seconds) the algorithm converged to error slightly below $0.5$ ($0.41$). On the other hand, all of the other sampling algorithms perform significantly worse -- RM ends with error slightly over $1$, UCT with $1.50$, and EXP3 with $1.88$.
 This confirms our findings from the previous experiment that increasing branching factor slows down the convergence rate.
-Secondly, since there is a pure Nash equilibrium, the convergence of the algorithms is also slower since they essentially mix the strategy during the iterations in order to explore the unvisited parts of the game tree. Since none of the sampling algorithms can exploit the fact, their performance in offline solving games like Oshi-Zumo is not compelling.
+Secondly, since there is a pure Nash equilibrium in this particular game configuration, the convergence of the algorithms is also slower since they essentially mix the strategy during the iterations in order to explore the unvisited parts of the game tree. Since none of the sampling algorithms can directly exploit this fact, their performance in offline solving games like Oshi-Zumo is not compelling. On the other hand, the existence of pure NE explains the better performance of UCT compared to EXP3 that is forced to explore more broadly.
 
 \subsubsection{Random Games}
 In the first variant of the randomly generated games we used games with utility values randomly drawn from a uniform distribution $[0,1]$. 
@@ -307,7 +339,12 @@ Finally, $\doab$ evaluates $\approx2\cdot10^6$ nodes on average and it takes the
 \caption{Convergence comparison of different sampling algorithms on random game with branching factor $4$ and depth $5$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:rg}
 \end{figure}
 
+Figure~\ref{fig:off:conv:rg} depicts the results for convergence of the sampling algorithms for the random game with correlated utility values, branching factor set to $4$ and depth $5$. Interestingly, there is a much less difference between the performance of the sampling algorithms in this game. Since these games are generally more mixed (i.e., NE require to use mixed strategies in many states of the game), they are much more suitable for the sampling algorithms. In the overall performance, again OOS is the winner, however, the performance of RM is very similar and even better during the first second. Again, since the game is more mixed, EXP3 outperforms UCT in the longer run, however, it is the worst sampling algorithm during the first iterations.
+
 \subsubsection{Tron}
+From the perspective of offline computation of strategies, Tron is less interesting compared to the previous games.
+\bbosansky{TODO: Finish This!}
+
 \begin{figure}
 \centering
 \includegraphics[width=0.85\textwidth]{figures/convergence-tron.pdf}
@@ -318,7 +355,7 @@ Finally, $\doab$ evaluates $\approx2\cdot10^6$ nodes on average and it takes the
 \subsection{Online Search}
 
 This sections compares the performance of all the algorithms in head-to-head matches in large instances of the same games as we used in equilibrium computation experiments. Each algorithm has a strictly limited computational time per move set to one or five seconds. After this time, it has to output an action to be played in the current game state and afterwards, it is informed about the action selected by its opponent. The game proceeds to the following state and the algorithm have additional time for computation. As described in Section~\ref{sec:online}, all algorithms keep results of previous computations and do not start form scratch in the following move. 
-We use only \doab as a representative of backward induction algorithms in this comparison, because it was clearly the fastest algorithm in all the considered games and it provides practically the same solution with a fixed search depth.
+We use only $\doab$ as a representative of backward induction algorithms in this comparison, because it was clearly the fastest algorithm in all the considered games and it provides practically the same solution with a fixed search depth.
 In the following experiments, we aim to identify the algorithms that are most suitable in the online search setting and study the relation of the performance in approximating the equilibrium in the offline setting and actual game playing performance in the matches. In this section, we report mainly the win rates of the algorithms, in which a tie is counted as half win.
 
 
@@ -545,7 +582,7 @@ Time&\multicolumn{6}{|c|}{OOS}\\
 
 In head-to-head comparison, we use Goofspiel with 13 cards, as it is played by humans. However, for the sake of consistency with the offline results, we assume a fixed known (decreasing)\vlisy{check with brano} sequence of the cards of the nature player. The game has still more than $3.8\times 10^19$ leaf nodes. The results with one second per move are presented in Figure~\ref{fig:matches1}.
 
-Even though \doab uses a domain-specific evaluation function, it does not win significantly against any of the sampling algorithms not using any domain knowledge. It tied with OOS and it lost by the largest margin to the MCTS-Exp3. With five seconds per move (see Figure~\ref{fig:matches5}), even OOS is winning against \doab with Exp3 still being its strongest opponent.
+Even though $\doab$ uses a domain-specific evaluation function, it does not win significantly against any of the sampling algorithms not using any domain knowledge. It tied with OOS and it lost by the largest margin to the MCTS-Exp3. With five seconds per move (see Figure~\ref{fig:matches5}), even OOS is winning against $\doab$ with Exp3 still being its strongest opponent.
 
 The differences in the performance of sampling algorithms are relatively small. Even though OOS converges the fastest in the offline experiment (see Figure~\ref{fig:off:conv:gs}), it is losing against all other algorithms with 1 second per move. Its performance improves with 5 seconds per move, but it still does not significantly outperform any other sampling algorithm. With both time settings, RM seems to perform slightly the best. Its performance against other algorithms is very similar to Exp3, but it significantly wins in their mutual matches.
 
@@ -553,11 +590,11 @@ The differences in the performance of sampling algorithms are relatively small. 
 
 In Oshi-Zumo, we use the setting with 50 coins, K=3 fields on each side of the board and minimal bet of 1. We chose this parameters to be consistent with \cite{} and to have a game with larger branching factor.\vlisy{can we estimate game size?}
 
-In this game, the evaluation function used by \doab is much stronger than in Goofspiel and all the sampling algorithms without domain specific knowledge perform poorly against this algorithm (see Figures~\ref{fig:matches1} and~\ref{fig:matches5}). The loss is even higher with 5 seconds per move. None of the sampling algorithms perform significantly better than the others.
+In this game, the evaluation function used by $\doab$ is much stronger than in Goofspiel and all the sampling algorithms without domain specific knowledge perform poorly against this algorithm (see Figures~\ref{fig:matches1} and~\ref{fig:matches5}). The loss is even higher with 5 seconds per move. None of the sampling algorithms perform significantly better than the others.
 
 In the offline experiment (Figure~\ref{fig:off:conv:oz}), none of the sampling algorithms was able to converge anywhere close to the equilibirum in short time and the game there was many orders of magnitude smaller. With one second per move, RM is clearly the strongest sampling algorithm, having the strongest opponent among the sampling algorithms in UCT loosing 67.8\% of games. OOS and UCT tie for the second place and Exp3 is the weakest sampling algorithm in this game. With five seconds per move, the differences among the algorithms are a little smaller but the same ranking of the algorithms holds.
 
-Because of high quality of the evaluation function in this game, we allowed the sampling algorithms to use it instead of simulation. The tables for this variant are labelled OshiE in the figures. Even when both players use evaluation function, \doab still wins over OOS and RM in both time settings. UCT is clearly the best
+Because of high quality of the evaluation function in this game, we allowed the sampling algorithms to use it instead of simulation. The tables for this variant are labelled OshiE in the figures. Even when both players use evaluation function, $\doab$ still wins over OOS and RM in both time settings. UCT is clearly the best
 
 Why UCT?
 Why more time hurts RM and helps Exp3?
