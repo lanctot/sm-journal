@@ -160,8 +160,10 @@ each variant at regular intervals. The results are shown in Figure~\ref{fig:expl
 
 \begin{figure}[t]
 \begin{tabular}{cc}
-\hspace{-1cm} \includegraphics[scale=0.56]{figures/graphs/brps/duct} & \includegraphics[scale=0.56]{figures/graphs/brps/duct-nondet}\\
-\hspace{-1cm} \includegraphics[scale=0.56]{figures/graphs/brps/exp3} & \includegraphics[scale=0.56]{figures/graphs/brps/rm}\\
+%\hspace{-1cm} \includegraphics[scale=0.56]{figures/graphs/brps/duct} & \includegraphics[scale=0.56]{figures/graphs/brps/duct-nondet}\\
+%\hspace{-1cm} \includegraphics[scale=0.56]{figures/graphs/brps/exp3} & \includegraphics[scale=0.56]{figures/graphs/brps/rm}\\
+\hspace{-1cm}\includegraphics[width=0.55\textwidth]{figures/brps-MCTS-UCT.pdf} & \includegraphics[width=0.55\textwidth]{figures/brps-MCTS-UCT-NONDET.pdf}\\
+\hspace{-1cm}\includegraphics[width=0.55\textwidth]{figures/brps-MCTS-EXP3.pdf} & \includegraphics[width=0.55\textwidth]{figures/brps-MCTS-RM.pdf}
 \end{tabular}
 \caption{Exploitability of strategies of recommended by MCTS over time. Vertical axis represents exploitability. \label{fig:expl-brps}}
 \end{figure}
@@ -224,7 +226,7 @@ These results confirm theoretical properties for the algorithms, where it can be
 Moreover, when we have not used randomization in UCT, the algorithm was not able to converge to error lower than $0.5$ in the time limit. 
 On the other hand, both OOS and RM confirm their quick convergence, witch is aligned with previous existing results~\cite{Lanctot13Goofspiel}.
 The vertical lines represent times for exact algorithms.
-In Goofspiel $5$, $\biab$ is slightly faster and finishes first in less than $1$ second, following by $\doab$ ($1.52$ seconds), \textsc{DO} ($4.25$ seconds), and \textsc{BI} ($7.11$).\vlisy{legend for BI algorithms still missing}\bbosansky{I am working on that.}
+In Goofspiel $5$, $\biab$ is slightly faster and finishes first in less than $1$ second, following by $\doab$ ($1.52$ seconds), \textsc{DO} ($4.25$ seconds), and \textsc{BI} ($7.11$).
 
 
 \subsubsection{Pursuit-Evasion Games}
@@ -342,13 +344,28 @@ Finally, $\doab$ evaluates $\approx2\cdot10^6$ nodes on average and it takes the
 Figure~\ref{fig:off:conv:rg} depicts the results for convergence of the sampling algorithms for the random game with correlated utility values, branching factor set to $4$ and depth $5$. Interestingly, there is a much less difference between the performance of the sampling algorithms in this game. Since these games are generally more mixed (i.e., NE require to use mixed strategies in many states of the game), they are much more suitable for the sampling algorithms. In the overall performance, again OOS is the winner, however, the performance of RM is very similar and even better during the first second. Again, since the game is more mixed, EXP3 outperforms UCT in the longer run, however, it is the worst sampling algorithm during the first iterations.
 
 \subsubsection{Tron}
-From the perspective of offline computation of strategies, Tron is less interesting compared to the previous games.
-\bbosansky{TODO: Finish This!}
+When comparing the exact algorithms on offline computation, the results are affected by the fact that pure NE exists in all smaller instances.
+Therefore, the performance of $\biab$ and $\doab$ is essentially the same since serialized alpha-beta is able to solve the game. Moreover, the performance of standard BI is very weak, since the size of the game increases dramatically with increasing size of the grid (the longest branch of the game tree has $\left(0.5\cdot w\cdot l - 1\right)$ joint actions, where $w$ and $l$ are dimensions of the grid). While BI is able to solve the grid $5\times6$ in $143$ seconds, it takes almost $30$ minutes to solve $6\times6$ grid. The same instance takes $\biab$ and $\doab$ $1.5$ seconds, however, the size of the game tree quickly prohibits the algorithms from computing the exact solution -- both algorithms solved at most the grid of size $8\times8$ that takes $25$ minutes to solve. 
+
+The size of the game tree in Tron also causes slow convergence for sampling algorithms.
+Figure~\ref{fig:off:conv:tron} depicts the results for the grid $5\times6$.
+Consistently with the previous results, OOS performs the best and it is able to converge to very close to exact solution in $300$ seconds. 
+Similarly, both RM and EXP3 are again eventually able to converge to a very small error, however, it take them more time and in the time limit they achieve error $0.05$, or $0.02$ respectively. 
+Finally, UCT performs reasonably good during the first $10$ seconds, where the exploitability is better than both RM and EXP3. 
+This is most likely due to existence pure NE, however, the length of the game tree prohibits UCT to converge and the best error the algorithm was able to achieve in the time limit was equal to $0.68$.
+
+\subsubsection{Discussion}
+The offline comparison of the algorithms offers several conclusions.
+Among the exact algorithms, $\doab$ is clearly the best algorithm, since it typically outperforms all other algorithms (especially in pursuit-evasion games and random games). Although for smaller games (e.g., goofspiel with $5$ cards)  $\biab$ can be slightly faster, this difference is not significant and $\doab$ is never significantly slower compared to $\biab$.
+
+Among the sampling algorithms, OOS is the clear winner since it is often able to quickly converge to a very small error and significantly outperforms all variants of MCTS.
+On the other hand, comparing OOS and $\doab$, the exact $\doab$ algorithm is always faster and it is able to find an exact solution much faster compared to OOS.
+Moreover, $\doab$ has significantly lower memory requirements since it is a depth-first search algorithm and does not use any form of global cache, while OOS iteratively constructs the game tree in memory.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.85\textwidth]{figures/convergence-tron.pdf}
-\caption{Convergence comparison of different sampling algorithms on Tron on grid $5\times6$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:rg}
+\caption{Convergence comparison of different sampling algorithms on Tron on grid $5\times6$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:tron}
 \end{figure}
 
 
@@ -407,7 +424,7 @@ The first two tables presents the results for decreasing sequence of nature play
 The differences in the performance of sampling algorithms are relatively small. Even though OOS converges the fastest in the offline experiment (see Figure~\ref{fig:off:conv:gs}), it is losing against all other algorithms with 1 second per move. Its performance improves with 5 seconds per move, but it still does not significantly outperform any other sampling algorithm. With both time settings, RM seems to perform slightly the best. Its performance against other algorithms is very similar to Exp3, but it significantly wins in their mutual matches.
 
 \subsubsection{Oshi-Zumo}
-\begin{figure}
+\begin{figure}[t!]
 \centering
 \begin{scriptsize}
 \begin{tabular}{|r|rrrrrr|}\hline
@@ -504,7 +521,7 @@ The next set of matches was played on a random game with each player having 5 ac
 With 1 second per move $\doab$ significantly wins over all other algorithms. With 5 seconds, it already wins only over OOS (in 60.5\% matches), playing tie with the other sampling algorithms. OOS looses also against all MCTS algorithms, which perform practically the same among each other. These performance results are not supported by the speed of convergence in Figure~\ref{fig:off:conv:rg}, where Exp3 converges consistently slower than OOS on the small variant of the game.
 
 \subsubsection{Tron}
-\begin{figure}
+\begin{figure}[t!]
 \centering
 \begin{scriptsize}
 \begin{tabular}{|r|rrrrrr|}\hline
