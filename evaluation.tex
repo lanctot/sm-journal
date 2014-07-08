@@ -516,7 +516,7 @@ RAND&9.9(1.7)&17.1(2.2)&12.2(1.9)&7.6(1.5)&10.1(1.7)&50.1(2.9)\\
 \end{figure}
 
 
-The next set of matches was played on a random game with each player having 5 actions in each stage and depth 15. Hence, the game has more than $9.3\times 10^{20}$ leaf nodes. In order to compute the win-rates as in other games, we use signum of the utility value defined in Section~\ref{sec:eval:domains}. The results are presented in Figure~\ref{fig:matches:rand}.
+The next set of matches was played on 10 different random games with each player having 5 actions in each stage and depth 15. Hence, the game has more than $9.3\times 10^{20}$ leaf nodes. In order to compute the win-rates as in other games, we use signum of the utility value defined in Section~\ref{sec:eval:domains}. The results are presented in Figure~\ref{fig:matches:rand}.
 
 With 1 second per move $\doab$ significantly wins over all other algorithms. With 5 seconds, it already wins only over OOS (in 60.5\% matches), playing tie with the other sampling algorithms. OOS looses also against all MCTS algorithms, which perform practically the same among each other. These performance results are not supported by the speed of convergence in Figure~\ref{fig:off:conv:rg}, where Exp3 converges consistently slower than OOS on the small variant of the game.
 
@@ -604,7 +604,7 @@ RAND&3.1(1.1)&28.3(2.8)&30.8(2.9)&1.6(0.8)&1.5(0.8)&71.0(2.8)\\
 \end{tabular}
 
 \end{scriptsize}
-\caption{Win-rate in head-to-head matches of Random games (15,5) with one (top) and five (bottom) seconds per move.}\label{fig:matches:peg}
+\caption{Win-rate in head-to-head matches of Pursuit evasion game with time limit of 15 moves and $10\times 10$ grod board. One (top) and five (bottom) seconds per move.}\label{fig:matches:peg}
 \end{figure}
 
 
