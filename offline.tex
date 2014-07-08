@@ -237,6 +237,7 @@ When extracting strategies from the double-oracle algorithm with serialized alph
 
 
 \subsection{Simultaneous-Move Monte Carlo Tree Search (SM-MCTS)} \label{sec:algs:smmcts}
+\bbosansky{It seems to me that the two parts (BI / sampling) are quite uneven in terms of details and readability. The first part is quite verbose with examples, while MCTS and OOS are quite condensed and more difficult to follow. It would be good to rewrite add some more text description and intuition into MCTS/OOS (it is encouraged in the AIJ submission info to be less heavy and provide intuition).}
 In the following sections we move to approximative algorithms.
 Monte Carlo Tree Search (MCTS) is a simulation-based state space search algorithm often used
 in game trees. The nodes in the tree represent game states. The main idea is to iteratively run
@@ -339,7 +340,7 @@ Note that UCT described in this section is different than UCT run on a game that
 \vlisy{Possibly mention convergence in games with pure strategies.}\bbosansky{I'd remove this last sentence of this para.}
 
 \subsubsection{Exponential-weight algorithm for Exploration and Exploitation}\label{sec:exp3}
-
+\bbosansky{$\gamma$ not defined}
 The second most common instantiation of SM-MCTS is to use the Exponential-weight algorithm for Exploration and Exploitation (Exp3) algorithm \cite{Auer2003Exp3} independently for each of the players.
 In Exp3, each player maintains an estimate of the sum of rewards for each action, denoted $\hat{X}_{a_i}$. The joint action produced by \emph{\underline{Select}} is composed of an action independently selected for each player.
 The probability of using action $a_i$ is proportional to the exponential of the reward estimates:
