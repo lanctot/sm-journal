@@ -1,8 +1,3 @@
-
-
-%\vlisy{This section uses a lot of terms and concepts that are not know for general AI audience. Would it not make sense to place related work after problem definition?}\bbosansky{It would be probably better.}
-%\vlisy{In surveish paper, I would expecct a little more detail on the alternative methods we do not explain here.}
-
 There has been a number of algorithms designed for simultaneous move games that can be classified into three categories: 
 (1) iterative learning algorithms, 
 (2) exact backard induction algorithms, 
@@ -10,9 +5,6 @@ There has been a number of algorithms designed for simultaneous move games that 
 The first type computes strategies through iterated self-play.
 The second type computes a Nash equilibrium strategy of the game. 
 The third type computes strategies by approximating utilities using sampling. 
-
-%\bbosansky{Add RW for Markov Games.}
-% mlanctot: started on this
 
 \subsection{Iterative Learning Algorithms}
 
@@ -69,13 +61,15 @@ The lower and upper bounds represent the threshold values, for which neither of 
 %           Note: this saving is several orders of magnitude more than reported by SMAB~\cite{Saffidine12SMAB}. 
 %SMAB outperforms classical backward induction, however, the computational speed-up is limited. 
 %The reason is that computing dominated actions is a costly operation that does not prune many actions; hence, much of the game tree is still fully evaluated. The authors propose further enhancements in their work~\cite{Saffidine12SMAB}, however, these improvements are domain-specific heuristics and do not significantly change the overall performance of the algorithm. Since other exact algorithms achieve computation speed-up in several orders of magnitude compared to backward induction (as we show in Section~\ref{sec:eval}), we do not explicitly use SMAB in our experiments.
+% bbosansky: Ok, I agree.
 
 The second exact algorithm that is significantly faster compared to the classical backward induction was introduced in~\cite{Bosansky13Using}.
 This algorithm is described in detail in Section~\ref{sec:doab}. The main is to integrate two key components: (1) instead of evaluating all successors in each state of the game and solving a normal-form game, the algorithm exploits the iterative framework known in game theory as double-oracle algorithm~\cite{McMahan03Planning}; (2) the algorithm computes bounds on the utility values of the successors by serializing the sub-games and running a standard alpha-beta algorithm. 
 
-Finally, since simultaneous move games can be seen as standard extensive-form games with imperfect information, one can use state-of-the-art algorithms for solving generic extensive-form games with imperfect information that are based on sequence form linear programming~\cite{koller1996,bosansky2013-aamas}. However, these algorithms do not exploit the specific structure of simultaneous-move games causing, as we will show in the experiments, weak performance in practice.
+Finally, since simultaneous move games can be seen as standard extensive-form games with imperfect information, one can use state-of-the-art algorithms for solving generic extensive-form games with imperfect information that are based on sequence form linear programming~\cite{koller1996,bosansky2013-aamas}. 
+However, these algorithms do not exploit the specific structure of simultaneous-move games and solve the game by constructing a linear program of a polynomial size in the size of the game tree. This causes large memory requirements and weak performance in practice compared to more tailored algorithms.
 
-\mlanctot{We should mention the Range-of-Skill algorithm \cite{Zinkevich07New} somewhere in this subsection. It was shown that there are very bad worst cases even for simple games \cite{Hansen08On}.. do we know if such bad cases are less likely to occur in simultaneous move games? It'd be nice if we could say anything at all on this.}
+\mlanctot{We should mention the Range-of-Skill algorithm \cite{Zinkevich07New} somewhere in this subsection. It was shown that there are very bad worst cases even for simple games \cite{Hansen08On}.. do we know if such bad cases are less likely to occur in simultaneous move games? It'd be nice if we could say anything at all on this.}\bbosansky{Not exactly sure how to approach this ... I have never really understood the benefits of ROS well.}
 
 \subsection{Approximative Sampling Algorithms} \label{sec:related:sampling}
 
@@ -113,13 +107,15 @@ MCTS has enjoyed some success in these types of games, in the single-agent
 setting~\cite{Pepels14Monte,Perez14PTSP} and multiagent setting~\cite{Balla09UCT}, much of this work inspired by video 
 games~\cite{Cowling13Video,BellemareNVB13,Ontanon13RTSSurvey}. Few of these works have considered MCTS
 in the simultaneous move game directly. 
-However, in one of the first papers on real-time strategy games, strategy simulation
+However, in one of the first papers on real-time strategy games, the authors used randomized serialization 
+of the game~\cite{kovarsky2005heuristic}, or strategy simulation
 from scripts was used to build a single matrix of values from which an equilibrium strategy was 
 computed using linear programming~\cite{Sailor07adversarial}.  
 Using Simultaneous Move MCTS, presented in Subsection~\ref{sec:algs:smmcts}, this search could be extended 
 to multiple nodes where internal nodes would correspond to scripts being interrupted to replan. 
 In later work, alpha-beta search was run on a serialized (sequential) version of the 
-simultaneous move game for combat scenarios~\cite{Churchill2012Fast}. The benefit of serializing the game is that bounds 
+simultaneous move game for combat scenarios~\cite{Churchill2012Fast}. 
+The benefit of serializing the game is that bounds 
 on the correct minimax value can be obtained for the underlying simultaneous move game. These bounds can be used to cut out
 parts of the game tree in backward induction algorithms, and is explained in detail in Subsection~\ref{sec:algs:biab}.
 

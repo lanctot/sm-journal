@@ -137,12 +137,13 @@ Figure~\ref{fig:do-scheme} shows a visualization of the main structure of the al
 \item compute a pair of Nash equilibrium strategies in this restricted game using linear programming
 \item for each player, compute a pure best response strategy against the equilibrium strategy of the opponent; pure best response can be \emph{any} action from the original unrestricted game
 \end{enumerate}
-The best response strategies computed in step 3 are added to the restricted game, the game matrix is expanded by adding new rows and columns, and the algorithm follows with the next iteration. The algorithm terminates if neither of the players can improve the outcome of the game by adding a new strategy to the restricted game; hence, players play best response strategies to the strategy of the opponent. The algorithm maintains the values of expected utilities of the best-response strategies throughout the iterations of the algorithm. These values provide bounds on the value of the original game $v^*$ \mlanctot{sentence not terminated..?}
+The best response strategies computed in step 3 are added to the restricted game, the game matrix is expanded by adding new rows and columns, and the algorithm follows with the next iteration. The algorithm terminates if neither of the players can improve the outcome of the game by adding a new strategy to the restricted game; hence, players play best response strategies to the strategy of the opponent. The algorithm maintains the values of the best expected utilities of the best-response strategies for each player throughout the iterations of the algorithm. These values then provide bounds on the value of the original game $v^*$, and their sum represent the error of the algorithm that converges to zero.
 
 \subsubsection{Integrating Double-Oracle with Backward Induction}
 
 Double-oracle algorithm for matrix games can be directly incorporated into the backward induction -- instead of immediately evaluating each of the successors of the current game state and solving the linear program, the algorithm can exploit the double-oracle algorithm. Pseudocode in Algorithm~\ref{alg:doab} depicts this integration. 
-\mlanctot{Shouldn't the recursive call in 14 of Algorithm \ref{alg:doab} be $\doab(...)$ rather than double-oracle written out?}
+%\mlanctot{Shouldn't the recursive call in 14 of Algorithm \ref{alg:doab} be $\doab(...)$ rather than double-oracle written out?}
+%bbosansky: done
 
 In each state of the game, the algorithm initializes the restricted game with an arbitrary action (line~\ref{alg:doab:init}) -- $A'$ represents the restricted matrix game, $\cA'_i$ represents the restricted set of available actions to player~$i$. 
 Afterwards, the algorithm starts the iterations of the double-oracle algorithm.
@@ -167,7 +168,7 @@ initialize $\cA'_i$, $\cA'_{-i}$ with arbitrary actions from $\cA_i, \cA_{-i}$\;
 			$v^i_{s'} \leftarrow \textrm{alpha-beta}(s',i)$\; 
 			$v^{-i}_{s'} \leftarrow \textrm{alpha-beta}(s',-i)$\; 
 			\If{$v^{-i}_{s'} < v^i_{s'}$} {
-				$A'_{rc} \leftarrow A'_{rc} + \Delta_{c}(\cT(s,r,c),s')\cdot \textrm{double-oracle}(s',i,v^{-i}_{s'},v^i_{s'})$\label{alg:doab:recursive}\;
+				$A'_{rc} \leftarrow A'_{rc} + \Delta_{c}(\cT(s,r,c),s')\cdot \doab(s',i,v^{-i}_{s'},v^i_{s'})$\label{alg:doab:recursive}\;
 				}
 			\Else{
 				$A'_{rc} \leftarrow A'_{rc} + \Delta_{c}(\cT(s,r,c),s')\cdot v^i_{s'}$ \label{alg:doab:saving}
@@ -176,8 +177,8 @@ initialize $\cA'_i$, $\cA'_{-i}$ with arbitrary actions from $\cA_i, \cA_{-i}$\;
 		}	
 	}
 	$\left\langle v_s, \delta' \right\rangle \leftarrow $ solve matrix game $A'$\; \label{alg:doab:NE}
-	$\left\langle v^{BR}_i, a^{BR}_{i} \right\rangle \leftarrow $ best-response$(i, \delta'_{-i}, \alpha_s)$\;\label{alg:doab:br1}
-	$\left\langle v^{BR}_{-i}, a^{BR}_{-i} \right\rangle \leftarrow $ best-response$(-i, \delta'_{i}, \beta_s)$\; \label{alg:doab:br2}
+	$\left\langle v^{BR}_i, a^{BR}_{i} \right\rangle \leftarrow $ BR$(i, \delta'_{-i}, \alpha_s)$\;\label{alg:doab:br1}
+	$\left\langle v^{BR}_{-i}, a^{BR}_{-i} \right\rangle \leftarrow $ BR$(-i, \delta'_{i}, \beta_s)$\; \label{alg:doab:br2}
 	$\alpha_s \leftarrow \max(\alpha_s, v^{BR}_i)$,
 	$\beta_s \leftarrow \min(\beta_s, v^{BR}_{-i})$\; \label{alg:doab:bounds}
 	$\cA'_i \leftarrow \cA'_i \cup \lbrace a^{BR}_i \rbrace$,
@@ -206,7 +207,7 @@ $a_i^{BR} \leftarrow \textbf{null}$ \;
 %			$v^i_{s'} \leftarrow \textrm{alpha-beta}(s',i)$\; \label{alg:br:ab1}
 %			$v^{-i}_{s'} \leftarrow \textrm{alpha-beta}(s',-i)$\; \label{alg:br:ab2}
 			\If{$v^{-i}_{s'} < v^i_{s'}$} {
-				$v_{a_i,a_{-i}} \leftarrow v_{a_i,a_{-i}} + \Delta_c(\cT(s,a_i,a_{-i}),s')\cdot$ $\textrm{double-oracle}(s',i,v^{-i}_{s'},v^i_{s'})$\label{alg:br:recursive}\;	
+				$v_{a_i,a_{-i}} \leftarrow v_{a_i,a_{-i}} + \Delta_c(\cT(s,a_i,a_{-i}),s')\cdot$ $\doab(s',i,v^{-i}_{s'},v^i_{s'})$\label{alg:br:recursive}\;	
 				}
 			\Else{
 				$v_{a_i,a_{-i}} \leftarrow v_{a_i,a_{-i}} + \Delta_c(\cT(s,a_i,a_{-i}),s')\cdot v^i_{s'}$ \label{alg:br:saving}
@@ -221,12 +222,13 @@ $a_i^{BR} \leftarrow \textbf{null}$ \;
 	} 
 }
 \Return $\langle v_i^{BR}, a_i^{BR} \rangle$ 
-\caption{Best Response with Serialized Bounds}\label{alg:br}
+\caption{Best Response with Serialized Bounds (BR)}\label{alg:br}
 \end{algorithm2e}
 
 Now we describe the algorithm for calculating the best responses. 
 The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:br}.
-\mlanctot{Shouldn't the recursive call in 12 of Algorithm \ref{alg:br} be something line BR(...) rather the double-oracle(...)? Also, the function name should be put into the caption as with the other ones.}
+%\mlanctot{Shouldn't the recursive call in 12 of Algorithm \ref{alg:br} be something line BR(...) rather the double-oracle(...)? Also, the function name should be put into the caption as with the other ones.}
+%bbosansky: not really, this is actually solving a subgame; hence, DOab is called on the subgame 
 The goal of the algorithm is to find the best action from the original unrestricted game against current strategy of the opponent $\delta'$. 
 Throughout the algorithm we use, as before, $v^i_{s'}$ to denote the upper bound of the value of the sub-game rooted in state $s'$ calculated using alpha-beta$(s',i)$. These values are calculated on demand, i.e., they are calculated once needed and cached until the game for state $s$ is not solved.
 Moreover, once the algorithm calculates the exact value of a particular subgame, both upper and lower bounds are updated to be equal to actual value of the game. 

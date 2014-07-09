@@ -286,10 +286,11 @@ in number of possible actions, number of moves before the game ends, variance of
 and whether the agents need to use mixed strategies in order to play optimally.
 
 % mlanctot: added this one
+% bbosansky: I have reworded mentioning UCT, since we have not discussed MCTS, nor UCB/UCT here
 Several contributions are made by this paper. First, we present a brief survey of the existing literature 
 for this class of games, much of which is recent work not covered in any other survey on this topic. 
-Second, we present detailed descriptions of several recent algorithms to compute strategies for this class of games. 
-Third, we produce a detailed analysis of the original non-convergence results of UCT from \cite{Shafiei09}, 
+Second, we present detailed descriptions of several recent exact and approximative algorithms to compute strategies for this class of games. 
+Third, we produce a detailed analysis of the original non-convergence results of a well known approximative algorithm from \cite{Shafiei09}, 
 showing its sensitivity and significant effect of deterministic coordination. 
 Lastly, we evaluate these algorithms in two different computational contexts (offline computation and online search) for 
 the first time, in five different games and over random games. 
@@ -305,12 +306,9 @@ find very good strategies to play within a few seconds, however, they are not we
 The paper is structured as follows. In Section~\ref{sec:smg}, we present a formal introduction of simultaneous move games. 
 Section~\ref{sec:relwork} follows with a list and analysis of the existing algorithms in the related work. In 
 Section~\ref{sec:offline}, we describe in detail selected exact and approximative algorithms.
-We first describe the algorithms in the offline setting, followed by the necessary modifications used in the online case.
+We first describe the algorithms in the offline setting, followed by the necessary modifications used in the online case described in Section~\ref{sec:online}.
 In Section~\ref{sec:eval}, we turn to the experimental evaluation and present our results of comparison of the algorithms.
-Finally, we conclude in Seciton~\ref{sec:conc}.
-
-% mlanctot: ok, I added a paragraph
-%\bbosansky{I feel like we should explicitly list our contributions here because the reviewers might wonder why we are doing this.}
+Finally, we conclude in Section~\ref{sec:conc}.
 
 \section{Simultaneous Move Games}  \label{sec:smg}
 

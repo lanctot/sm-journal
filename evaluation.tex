@@ -37,7 +37,7 @@ Therefore, with the exception of the evaluation function used in selected online
 %\bbosansky{Algorithms settings: offline case -- for BI-based, no settings; for sampling: we compared several (at least $3$ different exploration constants), in the results we use only the best setting for each algorithm. Typically, UCT was the most affected with the changes of the exploration factor, while for all other remaining algorithms, the best results were achieved with the same exploration values set to $0.1$ for EXP3 and RM, and to $0.6$ for OOS. The higher the exploration factor for EXP3 and RM, the larger was the final error. Smaller exploration constant causes slower convergence.}
 
 \subsection{Domains}\label{sec:eval:domains}
-
+\bbosansky{Add tables with measured data about how much we need to mix for each game.}
 In this subsection, we describe the domains used in our experiments.
 For each domain we also describe the evaluation function used in the online experiments. 
 Note that we are not seeking for the best-performing algorithm for a particular game; hence, we have not aimed for the most accurate evaluation functions for each game.
@@ -148,7 +148,7 @@ In the experiments we used an empty grid with no obstacles and varying size of t
 \mlanctot{Yup, will do.}
 
 \subsection{Non-Convergence and Random Tie-Breaking in DUCT}\label{sec:exp:brps} 
-
+\bbosansky{We need to unify naming the UCT algorithms. I suggest to state in the description of UCT that randomized decoupled UCT(mix) is termed UCT from now on and any other meaning/variant is explicitly stated. However, I do not have a strong opinion on this.}
 As mentioned above, a counter-example was given in \cite{Shafiei09} showing that 
 DUCT does not converge to an equilibrium strategy in Biased Rock, Paper, Scissors 
 when using a mixed strategy by normalizing the visit count.
