@@ -245,21 +245,41 @@ If the currently evaluated action $a_i$ can still be the best response, the valu
 When extracting strategies from the double-oracle algorithm with serialized alpha-beta, we proceed exactly as in the case of $\biab$: either a double-oracle is initialized and solved for certain matrix game and we keep equilibrium strategies from the final restricted game, or the strategy is extracted from the serialized alpha-beta algorithms as before.
 
 
-\subsection{Simultaneous-Move Monte Carlo Tree Search (SM-MCTS)} \label{sec:algs:smmcts}
+\subsection{Simultaneous Move Monte Carlo Tree Search (SM-MCTS)} \label{sec:algs:smmcts}
 
-\bbosansky{It seems to me that the two parts (BI / sampling) are quite uneven in terms of details and readability. The first part is quite verbose with examples, while MCTS and OOS are quite condensed and more difficult to follow. It would be good to rewrite add some more text description and intuition into MCTS/OOS (it is encouraged in the AIJ submission info to be less heavy and provide intuition).} 
-\mlanctot{Agree. I will do this.}
+%\bbosansky{It seems to me that the two parts (BI / sampling) are quite uneven in terms of details and readability. The first part is quite verbose with examples, while MCTS and OOS are quite condensed and more difficult to follow. It would be good to rewrite add some more text description and intuition into MCTS/OOS (it is encouraged in the AIJ submission info to be less heavy and provide intuition).} 
+%\mlanctot{Agree. I will do this.}
+
 In the following sections we move to approximative algorithms.
 Monte Carlo Tree Search (MCTS) is a simulation-based state space search algorithm often used
 in game trees. The nodes in the tree represent game states. The main idea is to iteratively run
 simulations to a terminal state, incrementally growing a tree rooted at the initial state of the game. In
 its simplest form, the tree is initially empty and a single leaf is added each iteration. Each iteration
-starts by visiting nodes in the tree, selecting which actions to take based on a selection function and
+starts by visiting nodes in the tree, selecting which actions to take based on a \emph{selection function} and
 information maintained in the node. Consequently, the algorithm transitions to a successor state. When a
 node is visited whose immediate children are not all in the tree, the node is expanded by adding a
 new leaf to the tree. Then, \emph{a rollout policy} (e.g., random action selection) is applied from the new
 leaf to a terminal state. The outcome of the simulation is then returned as a reward to the new leaf
 and the information stored in the tree is updated.
+
+\begin{figure}[t]
+\centering
+\includegraphics[scale=0.7]{figures/smmcts-example}
+\caption{Simultaneous Move MCTS example. Here, $X_{s'}$ represents the cumulative payoff of all simulations that have passed 
+through the cell, while $n_{s'}$ represents the number of simulations that have passed through the cell.} 
+\label{fig:smmcts-example}
+\end{figure}
+
+Consider again the game depicted at the top of Figure~\ref{fig:example}. We will demonstrate how Monte Carlo Tree Search 
+could could progress in this game using the example shown in Figure~\ref{fig:smmcts-example}. This game has a root state, 
+two subgames that are simple matrix games and two arbitrarily large subgames. In the root state, player 1 (Max) has two 
+actions: top ($t$) and bottom ($b$), and player 2 also has two actions: left ($l$) and right ($r$). The tree is initialized 
+with a single empty state, $s$. On the first iteration, the first child corresponding to $(t,l)$ is added to the tree, 
+giving a payoff $u_1 = 3$ at the terminal state which is backpropagated to each state visited on the simulation. 
+Similarly, on the second iteration the second child corresponding to $(b,l)$ is added to the tree, giving a payoff $u_1 = 1$ is 
+backpropagated up to all of its parents. 
+After four simulations, every cell in the root state has a value. 
+There are many possible ways to select actions based on the estimates stored in the each cell which lead to different variants. 
 
 \begin{algorithm2e}[t]
 \small
@@ -287,19 +307,20 @@ and the information stored in the tree is updated.
 \caption{Simultaneous Move Monte Carlo Tree Search}\label{alg:smmcts}
 \end{algorithm2e}
 
-We first present a generic template of MCTS algorithms for simultaneous move games (SM-MCTS) and then explain specific algorithms derived form this template.
+We first present a generic template of MCTS algorithms for simultaneous move games (SM-MCTS) and then explain specific algorithms derived from this template.
 Algorithm~\ref{alg:smmcts} describes a single iteration of the SM-MCTS. 
-The ``MCTS tree'' is an explicit tree data structure that stores the nodes of the search tree maintained in memory. 
+The ``MCTS tree'' is an explicit tree data structure that stores the nodes of the search tree maintained in memory, 
+\eg the five-node tree shown in Figure~\ref{fig:smmcts-example}.
 % mlanctot: actually I hardly used it so I just wrote it out explicitly, one less symbol to remember
 %\bbosansky{I'd use $\cS'$ or something based on $\cS$ instead of $T$.}
 Every node $s$ in the tree maintains algorithm-specific statistics about the iterations that previously used this node.
-The template can be instanciated by specific implementations of the updates of the statistics on line~\ref{alg:smmcts:up} and the selection based on these statistics on line \ref{alg:smmcts:select}.
+The template can be instantiated by specific implementations of the updates of the statistics on line~\ref{alg:smmcts:up} and the selection based on these statistics on line \ref{alg:smmcts:select}.
 In the terminal states, the algorithm returns the value of the state for the first player (line 2).
 In the chance nodes, the algorithm selects one of the possible next stated based on the chance distribution (line 4).
 If the current state has a node in the current MCTS tree, the statistics in the node are used to select an action for each player (line~\ref{alg:smmcts:select}).
 These actions are executed (line 8) and the algorithm is called recursively on the resulting state (line 9).
 The result of this call is used to update the statistics maintained for state $s$ (line~\ref{alg:smmcts:up}).
-If the current state is not stored in tree, it is added to the tree (line 13) and its value is estimated usinf the rollout policy (line 14).
+If the current state is not stored in tree, it is added to the tree (line 13) and its value is estimated using the rollout policy (line 14).
 
 Different algorithms can be the bases for the selection functions (e.g., UCB~\cite{UCB}, Exp3~\cite{Auer2003Exp3}).
 We now present the variants of SM-MCTS that were consistently the most successful in previous works, though more variants can be found in~\cite{Perick12Comparison,Lanctot13Tron,Tak14smmcts}.
