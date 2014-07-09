@@ -211,7 +211,6 @@ However, even if mixed strategies are required, they appear in the middle of the
 Once this is determined, the endgame can be solved in pure strategies since it typically consists of filling the available space in an optimal ordering one square at a time.
 The following table comparing the number of states demonstrates this characteristics of Tron on a grid $5\times6$:
 
-
 \begin{table}[h!]
 \centering
 \small
@@ -221,27 +220,35 @@ The following table comparing the number of states demonstrates this characteris
 %\hline Mixed & 0 & 0 & 2 & 0 & 9 & 7 & 51 & 92 & 106 & 121 & 74 & 0 & 0 & 0 \\
 %\hline
 %\end{tabular}
+\begin{flushleft}
 \begin{tabular}{|l|c|c|c|c|c|c|c|}
 \hline Depth & 0 & 1 & 2 & 3 & 4 & 5 & $\ldots$\\
 \hline Pure  & 1 & 4 & 14 & 100 & 565 & 2598 & \\
 \hline Mixed & 0 & 0 & 2 & 0 & 9 & 7 & \\
 \hline
 \end{tabular}
+\end{flushleft}
+\begin{flushright}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
 \hline  $\ldots$ & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13\\
 \hline  & 9508 & 25964 & 54304 & 83624 & 87009 & 63642 & 23296 & 3127\\
 \hline  & 51 & 92 & 106 & 121 & 74 & 0 & 0 & 0 \\
 \hline
 \end{tabular}
-
-
+\end{flushright}
 \end{table}
 
-\bbosansky{Marc, could you please describe the evaluation function for Tron here with a reference, if the evaluation function you have used is described somewhere.}
-\mlanctot{Yup, will do.}
+The evaluation function is based on how much space is ``owned'' by each player. A cell is owned by a player by player $i$ if it can be reached
+by player $i$ before the opponent. These values are computed using an efficient flood-fill algorithm whose sources start from the two players' 
+current positions. Formally: 
+$$
+eval(s) = \tanh\left(\frac{\textrm{owned}_1 - \textrm{owned}_2}{5}\right).
+$$
+
 
 \subsection{Non-Convergence and Random Tie-Breaking in DUCT}\label{sec:exp:brps} 
 \bbosansky{We need to unify naming the UCT algorithms. I suggest to state in the description of UCT that randomized decoupled UCT(mix) is termed UCT from now on and any other meaning/variant is explicitly stated. However, I do not have a strong opinion on this.}
+\mlanctot{I'll rename instances of DUCT to MCTS-UCT as used in the graphs, and will mention it is understood to be UCT(mix).}
 As mentioned above, a counter-example was given in \cite{Shafiei09} showing that 
 DUCT does not converge to an equilibrium strategy in Biased Rock, Paper, Scissors 
 when using a mixed strategy by normalizing the visit count.
