@@ -307,7 +307,7 @@ Several examples are depicted in \cite{Tak14smmcts}.
 
 \subsubsection{Decoupled Upper-confidence Bound applied to Trees}\label{sec:duct}
 
-The most common selection function for SM-MCTS is the Decoupled Upper-confidence Bound applied to Trees(DUCT).
+The most common selection function for SM-MCTS is the Decoupled Upper-confidence Bound applied to Trees (DUCT).
 For selection and updates, it executes the well-known UCT \cite{UCT} algorithm independently for each of the players in each nodes.
 The statistics stored in search nodes are independently computed for each action of each player. For player $i\in \cN$ and action $a_i \in \cA_i(s)$ the reward sums $X_{a_i}$ and the number of times the action was used $n_{a_i}$ are maintained.
 When a joint action needs to be selected by the \emph{\underline{Select}} function, an action that maximizes the UCB value over their reward estimates is selected for each player independently:
