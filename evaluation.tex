@@ -280,7 +280,8 @@ action randomly when the scores of the best values are ``tied'' (less than $0.01
 One particularly striking observation is that this simple addition leads to a large drop in resulting exploitability, where exploitability
 ranges from $[0.5,0.8]$ in the deterministic case, compared to $[0.01,0.05]$ with stochastic tie-breaking. 
 
-We investigated this further and found a possible
+\mlanctot{I noticed Vilo added his example to the SM-MCTS section so please modify this paragraph as necessary. Maybe it can be 
+removed entirely?} We investigated this further and found a possible
 explanation of this behavior. Consider the matrix game on the right of Figure~\ref{fig:egMatrixGames} in Section~\ref{sec:smg}.
 Suppose DUCT is run on this game and players deterministically prefer the left-action. 
 DUCT will always recieve rewards 0 and the exploration bias term will cause the players to round-robin over the actions indefinitely. 
