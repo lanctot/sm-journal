@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70005" creator="Ipe 7.1.4">
-<info created="D:20140330195453" modified="D:20140709151159"/>
+<info created="D:20140330195453" modified="D:20140709160421"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -387,12 +387,15 @@ h
 409.921 479.963 s
 </path>
 <text matrix="1 0 0 1 144.49 -63.5123" transformations="translations" pos="39.6799 788.362" stroke="black" type="label" width="4.276" height="6.918" depth="0" valign="baseline">$b$</text>
-<text matrix="1 0 0 1 -94.4897 -5.67749" transformations="translations" pos="224.474 549.242" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">4</text>
 <text matrix="1 0 0 1 -286.795 -49.5564" transformations="translations" pos="432 688" stroke="black" type="label" width="33.472" height="6.812" depth="1.49" valign="baseline">$X_{s&apos;} = 1$</text>
 <text matrix="1 0 0 1 -285.213 -111.766" transformations="translations" pos="432 736" stroke="black" type="label" width="31.198" height="6.425" depth="1.49" valign="baseline">$n_{s&apos;} = 1$</text>
 <text matrix="1 0 0 1 -265.18 13.7071" transformations="translations" pos="461.237 713.487" stroke="black" type="label" width="33.472" height="6.812" depth="1.49" valign="baseline">$X_{s&apos;} = 1$</text>
 <text matrix="1 0 0 1 -275.723 -27.9414" transformations="translations" pos="441.73 546.893" stroke="black" type="label" width="36.647" height="6.808" depth="2.85" valign="baseline">$X_{s,b} = 1$</text>
 <text matrix="1 0 0 1 -380.635 -76.4434" transformations="translations" pos="494.45 561.655" stroke="black" type="label" width="35.703" height="6.808" depth="2.85" valign="baseline">$X_{s,l} = 4$</text>
 <text matrix="1 0 0 1 -56.1991 47.2895" transformations="translations" pos="64 448" stroke="black" type="label" width="21.828" height="6.808" depth="0" valign="baseline">At $s$:</text>
+<text matrix="1 0 0 1 -269.732 -11.651" transformations="translations" pos="432 752" stroke="black" type="label" width="19.372" height="6.808" depth="0" valign="baseline">Max</text>
+<text matrix="1 0 0 1 62.3673 -9.59497" transformations="translations" pos="162.142 807.334" stroke="black" type="label" width="17.435" height="6.808" depth="0" valign="baseline">Min</text>
+<text matrix="1 0 0 1 0.685355 0" transformations="translations" pos="171.737 809.39" stroke="black" type="label" width="0" height="0" depth="0" valign="baseline"></text>
+<text matrix="1 0 0 1 2.83875 -1.21661" transformations="translations" pos="128 544" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">$1$</text>
 </page>
 </ipe>
