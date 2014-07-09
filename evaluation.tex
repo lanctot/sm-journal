@@ -3,7 +3,8 @@ We now turn to thorough experimental evaluation of the described algorithms.
 We analyze both offline and online case on a collection of games that are inspired by games used for experimental evaluation in previous works, and randomly generated games.
 After describing the rules of the games, we present the results for the offline case. 
 
-First of all we begin with the experimental evaluation of a well-known example of biased rock-paper-scissors~\cite{Shafiei09} that often serves as an example that MCTS with UCT selection function does not converge to a Nash equilibrium.~\bbosansky{In the description of UCT we need to suggest that there are two things how to do it (deterministically, randomly) -- in the experiments only refer to this.} 
+First of all we begin with the experimental evaluation of a well-known example of biased rock-paper-scissors~\cite{Shafiei09} that often serves as an example that MCTS with UCT selection function does not converge to a Nash equilibrium.
+%\bbosansky{In the description of UCT we need to suggest that there are two things how to do it (deterministically, randomly) -- in the experiments only refer to this.} done
 We reproduce this experiment and show the differences in performance of the sampling algorithms -- primarily the impact of randomization in UCT.
 Next we compare the offline performance of the algorithms on other domains.
 For each domain we at first analyze exact algorithms and measure the computation time it takes the algorithms to solve given instance of the game. 
@@ -19,26 +20,21 @@ We use two different restrictions to computation time per move: 1 second and 5 s
 The first one is more common in previous works focused on online comparison of the algorithms~\cite{XXX}\bbosansky{Reference missing -- ideally several works with different authors that use this settings.}, second one allow us to see the difference if the algorithms have more computation time.
 As indicated before, online algorithms based on the backward induction need to use domain-specific evaluation function in the online settings.
 This may gave these algorithms an advantage if the evaluation function is very precise.
-Therefore, for selected domains we also run sampling-based algorithms with an evaluation function compare the algorithms in a more fair settings.
-Reported results are mean of at least $1000$ matches for the $1$ second case, and at least $100$ matches for the $5$ second case.
-Where necessary, we run additional experiments to obtain statistically significant results.
+Therefore, for selected domains we also run sampling-based algorithms with an evaluation function to compare the algorithms in a more fair settings.
+Reported results are mean of at least $1000$ matches for each pair of algorithms.
+%Where necessary, we run additional experiments to obtain statistically significant results.
 
-Each of the described algorithms were implemented in a generic framework for modeling and solving extensive-form games\footnote{Source code is available at \texttt{http://agents.felk.cvut.cz/topics/Computational\_\newline game\_theory}.}.
+Each of the described algorithms was implemented in a generic framework for modeling and solving extensive-form games\footnote{Source code is available at \texttt{http://agents.felk.cvut.cz/topics/Computational\_\newline game\_theory}.}.
 We are interested in the performance of the algorithms and their ability to find or approximate the optimal behavior.
 Therefore, with the exception of the evaluation function used in selected online experiments, no algorithm is using any domain-specific knowledge.
 
 
-%\bbosansky{The following text is only sketched; hence, it is in the comments. Anyone with time can make a nice text out of it :)}\\
-%\bbosansky{What do we compare: 1. offline exact algorithms 2. offline convergence for complete strategy (2a. BRPS, 2b. other games), 3. online head-to-head performance}\\
-%\bbosansky{Re 2) what does it mean to compute error for sampling algorithms: 
-%The error of the algorithms is calculated as a sum of best-response values -- one for each strategy of a player.
-%In zero-sum games, this sum converges to zero.}\\
-%\bbosansky{Re 3) We create a simple matrix game for the first move for each offline games used for overall convergence, where each value of the matrix will be calculated using DOAB (which should be quick). In the framework this should be relatively easy to implement -- we just create a dummy domain that will take a parameter for any other domain and will simulate all this. Then, all machinery for computing convergence should work without any modifications and the experiments should be relatively quick. What we are hoping for are some results that will be closer to online results since currently there is very small correlation which weakens the paper.}\\
-%\bbosansky{Algorithms settings: offline case -- for BI-based, no settings; for sampling: we compared several (at least $3$ different exploration constants), in the results we use only the best setting for each algorithm. Typically, UCT was the most affected with the changes of the exploration factor, while for all other remaining algorithms, the best results were achieved with the same exploration values set to $0.1$ for EXP3 and RM, and to $0.6$ for OOS. The higher the exploration factor for EXP3 and RM, the larger was the final error. Smaller exploration constant causes slower convergence.}
-
 \subsection{Domains}\label{sec:eval:domains}
 \bbosansky{Add tables with measured data about how much we need to mix for each game.}
 In this subsection, we describe the domains used in our experiments.
+The games in our collection differ in characteristics, such as the number of available actions for each player (i.e., the branching factor), maximal depth, and number of possible utility values.
+Moreover, the games also differ in the \emph{randomization factor} -- i.e., how often it is necessary to use mixed strategies and whether this randomization occurs at the beginning of the game, near the end of the game, or it is spread throughout the whole course of the game.
+
 For each domain we also describe the evaluation function used in the online experiments. 
 Note that we are not seeking for the best-performing algorithm for a particular game; hence, we have not aimed for the most accurate evaluation functions for each game.
 We intentionally use evaluation functions of different quality that allow us to compare the differences between the algorithms from this perspective as well.
@@ -76,6 +72,24 @@ When there are no more cards to be played, the winner of the game is chosen base
 We follow the assumption made in \cite{Saffidine12SMAB} that both players know the sequence of the nature's cards. 
 The game is win-loss; hence, the players receive utility from set $\lbrace -1, 0, 1 \rbrace$.
 
+Goofspiel correspond to game trees with interesting properties. 
+First unique feature is that the branching factor is uniformly decreasing by $1$ with the depth.
+Secondly, algorithms must randomize in NE strategies, and this randomization is present throughout the whole course of the game.
+As an example, the following table depicts the number of states with pure strategies and mixed strategies in a subgame-perfect NE calculated using backward induction for Goofspiel with $5$ cards:
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline Depth & 0 & 1 & 2 & 3 & 4 \\
+\hline Pure  & 0 & 17 & 334 & 3354 & 14400 \\
+\hline Mixed & 1 &  8 &  66 &  246 & 0 \\
+\hline
+\end{tabular}
+\end{table}
+We can see that the relative number of states with mixed strategies slowly decreases, however, players need to mix throughout the whole game.
+In the last round, each player has only a single card; hence, there cannot be any mixed strategy.
+
 The evaluation function used in Goofspiel takes into consideration two components: (1) the difference in the current score for both players weighted by the current round in the game, and (2) the remaining cards in the deck weighted by a chance of winning these cards depending on the remaining cards on hand for each player. Formally, let $p_i$, $r$, $c_i$ be player $i$'s score (points), the current round, and player $i$'s remaining cards, respectively:
 $$
 %eval(s) = \tanh\left(\frac{\textrm{score}_1 - \textrm{score}_2}{\textrm{score}_1 + \textrm{score}_2}\cdot\frac{\textrm{round}}{d} + \frac{\textrm{remCards}_1 - \textrm{remCards}_2}{\textrm{remCards}_1 + \textrm{remCards}_2}\cdot\frac{\textrm{remCards}_c}{0.5\cdot d(d+1)}\right)
@@ -102,6 +116,21 @@ If the final position of the wrestler at in the center, the game is a draw.
 Again, the utility values are restricted to $\lbrace -1, 0, 1 \rbrace$.
 In the experiments we varied number of coins and parameter $K$.
 
+Many instances of the Oshi-Zumo game have pure Nash equilibrium.
+With the increasing number of the coins the game necessarily need to use mixed strategies, however, mixing is typically required only at the beginning of the game. 
+As an example, the following table depicts the number of states with pure strategies and mixed strategies in a subgame-perfect NE calculated using backward induction for Oshi-Zumo with $10$ coins, $K=3$, and minimal bid $1$. The results show that there are very few states where mixed strategies are required, and they are present only at the beginning of the game tree. Also note, that contrary to Goofspiel, not all branches have the same lenght.
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|}
+\hline Depth & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\
+\hline Pure  & 1 & 98 & 2012 & 14767 & 48538 & 79926 & 69938 & 33538 & 8351 & 861\\
+\hline Mixed & 0 &  1 &  4 &  17 & 8 & 0 & 0 & 0 & 0 & 0 \\
+\hline
+\end{tabular}
+\end{table}
+\vspace{1cm}
 The evaluation function used in Oshi-Zumo takes into consideration two components: (1) the current position of the wrestler and, (2) the remaining coins for each player. Formally:
 $$
 eval(s) = \tanh\left(\frac{b}{2}+\frac{1}{3}\left(\frac{\textrm{coins}_1 - \textrm{coins}_2}{M} + \textrm{wrestler} - K\right)\right)
@@ -116,8 +145,25 @@ There is a single evader and a pursuer that controls 2 pursuing units in our pur
 Since all units move simultaneously, the game has larger branching factor (up to $64$ joint actions).
 The evader wins, if she successfully avoids the units of the pursuer for the whole game; pursuer wins, if her units successfully capture the evader. The evader is captured if either her position is the same as the position of a pursuing unit, or the evader used the same edge as a pursuing unit (in the opposite direction). 
 Again, the game is win-loss and the players receive utility from set $\lbrace -1, 0, 1 \rbrace$.
-We used grid-graphs for the experiments without any obstacles or holes.
+We used $3$ different grid-graphs (with the size of a side 4,5, and 10 nodes) for the experiments without any obstacles or holes.
 In the experiments we varied the allowed number of moves $d$ and we altered the starting positions of the players (the distance between the pursuers and the evader was always at most $\left\lfloor\frac{2}{3} d\right\rfloor$ moves, in order to provide a possibility for the pursuers to capture the evader).
+
+Similarly to Oshi-Zumo, many instances of pursuit-evasion games have also pure Nash equilibrium.
+However, the mixing can be required towards the actual end of the game in order to capture the evader.
+Therefore, depending on the length of the game and the distance between the units, there might be many states that does not require mixed strategies (units of the pursuers are simply going towards the evader).
+Once the units are close to each other, the game may require mixed strategies for final coordination. 
+This can be seen on our small example on a graph $4\times4$ nodes and depth $4$:
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|l|c|c|c|c|}
+\hline Depth & 0 & 1 & 2 & 3  \\
+\hline Pure  & 1 & 19 & 615 & 19162 \\
+\hline Mixed & 0 & 11 & 115 & 769 \\
+\hline
+\end{tabular}
+\end{table}
 
 The evaluation function used in pursuit-evasion games takes into consideration the distance between the units of the pursuer and evader (denoted $\textrm{distance}_j$ for the distance in moves of the game between the $j-th$ unit of the pursuer and the evader). Formally:
 $$
@@ -130,9 +176,24 @@ We also use randomly generated games to be able to experiment with additional pa
 In randomly generated games, we fixed the number of actions that players can play in each stage to $4$ and $5$ (the results were similar for different branching factors) and we varied depth of the game tree. 
 We use $2$ different methods for randomly assigning the utility values to the terminal states of the game: 
 (1) the utility values are uniformly selected from the interval $\left[0,1\right]$; 
-(2) we randomly assign either $-1$, $0$, or $+1$ value to action and the utility value in a leaf is a sum of all values on edges on the path from the root of the game tree to the leaf; 
+(2) we randomly assign either $-1$, $0$, or $+1$ value to each joint action (pair of actions) and the utility value in a leaf is a sum of all values on edges on the path from the root of the game tree to the leaf. 
 The first method produces extremely difficult games for pruning using either alpha-beta search, or double-oracle methods, since there is no correlation between actions and utility values in sibling leafs. 
 The two latter methods are based on random \emph{T-games} \cite{smith1995}, that create more realistic games using the intuition of good and bad moves.
+
+Randomly generated games represent games that require mixed strategies in most of the states. 
+This holds even for games of the second type with correlated utility values in the leaves.
+The following table shows the number of states depending on the depth for randomly generated game of depth $5$ with $4$ actions available to both players in each state:
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline Depth & 0 & 1 & 2 & 3 & 4 \\
+\hline Pure  & 0 & 2 & 29 & 665 & 20093 \\
+\hline Mixed & 1 & 14 & 227 & 3431 & 45443 \\
+\hline
+\end{tabular}
+\end{table}
 
 Only the second type of randomly generated games is used in the online setting. 
 The evaluation function used in this case is calculated similarly as the utility value and it is equal to the sum of values on the edges from the root to the current node.
@@ -144,6 +205,37 @@ A player looses if he hits the wall.
 The goal of both players is to survive as long as possible. 
 If both players can only move into a wall, can only move off the board or move into each other at the same turn, the game ends in a draw. 
 In the experiments we used an empty grid with no obstacles and varying size of the grid.
+
+Similarly to pursuit-evasion games, there are many instances of Tron that have pure NE.
+However, even if mixed strategies are required, they appear in the middle of the game once both players reach the center of the board and compete over the advantage of possibly being able to occupy more squares.
+Once this is determined, the endgame can be solved in pure strategies since it typically consists of filling the available space in an optimal ordering one square at a time.
+The following table comparing the number of states demonstrates this characteristics of Tron on a grid $5\times6$:
+
+
+\begin{table}[h!]
+\centering
+\small
+%\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+%\hline Depth & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13\\
+%\hline Pure  & 1 & 4 & 14 & 100 & 565 & 2598 & 9508 & 25964 & 54304 & 83624 & 87009 & 63642 & 23296 & 3127\\
+%\hline Mixed & 0 & 0 & 2 & 0 & 9 & 7 & 51 & 92 & 106 & 121 & 74 & 0 & 0 & 0 \\
+%\hline
+%\end{tabular}
+\begin{tabular}{|l|c|c|c|c|c|c|c|}
+\hline Depth & 0 & 1 & 2 & 3 & 4 & 5 & $\ldots$\\
+\hline Pure  & 1 & 4 & 14 & 100 & 565 & 2598 & \\
+\hline Mixed & 0 & 0 & 2 & 0 & 9 & 7 & \\
+\hline
+\end{tabular}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline  $\ldots$ & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13\\
+\hline  & 9508 & 25964 & 54304 & 83624 & 87009 & 63642 & 23296 & 3127\\
+\hline  & 51 & 92 & 106 & 121 & 74 & 0 & 0 & 0 \\
+\hline
+\end{tabular}
+
+
+\end{table}
 
 \bbosansky{Marc, could you please describe the evaluation function for Tron here with a reference, if the evaluation function you have used is described somewhere.}
 \mlanctot{Yup, will do.}

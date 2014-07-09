@@ -10,7 +10,7 @@ Finally, we present counterfactual regret minimization and its sampling variant 
 
 \subsection{Backward Induction}\label{sec:algs:bi}
 
-Standard backward induction algorithm is based on the depth-first search that at each state of the game evaluates all successors, creates matrix game for the current state, solves the matrix game, and propagates back the value of the matrix game. The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:backwardinduction}. If the succeeding node $\cT(s,r,c)$ is a chance node, the algorithm directly evaluates all successors of this chance node computing an expected utility: the value of each subgame rooted in node $s''$ calculated by recursive call is weighted by the probability of the stochastic transition $\Delta_c(\cT(s,r,c),s')$~(line~\ref{alg:bi:recursive}).
+Standard backward induction algorithm is based on the depth-first search that at each state of the game evaluates all successors, creates matrix game for the current state, solves the matrix game, and propagates back the value of the matrix game. The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:backwardinduction}. If the succeeding node $\cT(s,r,c)$ is a chance node, the algorithm directly evaluates all successors of this chance node computing an expected utility: the value of each subgame rooted in node $s'$ calculated by recursive call is weighted by the probability of the stochastic transition $\Delta_c(\cT(s,r,c),s')$~(line~\ref{alg:bi:recursive}).
 
 \begin{algorithm2e}[t]
 \small
@@ -137,7 +137,7 @@ Figure~\ref{fig:do-scheme} shows a visualization of the main structure of the al
 \item compute a pair of Nash equilibrium strategies in this restricted game using linear programming
 \item for each player, compute a pure best response strategy against the equilibrium strategy of the opponent; pure best response can be \emph{any} action from the original unrestricted game
 \end{enumerate}
-The best response strategies computed in step 3 are added to the restricted game, the game matrix is expanded by adding new rows and columns, and the algorithm follows with the next iteration. The algorithm terminates if neither of the players can improve the outcome of the game by adding a new strategy to the restricted game; hence, players play best response strategies to the strategy of the opponent. The algorithm maintains the values of the best expected utilities of the best-response strategies for each player throughout the iterations of the algorithm. These values then provide bounds on the value of the original game $v^*$, and their sum represent the error of the algorithm that converges to zero.
+The best response strategies computed in step 3 are added to the restricted game, the game matrix is expanded by adding new rows and columns, and the algorithm follows with the next iteration. The algorithm terminates if neither of the players can improve the outcome of the game by adding a new strategy to the restricted game; hence, players play best response strategies to the strategy of the opponent. The algorithm maintains the values of the best expected utilities of the best-response strategies for each player throughout the iterations of the algorithm. These values then provide bounds on the value of the original game $V^*$, and their sum represent the error of the algorithm that converges to zero.
 
 \subsubsection{Integrating Double-Oracle with Backward Induction}
 
