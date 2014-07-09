@@ -265,7 +265,8 @@ and the information stored in the tree is updated.
 \begin{figure}[t]
 \centering
 \includegraphics[scale=0.7]{figures/smmcts-example}
-\caption{Simultaneous Move MCTS example. Here, $X_{s'}$ represents the cumulative payoff of all simulations that have passed 
+\caption{Simultaneous Move MCTS example. 
+Here, $X_{s'}$ represents the cumulative payoff of all simulations that have passed 
 through the cell, while $n_{s'}$ represents the number of simulations that have passed through the cell.} 
 \label{fig:smmcts-example}
 \end{figure}
@@ -323,15 +324,17 @@ The result of this call is used to update the statistics maintained for state $s
 If the current state is not stored in tree, it is added to the tree (line 13) and its value is estimated using the rollout policy (line 14).
 
 Different algorithms can be the bases for the selection functions (e.g., UCB~\cite{UCB}, Exp3~\cite{Auer2003Exp3}).
-We now present the variants of SM-MCTS that were consistently the most successful in previous works, though more variants can be found in~\cite{Perick12Comparison,Lanctot13Tron,Tak14smmcts}.
-Several examples are depicted in \cite{Tak14smmcts}. 
+We now present the variants of SM-MCTS that were consistently the most successful in previous works, 
+though more variants can be found in~\cite{Perick12Comparison,Lanctot13Tron,Tak14smmcts}.
 
 \subsubsection{Decoupled Upper-confidence Bound applied to Trees}\label{sec:duct}
 
-The most common selection function for SM-MCTS is the Decoupled Upper-confidence Bound applied to Trees (DUCT).
+The most common selection function for SM-MCTS is the decoupled Upper-confidence Bound applied to Trees (UCT).
 For selection and updates, it executes the well-known UCT \cite{UCT} algorithm independently for each of the players in each nodes.
-The statistics stored in search nodes are independently computed for each action of each player. For player $i\in \cN$ and action $a_i \in \cA_i(s)$ the reward sums $X_{a_i}$ and the number of times the action was used $n_{a_i}$ are maintained.
-When a joint action needs to be selected by the \emph{\underline{Select}} function, an action that maximizes the UCB value over their reward estimates is selected for each player independently:
+The statistics stored in search nodes are independently computed for each action of each player. For player $i\in \cN$ and 
+action $a_i \in \cA_i(s)$ the reward sums $X_{a_i}$ and the number of times the action was used $n_{a_i}$ are maintained.
+When a joint action needs to be selected by the \emph{\underline{Select}} function, an action that maximizes the UCB value over 
+their reward estimates is selected for each player independently:
 \begin{equation}
 a_i = \argmax_{a_i \in \cA_i(s)}{ \left\{ \bar{X}_{a_i} + C_i \sqrt{\frac{\log n_s}{n_{a_i}}} \right\} },
   \mbox{ where } \bar{X}_{a_i} = \frac{X_{a_i}}{n_{a_i}} \mbox{ and } n_s=\sum_{b_i \in \cA_i(s)} n_{b_i}.\label{eq:uct}
@@ -339,36 +342,34 @@ a_i = \argmax_{a_i \in \cA_i(s)}{ \left\{ \bar{X}_{a_i} + C_i \sqrt{\frac{\log n
 \noindent The \emph{\underline{Update}} function increases the visit count and rewards for each player $i$ and its selected action $a_i$ using $X_{a_i} \leftarrow X_{a_i} + u_i$
 and $n_{a_i} \leftarrow n_{a_i} + 1$.
 
+Consider again the example shown in Figure~\ref{fig:smmcts-example}. Decoupled UCT now groups together all the payoffs obtained 
+for an action. Therefore, at the root Max has $\bar{X}_t = 5/2 = 2.5, \bar{X}_b = 1/2 = 0.5$ and the exploration term for both is 
+$C_i \sqrt{(\log 4) / 2}$, and so top is selected. Similarly for Min, $\bar{X}_l = 4/2 = 2, \bar{X}_r = 2/2 = 1$, and
+therefore right is selected. The selection function would return $(t,r)$ at the root on the fifth simulation. 
+
 After all the simulations are done, there are two options how to determine the resulting action to play.
 The more standard option is to choose for each state the action $a_i$ that maximizes $n_{a_i}$ for each player $i$.
 This is suitable mainly for games, in which using mixed strategy is not necessary.
 Alternatively, the action to play in each state can be determined based on the mixed strategy obtained by normalizing the visit counts of each action 
 \begin{equation}
 \sigma_i(a_i) = \frac{n_{a_i}}{\sum_{b_i\in \cA_i(s)} n_{b_i}}.
+\label{eq:ductmix}
 \end{equation}
-We call the former DUCT(max) and the latter DUCT(mix).
 Using the first method will certainly not make the algorithm converge to a Nash equilibirum, because the game may require a mixed strategy.
-Therefore, unless stated otherwise, we only use DUCT(mix) from now on and refer to this algorithm simply as UCT.
+Therefore, unless stated otherwise, we only use the mixed form in Equation~\ref{eq:ductmix} from now on and refer to this algorithm simply as UCT.
 
 Note, however, that it was shown that this latter variant also might not converge to a Nash equilibrium (a well known counter-example in Rock, Paper, Scissors with biased payoffs~\cite{Shafiei09}). 
 However, one of the issues when using UCT in game trees is an underspecified behavior in case there are multiple actions with identical value in the maximization described in the UCT formula in Equation~\ref{eq:uct}.
 %Note that UCT does not define what happens which action is selected if multiple actions have identical value in the maximization. 
 This may have a significant impact on the performance of the UCT in simultaneous move games. 
-Consider the following matrix game:
-%\begin{tiny}
-$$\left(\begin{array}{cc}
-0 & 1\\
--1 & 0
-\end{array}\right)$$
-%\end{tiny}.
-This game has only one NE, such that both players play the first action. However, DUCT selecting the first or the last action among the options with the same value will always get only the rewards 0 and the bias term will cause the players to round-robin over the diagonal indefinitely. This is clearly not optimal, as each player can than improve by playing first action with probability 1. However, if we choose the action to play randomly among the once with the same probability, DUCT will quickly converge to the optimal solution. 
+Consider the matrix game at the right of Figure~\ref{fig:egMatrixGames}. 
+This game has only one NE, such that both players play the first action. However, UCT selecting the first or the last action among the options with the same value will always get only the rewards 0 and the bias term will cause the players to round-robin over the diagonal indefinitely. This is clearly not optimal, as each player can than improve by playing first action with probability 1. However, if we choose the action to play randomly among the once with the same probability, UCT will quickly converge to the optimal solution. 
 We will experimentally analyze the impact of this randomization on the example used in~\cite{Shafiei09} and show that if a randomized variant of UCT is used, the algorithm converges to a Nash equilibria (see Section~\ref{sec:exp:brps}).
 Therefore, unless stated otherwise, we use the randomized variant in our implementation.
 
-
 Even though UCT is not guaranteed to converge to the optimal solution, it is often very successful in practice.
 It has been used in and general game playing~\cite{Finnsson12}, in the Internet card game Urban Rivals~\cite{Teytaud11Upper},
-and in the simultaneous move game Tron~\cite{Perick12Comparison}.
+and in Tron~\cite{Perick12Comparison}.
 
 % mlanctot: removed, was confusing.
 %Note that UCT described in this section is different than UCT run on a game that is transformed to perfect information by serialization of the simultaneous moves, because in the latter case one player has the advantage of knowing what the other player chose at every stage.
@@ -378,18 +379,21 @@ and in the simultaneous move game Tron~\cite{Perick12Comparison}.
 
 %\bbosansky{$\gamma$ not defined}
 
-The second most common instantiation of SM-MCTS is to use the Exponential-weight algorithm for Exploration and Exploitation (Exp3) algorithm \cite{Auer2003Exp3} independently for each of the players.
-In Exp3, each player maintains an estimate of the sum of rewards for each action, denoted $\hat{X}_{a_i}$. The joint action produced by \emph{\underline{Select}} is composed of an action independently selected for each player.
+Another common choice is to use the Exponential-weight algorithm for Exploration and Exploitation (Exp3)
+algorithm \cite{Auer2003Exp3} independently for each of the players.
+In Exp3, each player maintains an estimate of the sum of rewards for each action, denoted $\hat{X}_{a_i}$. 
+The joint action produced by \emph{\underline{Select}} is composed of an action independently selected for each player.
+An action is selected by sampling from a probability distribution over actions.
 Define $\gamma$ to be the probability of exploring, \ie choosing an action uniformly. 
-The probability of using action $a_i$ is proportional to the exponential of the reward estimates:
+The probability of selecting action $a_i$ is proportional to the exponential of the reward estimates:
 \begin{equation}\label{eq:exp3select}
 \sigma_i(a_i) = \frac{(1-\gamma) \exp(\eta \hat{X}_{a_i})}{\sum_{b_i \in \cA_i(s)} \exp(\eta \hat{X}_{b_i})} + \frac{\gamma}{|\cA_i(s)|},
   \mbox{ where } \eta = \frac{\gamma}{|\cA_i(s)|}.
 \end{equation}
 
-This standard formulation of Exp3 is suitable for deriving its properties, but a straightforward implementation of this formula leads to problems with numerical stability. Both the numerator and denominator of the fraction can quickly become too large. For this reason, numerically more stable formulations has been suggested, e.g., in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS}. We use the following quivalent formulation from \cite{Cowling12ISMCTS}:
+This standard formulation of Exp3 is suitable for deriving its properties, but a straightforward implementation of this formula leads to problems with numerical stability. Both the numerator and denominator of the fraction can quickly become too large. For this reason, other formulations has been suggested, e.g., in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS} that are more numerically stable. We use the following equivalent formulation from \cite{Cowling12ISMCTS}:
 \begin{equation}
-\sigma^t_i(a_i) = \frac{(1-\gamma)}{\sum_{b_i \in A_i(s)}\exp(\eta(\hat{X}_{b_i}-\hat{X}_{a_i}))}
+\sigma^t_i(a_i) = \frac{(1-\gamma)}{\sum_{b_i \in A_i(s)}\exp(\eta(\hat{X}_{b_i}-\hat{X}_{a_i})).}
 \end{equation}
 
 The update after selecting actions $(a_1,a_2)$ and obtaining a simulation result $v_1$ normalizes the result to the unit interval for each player by
@@ -401,7 +405,7 @@ and adds to the corresponding reward sum estimates the reward divided by the pro
 \hat{X}_{a_i} \leftarrow \hat{X}_{a_i} + \frac{u_i}{\sigma_i(a_i)}.
 \end{equation}
 Dividing the value by the probability of selecting the corresponding action makes $\hat{X}_{a_i}$ estimate the sum of rewards over all
-iterations, not only the once where $a_i$ was selected.
+iterations, not only the ones where $a_i$ was selected.
 
 As the final strategy, after all iterations are executed, the algorithm computes the \emph{average strategy} of the Exp3 algorithm over all iterations for each player. After $n$ iterations in the particular node, it is
 \begin{equation}
@@ -418,7 +422,8 @@ normalized to sum to one.
 
 \subsubsection{Regret Matching} \label{sec:rm}
 
-This variant applies regret matching \cite{Hart00} to the current estimated matrix game at each stage. The statistics stored by this algorithm in each node are the use count of each joint action ($n_{a_1a_2}$), the sum of rewards for each joint action ($X_{a_1a_2}$). Furthermore, the algorithm for each player $i$ maintains a cumulative regret $r^i_{a_i}$ for having played $\sigma_i^t$ instead of $a_i \in \cA_i(s)$ on iteration $t$, initially set to 0. The regret values $r^i_{a_i}$ are maintained separately by each player, as in DUCT. However, the updates uses a value that is a function of the joint action space. 
+This variant applies regret matching \cite{Hart00} to the current estimated matrix game at each stage. The statistics stored by this algorithm in each node are the use count of each joint action ($n_{a_1a_2}$), the sum of rewards for each joint action ($X_{a_1a_2}$).\footnote{Note that $n_{a_1a_2}$ and $X_{a_1a_2}$ correspond to $n_{s'}$ and $X_{s'}$ from Figure~\ref{fig:smmcts-example} in a game without chance events.}
+Furthermore, the algorithm for each player $i$ maintains a cumulative regret $r^i_{a_i}$ for having played $\sigma_i^t$ instead of $a_i \in \cA_i(s)$ on iteration $t$, initially set to 0. The regret values $r^i_{a_i}$ are maintained separately by each player. However, the updates use a value that is a function of the joint action space. 
 
 On iteration $t$, function \emph{\underline{Select}} first builds
 each player's current strategies from the cumulative regrets. Define $x^+ = \max(x,0)$,
@@ -428,17 +433,17 @@ each player's current strategies from the cumulative regrets. Define $x^+ = \max
 \mbox{ oth. } \frac{1}{|\cA_i(s)|}, \mbox{ where } R^+_{sum} = \sum_{b_i \in \cA_i(s)}{r^{i+}_{b_i}}.
 \end{equation}
 The main idea is to adjust the strategy by assigning higher weight proportionally to actions based on the regret of having not taken them over the long-term.
-To ensure exploration, an $\gamma$-on-policy sampling procedure similar to Equation~\ref{eq:exp3select} is used
-choosing action $a_i$ with probability $\gamma/|\cA(s)| + (1-\gamma) \sigma^t_i(a_i)$.
+To ensure exploration, a sampling procedure similar to Equation~\ref{eq:exp3select} is used to select action $a_i$ with probability 
+$\gamma/|\cA(s)| + (1-\gamma) \sigma^t_i(a_i)$.
 
 \emph{\underline{Update}} adds regret accumulated at the iteration to
 the regret tables $r^i$. Suppose joint action $(a_1,a_2)$ is
-sampled from the selection policy and utility $v_1$ is returned from the recursive call on line~\ref{alg:smmcts:reccall}.
+sampled from the selection policy and utility $u_1$ is returned from the recursive call on line~\ref{alg:smmcts:reccall}.
 Label $reward(b_1,b_2) = \frac{X_{b_1b_2}}{n_{b_1b_2}}$ if
-$(b_1,b_2) \not= (a_1,a_2)$, or $v_1$ otherwise. The updates to the regret are:
+$(b_1,b_2) \not= (a_1,a_2)$, or $u_1$ otherwise. The updates to the regret are:
 \begin{eqnarray}
-\forall b_1 \in \cA_1(s), ~~  r^1_{b_1} \leftarrow r^1_{b_1} + ( reward(b_1, a_2) - v_1 ),\\
-\forall b_2 \in \cA_2(s), ~~  r^2_{b_2} \leftarrow r^2_{b_2} - ( reward(a_1, b_2) - v_1).
+\forall b_1 \in \cA_1(s), ~~  r^1_{b_1} \leftarrow r^1_{b_1} + ( reward(b_1, a_2) - u_1 ),\\
+\forall b_2 \in \cA_2(s), ~~  r^2_{b_2} \leftarrow r^2_{b_2} - ( reward(a_1, b_2) - u_1).
 \end{eqnarray}
 %\noindent and average strategy updates for each player, $\bar{\sigma}^i_s[a] \leftarrow \bar{\sigma}^i_s[a] + \sigma^t_i(s,a).$
 
@@ -447,7 +452,7 @@ After all simulations, the strategy to play in state $s$ is defined by the mean 
 \subsection{Counterfactual Regret Minimization and Outcome Sampling} \label{sec:algs:cfros}
 
 Counterfactual Regret (CFR) is a notion of regret at the information set level for extensive-form games with imperfect information~\cite{CFR}.
-The CFR algorithm iteratively learns strategies in self-play, producing approximate equilibrium strategues over time. 
+The CFR algorithm iteratively learns strategies in self-play, producing approximate equilibrium strategies over time. 
 
 Define a {\it history} as a sequence of actions taken by all players (including chance) that starts from the beginning of the game. 
 A history $h'$ is a prefix of another history $h$, denoted $h' \sqsubset h$, if $h$ contains $h'$ (as a prefix sequence of actions).  
@@ -479,7 +484,7 @@ Furthermore, the algorithm maintains for each information set the average   stra
 \bar{\sigma}^T(I,a) = \frac{\sum_{t=1}^T \pi^{\sigma^t}_i(I) \sigma^t(I,a)}{\sum_{t=1} \pi^{\sigma^t}_i(I)}, 
 \end{equation}
 where $\pi^{\sigma^t}_i(I) = \sum_{h \in I}\pi^{\sigma^t}_i(h)$.
-The combination of the counterfactual regret minimizers in individual information sets also minimizes the overall 
+The combination of the counterfactual regret minimizers in individual information sets also minimize the overall 
 average regret \cite{CFR}, and hence the average profile is a  $2\epsilon$-equilibrium, with $\epsilon \rightarrow 0$
 as $T \rightarrow \infty$.
 
@@ -515,11 +520,10 @@ The required number of iterations for convergence is much larger, but each itera
 
 \subsubsection{Online Outcome Sampling} \label{sec:oos}
 
-Online Outcome Sampling (OOS) is a version of outcome sampling MCCFR described in 
-Section~\ref{sec:algs:cfros}. It resembles MCTS in that it builds its tree incrementally, however it 
-is based on outcome sampling MCCFR rather than on UCB. The algorithm as applied to full imperfect information
-games is found in~\cite{Lanctot14OOS}. Here, we describe a simplified version specifically designed for 
-simultaneous move games. 
+Online Outcome Sampling (OOS) is resembles MCTS in that it builds its tree incrementally, however the selection 
+and update functions are based on outcome sampling MCCFR rather than on UCB. The algorithm as applied to full 
+imperfect information games is found in~\cite{Lanctot14OOS}. Here, we describe a simplified version specifically 
+designed for simultaneous move games. 
 
 % Note, mlanctot: \ElsIf breaks compilation for me but \ElseIf works
 %bb: Interestingly, \ElseIf does not work for me, but \ElsIf does ... maybe different versions of algorithm2e ?
