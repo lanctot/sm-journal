@@ -23,7 +23,7 @@ Therefore, for selected domains we also run sampling-based algorithms with an ev
 Reported results are mean of at least $1000$ matches for the $1$ second case, and at least $100$ matches for the $5$ second case.
 Where necessary, we run additional experiments to obtain statistically significant results.
 
-Each of the described algorithms were implemented in a generic framework for modeling and solving extensive-form games\footnote{Source codes are available at \texttt{http://agents.felk.cvut.cz/topics/Computational\_\newline game\_theory}.}.
+Each of the described algorithms were implemented in a generic framework for modeling and solving extensive-form games\footnote{Source code is available at \texttt{http://agents.felk.cvut.cz/topics/Computational\_\newline game\_theory}.}.
 We are interested in the performance of the algorithms and their ability to find or approximate the optimal behavior.
 Therefore, with the exception of the evaluation function used in selected online experiments, no algorithm is using any domain-specific knowledge.
 
@@ -69,18 +69,19 @@ S & -50 &  5 &  0\\\cline{2-4}
 %At the end of 13 rounds, the player with the highest number of points wins, a tie ends in a draw.
 \paragraph{\textbf{Goofspiel}}
 Goofspiel is a card game that appears in many works dedicated to simultaneous move games (e.g., \cite{Saffidine12SMAB,Rhoads12Computer,Lanctot13Goofspiel}). 
-There are $3$ identical decks of cards with values $\{1,\dots, d\}$ (one for nature and one for each player), where $d$ is a parameter of the game (classical goofspiel is played with $13$ cards). 
+There are $3$ identical decks of cards with values $\{1,\dots, d\}$ (one for nature and one for each player), where $d$ is a parameter of the game (classical Goofspiel is played with $13$ cards). 
 The game is played in rounds: at the beginning of each round, nature reveals one card from its deck and both players bid for the card by simultaneously selecting (and removing) a card from their hands. 
 A player that selects a higher card wins the round and receives a number of points equal to the value of the nature's card. In case both players select the card with the same value, the nature's card is discarded. 
 When there are no more cards to be played, the winner of the game is chosen based on the sum of card values he received during the whole game. 
 We follow the assumption made in \cite{Saffidine12SMAB} that both players know the sequence of the nature's cards. 
 The game is win-loss; hence, the players receive utility from set $\lbrace -1, 0, 1 \rbrace$.
 
-The evaluation function used in goofspiel takes into consideration two components: (1) the difference in the current score for both players weighted by the current round in the game, and (2) the remaining cards in the deck weighted by a chance of winning these cards depending on the remaining cards on hand for each player. Formally:
+The evaluation function used in Goofspiel takes into consideration two components: (1) the difference in the current score for both players weighted by the current round in the game, and (2) the remaining cards in the deck weighted by a chance of winning these cards depending on the remaining cards on hand for each player. Formally, let $p_i$, $r$, $c_i$ be player $i$'s score (points), the current round, and player $i$'s remaining cards, respectively:
 $$
-eval(s) = \tanh\left(\frac{\textrm{score}_1 - \textrm{score}_2}{\textrm{score}_1 + \textrm{score}_2}\cdot\frac{\textrm{round}}{d} + \frac{\textrm{remCards}_1 - \textrm{remCards}_2}{\textrm{remCards}_1 + \textrm{remCards}_2}\cdot\frac{\textrm{remCards}_c}{0.5\cdot d(d+1)}\right)
+%eval(s) = \tanh\left(\frac{\textrm{score}_1 - \textrm{score}_2}{\textrm{score}_1 + \textrm{score}_2}\cdot\frac{\textrm{round}}{d} + \frac{\textrm{remCards}_1 - \textrm{remCards}_2}{\textrm{remCards}_1 + \textrm{remCards}_2}\cdot\frac{\textrm{remCards}_c}{0.5\cdot d(d+1)}\right)
+eval(s) = \tanh\left(\frac{p_1 - p_2}{p_1 + p_2}\cdot\frac{r}{d} + \frac{c_1 - c_2}{c_1 + c_2}\cdot\frac{c_c}{0.5 \cdot d(d+1)}\right)
 $$
-$eval(s)$ is equal to $0$ in the beginning of the game (i.e., when $\textrm{score}_1 + \textrm{score}_2$ is $0$) and to the utility value of the game at the end (i.e., when $\textrm{remCards}_1 + \textrm{remCards}_2$ is $0$). We use $\tanh$ to scale the evaluation function into the interval $[-1,1]$.
+$eval(s)$ is equal to $0$ in the beginning of the game (i.e., when $p_1 + p_2$ is $0$) and to the utility value of the game at the end (i.e., when $c_1 + c_2$ is $0$). We use $\tanh$ to scale the evaluation function into the interval $[-1,1]$.
 Moreover, if the position is clearly winning for one of the players (there is not enough cards to change the current score), the evaluation function is set to $1$, or $-1$.
 %\item[Oshi-Zumo]$(N,K,M)$ is a wrestling simulation game played on a discrete single-dimensional grid with
 %$2K+1$ positions, where each player starts with $N$ coins~\cite{buro2003}. A wrestler token begins in the middle
@@ -359,7 +360,7 @@ This is most likely due to existence pure NE, however, the length of the game tr
 
 \subsubsection{Discussion}
 The offline comparison of the algorithms offers several conclusions.
-Among the exact algorithms, $\doab$ is clearly the best algorithm, since it typically outperforms all other algorithms (especially in pursuit-evasion games and random games). Although for smaller games (e.g., goofspiel with $5$ cards)  $\biab$ can be slightly faster, this difference is not significant and $\doab$ is never significantly slower compared to $\biab$.
+Among the exact algorithms, $\doab$ is clearly the best algorithm, since it typically outperforms all other algorithms (especially in pursuit-evasion games and random games). Although for smaller games (e.g., Goofspiel with $5$ cards)  $\biab$ can be slightly faster, this difference is not significant and $\doab$ is never significantly slower compared to $\biab$.
 
 Among the sampling algorithms, OOS is the clear winner since it is often able to quickly converge to a very small error and significantly outperforms all variants of MCTS.
 On the other hand, comparing OOS and $\doab$, the exact $\doab$ algorithm is always faster and it is able to find an exact solution much faster compared to OOS.
