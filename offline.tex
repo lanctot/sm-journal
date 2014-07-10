@@ -420,7 +420,9 @@ As the final strategy, after all iterations are executed, the algorithm computes
 In our implementation, we maintain the cumulative sum and normalize it to obtain the average strategy after the iterations.
 
 Previous work \cite{Teytaud11Upper} suggests first removing the samples caused by the exploration.
-This modification proved to be useful also in our experiments and it has been shown not to reduce the performance substantially in the worst case \cite{kovarik}, \mlanctot{@Vilo, please add the missing reference; I don't know which paper you wanted to cite here} so as the resulting final mixed strategy, we use
+This modification proved to be useful also in our experiments
+% and it has been shown not to reduce the performance substantially in the worst case \cite{kovarik}, \mlanctot{@Vilo, please add the missing reference; I don't know which paper you wanted to cite here}
+so as the resulting final mixed strategy, we use
 \begin{equation}
 \bar{\sigma}_i(a_i) \leftarrow \max\left(0, \bar{\sigma}_i(a_i) - \frac{\gamma}{|\cA_i(s)|}\right),
 \end{equation}
