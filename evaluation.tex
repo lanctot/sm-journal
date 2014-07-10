@@ -793,19 +793,19 @@ These results are consistent with the offline convergence results in Figure~\ref
 \begin{tabular}{|r|cccccc|}\hline
 Time&\multicolumn{6}{|c|}{OOS}\\
 &\textbf{0.6}&0.5&0.4&0.3&0.2&0.1\\
-1s&12.9(1.4)&14.6(2.1)&13.6(2.0)&12.6(1.9)&14.5(2.0)&15.8(2.1)\\
+1s&12.9(1.4)&15.2(2.2)&14.0(2.1)&15.6(2.2)&15.6(2.2)&16.9(2.3)\\
 5s&10.9(1.4)&9.3(1.8)&11.4(2.0)&10.7(1.9)&14.1(2.1)&13.1(2.1)\\\hline
 &\multicolumn{6}{|c|}{UCT}\\
 &4&\textbf{2}&1.5&1&0.8&0.6\\
-1s&11.2(3.5)&11.7(1.4)&16.5(4.2)&13.8(3.8)&15.8(4.1)&11.8(3.6)\\
+1s&7.2(1.6)&11.3(2.0)&13.0(2.1)&13.7(2.1)&12.9(2.0)&11.9(2.0\\
 5s&8.3(1.7)&11.7(1.4)&7.5(1.6)&7.0(1.6)&7.5(1.6)&8.9(1.8)\\\hline
 &\multicolumn{6}{|c|}{EXP3}\\
 &0.6&0.5&0.4&0.3&\textbf{0.2}&0.1\\
-1s&21.6(2.4)&19.5(2.3)&16.5(2.2)&15.3(2.1)&11.1(1.3)&6.5(1.4)\\
+1s&26.1(2.7)&20.1(2.5)&17.9(2.4)&17.5(2.3)&11.8(2.0)&7.2(1.6)\\
 5s&17.4(2.3)&14.2(2.1)&11.3(1.9)&11.7(2.0)&11.0(1.3)&8.1(1.7)\\\hline
 &\multicolumn{6}{|c|}{RM}\\
 &0.75&0.5&0.3&0.2&\textbf{0.1}&0.05\\
-1s&21.9(2.4)&25.8(2.5)&20.6(2.4)&17.0(2.2)&13.8(1.5)&16.6(2.2)\\
+1s&21.9(2.5)&25.8(2.7)&21.9(2.6)&17.9(2.4)&16.6(2.3)&18.1(2.4)\\
 5s&15.1(2.5)&14.7(2.7)&10.5(2.2)&9.8(2.2)&14.4(1.5)&12.0(2.3)\\\hline
 \end{tabular}
 
@@ -813,9 +813,9 @@ Time&\multicolumn{6}{|c|}{OOS}\\
 \caption{The win-rate of different algorithms against $\doab$ in Oshi Zumo. The bold parameter value is used in the head-to-head performance evaluation above.}\label{fig:tuning}
 \end{figure}
 
-The exploration parameters for the sampling algorithms in the complete head-to-head comparison above were hand-tuned and fixed to 0.6 for OOS, 2 for UCT, 0.2 for Exp3 and 0.1 for RM. In Figure~\ref{fig:tuning}, we evaluate how the performance of the algorithms can be improved by tuning the parameters for a specific game. We chose the Oshi-Zumo game, in which all the sampling algorithms performed the worst and we tuned their exploration parameter against their strongest opponent -- $\doab$. We chose this worst case, because in zero-sum games, the optimal player that approximates the Nash equilibrium in the game should maximize its performance against its strongest opponent.\vlisy{It would be good to add more samples here.}
+The exploration parameters for the sampling algorithms in the complete head-to-head comparison above were hand-tuned and fixed to 0.6 for OOS, 2 for UCT, 0.2 for Exp3 and 0.1 for RM. In Figure~\ref{fig:tuning}, we evaluate how the performance of the algorithms can be improved by tuning the parameters for a specific game. We chose the Oshi-Zumo game, in which all the sampling algorithms performed the worst and we tuned their exploration parameter against their strongest opponent -- $\doab$. We chose this worst case, because in zero-sum games, the optimal player that approximates the Nash equilibrium in the game should maximize its performance against its strongest opponent.
 
-The influence of the exploration parameter in OOS is not statistically significant after 300 matches played for this table. The differences with 5 seconds per move were even smaller. While the default parameter is likely not optimal in this setting, it is still meaningful.
+The influence of the exploration parameter in OOS is not statistically significant after 1000 matches played for this table. The differences with 5 seconds per move were even smaller. While the default parameter is likely not optimal in this setting, it is still meaningful.
 The performance of UCT can likely be slightly improved by setting the parameter to 1.5 instead of 2 for the shorter time setting, but our default value seems to be optimal for the longer time setting. Still, none of the differences is statistically significant with 95\% probability.
 Setting much higher exploration for Exp3 can significantly improve the performance of the algorithm against $\doab$ with one second per move, but the influence of the parameter is weaker with the longer time setting. 
 Similar behavior is apparent also for RM. The algorithm performs better against $\doab$ with higher exploration factor, however, in a self-play RM with exploration factor $0.5$ significantly looses against RM with exploration factor $0.1$ (i.e., wins only 37.5(2.8)\% of matches).
