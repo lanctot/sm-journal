@@ -202,8 +202,8 @@ Simultaneous move games model discrete, multistage interactions where at each st
 players choose their actions simultaneously. This formalism  has been used to express
 games in general game playing and can model discrete approximations of realistic scenarios 
 such as real-time decision-making in a physical environment. 
-In this paper, we first formally describe the formalism. We then survey the existing 
-literature on algorithms that compute strategies for two-player zero-sum simultaneous move games.
+In this paper, we survey the existing literature on algorithms that compute strategies 
+for two-player zero-sum simultaneous move games and describe our most recent algorithms.
 We evaluate our algorithms in two specific cases: the offline case, where computational 
 resources are abundant and approximation refinement is a priority, and 
 the online search case, where computational resources are limited and acting 
@@ -289,15 +289,16 @@ and whether the agents need to use mixed strategies in order to play optimally.
 % bbosansky: I have reworded mentioning UCT, since we have not discussed MCTS, nor UCB/UCT here
 Several contributions are made by this paper. First, we present a brief survey of the existing literature 
 for this class of games, much of which is recent work not covered in any other survey on this topic. 
-Second, we present detailed descriptions of several recent exact and approximative algorithms to compute strategies for this class of games. 
+Second, we present detailed descriptions of recent exact~\cite{Bosansky13Using} and approximative algorithms~\cite{Lanctot13Goofspiel,lisy2013-nips} to compute strategies for this class of games. 
 Third, we produce a detailed analysis of the original non-convergence results of a well known approximative algorithm from \cite{Shafiei09}, 
 showing its sensitivity and significant effect of deterministic coordination. 
 Lastly, we evaluate these algorithms in two different computational contexts (offline computation and online search) for 
 the first time, in five different games and over random games. 
 
 Our experimental comparison shows different performance of the algorithms in both cases.
-In the offline case, the fastest exact algorithms based on backward induction are able to solve the game 
-very quickly, however, these algorithms are less competitive in the online settings. 
+In the offline case, the fastest exact algorithms based on backward induction are able to solve the game very quickly. 
+In some cases, our novel algorithm solves the game in less than 2\% of time required by standard backward induction algorithm.
+However, the exact algorithms are less competitive in the online settings. 
 On the other hand, approximative sampling algorithms can perform very well in the online setting and 
 find very good strategies to play within a few seconds, however, they are not well suited for offline solving games. 
 % mlanctot: OOS will, right? Are you referring to Biased RPS? This is not really new.. 
