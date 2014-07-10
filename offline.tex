@@ -53,14 +53,20 @@ Therefore, the value of a serialized game where player $i$ is second to move is 
 
 \begin{figure}
 \centering
-\begin{tabular}{|l|c|c|}
-\hline $\bigcirc \setminus \square$ & $b_1$ & $b_2$ \\
-\hline $a_1$ & $2$ & $0$ \\
-\hline $a_2$ & $3$ & $4$ \\
-\hline
-\end{tabular}\\\vspace{0.5cm}
-\includegraphics[width=0.45\textwidth]{figures/serialization1.pdf}
-\includegraphics[width=0.45\textwidth]{figures/serialization2.pdf}
+%\begin{tabular}{|l|c|c|}
+%\hline $\bigcirc \setminus \square$ & $b_1$ & $b_2$ \\
+%\hline $a_1$ & $2$ & $0$ \\
+%\hline $a_2$ & $3$ & $4$ \\
+%\hline
+%\end{tabular}
+\begin{tabular}{l|c|c|}
+ \multicolumn{1}{c}{~} & \multicolumn{1}{c}{$b_1$}  &  \multicolumn{1}{c}{$b_2$}\\\cline{2-3}
+$a_1$ &  2  &  0\\\cline{2-3}
+$a_2$ &  3  &  4\\\cline{2-3}
+\end{tabular}
+\\\vspace{0.5cm}
+\includegraphics[width=0.35\textwidth]{figures/serialization1.pdf}~~~~~~~
+\includegraphics[width=0.35\textwidth]{figures/serialization2.pdf}
 \caption{Different serializations of a simultaneous move game. Utility values are in the leafs, the gray values correspond to the value propagation when solving the serialized game.}\label{fig:serialization}
 \end{figure}
 
@@ -121,7 +127,7 @@ First of all, we describe the main principles of the double-oracle algorithm in 
 \subsubsection{Double-oracle Algorithm for Matrix Games}\label{sec:doab}
 \begin{figure}[t!]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/DO-scheme}
+\includegraphics[width=0.9\textwidth]{figures/DO-scheme}
 \caption{Schematic of the double-oracle algorithm for a normal-form game.}\label{fig:do-scheme}
 \end{figure}
 
