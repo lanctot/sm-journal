@@ -633,7 +633,7 @@ RAND&10.2(1.8)&17.1(2.2)&12.2(1.9)&7.6(1.5)&10.1(1.7)&50.1(2.9)\\
 The next set of matches was played on 10 different random games with each player having 5 actions in each stage and depth 15. Hence, the game has more than $9.3\times 10^{20}$ leaf nodes. In order to compute the win-rates as in other games, we use signum of the utility value defined in Section~\ref{sec:eval:domains}. The results are presented in Figure~\ref{fig:matches:rand}.
 
 With 1 second per move $\doab$ significantly wins over all other algorithms. 
-The performance of $\doab$ decreases with more time and with 5 seconds, it already wins only over OOS (in 60.5\% matches), and playing tie with the other sampling algorithms. 
+The performance of $\doab$ decreases with more time and with 5 seconds, it already wins only over OOS (in 60.2\% matches), and playing tie with the other sampling algorithms. 
 In general, the performance of all MCTS algorithms is very similar in the random games and this is supported by the similar convergence in the offline settings (see~Figure~\ref{fig:off:conv:rg}), where the difference between the convergence rate among all the algorithms was the smallest.
 Overall, OOS has the weakest performance in spite of good convergence results, however, this is consistent across all the domains.
 %OOS looses also against all MCTS algorithms, which perform practically the same among each other. These performance results are not supported by the speed of convergence in , where Exp3 converges consistently slower than OOS on the small variant of the game.
@@ -693,11 +693,11 @@ RAND&2.2(0.7)&3.3(0.9)&2.2(0.7)&0.8(0.4)&1.7(0.6)&49.8(3.0)\\
 The large variant of Tron in our evaluation was played on en empty $13\times 13$ board. The branching factor of this game is up to 4 for each player and its depth is up to 83 moves. Tron is the largest game in our comparison with much more than $10^{21}$ leafs in the game tree\footnote{The number only estimates the number of possible paths when both players stay on their half of the board.}.
 The results are depicted in Figure~\ref{fig:matches:tron}.
 
-The evaluation function in Tron quite well approximates the actual situation in the game; hence, $\doab$ strongly outperforms all other algorithms when they do not use the evaluation function. Again, its win-rates are higher with less time per move. RM is its strongest opponent, which is more apparent in the longer time setting, where it looses 37.4\% matches.\vlisy{Check the difference with different player positions!!!}
+The evaluation function in Tron quite well approximates the actual situation in the game; hence, $\doab$ strongly outperforms all other algorithms when they do not use the evaluation function. Again, its win-rates are higher with less time per move. RM is its strongest opponent, which is more apparent in the longer time setting, where it looses 36.8\% matches.
 
 RM is a clear winner when we restrict to sampling algorithms without domain knowledge, and this is consistent for both time settings. 
-As before, OOS is the weakest of the sampling algorithms. In the setting with 5 seconds it won only 15.1\% matches against RM. 
-Among MCTS algorithms, UCT performs the worst and looses 61.6\% matches against RM.
+As before, OOS is the weakest of the sampling algorithms. In the setting with 5 seconds it won only 14.9\% matches against RM. 
+Among MCTS algorithms, UCT performs the worst and looses 60.9\% matches against RM.
 
 As in the case of Oshi Zumo, we also run the matches with the evaluation function used instead of simulation in the sampling algorithms. 
 The usage of the evaluation function improves the performance of all sampling algorithms -- while UCT ties with $\doab$ in the 5 seconds setting, both Exp3 and RM significantly outperform $\doab$ in this setting.
@@ -745,8 +745,8 @@ Finally, we compared algorithms on a pursuit-evasion game on an empty $10\times 
 The results in Figure~\ref{fig:matches:peg} show that the game is strongly biased towards the first player, which is the evader. The self-play results on the diagonal shows that $\doab$ won over 91\% matches against itself as the evader. Adding more computational time typically improved the play of the pursuer in self-play. This is caused by more complex optimal strategy of the pursuer. This optimal strategy is more difficult to find due to a larger branching factor (recall that pursuer controls two units) and requirement for more precise execution of strategies (a single move played incorrectly can cause an escape of the evader and can result in loosing the game due to the time limit).
 
 With 1 second per move, the performance of $\doab$ and RM is very similar against other opponents, but RM slightly outperforms $\doab$ in their mutual match.
-For 5 seconds setting, RM without any domain knowledge already performs significantly better (wins 90\% as an evader, while $\doab$ wins only 70.4\% of games as an evader).
-Comparing against the other opponents, RM has statistically significant difference of performance only against Exp3, against which $\doab$ on the first position wins 73\% of matches and RM wins 78.5\% of matches. The other two MCTS variants have similar performance in both time settings and OOS is consistently the weakest. 
+For 5 seconds setting, RM without any domain knowledge already performs significantly better. In mutual matches, it wins 91\% as an evader, while $\doab$ wins only 75.9\% of games as an evader.
+Comparing against the other opponents, RM is always slightly better then $\doab$, but it is never statistically significant. The other two MCTS variants have similar performance in both time settings and OOS is consistently the weakest. 
 These results are consistent with the offline convergence results in Figure~\ref{fig:off:conv:peg}, in which in short time, RM converges significantly the fastest.
 
 \subsubsection{Parameter tuning}\label{sec:eval:online:tuning}
@@ -797,10 +797,10 @@ However, when altering the parameters within reasonable boundaries, the differen
 \subsubsection{Summary}
 
 Several conclusions can be made form the head-to-head comparison of the algorithms in larger games. 
-First, the fast convergence and low exploitability of OOS algorithm in the smaller variants of the games is not very good predictor of its performance in the online setting. OOS was consistently one of the worst performing algorithm. \bbosansky{Why?}
+First, the fast convergence and low exploitability of OOS algorithm in the smaller variants of the games is not very good predictor of its performance in the online setting. OOS was consistently one of the worst performing algorithms. The reason is likely that with higher exploration parameter required for faster convergence, the part of the game tree constructed by OOS is too wide an shallow, and does not allow it to find important situations later in the game. If we set the exploration parameter to smaller numbers, the importance sampling correction of regret updates causes very high variance of their values, which generally slows-down the convergence to good solutions and results in building the tree in less useful directions.
 
 Second, while $\doab$ with a good evaluation function wins over the sampling algorithms without domain specific knowledge, it is not necessary the case with a weaker evaluation function, as we can see in Goofspiel. Moreover, when the sampling algorithms are allowed to use the evaluation functions, $\doab$ is typically outperformed by either RM in Tron or UCT in Oshi-Zumo. 
-Evaluation function improves the performance of OOS the least of all sampling algorithms. \bbosansky{Why?}
+Evaluation function improves the performance of OOS the least of all sampling algorithms. Even with evaluation functions, the wider and shallower tree is generally a disadvantage.
 
 Third, when the algorithms have more time for finding the move to play, the differences between win-rates of the sampling algorithms are getting smaller. Longer thinking time has also the same effect in the parameter tuning and it also significantly improves the performance of the sampling algorithms against backward induction. This is expected, since the difference is too small for the $\doab$ algorithm to reach greater depth, while it is sufficient for the sampling algorithms to execute $5$ times more iterations that improves their strategy.
 
