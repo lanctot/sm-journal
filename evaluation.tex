@@ -12,11 +12,11 @@ Then, we compare the offline performance of the algorithms on other domains.
 For each domain, we first analyze the exact algorithms and measure the computation time taken to solve a particular instance of the game. 
 We compute mean out of at least $30$ runs for each game settings. 
 Afterwards, we analyze the convergence of the approximative algorithms.
-At the specified time step the algorithm produces strategies $(\sigma_1,\sigma_2$, and using best responses we compute 
+At the specified time step the algorithm produces strategies $(\sigma_1,\sigma_2)$, and using best responses we compute 
 $\textrm{error}(\sigma_1,\sigma_2) = \max_{\sigma_1' \in \Sigma_1} \bE_{z \sim (\sigma_1',\sigma_2)}[u_1(z)] 
                                    + \max_{\sigma_2' \in \Sigma_2} \bE_{z \sim (\sigma_1,\sigma_2')}[u_2(z)]$, 
 which is equal to $0$ at a Nash equilibrium.
-In each offline convergence setting, the reported values are means out of $20$ runs of each sampling algorithm on a single instance of the game.
+In each offline convergence setting, the reported values are means out of at least $20$ runs of each sampling algorithm on a single instance of the game.
 We compared at least $3$ different settings for the exploration parameter and present the result only for the best exploration parameter.
 For OOS, Exp3, and RM the best values for the parameters were always $0.6$, $0.1$, and $0.1$ and we give the values for UCT for each domain.
 % mlanctot: please check the definition of error
@@ -262,7 +262,7 @@ eval(s) = \tanh\left(\frac{\textrm{owned}_1 - \textrm{owned}_2}{5}\right).
 $$
 
 
-\subsection{Non-Convergence and Random Tie-Breaking in DUCT}\label{sec:exp:brps} 
+\subsection{Non-Convergence and Random Tie-Breaking in UCT}\label{sec:exp:brps} 
 
 % mlanctot: should be done
 %\bbosansky{We need to unify naming the UCT algorithms. I suggest to state in the description of UCT that randomized decoupled UCT(mix) is termed UCT from now on and any other meaning/variant is explicitly stated. However, I do not have a strong opinion on this.}
@@ -298,7 +298,7 @@ We then tried adding a stochastic tie-breaking rule to the UCT selection mechani
 action randomly when the scores of the best values are ``tied'' (less than $0.01$ apart).
 One particularly striking observation is that this simple addition leads to a large drop in resulting exploitability, where exploitability
 ranges from $[0.5,0.8]$ in the deterministic case, compared to $[0.01,0.05]$ with stochastic tie-breaking. Therefore, stochastic tie-breaking is 
-enabled in all of our experiments. %mlanctot: is this true?
+enabled in all of our experiments. %mlanctot: is this true? %bbosansky: yes, we have run again experiments with randomized uct where deterministic uct had been used before
 
 %\mlanctot{I noticed Vilo added his example to the SM-MCTS section so please modify this paragraph as necessary. Maybe it can be 
 %removed entirely?} We investigated this further and found a possible
@@ -311,9 +311,9 @@ enabled in all of our experiments. %mlanctot: is this true?
 \subsection{Offline Equilibrium Computation}
 
 We first compare the offline performance of the algorithm. 
-We measure the overall computation time for each of the algorithms and number of evaluated nodes -- i.e., nodes for which the main method of teh backward induction algorithm executed (i.e., nodes evaluated by serialized alpha-beta algorithms are not included in this count, since they may be evaluated repeatedly).
+We measure the overall computation time for each of the algorithms and number of evaluated nodes -- i.e., nodes for which the main method of the backward induction algorithm executed (i.e., nodes evaluated by serialized alpha-beta algorithms are not included in this count, since they may be evaluated repeatedly).
 Unless otherwise stated, each data point represents a mean of at least $30$ runs.
-% mlanctot: check this
+% mlanctot: check this %bbosansky: ?
 
 \subsubsection{Goofspiel}
 \begin{figure}
