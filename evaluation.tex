@@ -12,7 +12,7 @@ We compute mean out of at least $30$ runs for each game settings.
 Afterwards we analyze the convergence of the approximative algorithms.
 For each algorithm we sample computed strategy in selected time steps and calculate the current error of the algorithm -- i.e., a sum of best-response values (one for each player's strategy).
 This value converges to $0$ as the algorithm converges to a Nash equilibrium in zero-sum games.
-In each offline convergence setting, the reported values are means out of $20$ runs of each sampling algorithm on a single instance of the game.\vlisy{is the 20 runs enough?}
+In each offline convergence setting, the reported values are means out of $20$ runs of each sampling algorithm on a single instance of the game.\vlisy{is the 20 runs enough?}\vlisy{exploration parameters for the offline setting are not explained anywhere.}
 
 Finally, we turn to the comparison of the algorithms in the online setting and we present head-to-head tournament on each domain.
 We used larger instances of games and calculated win-rate for each algorithm.
@@ -269,8 +269,8 @@ each variant at regular intervals. The results are shown in Figure~\ref{fig:expl
 \caption{Exploitability of strategies of recommended by MCTS over time in Biased Rock, Paper, Scissors. Vertical axis represents exploitability. \label{fig:expl-brps}}
 \end{figure}
 
-The first observation is that UCT does not seem to converge to a low-exploitability strategy. The exploitability of the strategies of 
-Exp3 and RM variants do converge to low-exploitability strategies, and the resulting approximation depend on the amount of exploration. 
+The first observation is that the deterministic UCT does not seem to converge to a low-exploitability strategy. The exploitability of the strategies of 
+Exp3 and RM variants do converge to low-exploitability strategies, and the resulting approximation depends on the amount of exploration. 
 If less exploration is used, then the resulting strategy is less exploitable, which is natural in the case of a single state. RM does seem to 
 converge slightly faster than Exp3, as seen in the full simultaneous games as well. 
 
@@ -302,8 +302,8 @@ Figure~\ref{fig:off:res:gs} depicts the results for the card game Goofspiel (not
 The results show that a significant number of sub-games has a pure sub-game Nash equilibrium that can be computed using serialized alpha-beta algorithms.
 Therefore, the performance of $\biab$ and $\doab$ is fairly similar and the gap only slowly increases in favor of $\doab$ with the increasing size of the game.
 Both of these algorithms significantly reduce the number of states visited by the backward induction algorithm (i.e., excluding the number of states evaluated by serialized alpha-beta algorithm).
-While \textsc{BI} algorithm evaluates on average more than $32\cdot10^6$ nodes in the setting with $7$ cards in more than $3$ hours, $\biab$ evaluates only $198986$ nodes in less than $5$ minutes. 
-The performance is further improved by $\doab$ that evaluates on average $51035$ nodes in less than $4$ minutes.
+While \textsc{BI} algorithm evaluates on average more than $3.2\cdot10^7$ nodes in the setting with $7$ cards in more than $3$ hours, $\biab$ evaluates only $198986$ nodes in less than $5$ minutes. 
+The performance is further improved by $\doab$ that evaluates on average $51035$ nodes in less than $4$ minutes.\vlisy{explain what is an evaluated node!}
 However, the overhead of the algorithm is slightly higher in case of $\doab$; hence, the difference between $\doab$ and $\biab$ is relatively small in this case.
 Finally, the results show that even simple \textsc{DO} algorithm without serialized alpha-beta search can improves the performance of \textsc{BI}.
 In the setting with $7$ cards, \textsc{DO} evaluates more than $6\cdot10^6$ nodes which takes on average almost 40 minutes.
@@ -319,16 +319,16 @@ In their work, the number of evaluated nodes was at best around $20\%$, and the 
 
 Next we focus on the convergence of sampling algorithms -- i.e., their ability to approximate Nash equilibrium strategies of the complete game. 
 Figure~\ref{fig:off:conv:gs} depicts the results in this offline settings for Goofspiel game with $5$ cards (note the logarithmic x-scale).
-We compare MCTS algorithms with three different selection functions (UCT, EXP3, and RM), and OOS algorithm. 
-The results are means out of $20$ runs of each algorithm.
+We compare MCTS algorithms with three different selection functions (UCT, EXP3, and RM), and OOS algorithm.
+The results are means out of $20$ runs of each algorithm.\vlisy{the number of samples per second for each algorithm should be reported somewhere!}
 The results show that OOS is the fastest out of all sampling algorithms during the whole time. 
 MCTS with Regret Matching selection function is only slightly slower, however, other two selection functions perform worse. 
 While EXP3 eventually converges close to $0$, the exploitability of UCT decreases rather slowly and it was still over $0.35$ at the time limit of $300$ seconds. 
-These results confirm theoretical properties for the algorithms, where it can be quite slow for EXP3 and UCT.
+%These results confirm theoretical properties for the algorithms, where it can be quite slow for EXP3 and UCT.\vlisy{What theoretical properties?}
 Moreover, when we have not used randomization in UCT, the algorithm was not able to converge to error lower than $0.5$ in the time limit. 
-On the other hand, both OOS and RM confirm their quick convergence, witch is aligned with previous existing results~\cite{Lanctot13Goofspiel}.
+On the other hand, both OOS and RM confirm their quick convergence, witch is aligned with previous results~\cite{Lanctot13Goofspiel}.
 The vertical lines represent times for exact algorithms.
-In Goofspiel $5$, $\biab$ is slightly faster and finishes first in less than $1$ second, following by $\doab$ ($1.52$ seconds), \textsc{DO} ($4.25$ seconds), and \textsc{BI} ($7.11$).
+In Goofspiel $5$, $\biab$ is slightly faster and finishes first in less than $1$ second, following by $\doab$ ($1.52$ seconds), \textsc{DO} ($4.25$ seconds), and \textsc{BI} ($7.11$ seconds).
 
 
 \subsubsection{Pursuit-Evasion Games}
@@ -343,13 +343,13 @@ In Goofspiel $5$, $\biab$ is slightly faster and finishes first in less than $1$
 \caption{Comparison of running times on pursuit-evasion game with increasing number of moves: sub-figure (a) depicts the results on $4\times4$ grid graph, (b) depicts results for $5\times5$ grid.} \label{fig:off:res:peg}
 \end{figure}
 
-The results on pursuit-evasion games show more significant improvement when comparing $\doab$ and $\biab$ (see Figure~\ref{fig:off:res:peg}). In all settings, the $\doab$ is significantly the fastest. When we compare the performance on graph $5\times5$ with depth set to $6$, \textsc{BI} evaluates more than $49\cdot10^6$ nodes that takes more than $13$ hours. On the other hand, $\biab$ evaluates on average $42001$ nodes taking almost $10$ minutes ($584$ seconds). Interestingly, the benefits of pure integration with alpha-beta search is not that helpful in this game.
+The results on pursuit-evasion games show more significant improvement when comparing $\doab$ and $\biab$ (see Figure~\ref{fig:off:res:peg}). In all settings, the $\doab$ is significantly the fastest. When we compare the performance on graph $5\times5$ with depth set to $6$, \textsc{BI} evaluates more than $4.9\cdot10^7$ nodes that takes more than $13$ hours. On the other hand, $\biab$ evaluates on average $42001$ nodes taking almost $10$ minutes ($584$ seconds). Interestingly, the benefits of pure integration with alpha-beta search is not that helpful in this game.
 This is apparent from results of \textsc{DO} algorithm that evaluates less than $2\cdot10^6$ nodes but it takes slightly over $9$ minutes on average ($547$ seconds). Finally, $\doab$ evaluates only $6692$ nodes and it takes the algorithm less than $3$ minutes.
 
 Large parts of pursuit-evasion game can be solved by serialized alpha-beta algorithms.
 These parts typically corresponds to clearly winning, or clearly loosing positions for a player.
 However, since there are only two pursuit units, it is still necessary to use mixed strategies for final coordination (capturing the evader close to edge of the graph), and thus mixing strategy occurs near the end of the game tree. 
-Therefore, serialized alpha-beta is not able to solve all sub-games, while double-oracle provides additional pruning and cause the improvement in computation time for $\doab$ compared to $\biab$ and all the other algorithms.
+Therefore, serialized alpha-beta is not able to solve all sub-games, while double-oracle provides additional pruning and cause the improvement in computation time for $\doab$ compared to $\biab$ and all the other algorithms.\vlisy{This argument is not very consistent with $\biab$ evaluating $\tfrac{1}{1000}$ of the nodes BI evaluates, while DO evaluating $\tfrac{1}{20}$. The reason is likely the cost of serialized searches.}
 
 \begin{figure}
 \centering
@@ -358,12 +358,12 @@ Therefore, serialized alpha-beta is not able to solve all sub-games, while doubl
 \end{figure}
 
 We turn to convergence of the sampling algorithms.
-The results are depicted in Figure~\ref{fig:off:conv:peg} for the smaller $4\times4$ graph and $4$ number of moves for each player (note again the logarithmic y-scale).
+The results are depicted in Figure~\ref{fig:off:conv:peg} for the smaller $4\times4$ graph and $4$ moves for each player (note again the logarithmic x-scale).
 The starting positions were selected such that there does not exist a pure NE strategy in the game.
 The results again show that OOS is overall the fastest out of all sampling algorithms, however, during the first iterations both UCT and RM are faster and their exploitability is smaller. 
 On the other hand, while OOS is able to keep the convergence rate and reach almost $0$ exploitability, UCT again converges to an exploitable strategy with error $1.16$ at best in the time limit of $500$ seconds.
 The convergence of RM is much better, however the best final error is $0.14$ in the given time.
-Finally, EXP3 converges even more slowly compared to the Goofspiel.
+Finally, EXP3 converges even more slowly compared to Goofspiel.
 The main difference between the games is the size of the branching factor for the second player (pursuer controls two simultaneously moving units), which can cause more difficulties for the sampling algorithms to estimate good strategies.
 
 As before, the vertical lines represent times for exact algorithms.
@@ -386,12 +386,12 @@ Although this does not hold for all the instances, the size of the sub-games wit
 If the game does not have equilibria in pure strategies, the mixed strategies are still required only near the root node and large end-games are solved using alpha-beta search.
 Note that this is different to pursuit-evasion games, where mixed strategies were necessary close to the end of the game tree.
 Figure~\ref{fig:off:res:oz} depicts the results for two different setting of the playing field $K$ is either set to $3$ or $4$.
-In both cases, the graphs clearly highlights when the whole game does not have an equilibrium in pure strategies -- for $K$ equal to $3$, the change occurs when the number of coins increase from $11$ to $12$, for $K=4$ the first setting with non-pure equilibria is in case with $15$ coins for each player.
+In both cases, the graphs clearly show when the whole game does not have an equilibrium in pure strategies -- for $K$ equal to $3$, the change occurs when the number of coins increase from $11$ to $12$, for $K=4$ the first setting with non-pure equilibria is in case with $15$ coins for each player.
 
 The consequence of the advantage of $\biab$ and $\doab$ algorithms that exploit serialized variants of alpha-beta algorihtms is dramatic in Oshi-Zumo game. 
 We can see that both \textsc{BI} and \textsc{DO} scale rather badly.
 The algorithms were able to scale up to $13$ coins in reasonable time. 
-For setting with $K=4$ and $13$ coins, it takes almost $2$ hours for \textsc{BI} to solve the game (the algorithm evaluates $15\cdot10^6$ nodes).
+For setting with $K=4$ and $13$ coins, it takes almost $2$ hours for \textsc{BI} to solve the game (the algorithm evaluates $1.5\cdot10^7$ nodes).
 \textsc{DO} improves the performance slightly (the algorithm evaluates nearly $6\cdot10^6$ nodes in $40$ minutes), however, the difference between alpha-beta algorithm is dramatic. 
 Both $\biab$ and $\doab$ are in essence solved by executing a single alpha-beta search on each serialization.
 Therefore, their performance is identical and it takes $21$ seconds to solve the game.
@@ -422,8 +422,8 @@ This is most likely caused by a larger support in mixed sub-game equilibria that
 Moreover, this is also demonstrated by the performance of $\biab$ that is only slightly better compared to \textsc{BI}.
 
 The fact that serialized alpha-beta is less successful in randomly generated games is noticeable also when comparing the number of evaluated nodes.
-For case with branching factor set to $4$ for both players, and depth $7$, \textsc{BI} evaluates almost $18\cdot10^6$ nodes in almost $3.5$ hours, while $\biab$ evaluates more than $\approx10\cdot10^6$ nodes in almost $3$ hours. 
-\textsc{DO} evaluates even more nodes compared to $\biab$ ($\approx12\cdot10^6$) and it is slower compared to both \textsc{BI} and $\biab$. 
+For case with branching factor set to $4$ for both players, and depth $7$, \textsc{BI} evaluates almost $1.8\cdot10^7$ nodes in almost $3.5$ hours, while $\biab$ evaluates more than $\approx1\cdot10^7$ nodes in almost $3$ hours. 
+\textsc{DO} evaluates even more nodes compared to $\biab$ ($\approx1.2\cdot10^7$) and it is slower compared to both \textsc{BI} and $\biab$. 
 Finally, $\doab$ evaluates $\approx2\cdot10^6$ nodes on average and it takes the algorithm slightly over $80$ minutes.
 
 \begin{figure}
@@ -446,7 +446,7 @@ Finally, $\doab$ evaluates $\approx2\cdot10^6$ nodes on average and it takes the
 Figure~\ref{fig:off:conv:rg} depicts the results for convergence of the sampling algorithms for the random game with correlated utility values, branching factor set to $4$ and depth $5$. Interestingly, there is a much less difference between the performance of the sampling algorithms in this game. Since these games are generally more mixed (i.e., NE require to use mixed strategies in many states of the game), they are much more suitable for the sampling algorithms. In the overall performance, again OOS is the winner, however, the performance of RM is very similar and even better during the first second. Again, since the game is more mixed, EXP3 outperforms UCT in the longer run, however, it is the worst sampling algorithm during the first iterations.
 
 \subsubsection{Tron}
-When comparing the exact algorithms on offline computation, the results are affected by the fact that pure NE exists in all smaller instances.
+When comparing the exact algorithms on offline computation in Tron, the results are affected by the fact that pure NE exist in all smaller instances.
 Therefore, the performance of $\biab$ and $\doab$ is essentially the same since serialized alpha-beta is able to solve the game. Moreover, the performance of standard BI is very weak, since the size of the game increases dramatically with increasing size of the grid (the longest branch of the game tree has $\left(0.5\cdot w\cdot l - 1\right)$ joint actions, where $w$ and $l$ are dimensions of the grid). While BI is able to solve the grid $5\times6$ in $143$ seconds, it takes almost $30$ minutes to solve $6\times6$ grid. The same instance takes $\biab$ and $\doab$ $1.5$ seconds, however, the size of the game tree quickly prohibits the algorithms from computing the exact solution -- both algorithms solved at most the grid of size $8\times8$ that takes $25$ minutes to solve. 
 
 The size of the game tree in Tron also causes slow convergence for sampling algorithms.
@@ -654,12 +654,13 @@ RAND&1.4(0.5)&5.0(1.2)&3.5(0.8)&1.9(0.6)&2.4(0.7)&51.1(3.2)\\
 \end{tabular}
 \begin{tabular}{|r|cccccc|}\hline
 5s&$\doab$&OOS&UCT&EXP3&RM&RAND\\\hline
-$\doab$&\textbf{51.9(0.8)}&\textbf{90.5(1.5)}&\textbf{76.2(2.2)}&\textbf{64.4(2.5)}&\textbf{62.9(2.3)}&\textbf{98.8(0.5)}\\
-OOS&10.3(1.5)&50.6(3.0)&27.9(2.3)&23.9(2.3)&19.4(2.0)&93.7(1.2)\\
-UCT&20.4(1.9)&69.5(2.3)&46.7(2.7)&43.5(2.4)&35.2(2.3)&97.0(0.8)\\
-EXP3&29.8(2.2)&74.3(2.3)&58.4(2.4)&49.8(2.6)&43.5(2.3)&97.3(0.7)\\
-RM&32.4(2.0)&80.1(2.0)&62.5(2.3)&58.7(2.2)&50.4(2.5)&97.0(0.7)\\
-RAND&1.9(0.6)&6.0(1.2)&3.3(0.8)&2.4(0.7)&3.0(0.7)&49.2(3.3)\\
+$\doab$&\textbf{49.9(0.1)}&\textbf{90.7(1.4)}&\textbf{72.7(2.1)}&\textbf{67.4(2.2)}&\textbf{60.6(2.2)}&\textbf{98.7(0.5)}\\
+OOS&10.3(1.4)&50.3(2.6)&22.8(2.0)&18.3(1.9)&14.9(1.8)&95.8(0.9)\\
+UCT&25.2(1.9)&77.6(2.1)&50.1(2.1)&42.0(2.1)&36.1(2.0)&97.9(0.6)\\
+EXP3&29.2(2.1)&80.8(2.0)&55.4(2.1)&49.5(2.2)&43.7(2.0)&97.8(0.7)\\
+RM&36.8(2.0)&85.9(1.6)&60.9(1.8)&55.6(1.9)&49.5(1.7)&97.6(0.7)\\
+RAND&2.0(0.6)&4.6(1.0)&3.5(0.8)&2.1(0.6)&2.4(0.7)&51.4(2.9)\\
+
 \hline
 \end{tabular}
 \begin{tabular}{|r|cccccc|}\hline
@@ -674,12 +675,14 @@ RAND&2.2(0.7)&3.3(0.9)&2.2(0.7)&0.8(0.4)&1.7(0.6)&49.8(3.0)\\
 \end{tabular}
 \begin{tabular}{|r|cccccc|}\hline
 E 5s&$\doab$&OOS&UCT&EXP3&RM&RAND\\\hline
-$\doab$&50.2(0.3)&66.0(2.3)&51.1(2.0)&45.3(2.3)&42.0(2.1)&98.9(0.5)\\
-OOS&40.6(1.8)&52.6(2.3)&43.9(1.7)&44.1(1.7)&40.2(1.8)&95.6(1.1)\\
-UCT&50.0(1.8)&56.6(1.9)&50.2(0.7)&48.6(0.9)&45.1(1.3)&97.6(0.7)\\
-EXP3&61.2(2.5)&56.2(1.9)&51.1(1.0)&50.6(0.8)&45.9(1.0)&98.6(0.6)\\
-\textbf{RM}&\textbf{58.4(2.2)}&\textbf{62.1(1.9)}&\textbf{55.2(1.1)}&\textbf{54.6(1.0)}&\textbf{49.9(0.7)}&\textbf{98.6(0.6)}\\
-RAND&3.2(0.8)&5.5(1.3)&2.5(0.8)&1.6(0.6)&1.8(0.7)&47.1(3.3)\\
+$\doab$&47.0(0.9)&64.6(2.0)&55.1(1.3)&53.6(1.8)&46.0(1.6)&98.7(0.5)\\
+OOS&37.5(1.6)&49.8(1.9)&45.0(1.4)&44.2(1.6)&40.9(1.4)&96.1(0.9)\\
+UCT&45.2(1.4)&56.0(1.8)&50.2(0.5)&44.6(1.1)&43.6(1.2)&97.6(0.7)\\
+EXP3&49.8(1.8)&58.2(1.8)&55.0(1.1)&50.9(0.8)&45.1(1.0)&98.2(0.6)\\
+\textbf{RM}&\textbf{50.6(1.9)}&\textbf{62.5(1.6)}&\textbf{55.5(1.1)}&\textbf{54.6(0.9)}&\textbf{50.0(0.4)}&\textbf{97.9(0.6)}\\
+RAND&2.2(0.7)&3.3(0.9)&2.2(0.7)&0.8(0.4)&1.7(0.6)&49.8(3.0)\\
+
+
 \hline
 \end{tabular}
 
