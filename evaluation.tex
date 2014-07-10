@@ -12,7 +12,10 @@ We compute mean out of at least $30$ runs for each game settings.
 Afterwards we analyze the convergence of the approximative algorithms.
 For each algorithm we sample computed strategy in selected time steps and calculate the current error of the algorithm -- i.e., a sum of best-response values (one for each player's strategy).
 This value converges to $0$ as the algorithm converges to a Nash equilibrium in zero-sum games.
-In each offline convergence setting, the reported values are means out of $20$ runs of each sampling algorithm on a single instance of the game.\vlisy{is the 20 runs enough?}\vlisy{exploration parameters for the offline setting are not explained anywhere.}
+In each offline convergence setting, the reported values are means out of $20$ runs of each sampling algorithm on a single instance of the game.
+We compared at least $3$ different settings for the exploration parameter and present the result only for the best exploration parameter.
+For OOS, Exp3, and RM the best values for the parameters were always $0.6$, $0.1$, and $0.1$ and we give the values for UCT for each domain.
+\vlisy{is the 20 runs enough?}\bbosansky{this is the lowest number, some games (e.g., Goofspiel) had more samples (40)}
 
 Finally, we turn to the comparison of the algorithms in the online setting and we present head-to-head tournament on each domain.
 We used larger instances of games and calculated win-rate for each algorithm.
@@ -141,7 +144,7 @@ Again, we use $\tanh$ to scale the evaluation function into the interval $[-1,1]
 \paragraph{\textbf{Pursuit Evasion Games}}
 Another important class of games is pursuit-evasion games (see for example~\cite{nguyen2013monte}).
 There is a single evader and a pursuer that controls 2 pursuing units on a four-connected grid in our pursuit-evasion game. 
-Since all units move simultaneously, the game has larger branching factor (up to $64$ joint actions).\vlisy{BF was defined for one player above}
+Since all units move simultaneously, the game has larger branching factor (up to $16$ for the pursuer).
 The evader wins, if she successfully avoids the units of the pursuer for the whole game; pursuer wins, if her units successfully capture the evader. The evader is captured if either her position is the same as the position of a pursuing unit, or the evader used the same edge as a pursuing unit (in the opposite direction). 
 Again, the game is win-loss and the players receive utility from set $\lbrace -1, 1 \rbrace$.
 We use $3$ different square grid-graphs (with the size of a side 4,5, and 10 nodes) for the experiments without any obstacles or holes.
@@ -288,7 +291,8 @@ ranges from $[0.5,0.8]$ in the deterministic case, compared to $[0.01,0.05]$ wit
 %discover the 1 and -1 rewards with high probability and allow the algorithm the break out or avoid this synchronization trap.
 
 \subsection{Offline Equilibrium Computation}
-We first compare the offline performance of the algorithm -- i.e., we measure overall computation time for each of the algorithms. 
+We first compare the offline performance of the algorithm. 
+We measure the overall computation time for each of the algorithms and number of evaluated nodes -- i.e., nodes for which the main method of teh backward induction algorithm executed (i.e., nodes evaluated by serialized alpha-beta algorithms are not included in this count, since they may be evaluated repeatedly).
 The reported results are means of at least $30$ runs for each algorithm. 
 
 \subsubsection{Goofspiel}
@@ -303,7 +307,7 @@ The results show that a significant number of sub-games has a pure sub-game Nash
 Therefore, the performance of $\biab$ and $\doab$ is fairly similar and the gap only slowly increases in favor of $\doab$ with the increasing size of the game.
 Both of these algorithms significantly reduce the number of states visited by the backward induction algorithm (i.e., excluding the number of states evaluated by serialized alpha-beta algorithm).
 While \textsc{BI} algorithm evaluates on average more than $3.2\cdot10^7$ nodes in the setting with $7$ cards in more than $3$ hours, $\biab$ evaluates only $198986$ nodes in less than $5$ minutes. 
-The performance is further improved by $\doab$ that evaluates on average $51035$ nodes in less than $4$ minutes.\vlisy{explain what is an evaluated node!}
+The performance is further improved by $\doab$ that evaluates on average $51035$ nodes in less than $4$ minutes.
 However, the overhead of the algorithm is slightly higher in case of $\doab$; hence, the difference between $\doab$ and $\biab$ is relatively small in this case.
 Finally, the results show that even simple \textsc{DO} algorithm without serialized alpha-beta search can improves the performance of \textsc{BI}.
 In the setting with $7$ cards, \textsc{DO} evaluates more than $6\cdot10^6$ nodes which takes on average almost 40 minutes.
@@ -319,12 +323,15 @@ In their work, the number of evaluated nodes was at best around $20\%$, and the 
 
 Next we focus on the convergence of sampling algorithms -- i.e., their ability to approximate Nash equilibrium strategies of the complete game. 
 Figure~\ref{fig:off:conv:gs} depicts the results in this offline settings for Goofspiel game with $5$ cards (note the logarithmic x-scale).
-We compare MCTS algorithms with three different selection functions (UCT, EXP3, and RM), and OOS algorithm.
-The results are means out of $20$ runs of each algorithm.\vlisy{the number of samples per second for each algorithm should be reported somewhere!}
-The results show that OOS is the fastest out of all sampling algorithms during the whole time. 
-MCTS with Regret Matching selection function is only slightly slower, however, other two selection functions perform worse. 
-While EXP3 eventually converges close to $0$, the exploitability of UCT decreases rather slowly and it was still over $0.35$ at the time limit of $300$ seconds. 
-%These results confirm theoretical properties for the algorithms, where it can be quite slow for EXP3 and UCT.\vlisy{What theoretical properties?}
+We compare MCTS algorithms with three different selection functions (UCT, Exp3, and RM), and OOS algorithm.
+The results are means out of $20$ runs of each algorithm.
+Due to the different selection and update functions, the algorithms differ in the number of iterations per second.
+RM is the fastest with more than $2.6\cdot 10^5$ iterations per second, OOS has around $2\cdot10^5$ iterations, UCT $1.9\cdot10^5$, and Exp3 only $5.4\cdot10^4$ iterations.
+
+The results show that OOS is the best out of all sampling algorithms during the whole time. 
+MCTS with RM selection function is only slightly slower, however, other two selection functions perform worse. 
+While Exp3 eventually converges close to $0$, the exploitability of UCT decreases rather slowly and it was still over $0.35$ at the time limit of $300$ seconds. The best C constant for UCT was 5 in this setting. While setting lower constant typically improved slightly the convergence during the first iterations, the final error was always larger.
+%These results confirm theoretical properties for the algorithms, where it can be quite slow for Exp3 and UCT.\vlisy{What theoretical properties?}
 Moreover, when we have not used randomization in UCT, the algorithm was not able to converge to error lower than $0.5$ in the time limit. 
 On the other hand, both OOS and RM confirm their quick convergence, witch is aligned with previous results~\cite{Lanctot13Goofspiel}.
 The vertical lines represent times for exact algorithms.
@@ -346,10 +353,11 @@ In Goofspiel $5$, $\biab$ is slightly faster and finishes first in less than $1$
 The results on pursuit-evasion games show more significant improvement when comparing $\doab$ and $\biab$ (see Figure~\ref{fig:off:res:peg}). In all settings, the $\doab$ is significantly the fastest. When we compare the performance on graph $5\times5$ with depth set to $6$, \textsc{BI} evaluates more than $4.9\cdot10^7$ nodes that takes more than $13$ hours. On the other hand, $\biab$ evaluates on average $42001$ nodes taking almost $10$ minutes ($584$ seconds). Interestingly, the benefits of pure integration with alpha-beta search is not that helpful in this game.
 This is apparent from results of \textsc{DO} algorithm that evaluates less than $2\cdot10^6$ nodes but it takes slightly over $9$ minutes on average ($547$ seconds). Finally, $\doab$ evaluates only $6692$ nodes and it takes the algorithm less than $3$ minutes.
 
-Large parts of pursuit-evasion game can be solved by serialized alpha-beta algorithms.
-These parts typically corresponds to clearly winning, or clearly loosing positions for a player.
+Large parts of pursuit-evasion games can be solved by serialized alpha-beta algorithms.
+These parts typically corresponds to clearly winning, or clearly loosing positions for a player; hence, serialized alpha-beta algorithms are able to prune substantial portion of the space. 
 However, since there are only two pursuit units, it is still necessary to use mixed strategies for final coordination (capturing the evader close to edge of the graph), and thus mixing strategy occurs near the end of the game tree. 
-Therefore, serialized alpha-beta is not able to solve all sub-games, while double-oracle provides additional pruning and cause the improvement in computation time for $\doab$ compared to $\biab$ and all the other algorithms.\vlisy{This argument is not very consistent with $\biab$ evaluating $\tfrac{1}{1000}$ of the nodes BI evaluates, while DO evaluating $\tfrac{1}{20}$. The reason is likely the cost of serialized searches.}
+Therefore, serialized alpha-beta is not able to solve all sub-games, while double-oracle provides additional pruning since many of the actions in the sub-games are leading to the same outcome and not all of them are required to find equilibrium strategies.
+This causes additional improvement in computation time for $\doab$ compared to $\biab$ and all the other algorithms.%\vlisy{This argument is not very consistent with $\biab$ evaluating $\tfrac{1}{1000}$ of the nodes BI evaluates, while DO evaluating $\tfrac{1}{20}$. The reason is likely the cost of serialized searches.}
 
 \begin{figure}
 \centering
@@ -358,12 +366,14 @@ Therefore, serialized alpha-beta is not able to solve all sub-games, while doubl
 \end{figure}
 
 We turn to convergence of the sampling algorithms.
+In terms of number of iterations per second, again RM was the fastest and OOS the second fastest with similar performance as in Goofspiel.
+UCT achieved slightly less ($1.7\cdot10^5$ iterations per second), and Exp3 only $2.6\cdot10^4$ iterations.
 The results are depicted in Figure~\ref{fig:off:conv:peg} for the smaller $4\times4$ graph and $4$ moves for each player (note again the logarithmic x-scale).
 The starting positions were selected such that there does not exist a pure NE strategy in the game.
 The results again show that OOS is overall the fastest out of all sampling algorithms, however, during the first iterations both UCT and RM are faster and their exploitability is smaller. 
-On the other hand, while OOS is able to keep the convergence rate and reach almost $0$ exploitability, UCT again converges to an exploitable strategy with error $1.16$ at best in the time limit of $500$ seconds.
+On the other hand, while OOS is able to keep the convergence rate and reach almost $0$ exploitability, UCT again converges to an exploitable strategy with error $1.16$ at best in the time limit of $500$ seconds ($C=2$).
 The convergence of RM is much better, however the best final error is $0.14$ in the given time.
-Finally, EXP3 converges even more slowly compared to Goofspiel.
+Finally, Exp3 converges even more slowly compared to Goofspiel.
 The main difference between the games is the size of the branching factor for the second player (pursuer controls two simultaneously moving units), which can cause more difficulties for the sampling algorithms to estimate good strategies.
 
 As before, the vertical lines represent times for exact algorithms.
@@ -403,9 +413,11 @@ With an increasing number of coins the algorithms need to find mixed Nash equili
 \caption{Convergence comparison of different sampling algorithms on Oshi-Zumo game, with $10$ coins, $K=3$, and $M=1$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:oz}
 \end{figure}
 
-Figure~\ref{fig:off:conv:oz} depicts results for convergence of the sampling algorithms for the game with $10$ coins, $K$ set to $3$ and minimum bid set to $1$. This is an easy game for $\doab$ and $\biab$ with pure strategy and both of these algorithms are able to solve the game in less than a second ($0.73$). However, due to large branching factor for both players ($10$ actions at the root node for each player) all sampling algorithms converge extremely slowly. Again, OOS is the best one, however, in a given time limit ($500$ seconds) the algorithm converged to error slightly below $0.5$ ($0.41$). On the other hand, all of the other sampling algorithms perform significantly worse -- RM ends with error slightly over $1$, UCT with $1.50$, and EXP3 with $1.88$.
+Figure~\ref{fig:off:conv:oz} depicts results for convergence of the sampling algorithms for the game with $10$ coins, $K$ set to $3$ and minimum bid set to $1$. This is an easy game for $\doab$ and $\biab$ with pure strategy and both of these algorithms are able to solve the game in less than a second ($0.73$). However, due to large branching factor for both players ($10$ actions at the root node for each player) all sampling algorithms converge extremely slowly. The performance of the algorithms in terms of iterations per second is very similar to the previous games, however, OOS is slightly better in this case with $1.9\cdot10^5$ iterations per second compared to the second RM with $1.6\cdot10^5$ iterations per second.
+
+As before, OOS is the best converging algorithm, however, in a given time limit ($500$ seconds) the reached error was only slightly below $0.5$ ($0.41$). On the other hand, all of the other sampling algorithms perform significantly worse -- RM ends with error slightly over $1$, UCT ($C=2$) with $1.50$, and Exp3 with $1.88$.
 This confirms our findings from the previous experiment that increasing branching factor slows down the convergence rate.
-Secondly, since there is a pure Nash equilibrium in this particular game configuration, the convergence of the algorithms is also slower since they essentially mix the strategy during the iterations in order to explore the unvisited parts of the game tree. Since none of the sampling algorithms can directly exploit this fact, their performance in offline solving games like Oshi-Zumo is not compelling. On the other hand, the existence of pure NE explains the better performance of UCT compared to EXP3 that is forced to explore more broadly.
+Secondly, since there is a pure Nash equilibrium in this particular game configuration, the convergence of the algorithms is also slower since they essentially mix the strategy during the iterations in order to explore the unvisited parts of the game tree. Since none of the sampling algorithms can directly exploit this fact, their performance in offline solving games like Oshi-Zumo is not compelling. On the other hand, the existence of pure NE explains the better performance of UCT compared to Exp3 that is forced to explore more broadly.
 
 \subsubsection{Random Games}
 In the first variant of the randomly generated games we used games with utility values randomly drawn from a uniform distribution $[0,1]$. 
@@ -443,20 +455,23 @@ Finally, $\doab$ evaluates $\approx2\cdot10^6$ nodes on average and it takes the
 \caption{Convergence comparison of different sampling algorithms on random game with branching factor $4$ and depth $5$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:rg}
 \end{figure}
 
-Figure~\ref{fig:off:conv:rg} depicts the results for convergence of the sampling algorithms for the random game with correlated utility values, branching factor set to $4$ and depth $5$. Interestingly, there is a much less difference between the performance of the sampling algorithms in this game. Since these games are generally more mixed (i.e., NE require to use mixed strategies in many states of the game), they are much more suitable for the sampling algorithms. In the overall performance, again OOS is the winner, however, the performance of RM is very similar and even better during the first second. Again, since the game is more mixed, EXP3 outperforms UCT in the longer run, however, it is the worst sampling algorithm during the first iterations.
+Figure~\ref{fig:off:conv:rg} depicts the results for convergence of the sampling algorithms for the random game with correlated utility values, branching factor set to $4$ and depth $5$. The number of iterations per second is very similar to Goofspiel, with Exp3 being the exception able to achieve more than $6.5\cdot10^4$ iterations per second, which is still significantly the lowest number of iterations.
+Interestingly, there is a much less difference between the performance of the sampling algorithms in this game. Since these games are generally more mixed (i.e., NE require to use mixed strategies in many states of the game), they are much more suitable for the sampling algorithms. In the overall performance, again OOS is the winner, however, the performance of RM is very similar and even better during the first second. Again, since the game is more mixed, Exp3 outperforms UCT in the longer run, however, it is the worst sampling algorithm during the first iterations. Exploration constant for UCT was set to 12 due to larger utility variance in this setting.
 
 \subsubsection{Tron}
 When comparing the exact algorithms on offline computation in Tron, the results are affected by the fact that pure NE exist in all smaller instances.
 Therefore, the performance of $\biab$ and $\doab$ is essentially the same since serialized alpha-beta is able to solve the game. Moreover, the performance of standard BI is very weak, since the size of the game increases dramatically with increasing size of the grid (the longest branch of the game tree has $\left(0.5\cdot w\cdot l - 1\right)$ joint actions, where $w$ and $l$ are dimensions of the grid). While BI is able to solve the grid $5\times6$ in $143$ seconds, it takes almost $30$ minutes to solve $6\times6$ grid. The same instance takes $\biab$ and $\doab$ $1.5$ seconds, however, the size of the game tree quickly prohibits the algorithms from computing the exact solution -- both algorithms solved at most the grid of size $8\times8$ that takes $25$ minutes to solve. 
 
 The size of the game tree in Tron also causes slow convergence for sampling algorithms.
+This is apparent also in the number of iterations that is slightly slower for the algorithms.
+OOS is the fastest performing $1.3\cdot 10^5$ iterations per second, RM achieves $1.2\cdot 10^5$ iterations, UCT only $8\cdot10^4$, and Exp3 is again the slowest with $7.8\cdot10^4$ iterations per second.
 Figure~\ref{fig:off:conv:tron} depicts the results for the grid $5\times6$.
 Consistently with the previous results, OOS performs the best and it is able to converge to very close to exact solution in $300$ seconds. 
-Similarly, both RM and EXP3 are again eventually able to converge to a very small error, however, it take them more time and in the time limit they achieve error $0.05$, or $0.02$ respectively. 
-Finally, UCT performs reasonably good during the first $10$ seconds, where the exploitability is better than both RM and EXP3. 
+Similarly, both RM and Exp3 are again eventually able to converge to a very small error, however, it take them more time and in the time limit they achieve error $0.05$, or $0.02$ respectively. 
+Finally, UCT ($C=5$) performs reasonably good during the first $10$ seconds, where the exploitability is better than both RM and Exp3. 
 This is most likely due to existence pure NE, however, the length of the game tree prohibits UCT to converge and the best error the algorithm was able to achieve in the time limit was equal to $0.68$.
 
-\subsubsection{Discussion}
+\subsubsection{Summary}
 The offline comparison of the algorithms offers several conclusions.
 Among the exact algorithms, $\doab$ is clearly the best algorithm, since it typically outperforms all other algorithms (especially in pursuit-evasion games and random games). Although for smaller games (e.g., Goofspiel with $5$ cards)  $\biab$ can be slightly faster, this difference is not significant and $\doab$ is never significantly slower compared to $\biab$.
 
