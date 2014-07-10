@@ -4,3 +4,4 @@ We provide an extensive survey on the existing algorithms.
 We describe in details our recent novel exact and approximative algorithms.
 Novel exact algorithms dominates in the offline equilibrium strategy computation.
 Novel use of regret-matching in MCTS dominates in the online game play.
+
