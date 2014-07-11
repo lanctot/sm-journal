@@ -113,6 +113,8 @@
 
 \newcommand{\doab}[0]{\textrm{DO}\alpha\beta}
 \newcommand{\biab}[0]{\textrm{BI}\alpha\beta}
+\newcommand{\bdoab}[0]{\textrm{\bf DO}\boldsymbol{\alpha\beta}}
+\newcommand{\bbiab}[0]{\textrm{\bf BI}\boldsymbol{\alpha\beta}}
 
 
 %% The amsthm package provides extended theorem environments
@@ -180,42 +182,41 @@
 %% \address[label1]{<address>}
 %% \address[label2]{<address>}
 
-\author[1]{Branislav Bo{\v s}ansk{\' y}\footnote{Corresponding author; phone: +420 22435 7581}}
+\author[1]{Branislav Bo{\v s}ansk{\' y}$^1$}%\footnote{Corresponding author; phone: +420 22435 7581}}
 \author[1]{Viliam Lis\'{y}}
 \author[2]{Marc Lanctot}
 \author[1]{Ji{\v r}{\' i} {\v C}erm{\' a}k}
 \author[2]{\\Mark H.M. Winands}
 \address[1]{Agent Technology Center, Department of Computer Science,\\ Faculty of Electrical Engineering, Czech Technical University in Prague\\
 Technicka 2, 166 27 Prague 6, Czech Republic\\
-\{branislav.bosansky,viliam.lisy,jiri.cermak\}@agents.fel.cvut.cz}
-
+\{branislav.bosansky,viliam.lisy,jiri.cermak\}@agents.fel.cvut.cz\\
+$^1$Corresponding author; phone: +420 22435 7581
+}
 \address[2]{Games and AI Group, Department of Knowledge Engineering, Maastricht University, \\P.O. Box 616, 6200 MD, Maastricht, The Netherlands\\
-\{marc.lanctot,m.winands\}@maastrichtuniversity.nl}
+\{marc.lanctot,m.winands\}@maastrichtuniversity.nl\vspace{-0.5cm}}
 
 %Author list (+ corresponding author), affiliations, and contact info 
 %needed\footnote{\mlanctot{A lot of information is required on this title page... see AIJ guidelines}}}
 
-\address{}
-
+%\address{}
 \begin{abstract}
 Simultaneous move games model discrete, multistage interactions where at each stage 
 players choose their actions simultaneously. This formalism  has been used to express
 games in general game playing and can model discrete approximations of realistic scenarios 
 such as real-time decision-making in a physical environment. 
 In this paper, we survey the existing literature on algorithms that compute strategies 
-for two-player zero-sum simultaneous move games and describe our most recent exact and approximative algorithms.
-We evaluate the algorithms in two specific cases: the offline case, where computational 
-resources are abundant and approximation refinement is a priority, and 
+for two-player zero-sum simultaneous move games and describe our recent algorithms that advance the state of the art.
+The algorithms include both backward induction methods with very efficient pruning, as well as Monte-Carlo sampling algorithms.
+We evaluate the algorithms in two settings: the offline case, where computational 
+resources are abundant and closely approximating the optimal strategy is a priority, and 
 the online search case, where computational resources are limited and acting 
 quickly is necessary.
-We show how modern approaches compute strategies and compare the quality of the resulting
-strategies in the worst case and expected case in several 
-domains previously used in the literature and in randomly generated games. 
+Thorough experimental evaluation in six substantially different games shows that the proposed algorithms can compute the optimal strategy in less then 2\% of the time required by the existing algorithms. Furthermore, the novel sampling algorithm dominates in the head-to-head tournament with pre-existing methods.
 \end{abstract}
 
 \begin{keyword}
 %% keywords here, in the form: keyword \sep keyword
-simultaneous move games \sep backward induction \sep Monte Carlo tree search \sep Nash equilibrium
+simultaneous move games \sep backward induction \sep Monte Carlo tree search \sep alpha-beta pruning \sep double-oracle algorithm \sep regret matching \sep game playing \sep Nash equilibrium
 
 %% MSC codes here, in the form: \MSC code \sep code
 %% or \MSC[2008] code \sep code (2000 is the default)
