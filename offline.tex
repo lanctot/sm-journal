@@ -44,12 +44,11 @@ The following algorithms try to prune certain branches of the tree in order to a
 \subsection{Backward Induction with Serialized Alpha-Beta Bounds}\label{sec:algs:biab}
 
 Backward induction algorithm can be easily enhanced by using bounds on the value of subgames. 
-These bounds can be calculated very quickly by using a transformation of a simultaneous move game into a perfect information extensive-form game.
+These bounds can be calculated very quickly by using a transformation of a simultaneous move game into a perfect information extensive-form game and applying wide range of search improvements developed for this more standard setting.
 Consider a matrix game representing a simultaneous choice of both players.
 This matrix can be serialized by discarding the notion of information sets; hence, letting one player to play first following by the play of the second player. 
-The crucial difference between a serialized and a simultaneous move matrix game is the serialized game that the second player to move has an advantage of knowing 
-what action the first player chose. 
-Therefore, the value of a serialized game where player $i$ is second to move is an upper bound on the value of the matrix game from the perspective of player~$i$. 
+The crucial difference between a serialized and a simultaneous move matrix game is that the second player to move has an advantage of knowing what action the first player chose. 
+Therefore, the value of a serialized game where player $i$ is second to move is an upper bound on the value of the matrix game from the perspective of player~$i$ \cite{Bosansky13Using}.
 
 \begin{figure}
 \centering
