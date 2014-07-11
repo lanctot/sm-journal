@@ -652,11 +652,11 @@ RAND&11.8(1.9)&19.7(2.3)&17.4(2.2)&11.1(1.8)&12.4(1.9)&49.9(2.9)\\
 \end{tabular}
 \begin{tabular}{|r|cccccc|}\hline
 5s&$\doab$&OOS&UCT&EXP3&RM&RAND\\\hline
-$\doab$&49.6(2.9)&60.2(2.8)&49.8(2.9)&49.6(2.9)&49.1(2.8)&87.6(1.9)\\
+$\doab$&\textbf{49.6(2.9)}&\textbf{60.2(2.8)}&\textbf{49.8(2.9)}&\textbf{49.6(2.9)}&\textbf{49.1(2.8)}&\textbf{87.6(1.9)}\\
 OOS&35.5(2.8)&50.9(2.9)&40.2(2.8)&35.8(2.8)&36.1(2.8)&83.1(2.2)\\
 UCT&45.2(2.9)&55.3(2.9)&48.9(2.9)&47.8(2.9)&48.9(2.9)&86.9(2.0)\\
-EXP3&48.2(2.8)&61.6(2.8)&49.9(2.9)&47.4(2.8)&49.5(2.8)&91.0(1.6)\\
-RM&47.1(2.9)&59.9(2.8)&50.5(2.9)&50.9(2.8)&48.4(2.8)&91.2(1.6)\\
+\textbf{EXP3}&\textbf{48.2(2.8)}&\textbf{61.6(2.8)}&\textbf{49.9(2.9)}&\textbf{47.4(2.8)}&\textbf{49.5(2.8)}&\textbf{91.0(1.6)}\\
+\textbf{RM}&\textbf{47.1(2.9)}&\textbf{59.9(2.8)}&\textbf{50.5(2.9)}&\textbf{50.9(2.8)}&\textbf{48.4(2.8)}&\textbf{91.2(1.6)}\\
 RAND&10.2(1.8)&17.1(2.2)&12.2(1.9)&7.6(1.5)&10.1(1.7)&50.1(2.9)\\
 \hline
 \end{tabular}
@@ -669,7 +669,7 @@ RAND&10.2(1.8)&17.1(2.2)&12.2(1.9)&7.6(1.5)&10.1(1.7)&50.1(2.9)\\
 The next set of matches was played on 10 different random games with each player having 5 actions in each stage and depth 15. Hence, the game has more than $9.3\times 10^{20}$ leaf nodes. In order to compute the win-rates as in other games, we use signum of the utility value defined in Section~\ref{sec:eval:domains}. The results are presented in Figure~\ref{fig:matches:rand}.
 
 With 1 second per move $\doab$ significantly wins over all other algorithms. 
-The performance of $\doab$ decreases with more time and with 5 seconds, it already wins only over OOS (in 60.2\% matches), and playing tie with the other sampling algorithms. 
+The performance of $\doab$ decreases with more time and with 5 seconds, it already wins only over OOS (in 60.2\% matches), and plays tie with the other sampling algorithms. 
 In general, the performance of all MCTS algorithms is very similar in the random games and this is supported by the similar convergence in the offline settings (see~Figure~\ref{fig:off:conv:rg}), where the difference between the convergence rate among all the algorithms was the smallest.
 Overall, OOS has the weakest performance in spite of good convergence results, however, this is consistent across all the domains.
 %OOS looses also against all MCTS algorithms, which perform practically the same among each other. These performance results are not supported by the speed of convergence in , where Exp3 converges consistently slower than OOS on the small variant of the game.
@@ -833,9 +833,11 @@ However, when altering the parameters within reasonable boundaries, the differen
 \subsubsection{Summary}
 
 \begin{figure}
+\centering
 \scriptsize
-\begin{tabular}{|r|rr|rr|rr|rr|rr|rr|rr|}\hline
-&OZ&&OZE&&GS&&RG&&PE&&Tron&&TronE&\\
+%\renewcommand{\arraystretch}{0.5}%
+\begin{tabular}{|r|r@{\hspace{7pt}}r|r@{\hspace{7pt}}r|r@{\hspace{7pt}}r|r@{\hspace{7pt}}r|r@{\hspace{7pt}}r|r@{\hspace{7pt}}r|r@{\hspace{7pt}}r|}\hline
+&\multicolumn{2}{|c|}{Oshi}&\multicolumn{2}{|c|}{OshiE}&\multicolumn{2}{|c|}{GS}&\multicolumn{2}{|c|}{Rand}&\multicolumn{2}{|c|}{PE}&\multicolumn{2}{|c|}{Tron}&\multicolumn{2}{|c|}{TronE}\\
 &$\bar{d}$&Its.&$\bar{d}$&Its.&$\bar{d}$&Its.&$\bar{d}$&Its.&$\bar{d}$&Its.&$\bar{d}$&Its.&$\bar{d}$&Its.\\\hline
 OOS&5.5&187k&5.8&349k&11.2&73k&9.7&93k&8.1&28k&17.7&77k&17.4&265k\\
 RM&7.1&186k&7.6&244k&17.8&92k&12.3&108k&11.0&34k&26.3&75k&25.1&251k\\
@@ -843,19 +845,21 @@ UCT&4.0&134k&6.5&213k&9.6&74k&8.0&94k&7.0&30k&15.1&72k&16.7&279k\\
 Exp3&3.3&14k&3.7&12k&12.0&50k&8.4&95k&7.6&32k&17.5&80k&18.3&275k\\
 \hline
 \end{tabular}
-\caption{The number of iterations and  the mean depth of the tree constructed by the sampling algorithms in 5 seconds in the root node of the evaluated games.}
+\caption{The number of iterations (in thousands) and  the mean depth($\bar{d}$) of the tree constructed by the sampling algorithms in 5 seconds in the root node of the evaluated games.}\label{fig:tab:depthsIters}
 \end{figure}
 
 
 Several conclusions can be made form the head-to-head comparison of the algorithms in larger games. 
-First, the fast convergence and low exploitability of OOS algorithm in the smaller variants of the games is not very good predictor of its performance in the online setting. OOS was consistently one of the worst performing algorithms. The reason is likely that with higher exploration parameter required for faster convergence, the part of the game tree constructed by OOS is too wide an shallow, and does not allow it to find important situations later in the game. If we set the exploration parameter to smaller numbers, the importance sampling correction of regret updates causes very high variance of their values, which generally slows-down the convergence to good solutions and results in building the tree in less useful directions.
+First, the fast convergence and low exploitability of OOS in the smaller variants of the games is not a very good predictor of its performance in the online setting. OOS was consistently one of the worst performing algorithms. One possible reason could be that with higher exploration parameter required for faster convergence, the part of the game tree constructed by OOS is too wide an shallow, and does not allow it to find important situations later in the game. However, table \ref{fig:tab:depthsIters} shows that while OOS builds a substantially less deep tree as RM, it is often deeper than for other MCTS algorithms which performed better. If we set the exploration parameter to smaller numbers, and also generally deeper in the tree, the importance sampling correction of regret updates causes very high variance of their values, which generally slows-down the convergence to good solutions and may result in building the tree in less useful directions.
 
 Second, while $\doab$ with a good evaluation function wins over the sampling algorithms without domain specific knowledge, it is not necessary the case with a weaker evaluation function, as we can see in Goofspiel. Moreover, when the sampling algorithms are allowed to use the evaluation functions, $\doab$ is typically outperformed by either RM in Tron or UCT in Oshi-Zumo. 
-Evaluation function improves the performance of OOS the least of all sampling algorithms. Even with evaluation functions, the wider and shallower tree is generally a disadvantage.
+Evaluation function improves the performance of OOS the least of all sampling algorithms. \bbosansky{why?}
 
 Third, when the algorithms have more time for finding the move to play, the differences between win-rates of the sampling algorithms are getting smaller. Longer thinking time has also the same effect in the parameter tuning and it also significantly improves the performance of the sampling algorithms against backward induction. This is expected, since the difference is too small for the $\doab$ algorithm to reach greater depth, while it is sufficient for the sampling algorithms to execute $5$ times more iterations that improves their strategy.
 
-Finally, RM seems to be consistently the best performing algorithm in game playing for this class of games. Out of all the games and both time settings, it looses only in Oshi-Zumo with evaluation function, where it is outperformed by UCT.
+Fourth, Exp3 in its standard form is usable only in games with smaller branching factors. The cost of computing the exponential for each action causes an order of magnitude smaller number of iterations in Oshi-Zumo, compared to all other sampling algorithms. 
+
+Finally, RM seems to be consistently the best performing algorithm in game playing for this class of games. Even with similar number of iterations, it builds a substantially deeper tree (see Figure~\ref{fig:tab:depthsIters}), which indicates the algorithm is able to better target the search to important parts of the tree. Out of all the games and both time settings, it looses only in Oshi-Zumo with evaluation function, where it is outperformed by UCT.
 
 %Discussion: 
 %-low exploitability not necessary correlated to quality of play, possibly other solution concept, such as non-dominated strategies.
