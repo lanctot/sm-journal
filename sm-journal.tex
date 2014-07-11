@@ -283,10 +283,10 @@ abundant and strategies are computed and stored, and the online case, where comp
 agents must search online. We are concerned both with the quality of strategies based on 
 their worst-case performance in theory and their observed performance in practice. We compare and 
 contrast the algorithms and choices in the offline and online cases, and thoroughly evaluate each 
-algorithm on a suite of games. Our collection of games cover many games used for benchmark purposes
+algorithm on a suite of games. Our collection of games covers many games used for benchmark purposes
 in the previous work, but we also performed experiments on randomly generated games. These games differ 
 in number of possible actions, number of moves before the game ends, variance of the utility values,
-and whether the agents need to use mixed strategies in order to play optimally.
+and whether and when the agents need to use mixed strategies in order to play optimally.
 
 % mlanctot: added this one
 % bbosansky: I have reworded mentioning UCT, since we have not discussed MCTS, nor UCB/UCT here
@@ -303,7 +303,7 @@ In the offline case, the fastest exact algorithms based on backward induction ar
 In some cases, our novel algorithm solves the game in less than 2\% of time required by standard backward induction algorithm.
 However, the exact algorithms are less competitive in the online settings. 
 On the other hand, approximative sampling algorithms can perform very well in the online setting and 
-find very good strategies to play within a few seconds, however, they are not well suited for offline solving games. 
+find very good strategies to play within a few seconds, however, they are not well suited for offline solving of games. 
 % mlanctot: OOS will, right? Are you referring to Biased RPS? This is not really new.. 
 %As we will show, even for a small game they may not converge to an exact solution in a reasonable time.
 
