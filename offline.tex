@@ -489,8 +489,8 @@ Furthermore, the algorithm maintains for each information set the average   stra
 \end{equation}
 where $\pi^{\sigma^t}_i(I) = \sum_{h \in I}\pi^{\sigma^t}_i(h)$.
 The combination of the counterfactual regret minimizers in individual information sets also minimize the overall 
-average regret \cite{CFR}, and hence the average profile is a  $2\epsilon$-equilibrium, with $\epsilon \rightarrow 0$
-as $T \rightarrow \infty$.
+average regret \cite{CFR}, and hence due to the Folk Theorem the average profile is a  $2\epsilon$-equilibrium, 
+with $\epsilon \rightarrow 0$ as $T \rightarrow \infty$.
 
 Monte Carlo Counterfactual Regret Minimization (MCCFR) applies CFR to sampled portions of the games~\cite{Lanctot09Sampling}.
 In the {\it outcome sampling} (OS) variant, a single terminal history $z\in Z$ is sampled in each iteration.
