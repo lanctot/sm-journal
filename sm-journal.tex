@@ -201,17 +201,19 @@ $^1$Corresponding author; phone: +420 22435 7581
 %\address{}
 \begin{abstract}
 Simultaneous move games model discrete, multistage interactions where at each stage 
-players choose their actions simultaneously. This formalism  has been used to express
+players choose their actions simultaneously. This formalism has been used to express
 games in general game playing and can model discrete approximations of realistic scenarios 
 such as real-time decision-making in a physical environment. 
 In this paper, we survey the existing literature on algorithms that compute strategies 
 for two-player zero-sum simultaneous move games and describe our recent algorithms that advance the state of the art.
-The algorithms include both backward induction methods with very efficient pruning, as well as Monte Carlo sampling algorithms.
+The algorithms include both backward induction methods with efficient pruning, as well as Monte Carlo sampling algorithms.
 We evaluate the algorithms in two settings: the offline case, where computational 
 resources are abundant and closely approximating the optimal strategy is a priority, and 
-the online search case, where computational resources are limited and acting 
-quickly is necessary.
-Thorough experimental evaluation in six substantially different games shows that the proposed algorithms can compute the optimal strategy in less then 2\% of the time required by the existing algorithms. Furthermore, the novel sampling algorithm dominates in the head-to-head tournament with pre-existing methods.
+the online search case, where computational resources are limited and acting quickly is necessary.
+Thorough experimental evaluation in six substantially different games shows that the proposed algorithms can compute the 
+optimal strategy in less then 2\% of the time required by existing algorithms. Furthermore, a new sampling algorithm
+based on regret matching, dominates in the head-to-head tournament compared to 
+existing methods.
 \end{abstract}
 
 \begin{keyword}
@@ -271,7 +273,8 @@ environment when agents are allowed to act simultaneously, such as in real-world
 autonomous driving. 
 
 One of the key differences compared to strictly sequential 
-games is that the agents may need to use randomized (or \textit{mixed}) strategies in order to play optimally, 
+games is that the agents may need to use randomized (or \textit{mixed}) strategies in order to 
+play optimally~\cite{Gintis09}, 
 \ie to maximize their worst-case expected utility.
 This means that agents may need to randomize over several actions in some situations of the game. 
 This does not occur in strictly sequential games, where optimal solution always exists in deterministic 
@@ -281,24 +284,28 @@ abundant and strategies are computed and stored, and the online case, where comp
 agents must search online. We are concerned both with the quality of strategies based on 
 their worst-case performance in theory and their observed performance in practice. We compare and 
 contrast the algorithms and choices in the offline and online cases, and thoroughly evaluate each 
-algorithm on a suite of games. Our collection of games covers many games used for benchmark purposes
-in the previous work, but we also performed experiments on randomly generated games. These games differ 
+algorithm on a suite of games. Our collection covers Biased Rock, Paper Scissors, Goofspiel, Oshi-Zumo, 
+Pursuit Evasion Games, and Tron, all of which have been used for benchmark purposes
+in the previous work, and we also perform experiments on randomly generated games. These games differ 
 in number of possible actions, number of moves before the game ends, variance of the utility values,
 and whether and when the agents need to use mixed strategies in order to play optimally.
 
 % mlanctot: added this one
 % bbosansky: I have reworded mentioning UCT, since we have not discussed MCTS, nor UCB/UCT here
+% mlanctot: I added it back in (Mark mentioned it)-- it's very popular, I don't think it will be a problem
 Several contributions are made by this paper. First, we present a brief survey of the existing literature 
 for this class of games, much of which is recent work not covered in any other survey on this topic. 
-Second, we present detailed descriptions of recent exact~\cite{Bosansky13Using} and approximative algorithms~\cite{Lanctot13Goofspiel,lisy2013-nips} to compute strategies for this class of games. 
-Third, we produce a detailed analysis of the original non-convergence results of a well known approximative algorithm from \cite{Shafiei09}, 
-showing its sensitivity and significant effect of deterministic coordination. 
+Second, we present detailed descriptions of recent exact~\cite{Bosansky13Using} and approximative 
+algorithms~\cite{Lanctot13Goofspiel,lisy2013-nips} to compute strategies for this class of games. 
+Third, we produce a detailed analysis of the original non-convergence results of a well-known approximative algorithm (UCT) 
+from \cite{Shafiei09}, showing its sensitivity and significant effect of deterministic coordination. 
 Lastly, we evaluate these algorithms in two different computational contexts (offline computation and online search) for 
 the first time, in five different games and over random games. 
 
 Our experimental comparison shows different performance of the algorithms in both cases.
 In the offline case, the fastest exact algorithms based on backward induction are able to solve the game very quickly. 
-In some cases, our novel algorithm solves the game in less than 2\% of time required by standard backward induction algorithm.
+In some cases, our novel algorithm ($\doab$) solves the game in less than 2\% of time required by standard backward 
+induction algorithm.
 However, the exact algorithms are less competitive in the online settings. 
 On the other hand, approximative sampling algorithms can perform very well in the online setting and 
 find very good strategies to play within a few seconds, however, they are not well suited for offline solving of games. 
@@ -308,8 +315,9 @@ find very good strategies to play within a few seconds, however, they are not we
 The paper is structured as follows. In Section~\ref{sec:smg}, we present a formal introduction of simultaneous move games. 
 Section~\ref{sec:relwork} follows with a list and analysis of the existing algorithms in the related work. In 
 Section~\ref{sec:offline}, we describe in detail selected exact and approximative algorithms.
-We first describe the algorithms in the offline setting, followed by the necessary modifications used in the online case described in Section~\ref{sec:online}.
-In Section~\ref{sec:eval}, we turn to the experimental evaluation and present our results of comparison of the algorithms.
+We first describe the algorithms in the offline setting, followed by the necessary modifications used in the online 
+case described in Section~\ref{sec:online}.
+In Section~\ref{sec:eval}, we turn to the experimental evaluation and present our results of comparing of the algorithms.
 Finally, we conclude in Section~\ref{sec:conc}.
 
 \section{Simultaneous Move Games}  \label{sec:smg}

@@ -1,11 +1,11 @@
 
 This section focuses on algorithms that compute strategies for simultaneous move games. 
-The baseline algorithm for solving simultaneous move games is backward induction~(Section~\ref{sec:algs:bi}).
+The baseline algorithm for solving simultaneous move games is backward induction~(Subsection~\ref{sec:algs:bi}).
 %Therefore, we start our description of the algorithms focusing on algorithms based on the backward induction, then we introduce algorithms based on no-regret learning and Monte Carlo sampling.
-Afterwards we present a modification that exploits quick calculation of upper and lower bounds in a simultaneous move game~(Section~\ref{sec:algs:biab}).
-Then, we further improve the algorithm by speeding up the calculation of NE in stage games, exploiting the iterative framework known as the double-oracle algorithm~(Seciton~\ref{sec:algs:doab}).
-In Section~\ref{sec:algs:smmcts} we describe Monte Carlo tree search for simultaneous move games. 
-Finally, we present counterfactual regret minimization and its sampling variant outcome sampling in Section~\ref{sec:algs:cfros}. 
+Afterwards we present a modification that exploits quick calculation of upper and lower bounds in a simultaneous move game~(Subsection~\ref{sec:algs:biab}).
+Then, we further improve the algorithm by speeding up the calculation of NE in stage games, exploiting the iterative framework known as the double-oracle algorithm~(Subsection~\ref{sec:algs:doab}).
+In Subsection~\ref{sec:algs:smmcts} we describe Monte Carlo tree search for simultaneous move games. 
+Finally, we present counterfactual regret minimization and its sampling variant outcome sampling in Subsection~\ref{sec:algs:cfros}. 
 
 
 \subsection{Backward Induction}\label{sec:algs:bi}
@@ -72,20 +72,21 @@ $a_2$ &  3  &  4\\\cline{2-3}
 An example of this serialization is depicted in Figure~\ref{fig:serialization}. 
 There is a simple matrix game for two players (the circle and the box player; the utility values are depicted for the circle player i.e., the box player in the column is minimizing this value) and two ways this game can be transformed into a serialized perfect-information extensive-form game.
 If the circle player moves first (the left game tree), then the value of this serialized game is the lower bound of the value of the game; if this player moves second (the right game tree), then the value of this serialized game is the upper bound of the value of the game.
-Since the serialized games are zero-sum perfect-information games in the extensive form, they can be solved very quickly by using classical AI algorithm such as alpha-beta or negascout.
+Since the serialized games are zero-sum perfect-information games in the extensive form, they can be solved quite quickly by using a classic AI 
+algorithm such as alpha-beta or negascout.
 If the values of both serialized games are equal, then this value is also equal to the value of the original simultaneous move game. 
 This situation occurs in our example in Figure~\ref{fig:serialization}, where both serialized games have value equal to~$3$.
 
 By using bounds calculated in this way we can speed-up the backward induction algorithm (denoted $\biab$). 
 Algorithm~\ref{alg:backwardinduction-ab} depicts the pseudocode.
 When the backward induction starts evaluating successors of the current state, the algorithm calculates upper and lower bounds using alpha-beta algorithm on serialized variants of the subgame rooted in the successor $s'$ (lines~\ref{alg:biab:ab1}-\ref{alg:biab:ab2}). 
-The serialized game is solved using standard alpha-beta algorithm, where the second player to move in the serialization is the player in the argument of the method.
+The serialized game is solved using the standard alpha-beta algorithm, where the second player to move in the serialization is the player in the argument of the method.
 If the bounds are equal, the algorithm stores the value (line~\ref{alg:biab:saving}) instead of performing a recursive call~(line~\ref{alg:biab:recursive}). 
 
 We distinguish two cases when extracting the equilibrium strategies from the backward induction with alpha-beta search.
 In case that a state was fully evaluated by the algorithm (i.e., a linear program was built and solved for this state), we proceed as before and keep the pair of equilibrium strategies in this state.
 However, the algorithms prunes certain branches and does not create a linear program for all states.
-In this case, the algorithm keeps the strategy calculated by serialized alpha-beta algorithm.
+In this case, the algorithm keeps the strategy calculated by the serialized alpha-beta algorithm.
 More precisely, for player~$i$ the algorithm keeps the pure strategy computed by alpha-beta($s$, $-i$), where the opponent has an advantage of knowing the moves of player $i$. 
 Such a strategy provides guarantees for player~$i$ that is not exploitable and due to the cut-off we know that there is no better strategy for player~$i$ with higher expected utility.
 %When such a cut-off occurs, one needs to extract the strategy from alpha-beta. 
@@ -146,7 +147,7 @@ The best response strategies computed in step 3 are added to the restricted game
 
 \subsubsection{Integrating Double-Oracle with Backward Induction}
 
-Double-oracle algorithm for matrix games can be directly incorporated into the backward induction -- instead of immediately evaluating each of the successors of the current game state and solving the linear program, the algorithm can exploit the double-oracle algorithm. Pseudocode in Algorithm~\ref{alg:doab} depicts this integration. 
+This double-oracle algorithm for matrix games can be directly incorporated into the backward induction -- instead of immediately evaluating each of the successors of the current game state and solving the linear program, the algorithm can exploit the double-oracle algorithm. Pseudocode in Algorithm~\ref{alg:doab} details this integration. 
 %\mlanctot{Shouldn't the recursive call in 14 of Algorithm \ref{alg:doab} be $\doab(...)$ rather than double-oracle written out?}
 %bbosansky: done
 
@@ -276,7 +277,7 @@ through the cell, while $n_{s'}$ represents the number of simulations that have 
 \label{fig:smmcts-example}
 \end{figure}
 
-Consider again the game depicted in Figure~\ref{fig:example}. We will demonstrate how Monte Carlo Tree Search 
+Consider again the game depicted in Figure~\ref{fig:example}. We demonstrate how Monte Carlo Tree Search 
 could could progress in this game using the example shown in Figure~\ref{fig:smmcts-example}. This game has a root state, 
 two subgames that are simple matrix games and two arbitrarily large subgames. In the root state, player 1 (Max) has two 
 actions: top ($t$) and bottom ($b$), and player 2 also has two actions: left ($l$) and right ($r$). The tree is initialized 
@@ -314,7 +315,7 @@ After four simulations, every cell in the root state has a value.
 
 There are many possible ways to select actions based on the estimates stored in the each cell which lead to different variants. 
 We therefore first formally describe a generic template of MCTS algorithms for simultaneous move games (SM-MCTS) and then explain specific algorithms derived from this template.
-Algorithm~\ref{alg:smmcts} describes a single iteration of the SM-MCTS. 
+Algorithm~\ref{alg:smmcts} describes a single iteration of SM-MCTS. 
 The ``MCTS tree'' is an explicit tree data structure that stores the nodes of the search tree maintained in memory, 
 \eg the five-node tree shown in Figure~\ref{fig:smmcts-example}.
 % mlanctot: actually I hardly used it so I just wrote it out explicitly, one less symbol to remember
@@ -334,7 +335,7 @@ though more variants can be found in~\cite{Perick12Comparison,Lanctot13Tron,Tak1
 
 \subsubsection{Decoupled Upper-confidence Bound applied to Trees}\label{sec:duct}
 
-The most common selection function for SM-MCTS is the decoupled Upper-confidence Bound applied to Trees (UCT).
+The most common selection function for SM-MCTS is the decoupled Upper-Confidence Bound applied to Trees (UCT).
 For selection and updates, it executes the well-known UCT \cite{UCT} algorithm independently for each of the players in each nodes.
 The statistics stored in search nodes are independently computed for each action of each player. For player $i\in \cN$ and 
 action $a_i \in \cA_i(s)$ the reward sums $X_{a_i}$ and the number of times the action was used $n_{a_i}$ are maintained.
@@ -360,20 +361,20 @@ Alternatively, the action to play in each state can be determined based on the m
 \sigma_i(a_i) = \frac{n_{a_i}}{\sum_{b_i\in \cA_i(s)} n_{b_i}}.
 \label{eq:ductmix}
 \end{equation}
-Using the first method will certainly not make the algorithm converge to a Nash equilibirum, because the game may require a mixed strategy.
+Using the first method certainly makes the algorithm not converge to a Nash equilibirum, because the game may require a mixed strategy.
 Therefore, unless stated otherwise, we only use the mixed form in Equation~\ref{eq:ductmix} from now on and refer to this algorithm simply as UCT.
 
-Note, however, that it was shown that this latter variant also might not converge to a Nash equilibrium (a well known counter-example in Rock, Paper, Scissors with biased payoffs~\cite{Shafiei09}). 
+Note, however, it was shown that this latter variant also might not converge to a Nash equilibrium (a well known counter-example in Rock, Paper, Scissors with biased payoffs~\cite{Shafiei09}). 
 However, one of the issues when using UCT in game trees is an underspecified behavior in case there are multiple actions with identical value in the maximization described in the UCT formula in Equation~\ref{eq:uct}.
 %Note that UCT does not define what happens which action is selected if multiple actions have identical value in the maximization. 
 This may have a significant impact on the performance of the UCT in simultaneous move games. 
 Consider the matrix game at the right of Figure~\ref{fig:egMatrixGames}. 
-This game has only one NE, such that both players play the first action. However, UCT selecting the first or the last action among the options with the same value will always get only the rewards 0 and the bias term will cause the players to round-robin over the diagonal indefinitely. This is clearly not optimal, as each player can than improve by playing first action with probability 1. However, if we choose the action to play randomly among the once with the same probability, UCT will quickly converge to the optimal solution. 
-We will experimentally analyze the impact of this randomization on the example used in~\cite{Shafiei09} and show that if a randomized variant of UCT is used, the algorithm converges to a Nash equilibria (see Section~\ref{sec:exp:brps}).
+This game has only one NE, such that both players play the first action. However, UCT selecting the first or the last action among the options with the same value will always get only the rewards 0 and the bias term will cause the players to round-robin over the diagonal indefinitely. This is clearly not optimal, as each player can than improve by playing first action with probability 1. However, if we choose the action to play randomly among the tied actions (where ``tied'' could be defined as being within a small tolerance gap), UCT will quickly converge to the optimal solution in this game. 
+We will experimentally analyze the impact of this randomization on the example used in~\cite{Shafiei09} and show that if a randomized variant of UCT is used, the algorithm still does not converge to a NE but does converges to a strategy that is much closer to a NE than without randomization (see Subsection~\ref{sec:exp:brps}).
 Therefore, unless stated otherwise, we use the randomized variant in our implementation.
 
 Even though UCT is not guaranteed to converge to the optimal solution, it is often very successful in practice.
-It has been used in and general game playing~\cite{Finnsson12}, in the Internet card game Urban Rivals~\cite{Teytaud11Upper},
+It has been used in and general game playing~\cite{Finnsson12}, in the card game Urban Rivals~\cite{Teytaud11Upper},
 and in Tron~\cite{Perick12Comparison}.
 
 % mlanctot: removed, was confusing.
