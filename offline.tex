@@ -538,7 +538,7 @@ designed for simultaneous move games~\cite{Lanctot13Goofspiel}.
   \lIf{$h \in Z$}{\Return $(s, u_i(z))$\;} \label{alg:terminal}
   \ElsIf{$h$ is a chance node}{
     Sample outcome $a$ with probability $\Pr(a)$ \;
-    \Return OOS$(ha, i, \pi_i, \pi_{-i}, s \cdot \Pr(a))$\;
+    \Return OOS$(ha, i, \pi_i, \pi_{-i} \cdot \Pr(a), s \cdot \Pr(a))$\;
   }
   $I \gets $ information set of player $P(h)$ at $h$ \;
   Sample $a \sim \Phi(I, i, \epsilon)$ with prob. $\Pr(a)$ \; \label{alg:oos:sample}
