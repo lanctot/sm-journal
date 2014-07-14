@@ -310,7 +310,7 @@ After four simulations, every cell in the root state has a value.
 	$v_{s} \leftarrow$ Rollout($s$)\;\label{alg:smmcts:rollout}
 	\Return $v_{s}$\;
 }
-\caption{Simultaneous Move Monte Carlo Tree Search}\label{alg:smmcts}
+\caption{Simultaneous Move Monte Carlo Tree Search (SM-MCTS)}\label{alg:smmcts}
 \end{algorithm2e}
 
 There are many possible ways to select actions based on the estimates stored in the each cell which lead to different variants. 
@@ -531,63 +531,47 @@ designed for simultaneous move games~\cite{Lanctot13Goofspiel}.
 
 % Note, mlanctot: \ElsIf breaks compilation for me but \ElseIf works
 %bb: Interestingly, \ElseIf does not work for me, but \ElsIf does ... maybe different versions of algorithm2e ?
-\begin{algorithm2e}[t]
+\begin{algorithm2e}[t!]
 \small
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\Input{$h$ -- current state of the game; $i$ -- current player; $\pi_i$ -- reach probability for player $i$; $\pi_{-i}$ -- reach probability for opponent of $i$, $s$ -- sample reach probability}
-  \lIf{$h \in Z$}{\Return $(s, u_i(z))$\;} \label{alg:terminal}
-  \ElsIf{$h$ is a chance node}{
-    Sample outcome $a$ with probability $\Pr(a)$ \;
-    \Return OOS$(ha, i, \pi_i, \pi_{-i} \cdot \Pr(a), s \cdot \Pr(a))$\;
+\Input{$s$ -- current state of the game; $i$ -- current player; $\pi_i$ -- reach probability for player $i$; $\pi_{-i}$ -- reach probability for opponent of $i$, $p$ -- probability of smapling $s$}
+\Output{$(x,q,u_i)$: $x$ -- tail probability ($\pi(h,z)$); $q$ -- sample probability ($q(z)$); $u_i$ -- utility of the leaf}
+  \lIf{$s \in Z$}{\Return $(1, p, u_i(s))$\;} \label{alg:terminal}
+  \ElsIf{$s \in \cC$ is a chance node}{
+    Sample $s'$ with from $\Delta_c(s)$ \;
+    \Return SM-OOS$(s', i, \pi_i, \pi_{-i} \cdot \Delta_c(s,s'), p \cdot \Delta_c(s,s'))$\;
   }
-  $I \gets $ information set of player $P(h)$ at $h$ \;
-  Sample $a \sim \Phi(I, i, \epsilon)$ with prob. $\Pr(a)$ \; \label{alg:oos:sample}
-  \If{$I$ is not in memory}{
-    Add $I$ to memory \;
-    $\sigma(I) \leftarrow \mbox{Unif}(A(I))$ \;
-    $(q(z), u_i(z)) \gets $ Rollout$(ha, s \cdot \Pr(a))$ \;         \label{alg:oos:rollout}
+  \If{$s$ already is in the incrementally built tree}{
+    $\sigma_i \gets $ RegretMatching$(R_i(s))$\;
+    $\forall a\in \cA_i(s)\; \sigma'_i(a) \gets (1-\epsilon)\sigma_i(a) + \tfrac{\epsilon}{|\cA_i(s)|}$\;
+    Sample action $a_i$ from $\sigma'_i$\;
+    $\sigma_{-i} \gets $ RegretMatching$(R_{-i}(s))$\;
+    Sample action $a_{-i}$ from $\sigma_{-i}$\;
+    $(x,q,u_i) \gets $SM-OOS$(\cT(s,a_i,a_{-i}), \sigma_i(a_i)\pi_i, \sigma_{-i}(a_{-i})\pi_{-i},\sigma'_i(a_i)\sigma_{-i}(a_{-i}) p)$\;
   }
   \Else{
-    $\sigma(I) \gets $ RegretMatching$(R_I)$ \;
-    $\pi_{P(h)}' \gets \sigma(I,a)\pi_{P(h)}$ \;    \label{alg:oos:newreaches1}
-    $\pi_{-P(h)}' \gets \pi_{-P(h)}$ \;             \label{alg:oos:newreaches2}
-    $(q(z), u_i(z)) \gets$ OOS$(ha, i, \pi_i', \pi_{-i}', s \cdot \Pr(a))$ \;
+    Add $s$ to the tree\;
+    $\forall a\in \cA_i(s)\; \sigma_i(a) \gets \tfrac{1}{|\cA_i(s)|}$\;
+    Sample action $a_{i}$ from $\sigma_{i}$\;
+    $\forall a\in \cA_{-i}(s)\; \sigma_{-i}(a) \gets \tfrac{1}{|\cA_{-i}(s)|}$\;
+    Sample action $a_{-i}$ from $\sigma_{-i}$\;
+    $(x,q,u_i) \gets$ OOS-Rollout$(\cT(s,a_i,a_{-i}), p \cdot \tfrac{1}{|\cA_i(h)|}\tfrac{1}{|\cA_{-i}(h)|})$\label{alg:oos:rollout}\;
   }
-  \For{$a' \in A(I)$}{
-    \If{$P(h) = i$}{
-      Update $R_I[a']$ for each $a' \in A(I)$ using $\tilde{r}^t(I,a)$ according to Eq.~\ref{eq:scv}
-    }
-    \Else{
-      Update $S_I[a'] \gets S_I[a'] + \frac{1}{s} \pi_{-i} \sigma(I,a')$ for each $a' \in A(I)$ \;  \label{alg:oos:avgstrat}
-    }
-  }
-  \Return $(q(z), u_i(z))$ \;   \label{alg:returnend}
+  $c \gets x \cdot \sigma_{-i}(a_{-i})$\;
+  $x \gets c \cdot \sigma_{i}(a_{i})$\;
+  $W \gets u \pi_{-i}~/~q$\;
+  $R_i(s,a_i) \gets  R_i(s,a_i) + (c-x)W$\;
+  $\forall a\in\cA_i(s)\setminus\{a_i\} \;\; R_i(s,a) \gets R_i(s,a) - x W$\;
+  $S_{-i}(s) \gets S_{-i}(s) + \tfrac{1}{p}\pi_{-i}\sigma_{-i}$\;
+  \Return $(x, q, u_i)$\; \label{alg:returnend}
   \vspace{0.1cm}
-  \caption{Simultaneous Move Online Outcome Sampling. \label{alg:oos}}
+  \caption{Simultaneous Move Online Outcome Sampling (SM-OOS)  \label{alg:oos}}
 \end{algorithm2e}
 
+The game tree is incrementally built, starting only with one node for the root game state.
+Each node stores for each player: $R_i(s)$ the cumulative regret $R^T(I,a)$ for information set $I$ of player $i$ in state $s$ and each action, 
+and average strategy table $S_i(s)$, which stores the cumulative average strategy contribution for each action.
 
-
-One iteration of the algorithm requires, as input, the current state of the game and a player role $i$. 
-Each iteration the player role $i$ is alternated. As the algorithm is applied to the imperfect information 
-representation of the simultaneous move game (described in Section~\ref{sec:smg}), we use histories $h$ 
-and information sets $I$ rather than states. 
-
-An information set tree is incrementally built, starting with the searching player's root information set.
-An information set stores two tables: $R_I$ stores the cumulative regret $R^T(I,a)$ for each action, 
-and average strategy table $S_I$ which stores the cumulative average strategy contribution for each action. 
-An $\epsilon$-on-policy sampling distribution used to sample actions, defined as
-\begin{equation*}
-\label{eq:ossample}
-\Phi(I,i,\epsilon) = \left\{
-\begin{array}{ll}
-\epsilon \cdot \mbox{Unif}(A(I)) + (1-\epsilon)\sigma_i(I) & \mbox{if } P(I) = i\\ 
-\sigma_i(I)                                          & \mbox{otherwise,}
-\end{array} \right.
-\end{equation*}
-and denote $\Phi(I,i,\epsilon,a)$ the probability of sampling $a \in A(I)$.
-
-
-
-
+The algorithm runs iterations from a starting state to the end of the game until it uses the given time limit. Each iteration is performed by the function presented in Algorithm~\ref{alg:oos}, which recursively descends down the tree. In the root of the game, the function is run as SM-OOS$(root, i, 1, 1, 1)$, alternating player $i\in\{1,2\}$ in each iteration. If the function reaches a terminal history of the game (line~1), it returns the utility of the terminal node for player $i$, the sampling probability of reaching this state $p$ and $1$ for the tail probability. If it reaches a chance node, is recursively continues after a randomly selected chance outcome (lines~3-4). If none of the first two conditions holds, the algorithm reaches a state where players make decisions. If this state is already included in the incrementally built tree (line~5), the following state is selected based on the cumulative regrets stored in the tree by regret matching with $\epsilon$-on-policy sampling strategy for player $i$ (lines~6-8) and the exact regret matching strategy for player $-i$ (lines~9-10). The recursive call on line~11 then updates the player's reach probabilities directly with the strategy from regret matching and the sampling probability with the modified strategy $\sigma_i'$. If the reached node is not in the tree (line~12), it is added and an action for each player is selected based on the uniform distribution (lines~14-17). Afterwards, random rollout of the game until a terminal node is initiated on line~18. The rollout is similar to the MCTS case, but in addition, it has to compute the probabilities $x$ and $q$ required by the definition of the sampled counterfactual value. Whether the current node was in the tree or not, the algorithm updates the regret table of player $i$ based on the definition of sampled counterfactual regret (lines~19-23) and the mean strategy of player $-i$ (line~24). For both players, the update is as if they actually decided first in the extensive form game representation of the simultaneous move game (see Section~\ref{sec:smg}). The value $W$ on line~21 are all the constant terms of equation~(\ref{eq:scv}) and $(c-x)$ represents the difference between the used strategy $\sigma_i$ and playing $a_i$ with probability $1$.
+Finally, the function returns the correct probabilities to the upper level of the tree.
 
