@@ -1,11 +1,11 @@
 **If any part of this work has been submitted or published elsewhere, please state where it has been submitted and how it differs from the paper submitted here. (Please either confirm that that the work has not been submitted or published elsewhere, or give details)**
 
-Parts of the submission has been previously published in proceedings of AI conferences and workshops [1,2,3].
+Parts of the submission has been previously published in proceedings of AI conferences and workshops [1,2,3,4].
 The notable additional material include: 
 (1) extended and more detailed description of the algorithms compared to the previously published works
 (2) description of BIab algorithm that naturally completes the current set of state-of-the-art exact algorithms for simultaneous move games
 (3) extended survey on alternative algorithms for solving simultaneous move games
-(4) complex experimental evaluation covering two types of applications: (a) computation of equilibrium strategies when computational resources are abundant and approximation refinement is a priority, and (b) the game playing, where computational resources are limited and acting quickly is necessary
+(4) first direct experimental comparison of different methods covering two types of applications: (a) computation of equilibrium strategies when computational resources are abundant and approximation refinement is a priority, and (b) the game playing, where computational resources are limited and acting quickly is necessary
 
 [1] B. Bosansky, V. Lisy, J. Cermak, R. Vitek, M. Pechoucek, Using Double-oracle Method and Serialized Alpha-Beta Search for Pruning in Simultaneous Moves Games, in: Proceedings of the Twenty-Third International Joint Conference on Artificial Intelligence (IJCAI), 2013.
 
@@ -14,6 +14,10 @@ Games Workshop at IJCAI 2013,
 
 [3] V. Lisy, V. Kovarik, M. Lanctot, B. Bosansky, Convergence of Monte Carlo tree search in simultaneous move games, in: Advances in Neural
 Information Processing Systems (NIPS), 2013
+
+[4] M. Lanctot, V. Lisy, M. Bowling, Search in imperfect information games using online Monte Carlo counterfactual regret minimization, in: Pro-
+ceedings of the AAAI Workshop on Computer Poker and Imperfect Information, 2014.
+
 
 
 **Do you agree not to submit the paper elsewhere during the review period? (We will not review papers without an affirmative answer.) (Please answer the question with a YES / NO) **
@@ -36,7 +40,7 @@ The submission is focused on computing optimal strategies and playing simultaneo
 
 ** What is the most closely related work by others, and how does this work differ? Please give 1-3 citations to such papers (not papers that of yours or your co-authors, of course), preferably from outlets such as the AI journal, the Journal of Artificial Research, IJCAI, AAAI, ECAI or some similar quality artificial intelligence venue. Your related work section should discuss the relationship in more detail. **
 
-The closest work in exact algorithms for simultaneous move games is the recent work by Saffidine et al. [1] which define alpha-beta pruning for the class of simultaneous-move games. In this paper we present an algorithm that provides additional pruning and thus further significant improvement, often in orders of magnitude. Secondly, our paper describes variants of Monte-Carlo tree search (MCTS), an algorithm that is widely used in perfect information games [2], or imperfect information games [3]. We describe the differences between the perfect information and simultaneous move games, analyze the impact of different choices in MCTS on the convergence rate of the algorithm.
+The closest work in exact algorithms for simultaneous move games is the recent work by Saffidine et al. [1] which define alpha-beta pruning for the class of simultaneous-move games. In this paper we present an algorithm that provides additional pruning and thus further significant improvement, often in orders of magnitude. Secondly, our paper describes variants of Monte Carlo tree search (MCTS), an algorithm that is widely used in perfect information games [2], or imperfect information games [3]. We describe the differences between the perfect information and simultaneous move games, analyze the impact of different choices in MCTS on the convergence rate of the algorithm.
 
 [1] A. Saffidine, H. Finnsson, M. Buro, Alpha-beta pruning for games with simultaneous moves, in: Proceedings of the Thirty-Second Conference on Artificial Intelligence (AAAI-12), 2012.
 

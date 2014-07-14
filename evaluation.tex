@@ -99,6 +99,7 @@ As an example, the following table depicts the number of states with pure strate
 \hline
 \end{tabular}
 \end{table}
+\vspace{1.5cm}
 We can see that the relative number of states with mixed strategies slowly decreases, however, players need to mix throughout the whole game.
 In the last round, each player has only a single card; hence, there cannot be any mixed strategy.
 
@@ -118,8 +119,8 @@ Moreover, if the position is clearly winning for one of the players (there is no
 \paragraph{\textbf{Oshi-Zumo}}
 
 Oshi-Zumo is a board game analyzed from the perspective of computational game theory in \cite{buro2003}.
-There are two players in the game, both starting with $N$ coins, and there is a playing board represented as a one-dimensional playing field with $2K+1$ locations.
-At the beginning, there is a stone (or a wrestler) located in the center of the playing field (i.e., at position $K$ starting from $0$).
+There are two players in the game, both starting with $N$ coins, and there is a playing board represented as a one-dimensional playing field with $2K+1$ locations (indexed $0, \ldots, 2K$).
+At the beginning, there is a stone (or a wrestler) located in the center of the playing field (i.e., at position $K$).
 During each move, both players simultaneously place their bid from the amount of coins they have (but at least $M$ if they still have some coins).
 Afterwards, the bids are revealed, both bids are subtracted from the number of coins of the players, and the highest bidder can push the wrestler one location towards the opponent's side.
 If the bids are the same, the wrestler does not move. 
@@ -127,7 +128,7 @@ The game proceeds until the money runs out for both players, or the wrestler is 
 The winner is determined based on the position of the wrestler -- the player in whose half the wrestler is located loses the game. 
 If the final position of the wrestler is the center, the game is a draw.
 Again, the utility values are restricted to $\lbrace -1, 0, 1 \rbrace$.
-In the experiments we varied the number of coins and parameter $K$.
+In the experiments we varied the number of coins and parameter~$K$.
 
 Many instances of the Oshi-Zumo game have pure Nash equilibrium.
 With the increasing number of the coins the game necessarily need to use mixed strategies, however, mixing is typically required only at the beginning of the game. 
@@ -143,7 +144,7 @@ As an example, the following table depicts the number of states with pure strate
 \hline
 \end{tabular}
 \end{table}
-\vspace{1cm}
+%\vspace{1cm}
 The evaluation function used in Oshi-Zumo takes into consideration two components: (1) the current position of the wrestler and, (2) the remaining coins for each player. Formally:
 $$
 eval(s) = \tanh\left(\frac{b}{2}+\frac{1}{3}\left(\frac{\textrm{coins}_1 - \textrm{coins}_2}{M} + \textrm{wrestler} - K\right)\right)
@@ -156,9 +157,9 @@ Again, we use $\tanh$ to scale the evaluation function into the interval $[-1,1]
 
 Another important class of games is pursuit-evasion games (for example, see~\cite{nguyen2013monte}).
 There is a single evader and a pursuer that controls 2 pursuing units on a four-connected grid in our pursuit-evasion game. 
-Since all units move simultaneously, the game has larger branching factor (up to $16$ for the pursuer).
+Since all units move simultaneously, the game has larger branching factor than Goofspiel (up to $16$ actions for the pursuer).
 The evader wins, if she successfully avoids the units of the pursuer for the whole game; pursuer wins, if her units successfully capture the evader. The evader is captured if either her position is the same as the position of a pursuing unit, or the evader used the same edge as a pursuing unit (in the opposite direction). 
-Again, the game is win-loss and the players receive utility from set $\lbrace -1, 1 \rbrace$.
+The game is win-loss and the players receive utility from set $\lbrace -1, 1 \rbrace$.
 We use $3$ different square grid-graphs (with the size of a side 4, 5, and 10 nodes) for the experiments without any obstacles or holes.
 In the experiments we varied the length of the game $d$ and we altered the starting positions of the players (the distance between the pursuers and the evader was always at most $\left\lfloor\frac{2}{3} d\right\rfloor$ moves, in order to provide a possibility for the pursuers to capture the evader).
 
@@ -178,7 +179,7 @@ This can be seen on our small example on a graph $4\times4$ nodes and depth $5$:
 \hline
 \end{tabular}
 \end{table}
-
+\vspace{1cm}
 The evaluation function used in pursuit-evasion games takes into consideration the distance between the units of the pursuer and evader (denoted $\textrm{distance}_j$ for the distance in moves of the game between the $j^{th}$ unit of the pursuer and the evader). Formally:
 $$
 eval(s) = \frac{\min(\textrm{distance}_1,\textrm{distance}_2) + 0.01\cdot\max(\textrm{distance}_1,\textrm{distance}_2)}{1.01 \cdot (w+l)}
@@ -264,7 +265,7 @@ $$
 
 \subsection{Non-Convergence and Random Tie-Breaking in UCT}\label{sec:exp:brps} 
 
-\begin{figure}[t]
+\begin{figure}[t!]
 \centering
 \begin{tabular}{c}
 {\small MCTS-UCT (fully deterministic)} \\
@@ -276,7 +277,7 @@ $$
 \label{fig:expl-brps1}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[t!]
 \centering
 \begin{tabular}{c}
 %{\small MCTS-UCT (fully deterministic)} \\
@@ -292,11 +293,7 @@ $$
 \label{fig:expl-brps2}
 \end{figure}
 
-% mlanctot: should be done
-%\bbosansky{We need to unify naming the UCT algorithms. I suggest to state in the description of UCT that randomized decoupled UCT(mix) is termed UCT from now on and any other meaning/variant is explicitly stated. However, I do not have a strong opinion on this.}
-%\mlanctot{I'll rename instances of DUCT to MCTS-UCT as used in the graphs, and will mention it is understood to be UCT(mix).}
-
-As mentioned above, a counter-example was given in \cite{Shafiei09} showing that 
+We first revisit the counter-example given in \cite{Shafiei09} showing that 
 UCT does not converge to an equilibrium strategy in Biased Rock, Paper, Scissors 
 when using a mixed strategy by normalizing the visit counts.
 In our first experiment, we revisit and expand upon on this result, showing the effect of synchronization ocurring when the UCT selection mechanism is fully deterministic (see Section~\ref{sec:duct}).
@@ -306,13 +303,14 @@ for 100 million ($10^8$) iterations, measuring the exploitability of the strateg
 each variant at regular intervals. The results are shown in Figures \ref{fig:expl-brps1} and \ref{fig:expl-brps2}.
 
 
-The first observation is that the deterministic UCT does not seem to converge to a low-exploitability strategy. The exploitability of the strategies of 
-Exp3 and RM variants do converge to low-exploitability strategies, and the resulting approximation depends on the amount of exploration. 
+The first observation is that the deterministic UCT does not seem to converge to a low-exploitability strategy (see Figure~\ref{fig:expl-brps1}, top figure). The exploitability of the strategies of 
+Exp3 and RM variants do converge to low-exploitability strategies (see Figure~\ref{fig:expl-brps2}), and the resulting approximation depends on the amount of exploration. 
 If less exploration is used, then the resulting strategy is less exploitable, which is natural in the case of a single state. RM does seem to 
-converge slightly faster than Exp3, as seen in the full simultaneous games as well. 
+converge slightly faster than Exp3, as we will see in the remaining domains as well. 
 
 We then tried adding a stochastic tie-breaking rule to the UCT selection mechanism typically used in MCTS implementations, which chooses an 
 action randomly when the scores of the best values are ``tied'' (less than $0.01$ apart).
+Figure~\ref{fig:expl-brps1}, bottom figure shows the convergence.
 One particularly striking observation is that this simple addition leads to a large drop in resulting exploitability, where exploitability
 ranges from $[0.5,0.8]$ in the deterministic case, compared to $[0.01,0.05]$ with stochastic tie-breaking. Therefore, stochastic tie-breaking is 
 enabled in all of our experiments. 
@@ -332,7 +330,7 @@ exact equilibrium, which is similar to results of UCT in Kuhn poker~\cite{Ponsen
 
 \subsection{Offline Equilibrium Computation}
 
-We first compare the offline performance of the algorithm. 
+We now compare the offline performance of the algorithm on all the remaining games. 
 We measure the overall computation time for each of the algorithms and number of evaluated nodes -- i.e., nodes for which the main method of the backward induction algorithm executed (i.e., nodes evaluated by serialized alpha-beta algorithms are not included in this count, since they may be evaluated repeatedly).
 Unless otherwise stated, each data point represents a mean of at least $30$ runs.
 % mlanctot: check this %bbosansky: ?
@@ -351,7 +349,7 @@ Both of these algorithms significantly reduce the number of states visited by th
 While \textsc{BI} algorithm evaluates on average more than $3.2\times10^7$ nodes in the setting with $7$ cards in more than $3$ hours, $\biab$ evaluates only $198,986$ nodes in less than $5$ minutes. 
 The performance is further improved by $\doab$ that evaluates on average $51,035$ nodes in less than $4$ minutes.
 However, the overhead of the algorithm is slightly higher in case of $\doab$; hence, the difference between $\doab$ and $\biab$ is relatively small in this case.
-Finally, the results show that even simple \textsc{DO} algorithm without serialized alpha-beta search can improves the performance of \textsc{BI}.
+Finally, the results show that even simple \textsc{DO} algorithm without serialized alpha-beta search can improve the performance of \textsc{BI}.
 In the setting with $7$ cards, \textsc{DO} evaluates more than $6\times10^6$ nodes which takes on average almost 40 minutes.
 
 The results on Goofspiel represent a significant improvement over the Goofspiel results of the pruning algorithm 
@@ -471,7 +469,7 @@ Such games represent an extreme case, where neither alpha-beta search, nor doubl
 In these games, \textsc{BI} algorithm is typically the fastest.
 Even though both $\biab$ and $\doab$ evaluate marginally less nodes ($\approx90\%$), the overhead of the algorithms (repeated calculation of alpha-beta algorithm, repeatedly solving linear programs, etc.) causes slower runtime performance in this case.
 
-However, completely random games are rarely instances that do not need to be solved in practice.
+However, completely random games are rarely instances that need to be solved in practice.
 The situation changes, when we use the intuition of good and bad moves and thus add correlation to the utility values.
 Figure~\ref{fig:off:res:rg} depicts the results for two different branching factors $4$ and $5$ for each player and increasing depth.
 The results show that $\doab$ outperforms all remaining algorithms, although the difference is rather small (still statistically significant).
@@ -591,7 +589,7 @@ RAND&37.4(1.2)&19.2(1.0)&19.9(1.0)&16.1(0.9)&16.3(0.9)&49.8(1.4)\\
 In head-to-head comparison, we use Goofspiel with 13 cards, as it is typically played. However, for the sake of consistency with the offline results, we assume a fixed known sequence of the cards of the nature player. In spite of the simplification, the game has still more than $3.8\times 10^{19}$ leaf nodes. The results are presented in Table~\ref{fig:matches:goof}, where the two top tables show results on an instance of the game with strictly decreasing ordering of cards by nature. The bottom table shows the results for $5$ random orderings, with $1000$ matches played for each ordering.
 
 First, we can see that finding a good strategy in Goofspiel is very hard for all algorithms.
-This is noticeable thanks to the result of RAND player, that performs reasonably well (RAND typically loses almost every match in all the remaining game domains). 
+This is noticeable thanks to the results of RAND player, that performs reasonably well (RAND typically loses almost every match in all the remaining game domains). 
 Next, we analyze the results of the $\doab$ algorithms compared to the sampling algorithms.
 The results show that even though $\doab$ uses a domain-specific evaluation function, it does not win significantly against any of the sampling algorithms that do not use any domain knowledge with one second per move. $\doab$ tied with OOS and it lost by the largest margin to the Exp3 for the decreasing ordering of the cards. With five seconds per move, OOS is significantly better than $\doab$ and Exp3 is still its strongest opponent. The results are even worse for $\doab$ across 5 random ordering of cards (table $^*\;1s$). Since the evaluation function of $\doab$ is not specifically tuned, this is the main reason for the weak performance. 
 
@@ -654,14 +652,14 @@ The size of the game is large with strictly more than $10^{15}$ leaves (number o
 
 In this game, the evaluation function used by $\doab$ is much stronger than in Goofspiel and all the sampling algorithms without domain specific knowledge perform poorly against this algorithm (see Table~\ref{fig:matches:oz}). The loss is even higher with 5 seconds per move. None of the sampling algorithms perform significantly better than the others.
 
-In the offline experiment (Figure~\ref{fig:off:conv:oz}), none of the sampling algorithms was able to converge anywhere close to the equilibirum in short time. Moreover, the game used in the offline experiments was many orders of magnitude smaller (there were $10$ coins for each player). In spite of the negative results in the offline experiments, all sampling algorithms are able to find reasonably good strategy. With one second per move, RM is clearly the strongest sampling algorithm, having the strongest opponent among the sampling algorithms in UCT (RM wins only 67.8\% of games). OOS and UCT tie for the second place and Exp3 is the weakest sampling algorithm in this game. With five seconds per move, the differences among the algorithms are a little smaller but the same ranking of the algorithms holds.
+In the offline experiment (Figure~\ref{fig:off:conv:oz}), none of the sampling algorithms was able to converge anywhere close to the equilibrium in short time. Moreover, the game used in the offline experiments was many orders of magnitude smaller (there were $10$ coins for each player). In spite of the negative results in the offline experiments, all sampling algorithms are able to find reasonably good strategy. With one second per move, RM is clearly the strongest sampling algorithm, having the strongest opponent among the sampling algorithms in UCT (RM wins only 67.8\% of games). OOS and UCT tie for the second place and Exp3 is the weakest sampling algorithm in this game. With five seconds per move, the differences among the algorithms are a little smaller but the same ranking of the algorithms holds.
 
 Because of high quality of the evaluation function in this game, we performed experiments where the rollout simulation was replaced with the evaluation function. 
 The tables for this variant are labeled with ``E'' in the figures. 
 The results show that the quality of play of all sampling algorithms is significantly improved when using the evaluation function. 
 However, $\doab$ still wins over OOS and RM in both time settings.
 UCT is clearly the best and Exp3 significantly loses to $\doab$ with one second, but significantly wins with 5 seconds per move.
-Superior performance of UCT and Exp3 closely second with 5 seconds, but at 1 second RM is the close second. 
+Superior performance of UCT and Exp3 closely second with 5 seconds, but at 1 second RM is close the second. 
 %mlanctot: I don't know what you were trying to say here.
 %is obvious also in comparison of the sampling algorithms among each other.\vlisy{Why?}
 The main difference between RM, which was the best sampling algorithm without evaluation functions, and the other MCTS algorithms is that RM tries to estimate the quality of each joint action of the players, instead of using a fully decoupled dynamics.
@@ -685,7 +683,7 @@ RAND&11.8(1.9)&19.7(2.3)&17.4(2.2)&11.1(1.8)&12.4(1.9)&49.9(2.9)\\
 \end{tabular}
 \begin{tabular}{|r|cccccc|}\hline
 5s&$\doab$&OOS&UCT&EXP3&RM&RAND\\\hline
-$\doab$&\textbf{49.6(2.9)}&\textbf{60.2(2.8)}&\textbf{49.8(2.9)}&\textbf{49.6(2.9)}&\textbf{49.1(2.8)}&\textbf{87.6(1.9)}\\
+$\bdoab$&\textbf{49.6(2.9)}&\textbf{60.2(2.8)}&\textbf{49.8(2.9)}&\textbf{49.6(2.9)}&\textbf{49.1(2.8)}&\textbf{87.6(1.9)}\\
 OOS&35.5(2.8)&50.9(2.9)&40.2(2.8)&35.8(2.8)&36.1(2.8)&83.1(2.2)\\
 UCT&45.2(2.9)&55.3(2.9)&48.9(2.9)&47.8(2.9)&48.9(2.9)&86.9(2.0)\\
 \textbf{EXP3}&\textbf{48.2(2.8)}&\textbf{61.6(2.8)}&\textbf{49.9(2.9)}&\textbf{47.4(2.8)}&\textbf{49.5(2.8)}&\textbf{91.0(1.6)}\\
