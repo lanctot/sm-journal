@@ -64,13 +64,13 @@ The lower and upper bounds represent the threshold values, for which neither of 
 % bbosansky: Ok, I agree.
 
 The second exact algorithm that is significantly faster compared to the classical backward induction was introduced in~\cite{Bosansky13Using}.
-This algorithm is described in detail in Section~\ref{sec:doab}. The main idea is to integrate two key components: (1) instead of evaluating all successors in each state of the game and solving a normal-form game, the algorithm exploits the iterative framework known in game theory as double-oracle algorithm~\cite{McMahan03Planning}; (2) the algorithm computes bounds on the utility values of the successors by serializing the sub-games and running a standard alpha-beta algorithm. 
+This algorithm is described in detail in Subsection~\ref{sec:doab}. The main idea is to integrate two key components: (1) instead of evaluating all successors in each state of the game and solving a normal-form game, the algorithm exploits the iterative framework known in game theory as double-oracle algorithm~\cite{McMahan03Planning}; (2) the algorithm computes bounds on the utility values of the successors by serializing the sub-games and running a standard alpha-beta algorithm. 
 
 Finally, since simultaneous move games can be seen as standard extensive-form games with imperfect information, one can use techniques 
 designed for large imperfect information games. 
 An algorithm that is also built on double-oracle is the Range-of-Skill algorithm~\cite{Zinkevich07New}.  
 However, the number of iterations required by this algorithm in the worst case can be large~\cite{Hansen08On}. 
-There are also state-of-the-art algorithm for solving generic extensive-form games with imperfect information that based on sequence-form 
+There are also state-of-the-art algorithms for solving generic extensive-form games with imperfect information, based on sequence-form 
 optimization problems~\cite{koller1996,Sandholm10The,bosansky2013-aamas}. 
 However, these algorithms do not exploit the specific structure of simultaneous move games and could require memory that is linear 
 in the size of the game tree. In practice, this prohibits scaling to larger games (see, \eg \cite{Saffidine12SMAB}) and causes weak performance

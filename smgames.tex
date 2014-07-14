@@ -40,7 +40,7 @@ Two-player simultaneous move games are sometimes called {\it stacked matrix game
 $s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$ that either leads to a terminal state or (possibly after a 
 chance transition) to a subgame which is itself another stacked matrix game. 
 In the matrix game on the right of Figure~\ref{fig:egMatrixGames}, $b$ and $B$ are strictly dominated, leaving $(a,A)$ as a 
-pure and only Nash equilibrium strategy.
+pure and only Nash equilibrium (NE) strategy.
 
 A {\it behavioral strategy} for player $i$ is a mapping from states $s \in \cS$
 to a probability distribution over the actions $\cA_i(s)$, denoted $\sigma_i(s)$. 
@@ -74,8 +74,8 @@ The dark squares are terminal states. The values shown are optimal values that c
 \label{fig:example}}
 \end{figure}
 In two-player constant sum games a (subgame perfect) Nash equilibrium strategy is often considered to be optimal. It guarantees 
-the payoff of at least $V^*$ against any opponent. Any non-equilibrium strategy has its nemesis, which will make it win less 
-than $V^*$ in expectation. Moreover, subgame perfect NE strategy can earn more than $V^*$ against weak opponents. After the 
+the payoff of at least $V^*$ against any opponent. Any non-equilibrium strategy has its nemesis, which makes it win less 
+than $V^*$ in expectation. Moreover, subgame perfect Nash equilibrium strategy can earn more than $V^*$ against weak opponents. After the 
 opponent makes a sub-optimal move, the strategy will never allow it to gain the loss back.
 The value $V^*$ is known as the minimax-optimal value of the game
 and is the same for every equilibrium profile by von Neumann's minimax theorem.
