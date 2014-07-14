@@ -33,7 +33,7 @@ Therefore, for selected domains we also run sampling-based algorithms with an ev
 Reported results are mean of at least $1000$ matches for each pair of algorithms.
 %Where necessary, we run additional experiments to obtain statistically significant results.
 
-Each of the described algorithms was implemented in a generic framework for modeling and solving extensive-form games\footnote{Source code is available at \texttt{http://agents.felk.cvut.cz/topics/Computational\_\newline game\_theory}.}.
+Each of the described algorithms was implemented in a generic framework for modeling and solving extensive-form games\footnote{Source code is available at \texttt{http://agents.felk.cvut.cz/topics/Computational\_\newline game\_theory}. We use IBM CPLEX 12.5 to solve the linear programs.}.
 We are interested in the performance of the algorithms and their ability to find or approximate the optimal behavior.
 Therefore, with the exception of the evaluation function used in selected online experiments, no algorithm is using any domain-specific knowledge.
 
@@ -99,7 +99,6 @@ As an example, the following table depicts the number of states with pure strate
 \hline
 \end{tabular}
 \end{table}
-\vspace{1.5cm}
 We can see that the relative number of states with mixed strategies slowly decreases, however, players need to mix throughout the whole game.
 In the last round, each player has only a single card; hence, there cannot be any mixed strategy.
 
@@ -179,7 +178,6 @@ This can be seen on our small example on a graph $4\times4$ nodes and depth $5$:
 \hline
 \end{tabular}
 \end{table}
-\vspace{1cm}
 The evaluation function used in pursuit-evasion games takes into consideration the distance between the units of the pursuer and evader (denoted $\textrm{distance}_j$ for the distance in moves of the game between the $j^{th}$ unit of the pursuer and the evader). Formally:
 $$
 eval(s) = \frac{\min(\textrm{distance}_1,\textrm{distance}_2) + 0.01\cdot\max(\textrm{distance}_1,\textrm{distance}_2)}{1.01 \cdot (w+l)}
@@ -209,12 +207,12 @@ The following table shows the number of states depending on the depth for random
 \hline
 \end{tabular}
 \end{table}
-
+\vspace{1.5cm}
 Only the second type of randomly generated games is used in the online setting. 
 The evaluation function used in this case is calculated similarly as the utility value and it is equal to the sum of values on the edges from the root to the current node.
 
 \paragraph{\textbf{Tron}} 
-Tron is a two-player simultaneous-move game played on a discrete grid, possibly obstructed by 
+Tron is a two-player simultaneous move game played on a discrete grid, possibly obstructed by 
 walls~\cite{Samothrakis10Tron,Perick12Comparison,Lanctot13Tron}.
 At each step both players move to adjacent cells, and a wall is placed to players' original positions.
 A player exits the game if he hits the wall or the opponent.
@@ -296,7 +294,7 @@ $$
 We first revisit the counter-example given in \cite{Shafiei09} showing that 
 UCT does not converge to an equilibrium strategy in Biased Rock, Paper, Scissors 
 when using a mixed strategy by normalizing the visit counts.
-In our first experiment, we revisit and expand upon on this result, showing the effect of synchronization ocurring when the UCT selection mechanism is fully deterministic (see Section~\ref{sec:duct}).
+In our first experiment, we revisit and expand upon on this result, showing the effect of synchronization ocurring when the UCT selection mechanism is fully deterministic (see Subsection~\ref{sec:duct}).
 
 We run MCTS with UCT, Exp3, and Regret Matching variants on Biased Rock, Paper, Scissors
 for 100 million ($10^8$) iterations, measuring the exploitability of the strategy recommended by 
@@ -543,7 +541,7 @@ Finally, we also included random player (denoted RAND) into the tournament to co
 We report mainly the win rates of the algorithms, in which a tie is counted as half win.
 Each result represents a mean of at least 1000 matches with the half of the width of the 95\% confidence interval in brackets, \eg 49(0.3) refers to 49.3\% $\pm$ 0.3\%. 
 The parameters of the algorithms are initially hand tuned to OOS:0.6, UCT:2, Exp3:0.2, RM:0.1, and all games use the utility value between $[-1,1]$. 
-We discuss the influence of the parameters in Section~\ref{sec:eval:online:tuning}.
+We discuss the influence of the parameters in Subsection~\ref{sec:eval:online:tuning}.
 
 \subsubsection{Goofspiel}
 
@@ -697,7 +695,7 @@ RAND&10.2(1.8)&17.1(2.2)&12.2(1.9)&7.6(1.5)&10.1(1.7)&50.1(2.9)\\
 \end{table}
 
 
-The next set of matches was played on 10 different random games with each player having 5 actions in each stage and depth 15. Hence, the game has more than $9.3\times 10^{20}$ leaf nodes. In order to compute the win-rates as in other games, we use signum of the utility value defined in Section~\ref{sec:eval:domains}. The results are presented in Table~\ref{fig:matches:rand}.
+The next set of matches was played on 10 different random games with each player having 5 actions in each stage and depth 15. Hence, the game has more than $9.3\times 10^{20}$ leaf nodes. In order to compute the win-rates as in other games, we use signum of the utility value defined in Subsection~\ref{sec:eval:domains}. The results are presented in Table~\ref{fig:matches:rand}.
 
 With 1 second per move $\doab$ significantly wins over all other algorithms. 
 The performance of $\doab$ decreases with more time and with 5 seconds, it already wins only over OOS (in 60.2\% matches), and plays tie with the other sampling algorithms. 

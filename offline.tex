@@ -1,11 +1,11 @@
 
 This section focuses on algorithms that compute strategies for simultaneous move games. 
-The baseline algorithm for solving simultaneous move games exactly is backward induction~(Section~\ref{sec:algs:bi}).
+The baseline algorithm for solving simultaneous move games exactly is backward induction~(Subsection~\ref{sec:algs:bi}).
 %Therefore, we start our description of the algorithms focusing on algorithms based on the backward induction, then we introduce algorithms based on no-regret learning and Monte Carlo sampling.
-Afterwards we present a modification that exploits quick calculation of upper and lower bounds in a simultaneous move game~(Section~\ref{sec:algs:biab}).
-Then, we further improve the algorithm by speeding up the calculation of NE in stage games, exploiting the iterative framework known as the double-oracle algorithm~(Section~\ref{sec:algs:doab}).
-In Section~\ref{sec:algs:smmcts} we describe Monte Carlo tree search for simultaneous move games. 
-Finally, we present counterfactual regret minimization and its sampling variant outcome sampling in Section~\ref{sec:algs:cfros}. 
+Afterwards we present a modification that exploits quick calculation of upper and lower bounds in a simultaneous move game~(Subsection~\ref{sec:algs:biab}).
+Then, we further improve the algorithm by speeding up the calculation of NE in stage games, exploiting the iterative framework known as the double-oracle algorithm~(Subsection~\ref{sec:algs:doab}).
+In Subsection~\ref{sec:algs:smmcts} we describe Monte Carlo tree search for simultaneous move games. 
+Finally, we present counterfactual regret minimization and its sampling variant outcome sampling in Subsection~\ref{sec:algs:cfros}. 
 
 
 \subsection{Backward Induction}\label{sec:algs:bi}
@@ -236,7 +236,7 @@ The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:br}.
 %\mlanctot{Shouldn't the recursive call in 12 of Algorithm \ref{alg:br} be something line BR(...) rather the double-oracle(...)? Also, the function name should be put into the caption as with the other ones.}
 %bbosansky: not really, this is actually solving a subgame; hence, DOab is called on the subgame 
 The goal of the algorithm is to find the best action from the original unrestricted game against current strategy of the opponent $\delta'$. 
-Throughout the algorithm we use, as before, $v^i_{s'}$ to denote the upper bound of the value of the sub-game rooted in state $s'$ calculated using alpha-beta$(s',i)$. These values are calculated on demand, i.e., they are calculated once needed and cached until the game for state $s$ is not solved.
+Throughout the algorithm we use, as before, $v^i_{s'}$ to denote the upper bound of the value of the subgame rooted in state $s'$ calculated using alpha-beta$(s',i)$. These values are calculated on demand, i.e., they are calculated once needed and cached until the game for state $s$ is not solved.
 Moreover, once the algorithm calculates the exact value of a particular subgame, both upper and lower bounds are updated to be equal to actual value of the game. 
 
 The algorithm iteratively examines all actions of player $i$ from the unrestricted game (line~\ref{alg:br:start}). 
@@ -256,7 +256,7 @@ When extracting strategies from the double-oracle algorithm with serialized alph
 %\bbosansky{It seems to me that the two parts (BI / sampling) are quite uneven in terms of details and readability. The first part is quite verbose with examples, while MCTS and OOS are quite condensed and more difficult to follow. It would be good to rewrite add some more text description and intuition into MCTS/OOS (it is encouraged in the AIJ submission info to be less heavy and provide intuition).} 
 %\mlanctot{Agree. I will do this.}
 
-In the following sections we move to approximative algorithms.
+In the following subsections we move to approximative algorithms.
 Monte Carlo Tree Search (MCTS) is a simulation-based state space search algorithm often used
 in game trees. The nodes in the tree represent game states. The main idea is to iteratively run
 simulations to a terminal state, incrementally growing a tree rooted at the initial state of the game. In
@@ -370,7 +370,7 @@ However, one of the issues when using UCT in game trees is an underspecified beh
 This may have a significant impact on the performance of the UCT in simultaneous move games. 
 Consider the matrix game at the right of Figure~\ref{fig:egMatrixGames}. 
 This game has only one NE, such that both players play the first action. However, UCT selecting the first or the last action among the options with the same value will always get only the rewards 0 and the bias term will cause the players to round-robin over the diagonal indefinitely. This is clearly not optimal, as each player can than improve by playing first action with probability 1. However, if we choose the action to play randomly among the tied actions (where ``tied'' could be defined as being within a small tolerance gap), UCT will quickly converge to the optimal solution in this game. 
-We will experimentally analyze the impact of this randomization on the example used in~\cite{Shafiei09} and show that if a randomized variant of UCT is used, the algorithm still does not converge to a NE but does converges to a strategy that is much closer to a NE than without randomization (see Section~\ref{sec:exp:brps}).
+We will experimentally analyze the impact of this randomization on the example used in~\cite{Shafiei09} and show that if a randomized variant of UCT is used, the algorithm still does not converge to a NE but does converges to a strategy that is much closer to a NE than without randomization (see Subsection~\ref{sec:exp:brps}).
 Therefore, unless stated otherwise, we use the randomized variant in our implementation.
 
 Even though UCT is not guaranteed to converge to the optimal solution, it is often very successful in practice.
@@ -534,7 +534,7 @@ designed for simultaneous move games~\cite{Lanctot13Goofspiel}.
 \begin{algorithm2e}[t!]
 \small
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\Input{$s$ -- current state of the game; $i$ -- current player; $\pi_i$ -- reach probability for player $i$; $\pi_{-i}$ -- reach probability for opponent of $i$, $p$ -- probability of smapling $s$}
+\Input{$s$ -- current state of the game; $i$ -- current player; $\pi_i$ -- reach probability for player $i$; $\pi_{-i}$ -- reach probability for opponent of $i$, $p$ -- probability of sampling $s$}
 \Output{$(x,q,u_i)$: $x$ -- tail probability ($\pi(h,z)$); $q$ -- sample probability ($q(z)$); $u_i$ -- utility of the leaf}
   \lIf{$s \in Z$}{\Return $(1, p, u_i(s))$\;} \label{alg:terminal}
   \ElsIf{$s \in \cC$ is a chance node}{
@@ -547,7 +547,7 @@ designed for simultaneous move games~\cite{Lanctot13Goofspiel}.
     Sample action $a_i$ from $\sigma'_i$\;
     $\sigma_{-i} \gets $ RegretMatching$(R_{-i}(s))$\;
     Sample action $a_{-i}$ from $\sigma_{-i}$\;
-    $(x,q,u_i) \gets $SM-OOS$(\cT(s,a_i,a_{-i}), \sigma_i(a_i)\pi_i, \sigma_{-i}(a_{-i})\pi_{-i},\sigma'_i(a_i)\sigma_{-i}(a_{-i}) p)$\;
+    $(x,q,u_i) \gets $ SM-OOS$(\cT(s,a_i,a_{-i}), \sigma_i(a_i)\pi_i, \sigma_{-i}(a_{-i})\pi_{-i},\sigma'_i(a_i)\sigma_{-i}(a_{-i}) p)$\;
   }
   \Else{
     Add $s$ to the tree\;
@@ -559,7 +559,7 @@ designed for simultaneous move games~\cite{Lanctot13Goofspiel}.
   }
   $c \gets x \cdot \sigma_{-i}(a_{-i})$\;
   $x \gets c \cdot \sigma_{i}(a_{i})$\;
-  $W \gets u \pi_{-i}~/~q$\;
+  $W \gets u_i \pi_{-i}~/~q$\;
   $R_i(s,a_i) \gets  R_i(s,a_i) + (c-x)W$\;
   $\forall a\in\cA_i(s)\setminus\{a_i\} \;\; R_i(s,a) \gets R_i(s,a) - x W$\;
   $S_{-i}(s) \gets S_{-i}(s) + \tfrac{1}{p}\pi_{-i}\sigma_{-i}$\;
@@ -572,6 +572,6 @@ The game tree is incrementally built, starting only with one node for the root g
 Each node stores for each player: $R_i(s)$ the cumulative regret $R^T(I,a)$ for information set $I$ of player $i$ in state $s$ and each action, 
 and average strategy table $S_i(s)$, which stores the cumulative average strategy contribution for each action.
 
-The algorithm runs iterations from a starting state to the end of the game until it uses the given time limit. Each iteration is performed by the function presented in Algorithm~\ref{alg:oos}, which recursively descends down the tree. In the root of the game, the function is run as SM-OOS$(root, i, 1, 1, 1)$, alternating player $i\in\{1,2\}$ in each iteration. If the function reaches a terminal history of the game (line~1), it returns the utility of the terminal node for player $i$, the sampling probability of reaching this state $p$ and $1$ for the tail probability. If it reaches a chance node, is recursively continues after a randomly selected chance outcome (lines~3-4). If none of the first two conditions holds, the algorithm reaches a state where players make decisions. If this state is already included in the incrementally built tree (line~5), the following state is selected based on the cumulative regrets stored in the tree by regret matching with $\epsilon$-on-policy sampling strategy for player $i$ (lines~6-8) and the exact regret matching strategy for player $-i$ (lines~9-10). The recursive call on line~11 then updates the player's reach probabilities directly with the strategy from regret matching and the sampling probability with the modified strategy $\sigma_i'$. If the reached node is not in the tree (line~12), it is added and an action for each player is selected based on the uniform distribution (lines~14-17). Afterwards, random rollout of the game until a terminal node is initiated on line~18. The rollout is similar to the MCTS case, but in addition, it has to compute the probabilities $x$ and $q$ required by the definition of the sampled counterfactual value. Whether the current node was in the tree or not, the algorithm updates the regret table of player $i$ based on the definition of sampled counterfactual regret (lines~19-23) and the mean strategy of player $-i$ (line~24). For both players, the update is as if they actually decided first in the extensive form game representation of the simultaneous move game (see Section~\ref{sec:smg}). The value $W$ on line~21 are all the constant terms of equation~(\ref{eq:scv}) and $(c-x)$ represents the difference between the used strategy $\sigma_i$ and playing $a_i$ with probability $1$.
+The algorithm runs iterations from a starting state until it uses the given time limit. A single iteration is depicted in Algorithm~\ref{alg:oos}, which recursively descends down the tree. In the root of the game, the function is run as SM-OOS$(root, i, 1, 1, 1)$, alternating player $i\in\{1,2\}$ in each iteration. If the function reaches a terminal history of the game (line~1), it returns the utility of the terminal node for player $i$, the sampling probability of reaching this state $p$ and $1$ for the tail probability. If it reaches a chance node, is recursively continues after a randomly selected chance outcome (lines~3-4). If none of the first two conditions holds, the algorithm reaches a state where players make decisions. If this state is already included in the incrementally built tree (line~5), the following state is selected based on the cumulative regrets stored in the tree by regret matching with $\epsilon$-on-policy sampling strategy for player $i$ (lines~6-8) and the exact regret matching strategy for player $-i$ (lines~9-10). The recursive call on line~11 then updates the player's reach probabilities directly with the strategy from regret matching and the sampling probability with the modified strategy $\sigma_i'$. If the reached node is not in the tree (line~12), it is added and an action for each player is selected based on the uniform distribution (lines~14-17). Afterwards, random rollout of the game until a terminal node is initiated on line~18. The rollout is similar to the MCTS case, but in addition, it has to compute the probabilities $x$ and $q$ required by the definition of the sampled counterfactual value. Regardless on whether the current node was in the tree or not, the algorithm updates the regret table of player $i$ based on the definition of sampled counterfactual regret (lines~19-23) and the mean strategy of player $-i$ (line~24). For both players, the update is as if they actually decided first in the extensive form game representation of the simultaneous move game (see Section~\ref{sec:smg}). The value $W$ on line~21 are all the constant terms of equation~(\ref{eq:scv}) and $(c-x)$ represents the difference between the used strategy $\sigma_i$ and playing $a_i$ with probability $1$.
 Finally, the function returns the correct probabilities to the upper level of the tree.
 

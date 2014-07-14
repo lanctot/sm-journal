@@ -49,7 +49,7 @@ A slightly modified variant of the algorithm can also be applied to simultaneous
 games (e.g., see \cite{Ross71Goofspiel,buro2003,Rhoads12Computer}). 
 %\bbosansky{We do need some better reference here.}) 
 % mlanctot: added the Ross 1971 paper; as far as I know it's the earliest one. Would be nice to have a text book cover this.
-The algorithm searches through the game tree in the depth-first manner and after computing the values of all the succeeding sub-games, it solves the normal-form game corresponding to this state (i.e., computes a NE of the matrix game in the current state of the game), and propagates the calculated game value to the predecessor. The result of the backward-induction algorithm is a refinement of NE called \emph{subgame-perfect Nash equilibrium}. 
+The algorithm searches through the game tree in the depth-first manner and after computing the values of all the succeeding subgames, it solves the normal-form game corresponding to this state (i.e., computes a NE of the matrix game in the current state of the game), and propagates the calculated game value to the predecessor. The result of the backward-induction algorithm is a refinement of NE called \emph{subgame-perfect Nash equilibrium}. 
 
 There are two notable algorithms that improve the standard backward induction in simultaneous move games. 
 First is an algorithm by Saffidine et al.~\cite{Saffidine12SMAB} termed simultaneous move alpha-beta algorithm (SMAB). 
@@ -65,7 +65,7 @@ SMAB outperforms classical backward induction, however, the computational speed-
 % bbosansky: Ok, I agree.
 
 The second exact algorithm that is significantly faster compared to the classical backward induction was introduced in~\cite{Bosansky13Using}.
-This algorithm is described in detail in Section~\ref{sec:doab}. The main idea is to integrate two key components: (1) instead of evaluating all successors in each state of the game and solving a normal-form game, the algorithm exploits the iterative framework known in game theory as double-oracle algorithm~\cite{McMahan03Planning}; (2) the algorithm computes bounds on the utility values of the successors by serializing the sub-games and running classical alpha-beta algorithm. 
+This algorithm is described in detail in Subsection~\ref{sec:doab}. The main idea is to integrate two key components: (1) instead of evaluating all successors in each state of the game and solving a normal-form game, the algorithm exploits the iterative framework known in game theory as double-oracle algorithm~\cite{McMahan03Planning}; (2) the algorithm computes bounds on the utility values of the successors by serializing the subgames and running classical alpha-beta algorithm. 
 
 Finally, since simultaneous move games can be seen as standard extensive-form games with imperfect information, one can use techniques 
 designed for large imperfect information games. 
@@ -87,8 +87,8 @@ Most of the successful applications use classical exploration/exploitation formu
 
 Despite this success, Shafiei et al. in \cite{Shafiei09} provide a counter-example showing that this straightforward application of UCT does not
 converge to NE even in the simplest simultaneous move games and that a player playing a NE can exploit this strategy. Another variant of UCT, which has been applied to  Tron~\cite{Samothrakis10Tron}, builds the tree as if the players were moving sequentially giving one of the players an informational advantage. This approach also cannot converge to NE in general. For this reason, other variants of MCTS were considered for simultaneous move games. Teytaud and Flory describe a search algorithm for games with short-term imperfect information~\cite{Teytaud11Upper}, which are a generalization of simultaneous move games. Their algorithm uses a different selection strategy, called Exp3~\cite{Auer2003Exp3},
-and was shown to work well in the Internet card game Urban Rivals. We provide details of these two main existing selection functions in Sections~\ref{sec:duct} and~\ref{sec:exp3}.
-A more thorough experimental investigation of different selection policies including UCB, UCB1-Tuned, UCB1-greedy, Exp3, and more is reported in the game of Tron \cite{Perick12Comparison}. The work by Lanctot et al.~\cite{Lanctot13Goofspiel} compares some of these variants and proposes Online Outcome Sampling, a search version of Monte Carlo CFR~\cite{Lanctot09Sampling}, which computes an approximate equilibrium strategy with high probability. We give the technical details in Sections~\ref{sec:rm} and \ref{sec:oos}.
+and was shown to work well in the Internet card game Urban Rivals. We provide details of these two main existing selection functions in Subsections~\ref{sec:duct} and~\ref{sec:exp3}.
+A more thorough experimental investigation of different selection policies including UCB, UCB1-Tuned, UCB1-greedy, Exp3, and more is reported in the game of Tron \cite{Perick12Comparison}. The work by Lanctot et al.~\cite{Lanctot13Goofspiel} compares some of these variants and proposes Online Outcome Sampling, a search version of Monte Carlo CFR~\cite{Lanctot09Sampling}, which computes an approximate equilibrium strategy with high probability. We describe this algorithm in Subsection~\ref{sec:oos}.
 Finally, Lisy et al.~\cite{lisy2013-nips} present variants of MCTS that provably converge to Nash equilibria in simultaneous move games, in general, using any regret-minimizing algorithm at each stage, showing observed worst-case behavior in several cases. 
 
 There have been two recent studies that examine the head-to-head performance of these variants in practice. 
