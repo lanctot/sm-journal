@@ -535,7 +535,7 @@ designed for simultaneous move games~\cite{Lanctot13Goofspiel}.
 \small
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \Input{$s$ -- current state of the game; $i$ -- current player; $\pi_i$ -- reach probability for player $i$; $\pi_{-i}$ -- reach probability for opponent of $i$, $p$ -- probability of sampling $s$}
-\Output{$(x,q,u_i)$: $x$ -- tail probability ($\pi(h,z)$); $q$ -- sample probability ($q(z)$); $u_i$ -- utility of the leaf}
+\Output{$(x,q,u_i)$: $x$ -- tail probability ($\pi^{\sigma}(h,z)$); $q$ -- sample probability ($q(z)$); $u_i$ -- utility of the leaf}
   \lIf{$s \in Z$}{\Return $(1, p, u_i(s))$\;} \label{alg:terminal}
   \ElsIf{$s \in \cC$ is a chance node}{
     Sample $s'$ with from $\Delta_c(s)$ \;
@@ -555,7 +555,7 @@ designed for simultaneous move games~\cite{Lanctot13Goofspiel}.
     Sample action $a_{i}$ from $\sigma_{i}$\;
     $\forall a\in \cA_{-i}(s)\; \sigma_{-i}(a) \gets \tfrac{1}{|\cA_{-i}(s)|}$\;
     Sample action $a_{-i}$ from $\sigma_{-i}$\;
-    $(x,q,u_i) \gets$ OOS-Rollout$(\cT(s,a_i,a_{-i}), p \cdot \tfrac{1}{|\cA_i(h)|}\tfrac{1}{|\cA_{-i}(h)|})$\label{alg:oos:rollout}\;
+    $(x,q,u_i) \gets$ OOS-Rollout$(\cT(s,a_i,a_{-i}), p \cdot \tfrac{1}{|\cA_i(s)|}\tfrac{1}{|\cA_{-i}(s)|})$\label{alg:oos:rollout}\;
   }
   $c \gets x \cdot \sigma_{-i}(a_{-i})$\;
   $x \gets c \cdot \sigma_{i}(a_{i})$\;
@@ -571,6 +571,7 @@ designed for simultaneous move games~\cite{Lanctot13Goofspiel}.
 The game tree is incrementally built, starting only with one node for the root game state.
 Each node stores for each player: $R_i(s)$ the cumulative regret $R^T(I,a)$ for information set $I$ of player $i$ in state $s$ and each action, 
 and average strategy table $S_i(s)$, which stores the cumulative average strategy contribution for each action.
+Normalizing $S_i$ gives the resulting strategy of the algorithm for player $i$.
 
 The algorithm runs iterations from a starting state until it uses the given time limit. A single iteration is depicted in Algorithm~\ref{alg:oos}, which recursively descends down the tree. In the root of the game, the function is run as SM-OOS$(root, i, 1, 1, 1)$, alternating player $i\in\{1,2\}$ in each iteration. If the function reaches a terminal history of the game (line~1), it returns the utility of the terminal node for player $i$, the sampling probability of reaching this state $p$ and $1$ for the tail probability. If it reaches a chance node, is recursively continues after a randomly selected chance outcome (lines~3-4). If none of the first two conditions holds, the algorithm reaches a state where players make decisions. If this state is already included in the incrementally built tree (line~5), the following state is selected based on the cumulative regrets stored in the tree by regret matching with $\epsilon$-on-policy sampling strategy for player $i$ (lines~6-8) and the exact regret matching strategy for player $-i$ (lines~9-10). The recursive call on line~11 then updates the player's reach probabilities directly with the strategy from regret matching and the sampling probability with the modified strategy $\sigma_i'$. If the reached node is not in the tree (line~12), it is added and an action for each player is selected based on the uniform distribution (lines~14-17). Afterwards, random rollout of the game until a terminal node is initiated on line~18. The rollout is similar to the MCTS case, but in addition, it has to compute the probabilities $x$ and $q$ required by the definition of the sampled counterfactual value. Regardless on whether the current node was in the tree or not, the algorithm updates the regret table of player $i$ based on the definition of sampled counterfactual regret (lines~19-23) and the mean strategy of player $-i$ (line~24). For both players, the update is as if they actually decided first in the extensive form game representation of the simultaneous move game (see Section~\ref{sec:smg}). The value $W$ on line~21 are all the constant terms of equation~(\ref{eq:scv}) and $(c-x)$ represents the difference between the used strategy $\sigma_i$ and playing $a_i$ with probability $1$.
 Finally, the function returns the correct probabilities to the upper level of the tree.
