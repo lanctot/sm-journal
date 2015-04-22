@@ -1,0 +1,500 @@
+%% This is file `elsarticle-template-1-num.tex',
+%%
+%% Copyright 2009 Elsevier Ltd
+%%
+%% This file is part of the 'Elsarticle Bundle'.
+%% ---------------------------------------------
+%%
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%%
+%% The list of all files belonging to the 'Elsarticle Bundle' is
+%% given in the file `manifest.txt'.
+%%
+%% Template article for Elsevier's document class `elsarticle'
+%% with numbered style bibliographic references
+%%
+%% $Id: elsarticle-template-1-num.tex 149 2009-10-08 05:01:15Z rishi $
+%% $URL: http://lenova.river-valley.com/svn/elsbst/trunk/elsarticle-template-1-num.tex $
+%%
+\documentclass[preprint,12pt]{elsarticle}
+
+%% Use the option review to obtain double line spacing
+%% \documentclass[preprint,review,12pt]{elsarticle}
+
+%% Use the options 1p,twocolumn; 3p; 3p,twocolumn; 5p; or 5p,twocolumn
+%% for a journal layout:
+%% \documentclass[final,1p,times]{elsarticle}
+%% \documentclass[final,1p,times,twocolumn]{elsarticle}
+%% \documentclass[final,3p,times]{elsarticle}
+%% \documentclass[final,3p,times,twocolumn]{elsarticle}
+%% \documentclass[final,5p,times]{elsarticle}
+%% \documentclass[final,5p,times,twocolumn]{elsarticle}
+
+%% if you use PostScript figures in your article
+%% use the graphics package for simple commands
+%% \usepackage{graphics}
+%% or use the graphicx package for more complicated commands
+%% \usepackage{graphicx}
+%% or use the epsfig package if you prefer to use the old commands
+%% \usepackage{epsfig}
+
+%% The amssymb package provides various useful mathematical symbols
+\usepackage{graphicx}
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{nopageno}
+\usepackage{sidecap}
+
+\usepackage[algo2e, noend, noline, linesnumbered]{algorithm2e}
+%\DontPrintSemicolon
+
+\makeatletter
+\newcommand{\pushline}{\Indp}% Indent
+\newcommand{\popline}{\Indm}
+\makeatother
+\DeclareMathOperator{\pess}{pess}
+\DeclareMathOperator{\opti}{opti}
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+
+\captionsetup{compatibility=false}
+
+
+
+%\pgfplotsset{compat=newest}
+\usetikzlibrary{arrows,shapes,petri}
+
+\newcommand{\bE}{\mathbb{E}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cZ}{\mathcal{Z}}
+\newcommand{\eg}{{\it e.g.,}~}
+\newcommand{\ie}{{\it i.e.,}~}
+\newcommand{\defword}[1]{\textbf{\boldmath{#1}}}
+
+\definecolor{darkgreen}{RGB}{0,125,0}
+\newcounter{mwNoteCounter}
+\newcounter{mlNoteCounter}
+\newcounter{vlNoteCounter}
+\newcounter{bbNoteCounter}
+\newcounter{jcNoteCounter}
+\newcommand{\mwinands}[1]{{\small \color{blue} $\blacksquare$ \refstepcounter{mwNoteCounter}\textsf{[RGG]$_{\arabic{mwNoteCounter}}$:{#1}}}}
+\newcommand{\mlanctot}[1]{{\small \color{darkgreen} $\blacksquare$ \refstepcounter{mlNoteCounter}\textsf{[ML]$_{\arabic{mlNoteCounter}}$:{#1}}}}
+\newcommand{\vlisy}[1]{{\small \color{red} $\blacktriangle$ \refstepcounter{vlNoteCounter}\textsf{[VL]$_{\arabic{vlNoteCounter}}$:{#1}}}}
+\newcommand{\bbosansky}[1]{{\small \color{orange} $\blacktriangle$ \refstepcounter{bbNoteCounter}\textsf{[BB]$_{\arabic{bbNoteCounter}}$:{#1}}}}
+\newcommand{\jcermak}[1]{{\small \color{violet} $\blacktriangle$ \refstepcounter{jcNoteCounter}\textsf{[JC]$_{\arabic{jcNoteCounter}}$:{#1}}}}
+\renewcommand{\mwinands}[1]{}
+\renewcommand{\mlanctot}[1]{}
+\renewcommand{\vlisy}[1]{}
+\renewcommand{\bbosansky}[1]{}
+\renewcommand{\jcermak}[1]{}
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+\newcommand{\doab}[0]{\textrm{DO}\alpha\beta}
+\newcommand{\biab}[0]{\textrm{BI}\alpha\beta}
+\newcommand{\bdoab}[0]{\textrm{\bf DO}\boldsymbol{\alpha\beta}}
+\newcommand{\bbiab}[0]{\textrm{\bf BI}\boldsymbol{\alpha\beta}}
+
+
+%% The amsthm package provides extended theorem environments
+%% \usepackage{amsthm}
+
+%% The lineno packages adds line numbers. Start line numbering with
+%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
+%% for the whole article with \linenumbers after \end{frontmatter}.
+%% \usepackage{lineno}
+
+%% natbib.sty is loaded by default. However, natbib options can be
+%% provided with \biboptions{...} command. Following options are
+%% valid:
+
+%%   round  -  round parentheses are used (default)
+%%   square -  square brackets are used   [option]
+%%   curly  -  curly braces are used      {option}
+%%   angle  -  angle brackets are used    <option>
+%%   semicolon  -  multiple citations separated by semi-colon
+%%   colon  - same as semicolon, an earlier confusion
+%%   comma  -  separated by comma
+%%   numbers-  selects numerical citations
+%%   super  -  numerical citations as superscripts
+%%   sort   -  sorts multiple citations according to order in ref. list
+%%   sort&compress   -  like sort, but also compresses numerical citations
+%%   compress - compresses without sorting
+%%
+%% \biboptions{comma,round}
+
+% \biboptions{}
+
+\pagenumbering{arabic}
+\journal{Artificial Intelligence}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Why OOS converges faster, but RM plays better?}
+
+\end{frontmatter}
+
+\section{CFR simplification for SMGs}
+
+Each state in a SMG fully defines a subgame, which is itself a well defined extensive form game. Therefore, we can modify the algorithm to treat each node as if it is the root node of the game it is solving. This is especially useful if we want to progress in three during the match and continue the computation.
+
+Recall the definition of counterfactual value:
+\begin{equation}
+\label{eq:cfv}
+v_i(I,\sigma) = \sum_{(h,z) \in Z_I} \pi^{\sigma}_{-i}(h) \pi^{\sigma}(h,z) u_i(z), 
+\end{equation}
+
+
+\begin{lemma}
+If we apply the CFR family of algorithms in simultaneous move games, we can ignore the probability of reaching the current state (in SMG sense) and the convergence guarantees are still preserved.
+\end{lemma}
+\begin{proof}
+\emph{Player 1:}
+If we define 
+\begin{equation}
+v'_1(I,\sigma) = \sum_{(h,z) \in Z_I} \pi^{\sigma}(h,z) u_1(z),\;\; r'^{\sigma}(I,a)=v'_i(I,\sigma_{I\rightarrow a})-v'_i(I,\sigma),
+\end{equation}
+then $v_1(I,\sigma) = \pi^{\sigma}_{2}(h[I])v'_1(I,\sigma)$ and $r^\sigma(I,a)=\pi^{\sigma}_{2}(h[I])r'^\sigma(I,a)$, because there is only one history $h$ that reaches the information set $I$ of player 1. Hence,
+\begin{equation}
+R^T(I,a)=\sum_{t=1}^T r^{\sigma^t}(I,a) = \sum_{t=1}^T\pi^{\sigma^t}_{2}(h[I])r'^{\sigma^t}(I,a) \leq \sum_{t=1}^T r'^{\sigma^t}(I,a),
+\end{equation}
+because $\pi^{\sigma^t}_{2}(h[I]) \in [0,1]$. As a result, minimizing the cummulative regret based on $r'$ minimizes the counterfactual regret and therefore also the overall regret of the mean strategy in the game.
+
+\noindent
+\emph{Player 2:}
+If we define 
+\begin{equation}
+v'_2(I,\sigma) = \sum_{(ha,z) \in Z_I} \sigma_1(a)\pi^{\sigma}(ha,z) u_i(z),
+\end{equation}
+an argument analogical to the one above shows it is enough to minimize the cummulative regret defined based on $v'_2(I,\sigma)$.
+\end{proof}
+
+The proof above says that in CFR in a simultaneous move game, we can treat each inner node as if it was the root of the game in updates. We further assume that there is an empty history towards the current state in the game and we show that we can use the same update for both players, regardless of who is the first or second in the extensive form representation of the game. Recall the definition of sampled counterfactual regret for outcome sampling form \cite{Lanctot}
+\begin{equation}
+\tilde{r}^{\sigma}(I,a)=\left\{
+\begin{array}{ll}
+~~\frac{u_i(z)\pi^{\sigma}_{-i}(z[I])}{\pi^{\sigma'}(z)}(\pi^{\sigma}(z[I]a,z)-\pi^{\sigma}(z[I],z))& \mbox{if $a$ was sampled}\\ 
+-\frac{u_i(z)\pi^{\sigma}_{-i}(z[I])}{\pi^{\sigma'}(z)} \pi^{\sigma}(z[I],z)& \mbox{otherwise,}
+\end{array} \right.
+\end{equation}
+Where $\sigma'$ is the sampling distribution. Now we derive the formulas for the sampled counterfactual regret in simultaneous move game and alternating $\epsilon$-on policy sampling. In that case, $\sigma'$ is the strategy $\sigma$ for the player that updates the mean strategy and $(1-\gamma)\sigma + \frac{\gamma}{|A(I)|}\mathbf{1}$ for the player that updates the regrets.
+
+
+\emph{Player 1:} In case of the first player, we can just disregard the term $\pi^{\sigma}_{-i}(z[I])=1$ and assume the sample that eventually reaches $z$ starts with actions $a,b$ for the first and second player respectively.
+
+\begin{multline}
+\frac{u_1(z)\pi^{\sigma}_{2}(z[I])}{\pi^{\sigma'}(z)}(\pi^{\sigma}(z[I]a,z)-\pi^{\sigma}(z[I],z)) = 
+\frac{u_1(z)}{\pi^{\sigma'}(z)}\pi^{\sigma}(a,z)(1-\sigma(a))=\\
+\frac{u_1(z)}{\sigma'(a)\sigma(b)\pi^{\sigma'}(ab,z)}\pi^{\sigma}(ab,z)\sigma(b)(1-\sigma(a))=\\
+\frac{u_1(z)\pi^{\sigma}(ab,z)}{\pi^{\sigma'}(ab,z)}\cdot\frac{1-\sigma(a)}{\sigma'(a)}
+\end{multline}
+
+Similarly, we can derive the following:
+\begin{equation}
+\frac{u_1(z)\pi^{\sigma}_{2}(z[I])}{\pi^{\sigma'}(z)} \pi^{\sigma}(z[I],z)=
+\frac{u_1(z)\pi^{\sigma}(ab,z)}{\pi^{\sigma'}(ab,z)} \cdot\frac{\sigma(a)}{\sigma'(a)}
+\end{equation}
+
+\noindent
+\emph{Player 2:} For the second player, we can derive the exact same formulas. Assume that player 1 chose action $a$ and player 2 action $b$ on a sample to $z$. We have to take into account the history and reach probability within the current state $z[I]=a$ and $\pi^{\sigma}_{1}(z[I])=\sigma(a)$.
+\begin{multline}
+\frac{u_2(z)\pi^{\sigma}_{1}(z[I])}{\pi^{\sigma'}(z)}(\pi^{\sigma}(z[I]b,z)-\pi^{\sigma}(z[I],z))=
+\frac{u_2(z)\sigma(a)}{\pi^{\sigma'}(z)}\pi^{\sigma}(ab,z)(1-\sigma(b))=\\
+\frac{u_2(z)\sigma(a)}{\sigma(a)\sigma'(b)\pi^{\sigma'}(ab,z)}\pi^{\sigma}
+(ab,z)(1-\sigma(b))=
+\frac{u_2(z)\pi^{\sigma}(ab,z)}{\pi^{\sigma'}(ab,z)}\cdot\frac{1-\sigma(b)}{\sigma'(b)}
+\end{multline}
+
+Finally, for non-sampled action $b$ for the second player, we have
+\begin{equation}
+\frac{u_2(z)\pi^{\sigma}_{1}(z[I])}{\pi^{\sigma'}(z)} \pi^{\sigma}(z[I],z)=
+\frac{u_2(z)\pi^{\sigma}(ab,z)}{\pi^{\sigma'}(ab,z)} \cdot\frac{\sigma(b)}{\sigma'(b)}
+\end{equation}
+
+All regret updates include the term $\frac{\pi^{\sigma}(ab,z)}{\pi^{\sigma'}(ab,z)}$. In case of alternating outcome sampling, only the player that updates the regrets uses exploration, while the other one (and chance) always selects its action based on the current strategy. As a result, we can use $\frac{\pi^{\sigma}(ab,z)}{\pi^{\sigma'}(ab,z)} = \frac{\pi_i^{\sigma}(ab,z)}{\pi_i^{\sigma'}(ab,z)}$, which can help with numerical stability in case of selecting actions with very low probability.\\
+
+
+\noindent
+\emph{Mean strategy updates}
+In CFR, the updates of the mean strategies in an information set have to be weighted by the player's probability of reaching the information set. We argue we do not have to use this weighting in simultaneous move games. In any subgame, both information sets in the root of the subgame are always visited with probability 1. Therefore, CFR would just average the strategy in this subgame root without any weights. It would be guaranteed to converge to the optimal strategy in the subgame and in the root of the subgame in particular. Therefore, the algorithm without any mean strategy updates weights converges to the optimal strategy in all information sets.
+
+\subsection{Online Outcome Sampling} \label{sec:oos}
+
+Online Outcome Sampling (OOS) resembles MCTS in that it builds its tree incrementally, however the selection
+and update functions are based on outcome sampling MCCFR rather than on selection functions such as UCB or Exp3. The algorithm as applied to full
+imperfect information games is found in~\cite{Lanctot14OOS,Lisy15OOS}. Here, we describe a simplified version of this algorithm specifically designed for simultaneous move games.
+
+A previous version of this algorithm was presented by Lanctot et al.~\cite{Lanctot13Goofspiel}. The version presented here is simpler for implementation and it further reduces variance of the regret estimates, which leads to faster convergence and better game play. The main novelty in the presented variant is that in any states, it defines the counterfactual values as if the game actually started in this state. This is possible in simultaneous move games, because the optimal strategy in any state depends only on the part of the game below the state.
+
+% Note, mlanctot: \ElsIf breaks compilation for me but \ElseIf works
+%bb: Interestingly, \ElseIf does not work for me, but \ElsIf does ... maybe different versions of algorithm2e ?
+\begin{algorithm2e}[t!]
+\small
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\Input{$s$ -- current state of the game; $i$ -- regret updating player}
+\Output{$(x_i,q_i,u_i)$: $x_i$ -- $i$'s contribution to tail probability ($\pi^{\sigma}(h,z)$); $q_i$ -- $i$'s contribution to sample probability ($q(z)$); $u_i$ -- utility of the sampled leaf}
+  \lIf{$s \in Z$}{\Return $(1, 1, u_i(s))$\;} \label{alg:terminal}
+  \ElsIf{$s \in \cC$ is a chance node}{
+    Sample $s'$ from $\Delta_c(s)$ \;
+    \Return SM-OOS$(s', i)$\;
+  }
+  \If{$s$ already is in the incrementally built tree}{
+    $\sigma_i \gets $ RegretMatching$(R_i(s))$\;
+    $\forall a\in \cA_i(s)\; \sigma'_i(a) \gets (1-\epsilon)\sigma_i(a) + \tfrac{\epsilon}{|\cA_i(s)|}$\;
+    Sample action $a_i$ from $\sigma'_i$\;
+    $\sigma_{-i} \gets $ RegretMatching$(R_{-i}(s))$\;
+    Sample action $a_{-i}$ from $\sigma_{-i}$\;
+    $(x_i,q_i,u_i) \gets $ SM-OOS$(\cT(s,a_i,a_{-i}),i)$\;
+  }
+  \Else{
+    Add $s$ to the tree\;
+    $\forall a\in \cA_i(s)\; \sigma_i(a) \gets \tfrac{1}{|\cA_i(s)|}$\;
+    Sample action $a_{i}$ from $\sigma_{i}$\;
+    $\forall a\in \cA_{-i}(s)\; \sigma_{-i}(a) \gets \tfrac{1}{|\cA_{-i}(s)|}$\;
+    Sample action $a_{-i}$ from $\sigma_{-i}$\;
+    $(x_i,q_i,u_i) \gets$ OOS-Rollout$(\cT(s,a_i,a_{-i}))$\label{alg:oos:rollout}\;
+  }
+  $W \gets u_i \cdot x_i/q_i$\;
+  $R_i(s,a_i) \gets  R_i(s,a_i) + \frac{1-\sigma_i(a_i)}{\sigma'_i(a_i)}W$\;
+  $\forall a\in\cA_i(s)\setminus\{a_i\} \;\; R_i(s,a) \gets R_i(s,a) - \frac{\sigma_i(a_i)}{\sigma'_i(a_i)}W$\;
+  $S_{-i}(s) \gets S_{-i}(s) + \sigma_{-i}$\;
+  \Return $(x\cdot \sigma_i(a_i), q\cdot \sigma'_i(a_i), u_i)$\; \label{alg:returnend}
+  \vspace{0.1cm}
+  \caption{Simultaneous Move Online Outcome Sampling (SM-OOS)  \label{alg:oos}}
+\end{algorithm2e}
+
+
+The game tree is incrementally built, starting only with one node for the root game state.
+Each node stores for each player: $R_i(s)$ the cumulative regret $R^T(I,a)$ for information set $I$ of player $i$ in state $s$ and each action,
+and average strategy table $S_i(s)$, which stores the cumulative average strategy contribution for each action.
+Normalizing $S_i$ gives the resulting strategy of the algorithm for player $i$.
+
+The algorithm runs iterations from a starting state until it uses the given time limit. A single iteration is depicted in Algorithm~\ref{alg:oos}, which recursively descends down the tree. In the root of the game, the function is run as SM-OOS$(root, i)$, alternating player $i\in\{1,2\}$ in each iteration. If the function reaches a terminal history of the game (line~1), it returns the utility of the terminal node for player $i$, and $1$ for both the tail and sample probability contribution of $i$. If it reaches a chance node, it recursively continues after a randomly selected chance outcome (lines~3-4). If none of the first two conditions holds, the algorithm reaches a state where players make decisions. If this state is already included in the incrementally built tree (line~5), the following state is selected based on the cumulative regrets stored in the tree by regret matching with $\epsilon$-on-policy sampling strategy for player $i$ (lines~6-8) and the exact regret matching strategy for player $-i$ (lines~9-10). The recursive call on line~11 then continues the iteration until the end of the game tree. If the reached node is not in the tree (line~12), it is added and an action for each player is selected based on the uniform distribution (lines~14-17). Afterwards, random rollout of the game until a terminal node is initiated on line~18. The rollout is similar to the MCTS case, but in addition, it has to compute the probabilities $x_i$ and $q_i$ required to compute the sampled counterfactual value. Regardless on whether the current node was in the tree or not, the algorithm updates the regret table of player $i$ based on the simplified definition of sampled counterfactual regret for simultaneous move games (lines~19-21) and the mean strategy of player $-i$ (line~22).
+Finally, the function returns the updated probabilities to the upper level of the tree.
+
+
+\section{What is the actual difference between OOS and RM?}
+
+\begin{itemize}
+\item Both use RM in recursive manner, as if the current node is the root.
+\item RM does not identify if the result of a sample is caused by exploration or the intended strategy. The value of the sample is used for the update as it is. OOS separates the sampling probability $q$ and the tail probability $x$, which allows it to do the updates only based on the actual future strategy. On the other hand, it does not always use the sample for updates in root information sets. If there is any action in the sample, which is played only because of exploration and has probability 0 in the strategy, the sample is not used to update the regrets. In Tron(A,13,13), cca 85\% of samples do not update root with default exploration of 0.6. RM, on the other hand, eventually optimized against an opponent which is NE if not exploring and uniform if it is exploring.
+\item RM uses coupled, while OOS uncoupled dynamics. I.e., OOS does not use the information about which action the opponent chose and what utility it would get with this particular opponent actions for other choices of his actions. RM estimates this explicitly and uses it.
+\item Related to the previous point, RM computes means and uses them for updates. It introduces extra inertia to the convergence process.
+\item RM updates both player's strategies in each iteration, while OOS does not.
+
+\end{itemize}
+
+
+\section{New Experimental Results}
+\begin{scriptsize}
+GS 1 13 (my computer, 1000 runs)\\
+OOS vs. DRM   48.9(3.0)\\
+DRM vs. OOS   52.6(3.0)
+
+
+Tron 1 A 13 13 (my computer, less runs)\\
+OOS vs. DRM   29.2(6.5)\\
+DRM vs. OOS   73.9(5.7)
+
+GS 1 13 (metacentrum, 1000 runs)\\
+\begin{tabular}{|r|cccccc|}\hline
+1s&$\doab$&OOS&UCT(mix)&EXP3&RM&RAND\\\hline
+$\doab$&49.0(3.0)&49.1(3.0)&37.1(2.0)&24.0(1.8)&28.2(1.9)&88.7(1.3)\\
+OOS&50.8(3.2)&&46.1(3.0)&42.3(3.0)&42.5(3.0)&69.5(2.8)\\
+UCT(max)&62.4(2.9)&57.3(3.0)&48.3(3.0)&50.6(2.9)&50.7(2.9)&66.3(2.8)\\
+EXP3&76.3(2.5)&55.5(2.9)&48.3(2.9)&51.4(2.4)&42.9(2.6)&66.3(2.8)\\
+\textbf{RM}&\textbf{71.6(2.7)}&\textbf{56.8(2.9)}&\textbf{49.0(2.9)}&\textbf{56.1(2.6)}&\textbf{50.0(2.9)}&\textbf{66.2(2.8)}\\
+RAND&8.6(1.7)&28.6(2.8)&34.3(2.8)&29.1(2.7)&35.0(2.8)&49.6(3.1)\\
+\hline
+\end{tabular}
+
+GS 1 13 (metacentrum, 1000 runs)\\
+\begin{tabular}{|r|cccccc|}\hline
+1s&$\doab$&OOS(0.1)&UCT(mix)&EXP3&RM&RAND\\\hline
+$\doab$&49.0(3.0)&49.5(3.1)&37.1(2.0)&24.0(1.8)&28.2(1.9)&88.7(1.3)\\
+OOS(0.1)&49.6(3.2)&&50.1(3.0)&44.0(3.0)&42.0(3.0)&74.0(2.7)\\
+UCT(max)&62.4(2.9)&58.8(2.9)&48.3(3.0)&50.6(2.9)&50.7(2.9)&66.3(2.8)\\
+EXP3&76.3(2.5)&56.5(3.0)&48.3(2.9)&51.4(2.4)&42.9(2.6)&66.3(2.8)\\
+\textbf{RM}&\textbf{71.6(2.7)}&\textbf{56.2(3.0)}&\textbf{49.0(2.9)}&\textbf{56.1(2.6)}&\textbf{50.0(2.9)}&\textbf{66.2(2.8)}\\
+RAND&8.6(1.7)&26.4(2.7)&34.3(2.8)&29.1(2.7)&35.0(2.8)&49.6(3.1)\\
+\hline
+\end{tabular}
+
+OZ 1 50 3 1 (metacentrum, 1000 runs)\\
+\begin{tabular}{|r|cccccc|}\hline
+1s&$\doab$&OOS&UCT(mix)&EXP3&RM&RAND\\\hline
+$\bdoab$&\textbf{50.0(0.0)}&\textbf{78.7(2.5)}&\textbf{89.1(1.3)}&\textbf{89.2(1.3)}&\textbf{85.1(1.5)}&\textbf{98.8(0.5)}\\
+OOS&19.1(2.4)&&65.5(2.9)&76.2(2.5)&48.1(3.0)&98.5(0.7)\\
+UCT(max)&11.7(1.4)&77.2(2.3)&50.5(3.0)&55.3(2.1)&32.3(1.9)&94.0(1.0)\\
+EXP3&11.1(1.3)&27.0(2.6)&45.1(2.1)&48.9(3.0)&26.0(1.8)&94.2(0.9)\\
+RM&13.8(1.5)&51.4(3.0)&67.8(1.9)&75.5(1.8)&48.1(3.0)&99.0(0.4)\\
+RAND&1.3(0.5)&1.9(0.8)&5.6(1.0)&5.3(0.9)&0.7(0.3)&48.5(2.9)\\
+\hline
+\end{tabular}
+
+OZ 1 50 3 1 (metacentrum, 1000 runs)\\
+\begin{tabular}{|r|cccccc|}\hline
+1s&$\doab$&OOS(0.1)&UCT(mix)&EXP3&RM&RAND\\\hline
+$\bdoab$&\textbf{50.0(0.0)}&\textbf{76.5(2.6)}&\textbf{89.1(1.3)}&\textbf{89.2(1.3)}&\textbf{85.1(1.5)}&\textbf{98.8(0.5)}\\
+OOS(0.1)&20.1(2.5)&&70.5(2.8)&76.5(2.5)&49.4(3.0)&97.5(0.9)\\
+UCT(max)&11.7(1.4)&74.8(2.4)&50.5(3.0)&55.3(2.1)&32.3(1.9)&94.0(1.0)\\
+EXP3&11.1(1.3)&21.6(2.5)&45.1(2.1)&48.9(3.0)&26.0(1.8)&94.2(0.9)\\
+RM&13.8(1.5)&52.8(3.0)&67.8(1.9)&75.5(1.8)&48.1(3.0)&99.0(0.4)\\
+RAND&1.3(0.5)&2.8(1.0)&5.6(1.0)&5.3(0.9)&0.7(0.3)&48.5(2.9)\\
+\hline
+\end{tabular}
+
+Tron 1 A 13 13 (metacentrum, 1000 runs)\\
+\begin{tabular}{|r|cccccc|}\hline
+1s &$\doab$&OOS&UCT(mix)&EXP3&RM&RAND\\\hline
+$\bdoab$&\textbf{48.7(0.5)}&\textbf{82.7(2.0)}&\textbf{70.0(2.3)}&\textbf{63.4(2.4)}&\textbf{56.9(2.4)}&\textbf{97.9(0.7)}\\
+OOS&13.1(1.6)&&38.7(2.4)&34.8(2.4)&27.8(2.1)&95.9(0.9)\\
+UCT(max)&25.4(2.1)&82.2(1.9)&50.0(2.3)&42.0(2.3)&36.0(2.1)&97.8(0.7)\\
+EXP3&28.8(2.2)&63.3(2.4)&55.0(2.3)&49.6(2.3)&43.5(2.3)&97.8(0.7)\\
+RM&37.4(2.2)&74.4(2.0)&61.6(2.3)&54.6(2.3)&49.0(2.0)&97.7(0.7)\\
+RAND&1.4(0.5)&4.1(0.9)&3.5(0.8)&1.9(0.6)&2.4(0.7)&51.1(3.2)\\
+\hline
+\end{tabular}
+
+Tron 1 A 13 13 (metacentrum, 1000 runs)\\
+\begin{tabular}{|r|cccccc|}\hline
+1s &$\doab$&OOS(0.1)&UCT(mix)&EXP3&RM&RAND\\\hline
+$\bdoab$&\textbf{48.7(0.5)}&\textbf{73.7(2.4)}&\textbf{70.0(2.3)}&\textbf{63.4(2.4)}&\textbf{56.9(2.4)}&\textbf{97.9(0.7)}\\
+OOS(0.1)&19.8(2.0)&&52.9(2.5)&48.9(2.5)&40.4(2.4)&97.3(0.8)\\
+UCT(max)&25.4(2.1)&71.7(2.2)&50.0(2.3)&42.0(2.3)&36.0(2.1)&97.8(0.7)\\
+EXP3&28.8(2.2)&50.8(2.5)&55.0(2.3)&49.6(2.3)&43.5(2.3)&97.8(0.7)\\
+RM&37.4(2.2)&62.6(2.4)&61.6(2.3)&54.6(2.3)&49.0(2.0)&97.7(0.7)\\
+RAND&1.4(0.5)&3.0(0.8)&3.5(0.8)&1.9(0.6)&2.4(0.7)&51.1(3.2)\\
+\hline
+\end{tabular}
+
+PE 1-10 15 simple10x10 (metacentrum, 1000 runs)\\
+\begin{tabular}{|r|cccccc|}\hline
+1s&$\doab$&OOS&UCT(mix)&EXP3&RM&RAND\\\hline
+$\doab$&91.7(1.7)&94.0(1.5)&93.1(0.5)&89.0(0.6)&81.8(0.8)&99.6(0.1)\\
+OOS&78.2(2.6)&&95.1(1.3)&90.4(1.8)&82.3(2.4)&98.9(0.6)\\
+UCT(max)&78.7(0.8)&96.5(1.1)&91.9(1.7)&86.5(0.7)&78.0(0.8)&98.8(0.2)\\
+EXP3&76.1(0.8)&93.7(1.5)&91.7(0.5)&86.6(2.1)&78.9(0.8)&99.3(0.2)\\
+\textbf{RM}&\textbf{86.1(0.7)}&\textbf{93.8(1.5)}&\textbf{93.4(0.5)}&\textbf{90.2(0.6)}&\textbf{81.3(2.4)}&\textbf{99.2(0.2)}\\
+RAND&1.9(0.3)&35.7(3.0)&38.1(0.9)&8.0(0.5)&3.9(0.4)&70.9(2.8)\\
+\hline
+\end{tabular}
+
+\end{scriptsize}
+
+
+
+\section{Why RM plays better?}
+
+\subsection{H1: RM can exploit weak opponent's play better.}
+
+\subsubsection{Pro: RM does not disregard exploration.}
+
+One reason why H1 may be true is that RM does not include the probability tricks to remove regrets caused by exploration. Even after converging to the optimal strategy, both players still explore. If a player gets high reward just because the opponent is exploring, it is still used to update its strategy in RM, while this is ignored in OOS. This makes RM converge close to a trembling hand perfect NE, rather than any NE.
+
+This fact can be easily demonstrated on simple OZ(3,2,1) game. In the root of this game, playing 3 leads to loosing the game if the opponent plays 1. However, any distribution on 1 and 2 guarantees draw for each player. If we assume the players play optimally below the root, the situation in the root is the following:
+
+\begin{center}
+\begin{tabular}{c|c|c|c|}
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3}\\\cline{2-4}
+1& 0 & 0 & 1\\\cline{2-4}
+2& 0 & 0 & 0\\\cline{2-4}
+3&-1 & 0 & 0\\\cline{2-4}
+\end{tabular}
+\end{center}
+
+In this game, any probability distribution on actions 1 and 2 is part of a Nash equilibrium. However, there is only one trembling hand perfect equilibrium, which is playing 1 with probability 1. RM always quickly converges to playing 1 with probability over 99\%. OOS sometimes finds this equilibrium, but very often finds also the strategy of playing (1;2) with probabilities ($\frac{1}{2};\frac{1}{2}$).
+
+The reason for this is the different treatment of exploration samples by the algorithms. Assume the algorithms already learned that 3 is not a good action and play it only because of exploration. If RM explores action 3 for one player, the other player suffers large regret for not playing action 1. This regret is added to the cumulative regrets and never subtracted. Therefore, RM will eventually play 1 with probability 1 (the exploration is not stored to the mean strategy). However in OOS, if action 3 is explored by the second player, both tail probabilities $x$ and $c$ in the pseudocode become 0 and no update is performed. If it is explored by the first player, the reach probability $\pi_{-i}$ becomes zero and there is again no update of regrets. Therefore, if the action is not initially played by accident, it will never influence the regrets and the mean strategies towards playing 1.
+
+\subsubsection{Con: Performance against random player.}
+OOS performs much better against the random player in GS(13), which may indicate that it is able to exploit weak play. However, this can be also explained by exploiting explicitly the random player, as OOS tend to play more uniformly. This assumption should be measured. In other games, OOS performs worse against the random player.
+
+\subsubsection{Test: Playing an optimal player}
+
+A reasonably fast thing to do could be playing against a Nash equilibrium player. If RM still performs better, it is clear that the hypothesis H1 does not hold. There is nothing to exploit about NE player.
+
+\subsubsection{Test: Playing random player after full convergence}
+
+A fully converged strategy should be close to Nash equilibrium. If it performs better against a random player, it means that it is better off equilibrium. On equilibrium, the expected value should be the same.
+
+\subsubsection{Test: Area filling in Tron}
+If a player is certain to loose in 20 moves, it is equally rational to crush right away as to continue playing. OOS seems to do that. $\epsilon$-RM could help it.
+
+
+\subsection{H2: In case of equivalent pure and mixed NE strategy, RM converges to the pure strategies more often, which allows it to spend its samples more efficiently.}
+
+I am not sure this really holds. The example above would support this, but I can imagine a similar example, in which the ($\frac{1}{2};\frac{1}{2}$) strategy would be trembling hand perfect and OOS would still sometimes play the pure strategy.
+
+
+\subsubsection{Test: Number of actions played over time}
+
+Under the assumption that RM converges close to NE, the actions it removes and does not re-introduce are not necessary. We can measure the number of actions played with probability $>0.01$ over time. After 1s of computation, RM has much less actions like that. If they do not get reintroduced, it is likely the reason of good performance. If some actions need to be reintroduced, it may be the reason for worse convergence rate. Until they are back, the strategy is not improving in relevant parts of the game. We can measure both the mean and current strategy (without exploration).
+
+\subsubsection{Test: Real support size}
+
+After full convergence of the algorithm, compute the average number of actions used by each algorithm.
+
+\subsubsection{Test: Percentile actions}
+
+Measure how many actions are enough to cover 90\% of iterations.
+
+\subsubsection{Observation: Depth grows less close to game end}
+
+RM initially builds much deeper tree, while close to the end, OOS already has a deeper tree. It can be caused by RM usually winning, so that it can focus on the single winning strategy, while the OOS with worse position tries to find a way out which requires much more exploration.
+
+The difference in tree depths is mainly caused by the exploration. OOS(0.1) generally builds a deeper tree in GS(1,13) with 1s and also often has a smaller support. In GS(0,13) RM tree seems to be deeper AND with a larger support.
+
+
+\subsection{H3: RM is able to identify and remove the dominated strategies more quickly, but takes longer to identify the correct distribution over undominated.}
+
+\subsubsection{Test1: Actually compute the dominated strategies}
+
+There seem to be too few dominated actions. Even for weak dominance, the root of GS(13) has only 2 dominated actions. This is likely not the case.
+
+
+\subsection{H4: RM (or OOS with small exploration) tends to guess few actions and focus search to explore them better, which is good for game playing, but not ideal for convergence.}
+
+\subsection{H5: OOS wasted iterations}
+OOS does not use all iterations to update regrets. Particularly, once the tail probability $x$ becomes zero (i.e., exploring an action that is not played in the current strategy), it does not do any regret updates anymore. This may be really important with large exploration and pure strategies (e.g., OZ(50,3,1)). If exploration is 0.6, only one strategy is in the support and the depth of the tree in the memory is 20 states, only $0.4^10$ iterations update the root information sets strategy.
+
+A possible solution of this problem would be to restart the sample after such exploration attempt. While $x$ is 0, just try to select another action. There is no point (besides average strategy updates) to return to the root.
+
+
+\section*{References}
+\bibliographystyle{elsarticle-num}
+\bibliography{sm-journal}
+
+\end{document}
+
+%%
+%% End of file `elsarticle-template-1-num.tex'.
