@@ -90,6 +90,7 @@
 \newcommand{\eg}{{\it e.g.,}~}
 \newcommand{\ie}{{\it i.e.,}~}
 \newcommand{\defword}[1]{\textbf{\boldmath{#1}}}
+\newcommand{\reviewchange}[1]{{\color{blue}#1}}
 
 \definecolor{darkgreen}{RGB}{0,125,0}
 \newcounter{mwNoteCounter}
@@ -268,13 +269,13 @@ Much research has been devoted to developing algorithms that reason about or lea
 interactions. As an example, adversarial search has been a central topic of artificial intelligence 
 since the inception of the field itself, leading to very strong rational behavior in 
 Chess~\cite{Campbell02deepblue} and Checkers~\cite{Schaeffer96chinook}. Advances in machine learning for multi-step interactions 
-(\eg temporal difference learning) have led to self-play learning of evaluation function achieving master level play 
-in Backgammon~\cite{Tesauro95TDGammon}. 
+(\eg reinforcement learning) have led to self-play learning of evaluation function achieving master level play 
+in Backgammon~\cite{Tesauro95TDGammon} and super-human play in Atari~\cite{dqn2015}.
 
 The most common model for these multistage environments is one with strictly {\it sequential} 
 interactions. That is, each player chooses an action when it is their turn to act, and the environment 
 generates a new state, with the next player's turn to act, and so on. This model is sufficient in many 
-settings, such as Chess, Checkers, and Backgammon~\cite{AIbook}, but it is not a good representation of the 
+settings~\cite{AIbook}, such as in the examples used above, but it is not a good representation of the 
 environment when agents are allowed to act simultaneously, such as in real-world situations like auctions and 
 autonomous driving. 
 
@@ -296,18 +297,6 @@ in the previous work, and we also perform experiments on randomly generated game
 in number of possible actions, number of moves before the game ends, variance of the utility values,
 and whether and when the agents need to use mixed strategies in order to play optimally.
 
-% mlanctot: added this one
-% bbosansky: I have reworded mentioning UCT, since we have not discussed MCTS, nor UCB/UCT here
-% mlanctot: I added it back in (Mark mentioned it)-- it's very popular, I don't think it will be a problem
-Several contributions are made by this paper. First, we present a brief survey of the existing literature 
-for this class of games, much of which is recent work not covered in any other survey on this topic. 
-Second, we present detailed descriptions of recent exact~\cite{Bosansky13Using} and approximative 
-algorithms~\cite{Lanctot13Goofspiel,lisy2013-nips} to compute strategies for this class of games. 
-Third, we produce a detailed analysis of the original non-convergence results of a well-known approximative algorithm (UCT) 
-from \cite{Shafiei09}, showing its sensitivity and significant effect of deterministic coordination. 
-Lastly, we evaluate these algorithms in two different computational contexts (offline computation and online search) for 
-the first time, in five different games and over random games. 
-
 Our experimental comparison shows different performance of the algorithms in both cases.
 In the offline case, the fastest exact algorithms based on backward induction are able to solve the game very quickly. 
 In some cases, our novel algorithm ($\doab$) solves the game in less than 2\% of time required by standard backward 
@@ -318,13 +307,38 @@ find very good strategies to play within a few seconds, however, they are not we
 % mlanctot: OOS will, right? Are you referring to Biased RPS? This is not really new.. 
 %As we will show, even for a small game they may not converge to an exact solution in a reasonable time.
 
-The paper is structured as follows. In Section~\ref{sec:smg}, we present a formal introduction of simultaneous move games. 
+The paper is structured as follows. \reviewchange{First, we make explicit the contributions of the paper in Subsection~\ref{sec:contrib}.}
+In Section~\ref{sec:smg}, we present a formal introduction of simultaneous move games that we will use throughout the paper. 
 Section~\ref{sec:relwork} follows with a list and analysis of the existing algorithms in the related work. In 
 Section~\ref{sec:offline}, we describe in detail selected exact and approximative algorithms.
 We first describe the algorithms in the offline setting, followed by the necessary modifications used in the online 
 case described in Section~\ref{sec:online}.
+\reviewchange{In Section~\ref{sec:theory}, we discuss the theoretical guarantees and limitations of the algorithms.}
 In Section~\ref{sec:eval}, we turn to the experimental evaluation and present our results of comparing of the algorithms.
 Finally, we conclude in Section~\ref{sec:conc}.
+
+\reviewchange{
+\subsection{Novel Contributions}
+\label{sec:contrib}
+
+% mlanctot: added this one
+% bbosansky: I have reworded mentioning UCT, since we have not discussed MCTS, nor UCB/UCT here
+% mlanctot: I added it back in (Mark mentioned it)-- it's very popular, I don't think it will be a problem
+This paper presents detailed descriptions of recent exact~\cite{Bosansky13Using} and approximative
+algorithms~\cite{Lanctot13Goofspiel,lisy2013-nips} to compute strategies for two-player simultaneous move class of games.
+While the paper does act in some way as a survey of existing work in this area and as a means to present this previous work under a single unified framework, we also make several new contributions that have not been previously published.
+
+Original contributions made by this paper include:
+
+\begin{itemize}
+\item A new algorithm, $\epsilon$-minimax, a variant of Littman's Minimax-Q~\cite{Littman94markovgames} adapted for online search. (**Marc is considering implementing it.. is it too much?
+\item A new variant of Exp3 based on recent work (Exp3++ \cite{2014}). (**Marc is considering implementing it.. is it too much?)
+\item A detailed analysis of the original non-convergence results of a well-known approximative algorithm search algorithm UCT from \cite{Shafiei09}, showing its sensitivity and a significant detrimental effect caused by deterministic exploration.
+\item An analysis and evaluation of these algorithms in two different computational contexts: offline computation and online search, in five different games as well as random games.
+\item An equivalent and simplified version of Online Outcome Sampling~\cite{15aamas-iioos} and its analysis for the first time in two-player simultaneous move games.
+\end{itemize}
+
+}
 
 \section{Simultaneous Move Games}  \label{sec:smg}
 
@@ -341,6 +355,12 @@ Finally, we conclude in Section~\ref{sec:conc}.
 \section{Online Search} \label{sec:online}
 
 \input{online.tex}
+
+\reviewchange{
+\section{Theoretical Guarantees and Limitations}
+
+\input{theory.tex} \label{sec:theory}
+}
 
 \section{Empirical Evaluation} \label{sec:eval}
 

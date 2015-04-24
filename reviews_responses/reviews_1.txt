@@ -10,60 +10,41 @@
 > prevent the paper from being progressed with a minor revision. I waited longer for a third one, but
 > by looking at the reviews and the paper several times the current decision became clear to me, so that
 > I truncated the process, since I no longer needed to rely on another opinion to come to a conclusion.
->
+
+We thank all of the reviewers for their valuable feedback. Please find enclosed our resubmission. For ease of re-review, we have highlighted major portions of added/changed text.
+
 > My own impression is that the paper tends to has a survey character than representing a
 > focused set of state-of-the-art original technical contributions from the authors. This of
 > course has pros and cons as survey submissions are perfectly fine for AIJ. But then, the paper
 > is not organized as a survey.
->
+
+We agree that the paper does have (to some degree) a survey character in that it resumes existing algorithms published in different forums and venues. However, we feel that there are original technical contributions made by this paper (aside from simply organizing the information in one place). As such, we have chosen not to organize it as a survey paper. In this resubmission, we clarify the novel contributions that have not appeared in any preceeding paper by adding an explicit bullet-point list in the introduction.
+
 > The first reviewer said that he doesn't miss theory, but my judgement is that you should increase
 > insights to the theory, e.g., on correctness issues or running time efficiencies. What about
 > probabilistic completeness?
 >
 > As a result, I would like you to cristalize the contribution, elaborate on the theory/analysis,
 > follow the comments in detail and try a resubmission.
->
->
->
-> Reviewer #1: **********
-> * Part A *
-> **********
->
-> CONTENT
-> =======
->
-> Is the paper technically sound?
-> -------------------------------
->
-> YES. Mathematics and algorithmic descriptions are correct.
->
->
+
+We have clarified the contribution and specifically what are the novel contributions. We have added a section (Section 6) containing a theoretical discussion to increase the insights into the guarantees and limitations.
+
 > Is the work described original?
 > -------------------------------
 >
 > YES. The paper is basically a survey of work by the same authors (plus some further collaborators who are not coauthors of the present paper) previously published at various conferences and workshops. On the one hand, the present paper contains no new algorithms or theoretical analyses beyond what has been previously published by its authors, but it does contain an extensive empirical comparison of their algorithms and some pre-existing algorithms (in particular, UCT), that is, to my knowledge, novel.
->
->
-> Does it show sufficient applicability to AI?
-> --------------------------------------------
->
-> YES. Definitely relevant.
->
->
+
+There are new algorithms and new analyses beyond what has been previously published (and some additional ones have been added in this new submission). We have added a subsection (1.1) to the intro to clarify the novel contributions.
+
 > Does it place new results in appropriate context with earlier work?
 > -------------------------------------------------------------------
 >
 > YES. The algorithms discussed and evaluated also contain baseline backward induction (for exact solutions) and UCT and Exp3 (for approximate solutions). Related algorithmic literature is sufficiently discussed (maybe a bit too technically at times), although some discussion of existing theoretical results, especially regarding convergence of online approaches, would be appreciated.
->
->
-> Is the paper sufficiently novel? (A paper is novel if the results it describes
-> were not previously published by other authors, and were not previously published
-> by the same authors in any archival journal.)
-> ---------------------------------------------------------------------------------
->
-> YES. See above (originality).
->
->
+
+We believe the formality is necessary to make the algorithms precise. However, in this revision we have removed a number of technical details that obstructed the main message and did not add much value.
+
+We have added a section that contains discussion on theoretical results (Section 6).
+
 > Is the paper complete? (Generally, a paper is complete if it includes all relevant proofs
 > and/or experimental data, a thorough  discussion of connections with the existing literature,
 > and a convincing discussion of the motivations and implications of the presented work.)
@@ -72,83 +53,35 @@
 > YES (mostly). The paper is purely algorithmic and experimental, so the lack of theory and proofs is unproblematic (there is nothing to prove). What is do miss, though, is a more convincing discussion of what we really learn from the experimental results. We see numbers that tell us in which setting and which domain which algorithm performs best, but it is not always clear why this is the case. There are successful attempts in the paper at explaining some of the results informally, but I would have liked some more formal depth here. Reading the "future work" part of the paper, it becomes clear that the authors are aware of this limitation of their work. Still, it would be nice to know a bit more about the limitations of pruning using the various presented algorithms, and it would be nice to understand better why the fast convergence and low exploitability of OOS in the small game instances is such a poor predictor of its performance in the online setting. In Section 6.5.7,
 > the authors attempt at coming up with an explanation, but it is too speculative to be convincing.
 >
->
 > Does anything need to be added or deleted?
 > ------------------------------------------
 >
 > NO. Well, except for a better/deeper explanation of the different OOS behavior in offline and online settings. But that might already be beyond the scope of the present article.
 >
->
-> Is the result important enough to warrant publication?
-> ------------------------------------------------------
->
-> YES. Both in the offline and in the online setting, (some of) the presented algorithms clearly advance the state of the art.
->
->
-> Accessibility (Is the paper accessible to the broad readers of AIJ? Specifically:
-> Is the problem addressed in the paper, described in an accessible manner to readers of the journal?
-> Is it possible for an AI researcher, outside the specific area,  to assess its relevance to  AI in
-> general and  to their own research area, in particular?
-> Is enough background given (e.g., prior work, preliminaries, methodology) so an AI researcher outside
-> the specific area can appreciate the paper's contribution?)
-> -----------------------------------------------------------------------------------------------------
->
-> YES. The structure of the paper is excellent and preliminaries are introduced well. Also, the different settings that are discussed (backward vs. forward search, online vs. offline search) become sufficiently clear. The descriptions of the algorithms themselves are also mostly very good and readable. The chapter on experiments starts out with a discussion of all the benchmark domains, and for each individual experiment, the methodology is clearly described.
->
->
-> FORM
-> ====
->
-> Does the abstract adequately reflect the contents?
-> --------------------------------------------------
->
-> YES.
->
->
-> Does it contain adequate references to previous work?
-> -----------------------------------------------------
->
-> YES.
->
->
+
+We agree. We have added a significant amount of content based on these two previous comments. As a result, we believe the insight gained by the experiments and discussion have significantly improved.
+
 > Does it explain clearly what was done that is new?
 > --------------------------------------------------
 >
 > YES. When new concepts and ideas are presented, the authors succeed in clarifying in what respect they differ from previous work. A clearer separation of the description of previous work by other authors and the new contribution would be nice at some points, though.
->
->
+
+We agreed. (Section 1.1 has been added for this purpose.)
+
 > Does it clearly indicate why this work is important?
 > ----------------------------------------------------
 >
 > NO. It does mention general game playing and real-time decision making in physical environments as possible application areas of the algorithms, and I am convinced that this is correct, but still this could be elaborated upon. E.g., why not present a real-world case study besides the benchmark domains?
->
->
+
+(Hmm.. we need to think about this one. it might be more important than epsilon-Minimax and/or Exp3++. I'm not quite sure what we can do on this point, but I will think about it.)
+
 > Is the English satisfactory?
 > ----------------------------
 >
 > NO. At least one of the authors's English. It is possible to tell apart paragraphs by different authors by just observing whether the language is correct. The paragraphs not written by that particular author are fine. In the problematic paragraphs, the problem is mostly grammar (not vocabulary): definite and indefinite articles are incorrectly used and omitted, sometimes singular and plural are incorrectly used, plus some other minor mistakes. Fortunately, this only interferes with the reading flow but does not prevent understanding. Still, someone should re-read and correct the affected paragraphs.
->
->
->
-> Is the presentation otherwise satisfactory?
-> -------------------------------------------
->
-> YES.
->
->
-> Are there an appropriate number of figures?
-> -------------------------------------------
->
-> YES.
->
->
-> Do the figures help clarify the concepts in the paper?
-> ------------------------------------------------------
->
-> YES. Absolutely.
->
->
->
+
+Several full passes of the paper has been done by the native speaker and all of these problems have been fixed.
+
 > *****************************
 > * Part B: DETAILED COMMENTS *
 > *****************************
