@@ -73,7 +73,7 @@ We agreed. (Section 1.1 has been added for this purpose.)
 >
 > NO. It does mention general game playing and real-time decision making in physical environments as possible application areas of the algorithms, and I am convinced that this is correct, but still this could be elaborated upon. E.g., why not present a real-world case study besides the benchmark domains?
 
-(Hmm.. we need to think about this one. it might be more important than epsilon-Minimax and/or Exp3++. I'm not quite sure what we can do on this point, but I will think about it.)
+We believe that a real-world case study requires a full significant investigation of techniques and challenges that would reach beyond the scope of this paper. (Still TODO: However, we have elaborated on the importance and potential applicibality of this work in the introduction.)
 
 > Is the English satisfactory?
 > ----------------------------
