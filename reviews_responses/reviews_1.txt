@@ -154,7 +154,9 @@ Several full passes of the paper has been done by the native speaker and all of 
 > Yes (basically, it brings together the results of several conference
 > papers by the authors, but none of them were published in journals
 > before).
->
+
+We note that at the content of one of the papers has only been presented at a workshop. Also, the original analysis of the non-convergence results of UCT is also only in a workshop paper.
+
 > Is the paper complete? (Generally, a paper is complete if it includes all relevant proofs
 > and/or experimental data, a thorough  discussion of connections with the existing literature,
 > and a convincing discussion of the motivations and implications of the presented work.)
@@ -287,7 +289,9 @@ Several full passes of the paper has been done by the native speaker and all of 
 > "It guarantees the payoff of at least V*" -> Is that so? I thought
 > that's only the expected outcome. So, in a single game the actual
 > payoff may be much lower.
->
+
+Agreed, the wording here is ambiguous. What was meant was "It guarantees an _expected_ payoff of at least V*". This key word has now been added.
+
 > Fig. 2 referenced much later (after Fig. 3). Also, the entire
 > paragraph (i.e., 3 lines) referencing this are not much help. Either
 > properly introduce the concept of two-player finite-horizon Markov
