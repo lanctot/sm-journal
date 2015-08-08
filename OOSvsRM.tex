@@ -305,7 +305,7 @@ Finally, the function returns the updated probabilities to the upper level of th
 \section{What is the actual difference between OOS and RM?}
 
 \begin{itemize}
-\item Both use RM in recursive manner, as if the current node is the root.
+\item Because of importance sampling given by the probability of reaching a leaf, OOS has much higher variance of updates that RM, which uses importance sampling only on a single level.
 \item RM does not identify if the result of a sample is caused by exploration or the intended strategy. The value of the sample is used for the update as it is. OOS separates the sampling probability $q$ and the tail probability $x$, which allows it to do the updates only based on the actual future strategy. On the other hand, it does not always use the sample for updates in root information sets. If there is any action in the sample, which is played only because of exploration and has probability 0 in the strategy, the sample is not used to update the regrets. In Tron(A,13,13), cca 85\% of samples do not update root with default exploration of 0.6. RM, on the other hand, eventually optimized against an opponent which is NE if not exploring and uniform if it is exploring.
 \item RM uses coupled, while OOS uncoupled dynamics. I.e., OOS does not use the information about which action the opponent chose and what utility it would get with this particular opponent actions for other choices of his actions. RM estimates this explicitly and uses it.
 \item Related to the previous point, RM computes means and uses them for updates. It introduces extra inertia to the convergence process.
