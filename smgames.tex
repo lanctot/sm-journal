@@ -54,9 +54,9 @@ V^* = \max_{\sigma_1 \in \Sigma_1} \min_{\sigma_2 \in \Sigma_2} \bE_{z \sim \sig
 \end{equation}
 In other words, none of the players can improve their utility by deviating unilaterally. 
 For example, the Matching Pennies matrix game has a single state and the only equilibrium strategy is to mix equally between 
-both actions, \ie play with a {\it mixed strategy} (distribution) of $(0.5, 0.5)$ giving an expected payoff of $V^* = 0.5$.
+both actions, \ie play with a {\it mixed strategy}\footnote{\reviewchange{Notice that a pure strategy is also a mixed strategy that assigns probability 1 to a single action and probability 0 to every other action. However, as is standard in this literature, we will use the term ``mixed strategy'' to refer specifically to the case where no action is selected with probability 1.}} (distribution) of $(0.5, 0.5)$ giving an expected payoff of $V^* = 0.5$.
 Note that using a mixed (\ie randomized) strategy is necessary in this game.
-Any deterministic strategy of one player can be exploited by the opponent. 
+Any pure strategy of one player can be exploited by the opponent. 
 For the same reason, randomized strategies are often necessary also in the multi-stage simultaneous move games. 
 If the strategies also optimize Equation \ref{eq:ne} in each subgame starting in an arbitrary state, the equilibrium strategy 
 is termed subgame perfect.

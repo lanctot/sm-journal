@@ -119,9 +119,13 @@ Several full passes of the paper has been done by the native speaker and all of 
 > * Eq. 17: \pi_{-i}^{\sigma} and \pi^{\sigma} are undefined.
 >
 > * Section 4.5.1 is a bit hard to understand in full detail. If there is anything in the paper I found really hard to grasp, then it was this section.
->
+
+(Still TODO!) We have entirely rewrote this section with a new version of Online Outcome Sampling that is simpler and more efficient for this class of games. The implementation has also been simplified to reflect this change, and affected experiments have been rerun as well.
+
 > * Experiments: Usage of term "mixed strategy" confused me a bit, since each pure strategy is also a (trivial) mixed strategy.
->
+
+Every pure strategy is indeed also a mixed strategies, by definition. However, it is a convention in the games and game theory literature to refer to a mixed strategy as being in the set of mixed strategies minus the set of the pure strategies. We have made this clearer by added a note when first defining the terms.
+
 > * The evaluation function for Goofspiel looks wrong/weird. In the argument of tanh(), there are several divisions by zero that do actually occur at the beginning and the end of the game, respectively, and even if we interpret these situations in the limit, this would lead to eval-values of +/- 1 (after applying tanh), not 0, as claimed in the text for the beginning of the game. Uhm, okay, then the numerator is 0 as well. Anyway, this is somehow mathematically sloppy.
 >
 >
@@ -155,7 +159,7 @@ Several full passes of the paper has been done by the native speaker and all of 
 > papers by the authors, but none of them were published in journals
 > before).
 
-We note that at the content of one of the papers has only been presented at a workshop. Also, the original analysis of the non-convergence results of UCT is also only in a workshop paper.
+We note that at the content of one of the papers has only been presented at a workshop. Also, the original analysis of the non-convergence results of UCT was only in a workshop paper (and did not include the distinction between deterministic and stochastic tie-breaking that we include in this paper.)
 
 > Is the paper complete? (Generally, a paper is complete if it includes all relevant proofs
 > and/or experimental data, a thorough  discussion of connections with the existing literature,
