@@ -120,7 +120,9 @@ Several full passes of the paper has been done by the native speaker and all of 
 >
 > * Section 4.5.1 is a bit hard to understand in full detail. If there is anything in the paper I found really hard to grasp, then it was this section.
 
-(Still TODO!) We have entirely rewrote this section with a new version of Online Outcome Sampling that is simpler and more efficient for this class of games. The implementation has also been simplified to reflect this change, and affected experiments have been rerun as well.
+We have rewrote this section and present a new version of Online Outcome Sampling that is simpler, more efficient, and less prone to numerical instabilitiy specifically intended for this class of games. The implementation has also been simplified to reflect this change, and affected experiments have been rerun as well.
+
+Also, a more general version of the algorithm has been published since our initial writing (V. Lisy, M. Lanctot, and M. Bowling "Online Monte Carlo Counterfactual Regret Minimization for Search in Imperfect Information Games", 2015), which contains more background for the interested reader, which we have now pointed to.
 
 > * Experiments: Usage of term "mixed strategy" confused me a bit, since each pure strategy is also a (trivial) mixed strategy.
 

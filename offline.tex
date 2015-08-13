@@ -294,7 +294,7 @@ After four simulations, every cell in the root state has a value.
 \If{$s \in \cZ$} {
 	\Return $u_1(s)$\;
 }
-\If{$s \in \cC$} {
+\If{$s \in \cC$ is a chance node} {
         Sample $s' \sim \Delta_c(s)$\;
 	\Return SM-MCTS($s'$)\;
 }
@@ -456,7 +456,7 @@ $(b_1,b_2) \not= (a_1,a_2)$, or $u_1$ otherwise. The updates to the regret are:
 After all simulations, the strategy to play in state $s$ is defined by the mean strategy used in the corresponding node as in case of Exp3.
 
 \subsection{Counterfactual Regret Minimization and Outcome Sampling} \label{sec:algs:cfros}
-Finally, we describe algorithms based on Counterfactual Regret (CFR; a notion of regret at the information set level), first designed for extensive-form games with imperfect information~\cite{CFR} and tuned for simultaneous move games in~\cite{Lanctot13Goofspiel}.
+Finally, we describe algorithms based on Counterfactual Regret (CFR; a notion of regret at the information set level), first designed for extensive-form games with imperfect information~\cite{CFR} and first applied to simultaneous move games in~\cite{Lanctot13Goofspiel}.
 
 Define a {\it history} as a sequence of actions taken by all players (including chance) that starts from the beginning of the game. 
 A history $h'$ is a prefix of another history $h$, denoted $h' \sqsubset h$, if $h$ contains $h'$ (as a prefix sequence of actions).  
@@ -524,55 +524,80 @@ The required number of iterations for convergence is much larger, but each itera
 
 \subsubsection{Online Outcome Sampling} \label{sec:oos}
 
-Online Outcome Sampling (OOS) resembles MCTS in that it builds its tree incrementally, however the selection 
-and update functions are based on outcome sampling MCCFR rather than on selection functions such as UCB or Exp3. The algorithm as applied to full 
-imperfect information games is found in~\cite{Lanctot14OOS}. Here, we describe version specifically 
-designed for simultaneous move games~\cite{Lanctot13Goofspiel}. 
+We now present Online Outcome Sampling (OOS) for simultaneous move games. Note, importantly, that OOS is different from the general SM-MCTS
+algorithms presented in Section~\ref{sec:algs:smmcts}. OOS is an adaptation of a more general
+algorithm which has been proposed for search in imperfect information games~\cite{15aamas-iioos}. However, since simultaneous move games are 
+decomposable into subgames, the typical problems encountered in the fully imperfect information search setting are not present here. Hence, we present
+a simpler OOS specifically intended for simultaneous move games.
 
-% Note, mlanctot: \ElsIf breaks compilation for me but \ElseIf works
-%bb: Interestingly, \ElseIf does not work for me, but \ElsIf does ... maybe different versions of algorithm2e ?
+Online Outcome Sampling resembles MCTS in that it builds its tree incrementally. However the algorithm is based on MCCFR, from
+Section~\ref{sec:algs:cfros}, rather than on stochastic and adversarial bandits.
+A previous version of this algorithm for simultaneous move gameswas presented by Lanctot et al.~\cite{Lanctot13Goofspiel}. The version presented
+here is simpler for implementation and it further reduces variance of the regret estimates, which leads to faster convergence and better game play.
+The main novelty in this version is that in any state $s$, it defines the counterfactual values as if the game actually started in $s$. This is
+possible in simultaneous move games, because the optimal strategy in any state depends only on the part of the game below the state.
+
 \begin{algorithm2e}[t!]
 \small
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\Input{$s$ -- current state of the game; $i$ -- current player; $\pi_i$ -- reach probability for player $i$; $\pi_{-i}$ -- reach probability for opponent of $i$, $p$ -- probability of sampling $s$}
-\Output{$(x,q,u_i)$: $x$ -- tail probability ($\pi^{\sigma}(h,z)$); $q$ -- sample probability ($q(z)$); $u_i$ -- utility of the leaf}
-  \lIf{$s \in Z$}{\Return $(1, p, u_i(s))$\;} \label{alg:terminal}
+\Input{$s$ -- current state of the game; $i$ -- regret updating player}
+\Output{$(x_i,q_i,u_i)$: $x_i$ -- $i$'s contribution to tail probability ($\pi^{\sigma}(h,z)$); $q_i$ -- $i$'s contribution to sample probability ($q(z)$); $u_i$ -- utility of the sampled leaf}
+  \lIf{$s \in Z$}{\Return $(1, 1, u_i(s))$\;} \label{alg:oos:terminal}
   \ElsIf{$s \in \cC$ is a chance node}{
-    Sample $s'$ with from $\Delta_c(s)$ \;
-    \Return SM-OOS$(s', i, \pi_i, \pi_{-i} \cdot \Delta_c(s,s'), p \cdot \Delta_c(s,s'))$\;
+    Sample $s'$ from $\Delta_c(s)$ \;         \label{alg:oos:chance1}
+    \Return SM-OOS$(s', i)$\;                 \label{alg:oos:chance2}
   }
-  \If{$s$ already is in the incrementally built tree}{
-    $\sigma_i \gets $ RegretMatching$(R_i(s))$\;
-    $\forall a\in \cA_i(s)\; \sigma'_i(a) \gets (1-\epsilon)\sigma_i(a) + \tfrac{\epsilon}{|\cA_i(s)|}$\;
-    Sample action $a_i$ from $\sigma'_i$\;
-    $\sigma_{-i} \gets $ RegretMatching$(R_{-i}(s))$\;
+  \If{$s$ is already in OOS tree}{            \label{alg:oos:tree}
+    $\sigma_i \gets $ RegretMatching$(R_i(s))$\;  \label{alg:oos:rm1}
+    $\forall a\in \cA_i(s): \sigma'_i(s,a) \gets (1-\epsilon)\sigma_i(s,a) + \tfrac{\epsilon}{|\cA_i(s)|}$\;
+    Sample action $a_i$ from $\sigma'_i$\;        \label{alg:oos:rm2}
+    $\sigma_{-i} \gets $ RegretMatching$(R_{-i}(s))$\; \label{alg:oos:opprm1}
     Sample action $a_{-i}$ from $\sigma_{-i}$\;
-    $(x,q,u_i) \gets $ SM-OOS$(\cT(s,a_i,a_{-i}), \sigma_i(a_i)\pi_i, \sigma_{-i}(a_{-i})\pi_{-i},\sigma'_i(a_i)\sigma_{-i}(a_{-i}) p)$\;
+    $(x_i,q_i,u_i) \gets $ SM-OOS$(\cT(s,a_i,a_{-i}),i)$\; \label{alg:oos:opprm2}
   }
   \Else{
-    Add $s$ to the tree\;
-    $\forall a\in \cA_i(s)\; \sigma_i(a) \gets \tfrac{1}{|\cA_i(s)|}$\;
+    Add $s$ to the tree\; \label{alg:oos:addtree}
+    $\forall a\in \cA_i(s): \sigma_i(s,a) \gets \tfrac{1}{|\cA_i(s)|}$\;   \label{alg:oos:uniform1}
     Sample action $a_{i}$ from $\sigma_{i}$\;
-    $\forall a\in \cA_{-i}(s)\; \sigma_{-i}(a) \gets \tfrac{1}{|\cA_{-i}(s)|}$\;
+    $\forall a\in \cA_{-i}(s): \sigma_{-i}(s,a) \gets \tfrac{1}{|\cA_{-i}(s)|}$\; \label{alg:oos:uniform2}
+
     Sample action $a_{-i}$ from $\sigma_{-i}$\;
-    $(x,q,u_i) \gets$ OOS-Rollout$(\cT(s,a_i,a_{-i}), p \cdot \tfrac{1}{|\cA_i(s)|}\tfrac{1}{|\cA_{-i}(s)|})$\label{alg:oos:rollout}\;
+    $(x_i,q_i,u_i) \gets$ OOS-Rollout$(\cT(s,a_i,a_{-i}))$\label{alg:oos:rollout}\;
   }
-  $c \gets x \cdot \sigma_{-i}(a_{-i})$\;
-  $x \gets c \cdot \sigma_{i}(a_{i})$\;
-  $W \gets u_i \pi_{-i}~/~q$\;
-  $R_i(s,a_i) \gets  R_i(s,a_i) + (c-x)W$\;
-  $\forall a\in\cA_i(s)\setminus\{a_i\} \;\; R_i(s,a) \gets R_i(s,a) - x W$\;
-  $S_{-i}(s) \gets S_{-i}(s) + \tfrac{1}{p}\pi_{-i}\sigma_{-i}$\;
-  \Return $(x, q, u_i)$\; \label{alg:returnend}
+  $W \gets u_i \cdot x_i/q_i$\;  \label{alg:oos:update1}
+  $R_i(s,a_i) \gets  R_i(s,a_i) + \frac{1-\sigma_i(s,a_i)}{\sigma'_i(a_i)}W$\;
+  $\forall a\in\cA_i(s)\setminus\{a_i\}: R_i(s,a) \gets R_i(s,a) - \frac{\sigma_i(s,a_i)}{\sigma'_i(s,a_i)}W$\; \label{alg:oos:update2}
+  $S_{-i}(s) \gets S_{-i}(s) + \sigma_{-i}$\; \label{alg:oos:update3}
+  \Return $(x\cdot \sigma_i(s,a_i), q\cdot \sigma'_i(s,a_i), u_i)$\; \label{alg:returnend}
   \vspace{0.1cm}
   \caption{Simultaneous Move Online Outcome Sampling (SM-OOS)  \label{alg:oos}}
 \end{algorithm2e}
 
-The game tree is incrementally built, starting only with one node for the root game state.
+The pseudo-code is given in Algorithm~\ref{alg:oos}. The game tree is incrementally built, starting only with one node for the root game state.
 Each node stores for each player: $R_i(s)$ the cumulative regret $R^T(I,a)$ for information set $I$ of player $i$ in state $s$ and each action, 
 and average strategy table $S_i(s)$, which stores the cumulative average strategy contribution for each action.
 Normalizing $S_i$ gives the resulting strategy of the algorithm for player $i$.
 
-The algorithm runs iterations from a starting state until it uses the given time limit. A single iteration is depicted in Algorithm~\ref{alg:oos}, which recursively descends down the tree. In the root of the game, the function is run as SM-OOS$(root, i, 1, 1, 1)$, alternating player $i\in\{1,2\}$ in each iteration. If the function reaches a terminal history of the game (line~1), it returns the utility of the terminal node for player $i$, the sampling probability of reaching this state $p$ and $1$ for the tail probability. If it reaches a chance node, is recursively continues after a randomly selected chance outcome (lines~3-4). If none of the first two conditions holds, the algorithm reaches a state where players make decisions. If this state is already included in the incrementally built tree (line~5), the following state is selected based on the cumulative regrets stored in the tree by regret matching with $\epsilon$-on-policy sampling strategy for player $i$ (lines~6-8) and the exact regret matching strategy for player $-i$ (lines~9-10). The recursive call on line~11 then updates the player's reach probabilities directly with the strategy from regret matching and the sampling probability with the modified strategy $\sigma_i'$. If the reached node is not in the tree (line~12), it is added and an action for each player is selected based on the uniform distribution (lines~14-17). Afterwards, random rollout of the game until a terminal node is initiated on line~18. The rollout is similar to the MCTS case, but in addition, it has to compute the probabilities $x$ and $q$ required by the definition of the sampled counterfactual value. Regardless on whether the current node was in the tree or not, the algorithm updates the regret table of player $i$ based on the definition of sampled counterfactual regret (lines~19-23) and the mean strategy of player $-i$ (line~24). For both players, the update is as if they actually decided first in the extensive form game representation of the simultaneous move game (see Section~\ref{sec:smg}). The value $W$ on line~21 are all the constant terms of equation~(\ref{eq:scv}) and $(c-x)$ represents the difference between the used strategy $\sigma_i$ and playing $a_i$ with probability $1$.
-Finally, the function returns the correct probabilities to the upper level of the tree.
+The algorithm runs iterations from a starting state until it uses the given time limit. A single iteration is depicted in Algorithm~\ref{alg:oos},
+which recursively descends down the tree. In the root of the game, the function is run as SM-OOS$(root, i)$, alternating player $i\in\{1,2\}$ in
+each iteration. If the function reaches a terminal history of the game (line~\ref{alg:oos:terminal}), it returns the utility of the terminal node
+for player $i$, and $1$ for both the tail and sample probability contribution of $i$. If it reaches a chance node, it recursively continues after
+a randomly selected chance outcome (lines~\ref{alg:oos:chance1}-\ref{alg:oos:chance2}). If none of the first two conditions holds, the algorithm
+reaches a state where players make decisions. If this state is already included in the incrementally built tree (line~\ref{alg:oos:tree}), the
+following state is selected based on the cumulative regrets stored in the tree by regret matching with $\epsilon$-on-policy sampling strategy for
+player $i$ (lines~\ref{alg:oos:rm1}-\ref{alg:oos:rm2}) and the exact regret matching strategy for player $-i$ (lines~\ref{alg:oos:opprm1}-\ref{alg:oos:opprm2}).
+The recursive call on line~11 then continues the iteration until the end of the game tree. If the reached node is not in the tree,
+it is added (line~\ref{alg:oos:addtree}) and an action for each player is selected based on the uniform distribution
+(lines~\ref{alg:oos:uniform1}-\ref{alg:oos:uniform2}). Afterwards, random rollout of the game until a terminal node is initiated on line~\ref{alg:oos:rollout}.
+The rollout is similar to the MCTS case, but in addition, it has to compute the tail probability $x_i$ and sampling probability $q_i$
+required to compute the sampled counterfactual value.
+Regardless on whether the current node was in the tree or not, the algorithm updates the regret table of player $i$ based on the simplified definition of sampled counterfactual regret for simultaneous move games (lines~\ref{alg:oos:update1}-\ref{alg:oos:update2}) and the mean strategy of player $-i$ (line~\ref{alg:oos:update3}).
+Finally, the function returns the updated probabilities to the upper level of the tree.
+
+OOS appears similar to SM-MCTS using the RM selection mechanism (Section~\ref{sec:rm}). However, there are a number of differences:
+OOS uses importance sampling of a sequence of probabilities to keep its estimate unbiased, but will suffer higher variance than RM which uses only a one-step correction.
+RM does not distinguish whether its utility comes from exploration or otherwise, whereas OOS separates the two into tail probabilities of the strategy for the sequence
+sampled ($x_i$) and the sampling probability of the sequence ($q_i$); when $\sigma_i(s,a) = 0$, due to exploration, then $x_i = 0$ and value of the update increments
+are also $0$. RM uses coupled dynamics, whereas OOS is uncoupled, not requiring information about what action the opponent chose; RM uses the means from the subgames
+as estimates of utility for those subgames, which could introduce some bias in the estimation of subgame values. We further discuss the comparison in Section~\ref{sec:eval}.
 
