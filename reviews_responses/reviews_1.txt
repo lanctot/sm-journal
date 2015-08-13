@@ -129,30 +129,11 @@ Also, a more general version of the algorithm has been published since our initi
 Every pure strategy is indeed also a mixed strategies, by definition. However, it is a convention in the games and game theory literature to refer to a mixed strategy as being in the set of mixed strategies minus the set of the pure strategies. We have made this clearer by added a note when first defining the terms.
 
 > * The evaluation function for Goofspiel looks wrong/weird. In the argument of tanh(), there are several divisions by zero that do actually occur at the beginning and the end of the game, respectively, and even if we interpret these situations in the limit, this would lead to eval-values of +/- 1 (after applying tanh), not 0, as claimed in the text for the beginning of the game. Uhm, okay, then the numerator is 0 as well. Anyway, this is somehow mathematically sloppy.
->
->
->
-> Reviewer #2: AIJ Review Form
-> ===============
->
-> Part A
-> ------
->
-> Please answer the following questions "yes/no" and provide appropriate justification as appropriate.
->
-> CONTENT
->
-> Is the paper technically sound?
-> Yes.
->
+
+These cases were covered in the text that followed, but to be more precise and formal we now expressed eval(s) as a multicase function.
+
 > Is the work described original?
 > It is an overview of existing approaches.
->
-> Does it show sufficient applicability to AI?
-> Yes.
->
-> Does it place new results in appropriate context with earlier work?
-> Yes.
 >
 > Is the paper sufficiently novel? (A paper is novel if the results it describes
 > were not previously published by other authors, and were not previously published
@@ -161,59 +142,20 @@ Every pure strategy is indeed also a mixed strategies, by definition. However, i
 > papers by the authors, but none of them were published in journals
 > before).
 
-We note that at the content of one of the papers has only been presented at a workshop. Also, the original analysis of the non-convergence results of UCT was only in a workshop paper (and did not include the distinction between deterministic and stochastic tie-breaking that we include in this paper.)
+In addition, we note that at the content of one of the papers has only been presented at a workshop. Also, the original analysis of the non-convergence results of Decoupled UCT has also remained only in a workshop paper (and did not include the distinction between deterministic and stochastic tie-breaking that we include in this paper.)
 
-> Is the paper complete? (Generally, a paper is complete if it includes all relevant proofs
-> and/or experimental data, a thorough  discussion of connections with the existing literature,
-> and a convincing discussion of the motivations and implications of the presented work.)
-> Yes.
->
-> Does anything need to be added or deleted?
-> Yes.
->
-> Is the result important enough to warrant publication?
-> Yes.
->
-> Accesibility
-> --
-> Is the paper accessible to the broad readers of AIJ?
-> Yes.
->
-> Specifcally:
->
-> Is the problem addressed in the paper, described in an accessible manner to readers of the journal?
-> Yes.
->
-> Is it possible for an AI researcher, outside the specific area,  to assess its relevance to  AI in general and  to their own research area, in particular?
-> Yes.
->
 > Is enough background given (e.g., prior work, preliminaries, methodology) so an AI researcher outside the specific area can  appreciate the paper's contribution?
 > Largely yes, but some basics are missing, e.g., the notion of Nash
 > equilibria and the concept of dominance have not been introduced when
 > they are used.
 > ----
 >
-> FORM
->
-> Does the abstract adequately reflect the contents?
-> Yes.
-> Does it contain adequate references to previous work?
-> Yes.
-> Does it explain clearly what was done that is new?
-> Yes.
-> Does it clearly indicate why this work is important?
-> Yes.
 > Is the English satisfactory?
 > No.
+
 > Is the presentation otherwise satisfactory?
 > No. There are many small inconsistencies in the formalizations.
-> Are there an appropriate number of figures?
-> Yes.
-> Do the figures help clarify the concepts in the paper?
-> Yes.
->
->
->
+
 > Part B: DETAILED COMMENTS
 > -------------------------
 >

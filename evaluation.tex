@@ -105,11 +105,19 @@ We can see that the relative number of states with mixed strategies slowly decre
 In the last round, each player has only a single card; hence, there cannot be any mixed strategy.
 
 The evaluation function used in Goofspiel takes into consideration two components: (1) the difference in the current score for both players weighted by the current round in the game, and (2) the remaining cards in the deck weighted by a chance of winning these cards depending on the remaining cards on hand for each player. Formally, let $p_i$, $r$, $c_i$ be player $i$'s score (points), the current round, and the sum of values of player $i$'s remaining cards, respectively:
-$$
+
 %eval(s) = \tanh\left(\frac{\textrm{score}_1 - \textrm{score}_2}{\textrm{score}_1 + \textrm{score}_2}\cdot\frac{\textrm{round}}{d} + \frac{\textrm{remCards}_1 - \textrm{remCards}_2}{\textrm{remCards}_1 + \textrm{remCards}_2}\cdot\frac{\textrm{remCards}_c}{0.5\cdot d(d+1)}\right)
-eval(s) = \tanh\left(\frac{p_1 - p_2}{p_1 + p_2}\cdot\frac{r}{d} + \frac{c_1 - c_2}{c_1 + c_2}\cdot\frac{c_c}{0.5 \cdot d(d+1)}\right)
-$$
-$eval(s)$ is equal to $0$ in the beginning of the game (i.e., when $p_1 + p_2$ is $0$) and to the utility value of the game at the end (i.e., when $c_1 + c_2$ is $0$). We use $\tanh$ to scale the evaluation function into the interval $[-1,1]$.
+%\[ |x| = \left\{ \begin{array}{ll}
+%         x & \mbox{if $x \geq 0$};\\
+%        -x & \mbox{if $x < 0$}.\end{array} \right. \] 
+\[
+eval(s) = \left\{ \begin{array}{ll}
+  0      & \mbox{if $p_1 + p_2 = 0$ (start)};\\
+  u_1(s) & \mbox{if $c_1 + c_2 = 0$ (end)};\\
+  \tanh\left(\frac{p_1 - p_2}{p_1 + p_2}\cdot\frac{r}{d} + \frac{c_1 - c_2}{c_1 + c_2}\cdot\frac{c_c}{0.5 \cdot d(d+1)}\right) & \mbox{otherwise.} \end{array} \right.
+\]
+%$eval(s)$ is equal to $0$ in the beginning of the game (i.e., when $p_1 + p_2$ is $0$) and to the utility value of the game at the end (i.e., when $c_1 + c_2$ is $0$).
+We use $\tanh$ to scale the evaluation function into the interval $[-1,1]$.
 Moreover, if the position is clearly winning for one of the players (there is not enough cards to change the current score), the evaluation function is set to $1$, or $-1$.
 %\item[Oshi-Zumo]$(N,K,M)$ is a wrestling simulation game played on a discrete single-dimensional grid with
 %$2K+1$ positions, where each player starts with $N$ coins~\cite{buro2003}. A wrestler token begins in the middle
