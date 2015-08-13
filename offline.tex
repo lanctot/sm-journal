@@ -599,5 +599,5 @@ OOS uses importance sampling of a sequence of probabilities to keep its estimate
 RM does not distinguish whether its utility comes from exploration or otherwise, whereas OOS separates the two into tail probabilities of the strategy for the sequence
 sampled ($x_i$) and the sampling probability of the sequence ($q_i$); when $\sigma_i(s,a) = 0$, due to exploration, then $x_i = 0$ and value of the update increments
 are also $0$. RM uses coupled dynamics, whereas OOS is uncoupled, not requiring information about what action the opponent chose; RM uses the means from the subgames
-as estimates of utility for those subgames, which could introduce some bias in the estimation of subgame values. We further discuss the comparison in Section~\ref{sec:eval}.
+as estimates of utility for those subgames, which could introduce some bias in the estimators. We further discuss the comparison in Section~\ref{sec:eval}.
 
