@@ -23,7 +23,9 @@ We agree that the paper does have (to some degree) a survey character in that it
 > The first reviewer said that he doesn't miss theory, but my judgement is that you should increase
 > insights to the theory, e.g., on correctness issues or running time efficiencies. What about
 > probabilistic completeness?
->
+
+TODO!
+
 > As a result, I would like you to cristalize the contribution, elaborate on the theory/analysis,
 > follow the comments in detail and try a resubmission.
 
@@ -43,7 +45,7 @@ There are new algorithms and new analyses beyond what has been previously publis
 
 We believe the formality is necessary to make the algorithms precise. However, in this revision we have removed a number of technical details that obstructed the main message and did not add much value.
 
-We have added a section that contains discussion on theoretical results (Section 6).
+TODO: Add a paragraph summarizing the NIPS results + say something about online double-oracle. 
 
 > Is the paper complete? (Generally, a paper is complete if it includes all relevant proofs
 > and/or experimental data, a thorough  discussion of connections with the existing literature,
@@ -61,6 +63,8 @@ We have added a section that contains discussion on theoretical results (Section
 
 We agree. We have added a significant amount of content based on these two previous comments. As a result, we believe the insight gained by the experiments and discussion have significantly improved.
 
+TODO: Add Vilo's results of the variance analysis at the root and some discussion.
+
 > Does it explain clearly what was done that is new?
 > --------------------------------------------------
 >
@@ -73,7 +77,9 @@ We agreed. (Section 1.1 has been added for this purpose.)
 >
 > NO. It does mention general game playing and real-time decision making in physical environments as possible application areas of the algorithms, and I am convinced that this is correct, but still this could be elaborated upon. E.g., why not present a real-world case study besides the benchmark domains?
 
-We believe that a real-world case study requires a full significant investigation of techniques and challenges that would reach beyond the scope of this paper. (Still TODO: However, we have elaborated on the importance and potential applicibality of this work in the introduction.)
+We believe that a real-world case study requires a full significant investigation of techniques and challenges that would reach beyond the scope of this paper. 
+
+TODO: However, we have elaborated on the importance and potential applicibality of this work in the introduction.
 
 > Is the English satisfactory?
 > ----------------------------
@@ -103,9 +109,13 @@ Several full passes of the paper has been done by the native speaker and all of 
 > --------------
 >
 > * Description of Double-Oracle algorithm: I missed a remark about how much computational overhead is involved in incrementally updating LPs and solving them again. Also, I was wondering about how exactly you choose the initial restriction.
->
+
+TODO, @Vilo, Brano: can you answer this?
+
 > * Algorithms 3 and 4: BR(...) has different signatures in usage in Alg. 3 and definition in Alg. 4.
->
+
+Indeed, the usage in Algorithm 3 was missing the game as the first argument. This has now been fixed.
+
 > * Alg. 3: Before line 3, v_s^{i} and v_s^{-i} should somehow be initialized.
 >
 > * Alg. 4: \lambda_{a_i} needs a clearer explanation.

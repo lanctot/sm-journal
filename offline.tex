@@ -183,8 +183,8 @@ initialize $\cA'_i$, $\cA'_{-i}$ with arbitrary actions from $\cA_i, \cA_{-i}$\;
 		}	
 	}
 	$\left\langle v_s, \delta' \right\rangle \leftarrow $ solve matrix game $A'$\; \label{alg:doab:NE}
-	$\left\langle v^{BR}_i, a^{BR}_{i} \right\rangle \leftarrow $ BR$(i, \delta'_{-i}, \beta_s)$\;\label{alg:doab:br1}
-	$\left\langle v^{BR}_{-i}, a^{BR}_{-i} \right\rangle \leftarrow $ BR$(-i, \delta'_{i}, -\alpha_s)$\; \label{alg:doab:br2}
+	$\left\langle v^{BR}_i, a^{BR}_{i} \right\rangle \leftarrow $ BR$(s, i, \delta'_{-i}, \beta_s)$\;\label{alg:doab:br1}
+	$\left\langle v^{BR}_{-i}, a^{BR}_{-i} \right\rangle \leftarrow $ BR$(s, -i, \delta'_{i}, -\alpha_s)$\; \label{alg:doab:br2}
 	$\alpha_s \leftarrow \max(\alpha_s, -v^{BR}_{-i})$,
 	$\beta_s \leftarrow \min(\beta_s, v^{BR}_{i})$\; \label{alg:doab:bounds}
 	$\cA'_i \leftarrow \cA'_i \cup \lbrace a^{BR}_i \rbrace$,
