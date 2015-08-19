@@ -162,8 +162,11 @@ Next, the algorithm calculates best responses for each of the player~(lines~\ref
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \Input{$s$ -- current matrix game; $i$ -- searching player; $\alpha_s,\beta_s$ -- bounds for the game value rooted in state $s$}
 \If{$s \in \cZ$} {\Return $u_i(s)$} \label{alg:doab:stop1}
-\If{$v_s^{-i} = v_s^i$} {
-	\Return $v_s^{i}$
+%\If{$v_s^{-i} = v_s^i$} {
+%	\Return $v_s^{i}$
+%}
+\If{$\alpha_s = \beta_s$} {
+  \Return $\beta_s$
 }
 initialize $\cA'_i$, $\cA'_{-i}$ with arbitrary actions from $\cA_i, \cA_{-i}$\; \label{alg:doab:init}
 \Repeat{$\alpha_s = \beta_s$}{

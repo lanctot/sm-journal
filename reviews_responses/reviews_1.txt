@@ -117,7 +117,9 @@ TODO, @Vilo, Brano: can you answer this?
 Indeed, the usage in Algorithm 3 was missing the game as the first argument. This has now been fixed.
 
 > * Alg. 3: Before line 3, v_s^{i} and v_s^{-i} should somehow be initialized.
->
+
+These should be \alpha_s and \beta_s, respectively, which has been fixed. (TODO: Vilo, Brano, please check this then remove this note.)
+
 > * Alg. 4: \lambda_{a_i} needs a clearer explanation.
 >
 > * Alg. 4: Before line 10, v_{a_i, a_{-1}} should be initialized to 0 (I guess).
