@@ -365,15 +365,26 @@ Agreed, the wording here is ambiguous. What was meant was "It guarantees an _exp
 > the actual experiments, a decreasing order of nature's cards is
 > mentioned (e.g., in Tab. 1). This sounds like a very simplifying
 > restriction. Why was this made?
+
+In the offline experiments, the nature cards have been fixed due to the consistence with the previous work by Saffidine et al.
+However, we agree that we can also explore the standard setting with chance and therefore we have added the experiments also with chance.
+@[bb] add some comments about the results here
+
 >
 > What is the branching factor of a simultaneous move game? I had
 > assumed it to be the branching factor of the joint actions, but from
 > the descriptions (especially in Goofspiel) it seems that rather it is
 > the number of actions available to one of the players in a given
 > state.
+
+@[bb] TODO
+
 >
 > In Oshi-Zumo, it is said that the number of coins N and the size of
 > the playing field 2K+1 are varied. What about the minimum bid M?
+
+Increasing the minimum bid M significantly simplifies the game by removing possible options for players and does not give results that are different enough to present.
+
 >
 > In the evaluation function for Oshi-Zumo: There are two cases for
 > which the value of b is specified; what about the other cases?

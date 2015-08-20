@@ -81,15 +81,20 @@ S & -50 &  5 &  0\\\cline{2-4}
 Goofspiel is a card game that appears in many works dedicated to simultaneous move games (e.g., \cite{Ross71Goofspiel,Rhoads12Computer,Saffidine12SMAB,Lanctot13Goofspiel}). 
 There are $3$ identical decks of cards with values $\{0,\dots, (d-1)\}$ (one for nature and one for each player), where $d$ is a parameter of the game (classical Goofspiel is played with $13$ cards). 
 The game is played in rounds: at the beginning of each round, nature reveals one card from its deck and both players bid for the card by simultaneously selecting (and removing) a card from their hands. 
-A player that selects a higher card wins the round and receives a number of points equal to the value of the nature's card. In case both players select the card with the same value, the nature's card is discarded. 
+A player that selects a higher card wins the round and receives a number of points equal to the value of the nature's card. 
+In case both players select the card with the same value, the nature's card is discarded. 
 When there are no more cards to be played, the winner of the game is chosen based on the sum of card values he received during the whole game. 
-We follow the assumption made in \cite{Saffidine12SMAB} that both players know the sequence of the nature's cards. 
-The game is win-tie-loss; hence, the players receive utility from set $\lbrace -1, 0, 1 \rbrace$.
+
+There are two factors that create four different variants of Goofspiel.
+Firstly, we can either use an assumption made in previous work that used Goofspiel as a benchmark for evaluation of algorithms \cite{Saffidine12SMAB}, or we can treat nature in a standard way. 
+The games are fairly similar in terms of results, however, the second variant induces considerably larger game tree.
+Secondly, we use two different utility functions. 
+Either we treat the game as a win-tie-loose (i.e., the players receive utility from set $\lbrace -1, 0, 1 \rbrace$), or the utility of the players equals to the points they received during the game.
 
 Goofspiel correspond to game trees with interesting properties. 
 First unique feature is that the branching factor is uniformly decreasing by $1$ with the depth.
 Secondly, algorithms must randomize in NE strategies, and this randomization is present throughout the whole course of the game.
-As an example, the following table depicts the number of states with pure strategies and mixed strategies for each depth in a subgame-perfect NE calculated by backward induction for Goofspiel with $5$ cards:
+As an example, the following table depicts the number of states with pure strategies and mixed strategies for each depth in a subgame-perfect NE calculated by backward induction for Goofspiel with $5$ cards and fixed sequence of nature's cards:
 
 \begin{table}[h!]
 \centering
@@ -104,21 +109,32 @@ As an example, the following table depicts the number of states with pure strate
 We can see that the relative number of states with mixed strategies slowly decreases, however, players need to mix throughout the whole game.
 In the last round, each player has only a single card; hence, there cannot be any mixed strategy.
 
-The evaluation function used in Goofspiel takes into consideration two components: (1) the difference in the current score for both players weighted by the current round in the game, and (2) the remaining cards in the deck weighted by a chance of winning these cards depending on the remaining cards on hand for each player. Formally, let $p_i$, $r$, $c_i$ be player $i$'s score (points), the current round, and the sum of values of player $i$'s remaining cards, respectively:
+%The evaluation function used in Goofspiel takes into consideration two components: (1) the difference in the current score for both players weighted by the current round in the game, and (2) the remaining cards in the deck weighted by a chance of winning these cards depending on the remaining cards on hand for each player. Formally, let $p_i$, $r$, $c_i$ be player $i$'s score (points), the current round, and the sum of values of player $i$'s remaining cards, respectively:
+
+Our hand-tuned evaluation function used in Goofspiel takes into consideration the remaining cards in the deck weighted by a chance of winning these cards depending on the remaining cards on hand for each player. 
+Moreover, if the position is clearly winning for one of the players (there is not enough cards to change the current score), the evaluation function is set to maximal (or minimal) value.
+For the win-tie-loose case, the formal definition follows ($c_i$ are the sum of values the remaining cards of player $i$):
+
+\[
+eval(s) = \left\{ \begin{array}{ll}
+  u_1(s) & \mbox{if $c_1 + c_2 = 0$ };\\
+  \tanh\left(\frac{c_1 - c_2}{c_1 + c_2}\cdot\frac{c_c}{0.5 \cdot d(d+1)}\right) & \mbox{otherwise.} \end{array} \right.
+\]
+
 
 %eval(s) = \tanh\left(\frac{\textrm{score}_1 - \textrm{score}_2}{\textrm{score}_1 + \textrm{score}_2}\cdot\frac{\textrm{round}}{d} + \frac{\textrm{remCards}_1 - \textrm{remCards}_2}{\textrm{remCards}_1 + \textrm{remCards}_2}\cdot\frac{\textrm{remCards}_c}{0.5\cdot d(d+1)}\right)
 %\[ |x| = \left\{ \begin{array}{ll}
 %         x & \mbox{if $x \geq 0$};\\
 %        -x & \mbox{if $x < 0$}.\end{array} \right. \] 
-\[
-eval(s) = \left\{ \begin{array}{ll}
-  0      & \mbox{if $p_1 + p_2 = 0$ (start)};\\
-  u_1(s) & \mbox{if $c_1 + c_2 = 0$ (end)};\\
-  \tanh\left(\frac{p_1 - p_2}{p_1 + p_2}\cdot\frac{r}{d} + \frac{c_1 - c_2}{c_1 + c_2}\cdot\frac{c_c}{0.5 \cdot d(d+1)}\right) & \mbox{otherwise.} \end{array} \right.
-\]
+%\[
+%eval(s) = \left\{ \begin{array}{ll}
+%  0      & \mbox{if $p_1 + p_2 = 0$ (start)};\\
+%  u_1(s) & \mbox{if $c_1 + c_2 = 0$ (end)};\\
+%  \tanh\left(\frac{p_1 - p_2}{p_1 + p_2}\cdot\frac{r}{d} + \frac{c_1 - c_2}{c_1 + c_2}\cdot\frac{c_c}{0.5 \cdot d(d+1)}\right) & \mbox{otherwise.} \end{array} \right.
+%\]
 %$eval(s)$ is equal to $0$ in the beginning of the game (i.e., when $p_1 + p_2$ is $0$) and to the utility value of the game at the end (i.e., when $c_1 + c_2$ is $0$).
-We use $\tanh$ to scale the evaluation function into the interval $[-1,1]$.
-Moreover, if the position is clearly winning for one of the players (there is not enough cards to change the current score), the evaluation function is set to $1$, or $-1$.
+For the win-tie-loose case we use $\tanh$ to scale the evaluation function into the interval $[-1,1]$; this function is omitted in the exact point case.
+%Moreover, if the position is clearly winning for one of the players (there is not enough cards to change the current score), the evaluation function is set to $1$, or $-1$.
 %\item[Oshi-Zumo]$(N,K,M)$ is a wrestling simulation game played on a discrete single-dimensional grid with
 %$2K+1$ positions, where each player starts with $N$ coins~\cite{buro2003}. A wrestler token begins in the middle
 %position. Every turn,
