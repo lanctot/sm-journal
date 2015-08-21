@@ -1,3 +1,4 @@
+
 A finite game with simultaneous moves and chance can be described by a tuple 
 $(\cN, \cS = \cD\cup\cC\cup\cZ, \cA, \cT, \Delta_c, u_i, s_0)$.
 The player set $\cN = \{ 1, 2, c \}$ contains player labels, where 
@@ -31,7 +32,7 @@ Payoffs to the row player are shown. \label{fig:egMatrixGames}}
 \end{figure}
 
 A {\it matrix game} is a single step simultaneous move game with action sets $\cA_1$ and $\cA_2$. 
-Each entry in the matrix $A_{rc}$ where $(r,c) \in A_1 \times A_2$ corresponds to a payoff (to player 1) if row $r$ is 
+Each entry in the matrix $A_{rc}$ where $(r,c) \in \cA_1 \times \cA_2$ corresponds to a payoff (to player 1) if row $r$ is 
 chosen by player 1 and column $c$ by player 2. 
 For example, in Matching Pennies in the left side of Figure~\ref{fig:egMatrixGames}, each player has two actions (heads or tails). 
 The row player receives a payoff of 1 
@@ -44,22 +45,63 @@ pure and only Nash equilibrium (NE) strategy.
 
 A {\it behavioral strategy} for player $i$ is a mapping from states $s \in \cS$
 to a probability distribution over the actions $\cA_i(s)$, denoted $\sigma_i(s)$. 
-Given a profile $\sigma = (\sigma_1, \sigma_2)$, define the probability of reaching a terminal state $z$ under $\sigma$ as 
-$\pi^\sigma(z) = \pi_1(z) \pi_2(z) \pi_c(z)$, where each $\pi_i(z)$ is a product of probabilities of the actions taken 
-by player $i$ along the path to $z$ ($c$ being chance's probabilities). Define $\Sigma_i$ to be the set of behavioral 
-strategies for player $i$. A Nash equilibrium profile in this case is a pair of behavioral strategies optimizing
+\reviewchange{These strategies are often called {\it randomized}, or {\it mixed} because they represent a mixture over {\it pure} strategies, each of
+which is a point in the Cartesian product space $P_i = \times_{s \in \cS} \cA_i(s)$.\footnote{\reviewchange{Notice that a pure strategy is also a mixed strategy that assigns probability 1 to a single pure strategy and probability 0 to every other pure strategy. However, as is common in the literature, we sometimes refer to a mixed strategy
+to specifically mean not a pure strategy. This is mostly clear from the context, but we will clarify where necessary.}}}
+\reviewchange{Let $\cH$ be a global set of histories (sequences of actions from the start of the game).}
+Given a profile $\sigma = (\sigma_1, \sigma_2)$, define the probability of reaching a history $h$ under $\sigma$ as 
+$\pi^\sigma(h) = \pi_1(h) \pi_2(h) \pi_c(h)$, where each $\pi_i(h)$ is a product of probabilities of the actions taken 
+by player $i$ along the path to $h$ ($c$ being chance's probabilities). 
+Finally, define $\Sigma_i$ to be the set of behavioral strategies for player $i$. 
+
+\reviewchange{There are three important concepts used in the paper that deserve explicit definition. These concepts are used to define 
+optimal behavior for this class of games, metrics for evaluation, and within the algorithms as well.
+
+\begin{definition}[Dominated Action]
+In a matrix game, an action $a_i \in \cA_i$ is dominated if $\forall a_{-i} \in \cA_{-i}, \forall a_i' \in \Sigma_i - \{ a_i \}, u(a_i, a_{-i}) < u(a_i', a_{-i})$. 
+\end{definition}
+
+No rational player would want to play a dominated action, because there is always a better one to play instead, for any action used by the opponent. The concept also
+extends natrually to behavioral strategies.
+
+\begin{definition}[Best Response]
+Suppose $\sigma_{-i} \in \Sigma_{-i}$ is a fixed oppenent strategy. Define the set of best response strategies
+$BR_i(\sigma_{-i}) = \{ \sigma_i~|~u(\sigma_i, \sigma_{-i}) = \max_{\sigma_i' \in \Sigma_i} u(\sigma_i', \sigma_{-i})) \}$.
+A single strategy in this set, \eg $\sigma_i \in BR_i(\sigma_{-i})$, is called a best response strategy to $\sigma_{-i}$.
+\end{definition}
+
+Note that a best response can be a mixed strategy, but a pure best response always exists and is often easier to compute.
+
+\begin{definition}[Nash Equilibrium]
+A pair of strategies $(\sigma_i, \sigma_{-i})$ is a Nash equilibrium profile if and only if $\sigma_i \in BR_i(\sigma_{-i})$ 
+and $\sigma_{-i} \in BR_{-i}(\sigma_i)$. 
+\end{definition}
+
+In other words, in a Nash equilibrium profile each strategy is a best response to the opponents' strategies. In two-player, zero-sum
+games the set of Nash equilibria corresponds to the set of minimax-optimal strategies. That is,} a Nash equilibrium profile is
+also pair of behavioral strategies optimizing
 \begin{equation}\label{eq:ne}
 V^* = \max_{\sigma_1 \in \Sigma_1} \min_{\sigma_2 \in \Sigma_2} \bE_{z \sim \sigma}[u_1(z)]
-   = \max_{\sigma_1 \in \Sigma_1} \min_{\sigma_2 \in \Sigma_2} \sum_{z \in Z} \pi^\sigma(z) u_1(z).
+   = \max_{\sigma_1 \in \Sigma_1} \min_{\sigma_2 \in \Sigma_2} \sum_{z \in Z} \pi^\sigma(z) u_1(z), 
 \end{equation}
-In other words, none of the players can improve their utility by deviating unilaterally. 
+None of the players can improve their utility by deviating unilaterally. 
 For example, the Matching Pennies matrix game has a single state and the only equilibrium strategy is to mix equally between 
-both actions, \ie play with a {\it mixed strategy}\footnote{\reviewchange{Notice that a pure strategy is also a mixed strategy that assigns probability 1 to a single action and probability 0 to every other action. However, as is standard in this literature, we will use the term ``mixed strategy'' to refer specifically to the case where no action is selected with probability 1.}} (distribution) of $(0.5, 0.5)$ giving an expected payoff of $V^* = 0.5$.
-Note that using a mixed (\ie randomized) strategy is necessary in this game.
-Any pure strategy of one player can be exploited by the opponent. 
+both actions, \ie both players play with a mixed strategy $\sigma_i = \sigma_{-i} = (0.5, 0.5)$ giving an expected payoff of 
+$V^* = 0.5$. 
+Note that using a mixed strategy is necessary in this game to achieve a guaranteed payoff of $V^*$.
+Any pure strategy of one player can be exploited by the opponent; \reviewchange{so while a pure best response to a fixed strategy always 
+exists, it is not always possible to find a Nash equilibrium for which both strategies are pure.}
 For the same reason, randomized strategies are often necessary also in the multi-stage simultaneous move games. 
 If the strategies also optimize Equation \ref{eq:ne} in each subgame starting in an arbitrary state, the equilibrium strategy 
-is termed subgame perfect.
+is termed {\it subgame perfect.}
+
+\reviewchange{
+\begin{definition}[Dominated Strategy]
+A strategy $\sigma_i \in \Sigma_i$ is dominated if $\forall \sigma_{-i} \in \Sigma_{-i} \forall \sigma_i' \in \Sigma_i u(\sigma_i, \sigma_{-i}) < u(\sigma_i', \sigma_{-i})$. 
+\end{definition}
+
+No rational player would want to play a dominated strategy, because there is always a better one to play instead, for every strategy the opponent player can use.
+}
 
 \begin{figure}[t!]
 \centering

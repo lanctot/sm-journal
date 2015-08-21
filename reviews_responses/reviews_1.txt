@@ -160,13 +160,19 @@ In addition, we note that at the content of one of the papers has only been pres
 > Largely yes, but some basics are missing, e.g., the notion of Nash
 > equilibria and the concept of dominance have not been introduced when
 > they are used.
-> ----
+
+Explicit definitions for dominance, Nash equilibria, and best response have now been added to Section 2.
+
 >
 > Is the English satisfactory?
 > No.
 
+We have addressed this by doing a full pass of the final version, after edits. (TODO)
+
 > Is the presentation otherwise satisfactory?
 > No. There are many small inconsistencies in the formalizations.
+
+We have made all the necessary edits to fix these. Again, we thank the reviewers for such detailed remarks.
 
 > Part B: DETAILED COMMENTS
 > -------------------------
@@ -218,6 +224,9 @@ In addition, we note that at the content of one of the papers has only been pres
 > in my opinion a journal article should be as self-contained as
 > possible. Especially introductions into the concept of Nash equilibria
 > and dominance should be given.
+
+We have added explicit definitions for dominance, Nash equilibria, and best response to Section 2.
+
 > Many concepts in Section 3 (Related Work) are also only barely
 > scratched, but here it is OK, as they are not part of the actual
 > article.
@@ -325,40 +334,63 @@ Agreed, the wording here is ambiguous. What was meant was "It guarantees an _exp
 > somehow could get a value of 1 -- this should be made consistent.
 >
 > In equation (9): What does the t in \sigma^t_i stand for?
->
+
+Time step / iteration. We've added some text to clarify this. We remove most of the superscripts with t in these subsections, as they are not needed.
+
 > In equation (9): The summand \gamma / |\cal A_i(s)| is missing; this
 > way, equation (9) is not equivalent to equation (8), as is stated in
 > the text.
->
+
+Indeed, the exploration term is missing from this equation. Fixed.
+
 > In equation (10): What are v_{max} and v_{min}?
->
+
+These are defined at the start of Section 2. These define the range of the utility function, i.e. v_{min} <= u(...) <= v_{max}.
+
 > In equation (11): Should it not be \sigma^t_i(a_i)?
->
+
+We have now removed the t supercript from these subsections, and only explicitly define it where necessary.
+
 > In equation (12): Should it not be \bar\sigma_i(a_i) (i.e., without
 > ^t)?
->
+
+Indeed, the superscript t here is incorrect. But. actually, here the superscript should really be T. We want to emphasize that the average strategy exists at each iteration for all iterations up to that point.
+
 > At the bottom of page 24: with probability \gamma / |\cal A(s)|...
 > Should it not be \cal A_i(s)?
->
+
+Corrected.
+
 > In equation (17): What is \pi^\sigma_{-i} of a history? What is
 > \pi^\sigma of two histories, where the first is a prefix of the
 > second?
->
+
+We have added the missing definitions, some at the start of Section 2.
+
 > Right after equation (17): z \in Z -> should it be z \in \cal Z? If
 > so, how can a history be in the set of terminal states?
->
+
+We have changed all instances of Z to \cal{Z}. There is a one-to-one correspondence between terminal states and terminal histories, so we use the same set to denote them. We have added text to clarify this.
+
 > Next line: strategy \sigma_i^t is defined; the next sentence uses
 > \sigma^t (i.e., without the _i). Is this correct?
->
+
+We have reworded to clarify this. 
+
 > a \in A(I) -> what is A(I)?
->
+
+We have changed all instances of A(I) to \cal{A}(I).
+
 > In equation (18), denominator: should be \sum_{t=1}^T (^T is missing)
->
+
+Fixed.
+
 > Bottom of page 26: R^T(I,a) is defined "for information set I of
 > player i in state s" -> I guess, i should be mentioned somewhere in
 > R^T.
->
->
+
+True. Added subscripts to R^T and r^t.
+
 > Section 6.2:
 > In Goofspiel, with the assumption that the players know the sequence
 > of nature's cards, the chance player is basically removed, right? In
@@ -390,7 +422,9 @@ Increasing the minimum bid M significantly simplifies the game by removing possi
 > which the value of b is specified; what about the other cases?
 >
 > In Tron, what are the rewards?
->
+
++1 for win, -1 for loss, 0 for draw. TODO: @[bb], please verify this.
+
 >
 > Section 6.4.5:
 > Why is there no graph for the comparison of the exact algorithms in

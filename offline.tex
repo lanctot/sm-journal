@@ -400,7 +400,7 @@ The probability of selecting action $a_i$ is proportional to the exponential of 
 
 This standard formulation of Exp3 is suitable for deriving its properties, but a straightforward implementation of this formula leads to problems with numerical stability. Both the numerator and denominator of the fraction can quickly become too large. For this reason, other formulations has been suggested, e.g., in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS} that are more numerically stable. We use the following equivalent formulation from \cite{Cowling12ISMCTS}:
 \begin{equation}
-\sigma^t_i(a_i) = \frac{(1-\gamma)}{\sum_{b_i \in A_i(s)}\exp(\eta(\hat{X}_{b_i}-\hat{X}_{a_i})).}
+\sigma_i(a_i) = \frac{(1-\gamma)}{\sum_{b_i \in A_i(s)}\exp(\eta(\hat{X}_{b_i}-\hat{X}_{a_i}))} + \frac{\gamma}{|\cA_i(s)|}.
 \end{equation}
 
 The update after selecting actions $(a_1,a_2)$ and obtaining a simulation result $v_1$ normalizes the result to the unit interval for each player by
@@ -409,14 +409,15 @@ u_1 \leftarrow \frac{(v_1 - v_{min})}{v_{max} - v_{min}};\;\; u_2 \leftarrow (1-
 \end{equation}
 and adds to the corresponding reward sum estimates the reward divided by the probability that the action was played by the player using
 \begin{equation}
-\hat{X}_{a_i} \leftarrow \hat{X}_{a_i} + \frac{u_i}{\sigma_i(a_i)}.
+\hat{X}_{a_i} \leftarrow \hat{X}_{a_i} + \frac{u_i}{\sigma^t_i(a_i)}.
 \end{equation}
 Dividing the value by the probability of selecting the corresponding action makes $\hat{X}_{a_i}$ estimate the sum of rewards over all
 iterations, not only the ones where $a_i$ was selected.
 
-As the final strategy, after all iterations are executed, the algorithm computes the \emph{average strategy} of the Exp3 algorithm over all iterations for each player. After $n$ iterations in the particular node, it is
+As the final strategy, after all iterations are executed, the algorithm computes the \emph{average strategy} of the Exp3 algorithm over all iterations for each player.
+\reviewchange{Let $\sigma^t_i$ be the strategy used at time $t$.} After $T$ iterations in the particular node, it is
 \begin{equation}
-\bar{\sigma}^t_i(a_i) = \frac{1}{n}\sum_{t=1}^n \sigma^t_i(a_i).
+\bar{\sigma}^T_i(a_i) = \frac{1}{T}\sum_{t=1}^T \sigma^t_i(a_i).
 \end{equation}
 In our implementation, we maintain the cumulative sum and normalize it to obtain the average strategy after the iterations.
 
@@ -438,12 +439,12 @@ On iteration $t$, function \emph{\underline{Select}} first builds
 each player's current strategies from the cumulative regrets. Define $x^+ = \max(x,0)$,
 \begin{equation}
 \label{eq:rm}
-\sigma^t_i(a_i) = \frac{r^{i+}_{a_i}}{R^+_{sum}} \mbox{ if } R^+_{sum} > 0 
+\sigma_i(a_i) = \frac{r^{i+}_{a_i}}{R^+_{sum}} \mbox{ if } R^+_{sum} > 0 
 \mbox{ oth. } \frac{1}{|\cA_i(s)|}, \mbox{ where } R^+_{sum} = \sum_{b_i \in \cA_i(s)}{r^{i+}_{b_i}}.
 \end{equation}
 The main idea is to adjust the strategy by assigning higher weight proportionally to actions based on the regret of having not taken them over the long-term.
 To ensure exploration, a sampling procedure similar to Equation~\ref{eq:exp3select} is used to select action $a_i$ with probability 
-$\gamma/|\cA(s)| + (1-\gamma) \sigma^t_i(a_i)$.
+$\gamma/|\cA_i(s)| + (1-\gamma) \sigma_i(a_i)$.
 
 \emph{\underline{Update}} adds regret accumulated at the iteration to
 the regret tables $r^i$. Suppose joint action $(a_1,a_2)$ is
@@ -459,36 +460,40 @@ $(b_1,b_2) \not= (a_1,a_2)$, or $u_1$ otherwise. The updates to the regret are:
 After all simulations, the strategy to play in state $s$ is defined by the mean strategy used in the corresponding node as in case of Exp3.
 
 \subsection{Counterfactual Regret Minimization and Outcome Sampling} \label{sec:algs:cfros}
+
 Finally, we describe algorithms based on Counterfactual Regret (CFR; a notion of regret at the information set level), first designed for extensive-form games with imperfect information~\cite{CFR} and first applied to simultaneous move games in~\cite{Lanctot13Goofspiel}.
 
-Define a {\it history} as a sequence of actions taken by all players (including chance) that starts from the beginning of the game. 
-A history $h'$ is a prefix of another history $h$, denoted $h' \sqsubset h$, if $h$ contains $h'$ (as a prefix sequence of actions).  
+\reviewchange{Recall from Section~\ref{sec:smg} the set of histories $\cH$. Here we also use $\cZ$ defined previously as the set of terminal states, 
+to refer to the set of {\it terminal histories} since there is a one-to-one correspondence between them.}
+A {\it history} as a sequence of actions taken by all players (including chance) that starts from the beginning of the game. 
+A history $h'$ is a prefix of another history $h$, denoted $h' \sqsubset h$, if $h$ contains $h'$ as a prefix sequence of actions.  
 The {\it counterfactual value} of reaching information set $I$ is the expected payoff given that player $i$ played to reach $I$, the opponents played
 $\sigma_{-i}$ and both players played $\sigma$ after $I$ was reached:
 \begin{equation}
 \label{eq:cfv}
-v_i(I,\sigma) = \sum_{(h,z) \in Z_I} \pi^{\sigma}_{-i}(h) \pi^{\sigma}(h,z) u_i(z), 
+v_i(I,\sigma) = \sum_{(h,z) \in \cZ_I} \pi^{\sigma}_{-i}(h) \pi^{\sigma}(h,z) u_i(z), 
 \end{equation}
-where $Z_I = \{ (h,z)~|~z \in Z, h \in I, h \sqsubset z \}$.
-Suppose, at time $t$, player $i$ plays with strategy $\sigma^t_i$.
-Define $\sigma^t_{I \rightarrow a}$ as identical to $\sigma^t$ except at $I$ action $a$ is taken with probability $1$.
-The counterfactual regret of not taking $a \in A(I)$ at time $t$ is $r^t(I,a) = v_i(I,\sigma^t_{I \rightarrow a}) - v_i(I,\sigma^t)$.
-The CFR algorithm maintains the cumulative regret $R^T(I,a) = \sum_{t=1}^T r^t(I,a)$, for every action at every information set.
+where $\cZ_I = \{ (h,z)~|~z \in \cZ, h \in I, h \sqsubset z \}$, \reviewchange{$\pi^{\sigma}_{-i}(h)$ is the product of probabilities to reach $h$ under $\sigma$ excluding player $i$'s, 
+and $\pi^\sigma(h,h')$, where $h \sqsubset h'$, is the probability of all actions taken along the path from $h$ to $h'$.}
+Suppose, at time $t$, players player with strategy profile $\sigma^t$.
+Define $\sigma^t_{I \rightarrow a}$ as identical to $\sigma^t_i$ except at $I$ action $a$ is taken with probability $1$.
+Player $i$'s counterfactual regret of not taking $a \in \cA(I)$ at time $t$ is $r_i^t(I,a) = v_i(I, \sigma^t_{I \rightarrow a}) - v_i(I,\sigma^t)$.
+The CFR algorithm maintains the cumulative regret $R_i^T(I,a) = \sum_{t=1}^T r_i^t(I,a)$, for every action at every information set.
 Then, the distribution at each information set for the next iteration $\sigma^{T+1}(I)$ is obtained individually using
 regret-matching~\cite{Hart00}. The distribution is proportional to the positive portion of the individual actions' regret:
 \begin{equation*}
 \label{eq:rm}
 \sigma^{T+1}(I,a) = \left\{
 \begin{array}{ll}
-R^{T,+}(I,a) / R^{T,+}_{sum}(I) & \mbox{if } R^{T,+}_{sum}(I) > 0 \\ 
-1 / |A(I)|                   & \mbox{otherwise,}
+R_i^{T,+}(I,a) / R^{T,+}_{i,sum}(I) & \mbox{if } R^{T,+}_{i,sum}(I) > 0 \\ 
+1 / |\cA(I)|                   & \mbox{otherwise,}
 \end{array} \right.
 \end{equation*}
-where $x^+ = \max(0,x)$ for any term $x$, and $R^{T,+}_{sum}(I) = \sum_{a' \in A(I)} R^{T,+}(I,a')$. 
+where $x^+ = \max(0,x)$ for any term $x$, and $R^{T,+}_{i,sum}(I) = \sum_{a' \in A(I)} R_i^{T,+}(I,a')$. 
 Furthermore, the algorithm maintains for each information set the average   strategy profile
 \begin{equation}
 %\bar{\sigma}^T(I,a) = \frac{1}{T}\sum_{t=1}^T \sigma^t(I,a).
-\bar{\sigma}^T(I,a) = \frac{\sum_{t=1}^T \pi^{\sigma^t}_i(I) \sigma^t(I,a)}{\sum_{t=1} \pi^{\sigma^t}_i(I)}, 
+\bar{\sigma}^T(I,a) = \frac{\sum_{t=1}^T \pi^{\sigma^t}_i(I) \sigma^t(I,a)}{\sum_{t=1}^T \pi^{\sigma^t}_i(I)}, 
 \end{equation}
 where $\pi^{\sigma^t}_i(I) = \sum_{h \in I}\pi^{\sigma^t}_i(h)$.
 The combination of the counterfactual regret minimizers in individual information sets also minimize the overall 
@@ -496,13 +501,13 @@ average regret \cite{CFR}, and hence due to the Folk Theorem the average profile
 with $\epsilon \rightarrow 0$ as $T \rightarrow \infty$.
 
 Monte Carlo Counterfactual Regret Minimization (MCCFR) applies CFR to sampled portions of the games~\cite{Lanctot09Sampling}.
-In the {\it outcome sampling} (OS) variant, a single terminal history $z\in Z$ is sampled in each iteration.
+In the {\it outcome sampling} (OS) variant, a single terminal history $z\in \cZ$ is sampled in each iteration.
 The algorithm updates the regret in the information sets visited along $z$ using the
 {\it sampled counterfactual value},
 \begin{equation}
 \tilde{v}_i(I,\sigma) = \left\{
 \begin{array}{ll}
-\frac{1}{q(z)} \pi^{\sigma}_{-i}(h) \pi^{\sigma}(h,z) u_i(z) & \mbox{if } (h,z) \in Z_I\\
+\frac{1}{q(z)} \pi^{\sigma}_{-i}(h) \pi^{\sigma}(h,z) u_i(z) & \mbox{if } (h,z) \in \cZ_I\\
 0  & \mbox{otherwise,}
 \end{array} \right.
 \label{eq:scv}
@@ -510,7 +515,7 @@ The algorithm updates the regret in the information sets visited along $z$ using
 where $q(z)$ is the probability of sampling $z$.
 As long as every $z \in Z$ has non-zero probability of being sampled, $\tilde{v}_i(I,\sigma)$ is an unbiased estimate of $v(I,\sigma)$
 due to the importance sampling correction ($1/q(z)$). For this reason, applying CFR updates using these sampled counterfactual regrets
-$\tilde{r}^t(I,a) = \tilde{v}_i(I,\sigma^t_{I \rightarrow a}) - \tilde{v}_i(I,\sigma^t)$
+$\tilde{r}_i^t(I,a) = \tilde{v}_i(I,\sigma^t_{I \rightarrow a}) - \tilde{v}_i(I,\sigma^t)$
 on the sampled information sets values also eventually converges to the approximate equilibrium of the game with high probability.
 The required number of iterations for convergence is much larger, but each iteration is much faster.
 
@@ -545,12 +550,12 @@ possible in simultaneous move games, because the optimal strategy in any state d
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \Input{$s$ -- current state of the game; $i$ -- regret updating player}
 \Output{$(x_i,q_i,u_i)$: $x_i$ -- $i$'s contribution to tail probability ($\pi^{\sigma}(h,z)$); $q_i$ -- $i$'s contribution to sample probability ($q(z)$); $u_i$ -- utility of the sampled leaf}
-  \lIf{$s \in Z$}{\Return $(1, 1, u_i(s))$\;} \label{alg:oos:terminal}
+  \lIf{$s \in \cZ$}{\Return $(1, 1, u_i(s))$\;} \label{alg:oos:terminal}
   \ElsIf{$s \in \cC$ is a chance node}{
     Sample $s'$ from $\Delta_c(s)$ \;         \label{alg:oos:chance1}
     \Return SM-OOS$(s', i)$\;                 \label{alg:oos:chance2}
   }
-  \If{$s$ is already in OOS tree}{            \label{alg:oos:tree}
+  \If{$s$ is already in the OOS tree}{            \label{alg:oos:tree}
     $\sigma_i \gets $ RegretMatching$(R_i(s))$\;  \label{alg:oos:rm1}
     $\forall a\in \cA_i(s): \sigma'_i(s,a) \gets (1-\epsilon)\sigma_i(s,a) + \tfrac{\epsilon}{|\cA_i(s)|}$\;
     Sample action $a_i$ from $\sigma'_i$\;        \label{alg:oos:rm2}
@@ -577,7 +582,7 @@ possible in simultaneous move games, because the optimal strategy in any state d
 \end{algorithm2e}
 
 The pseudo-code is given in Algorithm~\ref{alg:oos}. The game tree is incrementally built, starting only with one node for the root game state.
-Each node stores for each player: $R_i(s)$ the cumulative regret $R^T(I,a)$ for information set $I$ of player $i$ in state $s$ and each action, 
+Each node stores for each player: $R_i(s)$ the cumulative regret $R_i^T(I,a)$ for information set $I$ of player $i$ in state $s$ and each action, 
 and average strategy table $S_i(s)$, which stores the cumulative average strategy contribution for each action.
 Normalizing $S_i$ gives the resulting strategy of the algorithm for player $i$.
 
