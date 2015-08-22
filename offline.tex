@@ -10,7 +10,7 @@ Finally, we present counterfactual regret minimization and its sampling variant 
 
 \subsection{Backward Induction}\label{sec:algs:bi}
 
-Standard backward induction algorithm is based on the depth-first search that at each state of the game evaluates all successors, creates matrix game for the current state, solves the matrix game, and propagates back the value of the matrix game. The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:backwardinduction}. If the succeeding node $\cT(s,r,c)$ is a chance node, the algorithm directly evaluates all successors of this chance node computing an expected utility: the value of each subgame rooted in node $s'$ calculated by recursive call is weighted by the probability of the stochastic transition $\Delta_c(\cT(s,r,c),s')$~(line~\ref{alg:bi:recursive}).
+Standard backward induction algorithm is based on the depth-first search that at each state of the game evaluates all successors, creates matrix game for the current state, solves the matrix game, and propagates back the value of the matrix game. The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:backwardinduction}. If the succeeding node $\cT(s,r,c)$ is a chance node, the algorithm directly evaluates all successors of this chance node computing an expected utility: the value of each subgame rooted in node $s'$ calculated by recursive call is weighted by the probability of the stochastic transition $\cP_\star(s,r,c,s')$~(line~\ref{alg:bi:recursive}).
 
 \begin{algorithm2e}[t]
 \small
@@ -19,7 +19,7 @@ Standard backward induction algorithm is based on the depth-first search that at
 \If{$s \in \cZ$} {\Return $u_i(s)$} \label{alg:bi:stop1}
 \For{$r \in \cA_1(s)$}{
 	\For{$c \in \cA_2(s)$} {
-	$A_{rc} \leftarrow \sum_{s' \in S \;:\; \Delta_{c}(\cT(s,r,c),s') > 0} \Delta_{c}(\cT(s,r,c),s')\cdot \textrm{BI}(s',i)$\label{alg:bi:recursive}\;	
+	$A_{rc} \leftarrow \sum_{s' \in \cS \;:\; \cP_\star(s,r,c,s') > 0} \cP_\star(s,r,c,s')\cdot \textrm{BI}(s',i)$\label{alg:bi:recursive}\;	
 	}
 }
 $v_s \leftarrow$ solve matrix game $A$\;
@@ -102,14 +102,14 @@ Such a strategy provides guarantees for player~$i$ that is not exploitable and d
 \For{$r \in \cA_1(s)$}{
 	\For{$c \in \cA_2(s)$} {
 		$A_{rc} \leftarrow 0$\;
-		\For{$s' \in S \;:\; \Delta_c(\cT(s,r,c),s') > 0$} {
+		\For{$s' \in \cS \;:\; \cP_\star(s,r,c,s') > 0$} {
 		$v^i_{s'} \leftarrow \textrm{alpha-beta}(s',i)$\; \label{alg:biab:ab1}
 		$v^{-i}_{s'} \leftarrow \textrm{alpha-beta}(s',-i)$\; \label{alg:biab:ab2}
 		\If{$v^{-i}_{s'} < v^i_{s'}$} {
-			$A_{rc} \leftarrow A_{rc} + \Delta_{c}(\cT(s,r,c),s')\cdot \textrm{BI}\alpha\beta(s',i)$ \label{alg:biab:recursive}\;	
+			$A_{rc} \leftarrow A_{rc} + \cP_\star(s,r,c,s')\cdot \textrm{BI}\alpha\beta(s',i)$ \label{alg:biab:recursive}\;	
 			}
 		\Else{
-			$A_{rc} \leftarrow A_{rc} + \Delta_c(\cT(s,r,c),s')\cdot v^i_{s'}$ \label{alg:biab:saving}
+			$A_{rc} \leftarrow A_{rc} + \cP_\star(s,r,c,s')\cdot v^i_{s'}$ \label{alg:biab:saving}
 			}
 		}
 	}
@@ -143,7 +143,7 @@ Figure~\ref{fig:do-scheme} shows a visualization of the main structure of the al
 \item compute a pair of Nash equilibrium strategies in this restricted game using linear programming
 \item for each player, compute a pure best response strategy against the equilibrium strategy of the opponent; pure best response can be \emph{any} action from the original unrestricted game
 \end{enumerate}
-The best response strategies computed in step 3 are added to the restricted game, the game matrix is expanded by adding new rows and columns, and the algorithm follows with the next iteration. The algorithm terminates if neither of the players can improve the outcome of the game by adding a new strategy to the restricted game; hence, both players play best response strategies to the strategy of the opponent. The algorithm maintains the values of the best expected utilities of the best-response strategies for each player throughout the iterations of the algorithm. These values provide bounds on the value of the original game $V^*$, and their sum represents the error of the algorithm that converges to zero.
+The best response strategies computed in step 3 are added to the restricted game, the game matrix is expanded by adding new rows and columns, and the algorithm follows with the next iteration. The algorithm terminates if neither of the players can improve the outcome of the game by adding a new strategy to the restricted game; hence, both players play best response strategies to the strategy of the opponent. The algorithm maintains the values of the best expected utilities of the best-response strategies for each player throughout the iterations of the algorithm. These values provide bounds on the value of the original game $V$ (from Equation~\ref{eq:ne}), and their sum represents the error of the algorithm that converges to zero.
 
 \subsubsection{Integrating Double-Oracle with Backward Induction}
 
@@ -173,14 +173,14 @@ initialize $\cA'_i$, $\cA'_{-i}$ with arbitrary actions from $\cA_i, \cA_{-i}$\;
 	\For{$r \in \cA'_i$, $c \in \cA'_{-i}$}{
 		\If{$A'_{rc}$ is not initialized}{\label{alg:doab:restr1}
 			 $A'_{rc} \leftarrow 0$\;
-			\For{$s' \in S \;:\; \Delta_c(\cT(s,r,c),s') > 0$} {
+			\For{$s' \in \cS \;:\; \cP_\star(s,r,c,s') > 0$} {
 			$v^i_{s'} \leftarrow \textrm{alpha-beta}(s',i)$\; 
 			$v^{-i}_{s'} \leftarrow \textrm{alpha-beta}(s',-i)$\; 
 			\If{$v^{-i}_{s'} < v^i_{s'}$} {
-				$A'_{rc} \leftarrow A'_{rc} + \Delta_{c}(\cT(s,r,c),s')\cdot \doab(s',i,v^{-i}_{s'},v^i_{s'})$\label{alg:doab:recursive}\;
+				$A'_{rc} \leftarrow A'_{rc} + \cP_\star(s,r,c,s')\cdot \doab(s',i,v^{-i}_{s'},v^i_{s'})$\label{alg:doab:recursive}\;
 				}
 			\Else{
-				$A'_{rc} \leftarrow A'_{rc} + \Delta_{c}(\cT(s,r,c),s')\cdot v^i_{s'}$ \label{alg:doab:saving}
+				$A'_{rc} \leftarrow A'_{rc} + \cP_\star(s,r,c,s')\cdot v^i_{s'}$ \label{alg:doab:saving}
 				}
 			}
 		}	
@@ -212,14 +212,14 @@ $a_i^{BR} \leftarrow \textbf{null}$ \;
 		continue from line~\ref{alg:br:start} with next $a_i$
 		}
 		\Else{
-		\For{$s' \in S \;:\; \Delta_c(\cT(s,a_i,a_{-i}),s') > 0$} {
+		\For{$s' \in \cS \;:\; \cP_\star(s,a_i,a_{-i},s') > 0$} {
 %			$v^i_{s'} \leftarrow \textrm{alpha-beta}(s',i)$\; \label{alg:br:ab1}
 %			$v^{-i}_{s'} \leftarrow \textrm{alpha-beta}(s',-i)$\; \label{alg:br:ab2}
 			\If{$v^{-i}_{s'} < v^i_{s'}$} {
-				$v_{a_i,a_{-i}} \leftarrow v_{a_i,a_{-i}} + \Delta_c(\cT(s,a_i,a_{-i}),s')\cdot$ $\doab(s',i,v^{-i}_{s'},v^i_{s'})$\label{alg:br:recursive}\;	
+				$v_{a_i,a_{-i}} \leftarrow v_{a_i,a_{-i}} + \cP_\star(s,a_i,a_{-i},s')\cdot$ $\doab(s',i,v^{-i}_{s'},v^i_{s'})$\label{alg:br:recursive}\;	
 				}
 			\Else{
-				$v_{a_i,a_{-i}} \leftarrow v_{a_i,a_{-i}} + \Delta_c(\cT(s,a_i,a_{-i}),s')\cdot v^i_{s'}$ \label{alg:br:saving}
+				$v_{a_i,a_{-i}} \leftarrow v_{a_i,a_{-i}} + \cP_\star(s,a_i,a_{-i},s')\cdot v^i_{s'}$ \label{alg:br:saving}
 				}
 			}
 			$v_{a_i} \leftarrow v_{a_i} + \delta'_{-i}(a_{-i})\cdot v_{a_i,a_{-i}}$\;		
@@ -298,7 +298,7 @@ After four simulations, every cell in the root state has a value.
 	\Return $u_1(s)$\;
 }
 \If{$s \in \cC$ is a chance node} {
-        Sample $s' \sim \Delta_c(s)$\;
+        Sample $s' \sim \Delta_\star(s)$\;
 	\Return SM-MCTS($s'$)\;
 }
 \If{$s$ is in the MCTS tree} {
@@ -552,7 +552,7 @@ possible in simultaneous move games, because the optimal strategy in any state d
 \Output{$(x_i,q_i,u_i)$: $x_i$ -- $i$'s contribution to tail probability ($\pi^{\sigma}(h,z)$); $q_i$ -- $i$'s contribution to sample probability ($q(z)$); $u_i$ -- utility of the sampled leaf}
   \lIf{$s \in \cZ$}{\Return $(1, 1, u_i(s))$\;} \label{alg:oos:terminal}
   \ElsIf{$s \in \cC$ is a chance node}{
-    Sample $s'$ from $\Delta_c(s)$ \;         \label{alg:oos:chance1}
+    Sample $s'$ from $\Delta_\star(s)$ \;         \label{alg:oos:chance1}
     \Return SM-OOS$(s', i)$\;                 \label{alg:oos:chance2}
   }
   \If{$s$ is already in the OOS tree}{            \label{alg:oos:tree}

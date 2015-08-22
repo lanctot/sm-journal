@@ -264,7 +264,7 @@ A previous version of this algorithm was presented by Lanctot et al.~\cite{Lanct
 \Output{$(x_i,q_i,u_i)$: $x_i$ -- $i$'s contribution to tail probability ($\pi^{\sigma}(h,z)$); $q_i$ -- $i$'s contribution to sample probability ($q(z)$); $u_i$ -- utility of the sampled leaf}
   \lIf{$s \in Z$}{\Return $(1, 1, u_i(s))$\;} \label{alg:terminal}
   \ElsIf{$s \in \cC$ is a chance node}{
-    Sample $s'$ from $\Delta_c(s)$ \;
+    Sample $s'$ from $\Delta_\star(s)$ \;
     \Return SM-OOS$(s', i)$\;
   }
   \If{$s$ already is in the incrementally built tree}{

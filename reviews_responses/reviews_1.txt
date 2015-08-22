@@ -242,19 +242,26 @@ We have added explicit definitions for dominance, Nash equilibria, and best resp
 > Finally, there are many small mistakes and inconsistencies in the
 > formalizations and the algorithms. I will point out many of those in
 > what follows.
->
->
+
+We appreciate the attention to detail and effort made to improve the quality of the paper. We believe to have found and fixed all of these. 
+
 > Section 2:
 > I get it why for A_{rc} r (row) and c (column) are chosen; however,
 > before c was defined as the chance player, so this might cause some
 > confusion.
->
+
+Agreed. We have kept (r,c) for row and column, and changed the chance player to \star.
+
 > Notion of dominance and Nash equilibria used (on p. 4) but not
 > properly introduced.
->
+
+We have added explicit definitions for dominance, Nash equilibria, and best response to Section 2.
+
 > In Eq. (1): What is Z? Is it the set of terminal states? Those were
 > defined with a different font style.
->
+
+Fixed. 
+
 > "It guarantees the payoff of at least V*" -> Is that so? I thought
 > that's only the expected outcome. So, in a single game the actual
 > payoff may be much lower.
@@ -265,9 +272,9 @@ Agreed, the wording here is ambiguous. What was meant was "It guarantees an _exp
 > paragraph (i.e., 3 lines) referencing this are not much help. Either
 > properly introduce the concept of two-player finite-horizon Markov
 > Games, or maybe think about dropping this paragraph.
->
->
->
+
+We have moved the reference to Markov games and Fig 2 to the start of the section, when these are first being introduced.
+
 > Section 4:
 > Overall, this is a nice introduction into all the used algorithms,
 > providing most of the necessary background.
@@ -277,22 +284,30 @@ Agreed, the wording here is ambiguous. What was meant was "It guarantees an _exp
 > In the text I actually stumbled over the meaning of T(s,r,c). Again,
 > using c as the name for the chance player and the name for player 2
 > (column) is extremely confusing.
->
+
+We have fixed these so that chance is now \star.
+
 > In the definition on page 4, \Delta_c is defined over \cal S \mapsto
 > \Delta(\cal S). However, in Section 4.1, \cal S \times \cal S \mapsto
 > \Delta(\cal S) is used (i.e., current and successor state are taken as
 > input). This seems to make more sense, but it has to be made
 > consistent throughout the article, especially so that it matches the
 > original definition (which seems to be what is wrong here).
->
+
+To clarify, we have introduced a new term \cal{P}_\star(s,r,c,s') to represent a transition probability, and redefined \Delta_\star : \cal{C} \mapso \Delta(\cal S) to refer specifically to the distribution of the outcomes at chance nodes.
+
 > In Alg. 1, line 5: What is s' \in S; especially: what is S? If it is
 > the set of all possible states, that was defined as \cal S on page 3
 > -- note the different font! (same in Alg. 2+3+4)
->
+
+Fixed.
+
 > In equation (3): What is A_{-i}? Is it supposed to be A_{3-i}, i.e.,
 > the actions of the opponent of player i? (same throughout the
 > remainder of the article)
->
+
+We have now added a paragraph to explain the -i syntax and examples on how it applies in each context.
+
 > In equations (3), (4), and (5): What is \delta^s_i?
 >
 >
