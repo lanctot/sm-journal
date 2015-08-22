@@ -18,13 +18,13 @@ We thank all of the reviewers for their valuable feedback. Please find enclosed 
 > course has pros and cons as survey submissions are perfectly fine for AIJ. But then, the paper
 > is not organized as a survey.
 
-We agree that the paper does have (to some degree) a survey character in that it resumes existing algorithms published in different forums and venues. However, we feel that there are original technical contributions made by this paper (aside from simply organizing the information in one place). As such, we have chosen not to organize it as a survey paper. In this resubmission, we clarify the novel contributions that have not appeared in any preceeding paper by adding an explicit bullet-point list in the introduction.
+We agree that the paper does have (to some degree) a survey character in that it resumes existing algorithms published in different forums and venues. However, we feel that there are original technical contributions made by this paper, aside from simply organizing the information in one place. As such, we have chosen not to organize it as a survey paper. In this resubmission, we clarify the novel contributions that have not appeared in any preceeding paper by adding an explicit bullet-point list in the introduction.
 
 > The first reviewer said that he doesn't miss theory, but my judgement is that you should increase
 > insights to the theory, e.g., on correctness issues or running time efficiencies. What about
 > probabilistic completeness?
 
-TODO!
+TODO 
 
 > As a result, I would like you to cristalize the contribution, elaborate on the theory/analysis,
 > follow the comments in detail and try a resubmission.
@@ -70,7 +70,7 @@ TODO: Add Vilo's results of the variance analysis at the root and some discussio
 >
 > YES. When new concepts and ideas are presented, the authors succeed in clarifying in what respect they differ from previous work. A clearer separation of the description of previous work by other authors and the new contribution would be nice at some points, though.
 
-We agreed. (Section 1.1 has been added for this purpose.)
+We agree. (Section 1.1 has been added for this purpose.)
 
 > Does it clearly indicate why this work is important?
 > ----------------------------------------------------
@@ -86,7 +86,7 @@ TODO: However, we have elaborated on the importance and potential applicibality 
 >
 > NO. At least one of the authors's English. It is possible to tell apart paragraphs by different authors by just observing whether the language is correct. The paragraphs not written by that particular author are fine. In the problematic paragraphs, the problem is mostly grammar (not vocabulary): definite and indefinite articles are incorrectly used and omitted, sometimes singular and plural are incorrectly used, plus some other minor mistakes. Fortunately, this only interferes with the reading flow but does not prevent understanding. Still, someone should re-read and correct the affected paragraphs.
 
-Several full passes of the paper has been done by the native speaker and all of these problems have been fixed.
+TODO: Several full passes of the paper has been done by the native speaker and all of these problems have been fixed.
 
 > *****************************
 > * Part B: DETAILED COMMENTS *
