@@ -316,7 +316,7 @@ Section~\ref{sec:relwork} follows with a list and analysis of the existing algor
 Section~\ref{sec:offline}, we describe in detail selected exact and approximative algorithms.
 We first describe the algorithms in the offline setting, followed by the necessary modifications used in the online 
 case described in Section~\ref{sec:online}.
-\reviewchange{In Section~\ref{sec:theory}, we discuss the theoretical guarantees and limitations of the algorithms.}
+%\reviewchange{In Section~\ref{sec:theory}, we discuss the theoretical guarantees and limitations of the algorithms.}
 In Section~\ref{sec:eval}, we turn to the experimental evaluation and present our results of comparing of the algorithms.
 Finally, we conclude in Section~\ref{sec:conc}.
 
@@ -337,7 +337,8 @@ Original contributions made by this paper include:
 % Just don't have time for these
 %\item A new algorithm, $\epsilon$-minimax, a variant of Littman's Minimax-Q~\cite{Littman94markovgames} adapted for online search. (**Marc is considering implementing it.. is it too much?
 %\item A new variant of Exp3 based on recent work (Exp3++ \cite{2014}). (**Marc is considering implementing it.. is it too much?)
-\item A detailed analysis of the original non-convergence results of a well-known approximative algorithm search algorithm UCT from \cite{Shafiei09}, showing also its sensitivity and a significant detrimental effect caused by deterministic exploration.
+\item A detailed analysis of the original convergence analysis of a well-known approximative algorithm search algorithm UCT from \cite{Shafiei09}, showing also its sensitivity and a significant detrimental effect caused by deterministic exploration.
+\item A first analysis of backward induction and double-oracle algorithms with serialized bounds in the online search setting using heuristic evaluation functions.
 \item An analysis and evaluation of these algorithms in two different computational contexts: offline computation and online search, in five different games as well as random games.
 \item An equivalent and simplified version of Online Outcome Sampling~\cite{15aamas-iioos} and its analysis for the first time in two-player simultaneous move games.
 \end{itemize}

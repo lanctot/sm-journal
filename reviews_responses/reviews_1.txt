@@ -309,8 +309,9 @@ Fixed.
 We have now added a paragraph to explain the -i syntax and examples on how it applies in each context.
 
 > In equations (3), (4), and (5): What is \delta^s_i?
->
->
+
+It refers to a probability of a strategy. \delta has been replaced by \sigma to stay consistent. TODO: @Brano, please confirm this was not intended to be any different.
+
 > Section 4.2:
 > How is the actual serialization performed for a multi-step game (as
 > opposed to a simple matrix game)? That is, is it enough to consider
@@ -319,35 +320,45 @@ We have now added a paragraph to explain the -i syntax and examples on how it ap
 > state consider the two possibilities? The latter sounds way too
 > expensive, but I would have expected to see some argumentation why the
 > former is enough to get proper bounds.
->
->
+
+TODO: @Brano, maybe give an overview of the argument from your IJCAI paper?
+
 > Section 4.3:
 > In Alg. 3, "solve matrix game" returns a pair (the value and \delta,
 > which seems to be the mixed equilibrium strategy); before "solve
 > matrix game" returned only the value -- this should be made consistent
 > (e.g., call it somewhat differently in Alg. 3 to make it clear that
 > this is based on more than just the LP in equations (2) to (5).
->
+
+Solving the LP in equations (2) to (5) necessarily yields both the value and the equilibrium strategy(ies) that acheive this value. We have fixed each use to return both.
+
 > In Alg. 4, BS takes the current state as first argument; this is not
 > passed in Alg. 3. Also the order of the strategy and the bound is
 > different in the two algorithms. Overall, BS in Alg. 4 takes 4
 > arguments, while its call in Alg. 3 has only 3.
->
+
+Fixed. 
+
 > Alg. 4, l. 12: What is v_{a_i,a_{-i}}? This is used here for the first
 > time, but its new value is dependent on its old value, so this must be
 > initialized somewhere.
->
+
+Agreed, we forgot to initialize this. We added an initialization (line 6). TODO: Brano, please check this-- I initialized it to 0.
+
 > In the description of Alg. 4: "until the game for state s is not
 > solved" -> should be until it is solved
->
->
+
+Fixed. 
+
 > Section 4.4:
 > Fig. 6 is supposed to be a possible result after running MCTS for four
 > iterations on the game from Fig. 2. However, the subgames after
 > playing (t,l) and (b,l) are simple matrix games. For the latter, the
 > top-left cell has a fixed value of 0 in Fig. 2, but in Fig. 6 we
 > somehow could get a value of 1 -- this should be made consistent.
->
+
+Fixed, along with the text that referred to it (in subsection 4.4.1). 
+
 > In equation (9): What does the t in \sigma^t_i stand for?
 
 Time step / iteration. We've added some text to clarify this. We remove most of the superscripts with t in these subsections, as they are not needed.

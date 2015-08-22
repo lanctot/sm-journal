@@ -68,7 +68,8 @@ pure and only Nash equilibrium (NE) strategy.
 
 A {\it behavioral strategy} for player $i$ is a mapping from states $s \in \cS$
 to a probability distribution over the actions $\cA_i(s)$, denoted $\sigma_i(s)$. 
-\reviewchange{These strategies are often called {\it randomized}, or {\it mixed} because they represent a mixture over {\it pure} strategies, each of
+\reviewchange{We denote $\sigma_i(s,a)$ as the probability that strategy $\sigma$ assigns to $a$ in $s$.
+These strategies are often called {\it randomized}, or {\it mixed} because they represent a mixture over {\it pure} strategies, each of
 which is a point in the Cartesian product space $\times_{s \in \cS} \cA_i(s)$.\footnote{\reviewchange{Notice that a pure strategy is also a mixed strategy that assigns probability 1 to a single pure strategy and probability 0 to every other pure strategy. However, as is common in the literature, we sometimes refer to a mixed strategy
 to specifically mean not a pure strategy. This is mostly clear from the context, but we will clarify where necessary.}}}
 \reviewchange{Let $\cH$ be a global set of histories (sequences of actions from the start of the game).}
@@ -77,7 +78,7 @@ $\pi^\sigma(h) = \pi_1(h) \pi_2(h) \pi_\star(h)$, where each $\pi_i(h)$ is a pro
 by player $i$ along the path to $h$ ($\pi_\star$ being chance's probabilities). 
 Finally, define $\Sigma_i$ to be the set of behavioral strategies for player $i$. 
 
-\reviewchange{For the remainder of the article, we adopt a standard convention that the index $-i$ refers to all other players except player $i$. 
+\reviewchange{For the remainder of the article, we adopt a standard convention that the index $-i$ refers to all players except $i$. 
 In a game with chance events, then the $-i$ also includes the chance player, so \eg if $i = 1$ then $\pi_{-i}(h) = \pi_2(h) \pi_\star(h)$. 
 Whereas, in the case of a matrix game, $\cA_{-i} = \cA_{3-i}$. 
   
@@ -85,7 +86,7 @@ There are three important concepts used in the paper that deserve explicit defin
 optimal behavior for this class of games, metrics for evaluation, and within the algorithms as well.
 
 \begin{definition}[Dominated Action]
-In a matrix game, an action $a_i \in \cA_i$ is dominated if $\forall a_{-i} \in \cA_{-i}, \forall a_i' \in \Sigma_i - \{ a_i \}, u(a_i, a_{-i}) < u(a_i', a_{-i})$. 
+In a matrix game, an action $a_i \in \cA_i$ is dominated if $\forall a_{-i} \in \cA_{-i}, \forall a_i' \in \Sigma_i \setminus \{ a_i \}: u(a_i, a_{-i}) < u(a_i', a_{-i})$. 
 \end{definition}
 
 No rational player would want to play a dominated action, because there is always a better one to play instead, for any action used by the opponent. The concept also
@@ -121,14 +122,6 @@ exists, it is not always possible to find a Nash equilibrium for which both stra
 For the same reason, randomized strategies are often necessary also in the multi-stage simultaneous move games. 
 If the strategies also optimize Equation \ref{eq:ne} in each subgame starting in an arbitrary state, the equilibrium strategy 
 is termed {\it subgame perfect.}
-
-\reviewchange{
-\begin{definition}[Dominated Strategy]
-A strategy $\sigma_i \in \Sigma_i$ is dominated if $\forall \sigma_{-i} \in \Sigma_{-i} \forall \sigma_i' \in \Sigma_i u(\sigma_i, \sigma_{-i}) < u(\sigma_i', \sigma_{-i})$. 
-\end{definition}
-
-No rational player would want to play a dominated strategy, because there is always a better one to play instead, for every strategy the opponent player can use.
-}
 
 A two-player simultaneous move game is a specific type of two-player imperfect information extensive-form game. 
 In imperfect information

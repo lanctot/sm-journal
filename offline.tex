@@ -22,21 +22,23 @@ Standard backward induction algorithm is based on the depth-first search that at
 	$A_{rc} \leftarrow \sum_{s' \in \cS \;:\; \cP_\star(s,r,c,s') > 0} \cP_\star(s,r,c,s')\cdot \textrm{BI}(s',i)$\label{alg:bi:recursive}\;	
 	}
 }
-$v_s \leftarrow$ solve matrix game $A$\;
+$\left\langle v_s, \sigma_i(s) \right\rangle \leftarrow$ solve matrix game $A$\;  \label{alg:bi:solve}
 \Return $v_s$ \label{alg:bi:stop2}
 \caption{Backward Induction algorithm (BI).}\label{alg:backwardinduction}
 \end{algorithm2e}
 
-Once the algorithm computes the value of each possible subgame following the current state $s$, the matrix game $A$ is complete and the algorithm solves the matrix game $A$ using standard linear program (LP) for solving normal-form games:
+Once the algorithm computes the value of each possible subgame following the current state $s$, the matrix game $A$ is complete and the algorithm 
+solves the matrix game $A$ using standard linear program (LP) for solving normal-form games:
 \begin{eqnarray}
 \max & v_s & \\
-\textrm{s.t.} & \sum_{a_i \in \cA_{i}}A_{a_i,a_{-i}} \cdot \delta^{s}_i(a_i) \geq v_s & \forall a_{-i} \in \cA_{-i}\\
-& \sum_{a_{i} \in \cA_{i}} \delta^{s}_{i}(a_{i}) = 1 \\
-& \delta^{s}_{i}(a_{i}) \geq 0 & \forall a_{i} \in \cA_{i} 
+\textrm{s.t.} & \sum_{a_i \in \cA_{i}}A_{a_i,a_{-i}} \cdot \sigma_i(s,a_i) \geq v_s & \forall a_{-i} \in \cA_{-i}\\
+& \sum_{a_{i} \in \cA_{i}} \sigma_i(s,a_{i}) = 1 \\
+& \sigma_i(s,a_{i}) \geq 0 & \forall a_{i} \in \cA_{i} 
 \end{eqnarray}
 Using the linear programming, the algorithm computes the value of the matrix game, which is propagated to the predecessor~(line~\ref{alg:bi:stop2}). 
 If the algorithm evaluates a terminal state, it directly returns the utility value of the state~(line~\ref{alg:bi:stop1}).
 A strategy can be easily extracted from the algorithm by keeping the equilibrium strategies from matrix games $A$ in each state.
+\reviewchange{To be clear, solving a game by solving this linear program yields both the optimal value and the strategy that acheives it.}
 
 Evaluating each successor and solving the linear programs in each state of the game is the main computational bottleneck of the backward induction algorithm. 
 The following algorithms try to prune certain branches of the tree in order to avoid this step even for the price of multiple traversals of the game tree.
@@ -114,7 +116,7 @@ Such a strategy provides guarantees for player~$i$ that is not exploitable and d
 		}
 	}
 }
-$v_s \leftarrow$ solve matrix game $A$\;
+$\left\langle v_s, \sigma_i \right\rangle \leftarrow$ solve matrix game $A$\;
 \Return $v_s$ \label{alg:biab:stop2}
 \caption{Backward Induction with Serialized Bounds $(\biab)$.}\label{alg:backwardinduction-ab}
 \end{algorithm2e}
@@ -154,7 +156,7 @@ The double-oracle algorithm for matrix games can be directly incorporated into t
 In each state of the game, the algorithm initializes the restricted game with an arbitrary action (line~\ref{alg:doab:init}) -- $A'$ represents the restricted matrix game, $\cA'_i$ represents the restricted set of available actions to player~$i$. 
 Afterwards, the algorithm starts the iterations of the double-oracle algorithm.
 First, the algorithm needs to calculate the value for each of the successors of the restricted game, for which the current value is not known (lines~\ref{alg:doab:restr1}-\ref{alg:doab:saving}). This evaluation is same as in the case of backward induction with alpha-beta algorithm. 
-Once all values for the restricted game $A'$ are known, the algorithm solves the restricted game (line~\ref{alg:doab:NE}) and keeps the optimal strategies $\delta'$ of the restricted game. 
+Once all values for the restricted game $A'$ are known, the algorithm solves the restricted game (line~\ref{alg:doab:NE}) and keeps the optimal strategies $\sigma'$ of the restricted game. 
 Next, the algorithm calculates best responses for each of the player~(lines~\ref{alg:doab:br1},\ref{alg:doab:br2}) using Alforithm~\ref{alg:br} below, and updates the lower and upper bounds (line~\ref{alg:doab:bounds}). Finally, the algorithm expands the restricted game with best response actions (line~\ref{alg:doab:expand}) until the lower and upper bound are equal. In this case, neither of the best responses improves the current solution from the restricted game; hence, the algorithm has found an equilibrium of the complete unrestricted matrix game corresponding to state $s$.
 
 \begin{algorithm2e}[t!]
@@ -185,9 +187,9 @@ initialize $\cA'_i$, $\cA'_{-i}$ with arbitrary actions from $\cA_i, \cA_{-i}$\;
 			}
 		}	
 	}
-	$\left\langle v_s, \delta' \right\rangle \leftarrow $ solve matrix game $A'$\; \label{alg:doab:NE}
-	$\left\langle v^{BR}_i, a^{BR}_{i} \right\rangle \leftarrow $ BR$(s, i, \delta'_{-i}, \beta_s)$\;\label{alg:doab:br1}
-	$\left\langle v^{BR}_{-i}, a^{BR}_{-i} \right\rangle \leftarrow $ BR$(s, -i, \delta'_{i}, -\alpha_s)$\; \label{alg:doab:br2}
+	$\left\langle v_s, \sigma' \right\rangle \leftarrow $ solve matrix game $A'$\; \label{alg:doab:NE}
+	$\left\langle v^{BR}_i, a^{BR}_{i} \right\rangle \leftarrow $ BR$(s, i, \sigma'_{-i}, \beta_s)$\;\label{alg:doab:br1}
+	$\left\langle v^{BR}_{-i}, a^{BR}_{-i} \right\rangle \leftarrow $ BR$(s, -i, \sigma'_{i}, -\alpha_s)$\; \label{alg:doab:br2}
 	$\alpha_s \leftarrow \max(\alpha_s, -v^{BR}_{-i})$,
 	$\beta_s \leftarrow \min(\beta_s, v^{BR}_{i})$\; \label{alg:doab:bounds}
 	$\cA'_i \leftarrow \cA'_i \cup \lbrace a^{BR}_i \rbrace$,
@@ -201,13 +203,14 @@ initialize $\cA'_i$, $\cA'_{-i}$ with arbitrary actions from $\cA_i, \cA_{-i}$\;
 \begin{algorithm2e}[t]
 \small
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\Input{$s$ -- current matrix game; $i$ -- best-response player; $\lambda$ -- bound for the best-response value; $\delta'_{-i}$ -- strategy of the opponent }
+\Input{$s$ -- current matrix game; $i$ -- best-response player; $\sigma'_{-i}$ -- strategy of the opponent; $\lambda$ -- bound for the best-response value }
 $v^{BR}_i \leftarrow \lambda$ \;
 $a_i^{BR} \leftarrow \textbf{null}$ \;
 \For{$a_i \in \cA_i $\label{alg:br:start}} {%\setminus \cA'_i 
 	$v_{a_i} \leftarrow 0$\;
-	\For{$a_{-i} \in \cA'_{-i} \;:\; \delta'_{-i}(a_{-i}) > 0$} {\label{alg:br:opp}
-		$\lambda_{a_i} \leftarrow \frac{v_i^{BR} - \sum_{a'_{-i} \in \cA'_{-i} \setminus \lbrace a_{-i} \rbrace} \delta'_{-i}(a'_{-i}) \cdot v^i_{\cT(s,a_i,a'_{-i})}}{\delta'_{-i}(a_{-i})}$\; \label{alg:br:bound}
+	\For{$a_{-i} \in \cA'_{-i} \;:\; \sigma'_{-i}(a_{-i}) > 0$} {\label{alg:br:opp}
+    $v_{a_i,a_{-i}} \leftarrow 0$\;
+		$\lambda_{a_i} \leftarrow \frac{v_i^{BR} - \sum_{a'_{-i} \in \cA'_{-i} \setminus \lbrace a_{-i} \rbrace} \sigma'_{-i}(a'_{-i}) \cdot v^i_{\cT(s,a_i,a'_{-i})}}{\sigma'_{-i}(a_{-i})}$\; \label{alg:br:bound}
 		\If{	$\lambda_{a_i} > v^i_{\cT(s,a_i,a_{-i})}$}{
 		continue from line~\ref{alg:br:start} with next $a_i$
 		}
@@ -222,7 +225,7 @@ $a_i^{BR} \leftarrow \textbf{null}$ \;
 				$v_{a_i,a_{-i}} \leftarrow v_{a_i,a_{-i}} + \cP_\star(s,a_i,a_{-i},s')\cdot v^i_{s'}$ \label{alg:br:saving}
 				}
 			}
-			$v_{a_i} \leftarrow v_{a_i} + \delta'_{-i}(a_{-i})\cdot v_{a_i,a_{-i}}$\;		
+			$v_{a_i} \leftarrow v_{a_i} + \sigma'_{-i}(a_{-i})\cdot v_{a_i,a_{-i}}$\;		
 		}
 	}
 	\If{$v_{a_i} > v_i^{BR}$}{\label{alg:br:max}
@@ -238,8 +241,8 @@ Now we describe the algorithm for calculating the best responses.
 The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:br}.
 %\mlanctot{Shouldn't the recursive call in 12 of Algorithm \ref{alg:br} be something line BR(...) rather the double-oracle(...)? Also, the function name should be put into the caption as with the other ones.}
 %bbosansky: not really, this is actually solving a subgame; hence, DOab is called on the subgame 
-The goal of the algorithm is to find the best action from the original unrestricted game against current strategy of the opponent $\delta'$. 
-Throughout the algorithm we use, as before, $v^i_{s'}$ to denote the upper bound of the value of the subgame rooted in state $s'$ calculated using alpha-beta$(s',i)$. These values are calculated on demand, i.e., they are calculated once needed and cached until the game for state $s$ is not solved.
+The goal of the algorithm is to find the best action from the original unrestricted game against current strategy of the opponent $\sigma'_{-i}$. 
+Throughout the algorithm we use, as before, $v^i_{s'}$ to denote the upper bound of the value of the subgame rooted in state $s'$ calculated using alpha-beta$(s',i)$. These values are calculated on demand, i.e., they are calculated once needed and cached until the game for state $s$ is solved.
 Moreover, once the algorithm calculates the exact value of a particular subgame, both upper and lower bounds are updated to be equal to actual value of the game. 
 
 The algorithm iteratively examines all actions of player $i$ from the unrestricted game (line~\ref{alg:br:start}). 
@@ -353,8 +356,10 @@ and $n_{a_i} \leftarrow n_{a_i} + 1$.
 
 Consider again the example shown in Figure~\ref{fig:smmcts-example}. Decoupled UCT now groups together all the payoffs obtained 
 for an action. Therefore, at the root Max has $\bar{X}_t = 5/2 = 2.5, \bar{X}_b = 1/2 = 0.5$ and the exploration term for both is 
-$C_i \sqrt{(\log 4) / 2}$, and so top is selected. Similarly for Min, $\bar{X}_l = 4/2 = 2, \bar{X}_r = 2/2 = 1$, and
-therefore right is selected. The selection function would return $(t,r)$ at the root on the fifth simulation. 
+$C_i \sqrt{(\log 4) / 2}$, and so top is selected. For Min, $\bar{X}_l = 3/2 = 1.5 = \bar{X}_r$, so both actions have the same value. 
+\reviewchange{So, in this situation Min must use a tie-breaking rule to decide which action to take. 
+As we show in subsection~\ref{sec:exp:brps}, the specific tie-breaking rule used here could lead to a significant effect on the quality
+of the strategy UCT produces.}
 
 After all the simulations are done, there are two options how to determine the resulting action to play.
 The more standard option is to choose for each state the action $a_i$ that maximizes $n_{a_i}$ for each player $i$.
