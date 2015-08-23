@@ -455,8 +455,11 @@ Increasing the minimum bid M significantly simplifies the game by removing possi
 > Section 6.4.5:
 > Why is there no graph for the comparison of the exact algorithms in
 > Tron?
->
->
+
+The amount of computation required grows too quickly as a function of the grid size, therefore we only talk about it in the text for a few instances. 
+
+TODO: @Brano, Vilo: is this answer accurate? Maybe we should still put a graph for these few points? Also please check the text, something is unclear to me in this section, so I put a remark.
+
 > Section 6.5.2:
 > The authors claim that RM clearly dominates all other approaches.
 > However, according to the table this is not always the case. In fact,
