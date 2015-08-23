@@ -74,12 +74,12 @@ which is a point in the Cartesian product space $\times_{s \in \cS} \cA_i(s)$.\f
 to specifically mean not a pure strategy. This is mostly clear from the context, but we will clarify where necessary.}}}
 \reviewchange{Let $\cH$ be a global set of histories (sequences of actions from the start of the game).}
 Given a profile $\sigma = (\sigma_1, \sigma_2)$, define the probability of reaching a history $h$ under $\sigma$ as 
-$\pi^\sigma(h) = \pi_1(h) \pi_2(h) \pi_\star(h)$, where each $\pi_i(h)$ is a product of probabilities of the actions taken 
+$\pi^\sigma(h) = \pi^\sigma_1(h) \pi^\sigma_2(h) \pi^\sigma_\star(h)$, where each $\pi^\sigma_i(h)$ is a product of probabilities of the actions taken 
 by player $i$ along the path to $h$ ($\pi_\star$ being chance's probabilities). 
 Finally, define $\Sigma_i$ to be the set of behavioral strategies for player $i$. 
 
 \reviewchange{For the remainder of the article, we adopt a standard convention that the index $-i$ refers to all players except $i$. 
-In a game with chance events, then the $-i$ also includes the chance player, so \eg if $i = 1$ then $\pi_{-i}(h) = \pi_2(h) \pi_\star(h)$. 
+In a game with chance events, then the $-i$ also includes the chance player, so \eg if $i = 1$ then $\pi^\sigma_{-i}(h) = \pi^\sigma_2(h) \pi^\sigma_\star(h)$. 
 Whereas, in the case of a matrix game, $\cA_{-i} = \cA_{3-i}$. 
   
 There are three important concepts used in the paper that deserve explicit definition. These concepts are used to define 
@@ -101,7 +101,7 @@ A single strategy in this set, \eg $\sigma_i \in BR_i(\sigma_{-i})$, is called a
 Note that a best response can be a mixed strategy, but a pure best response always exists and is often easier to compute.
 
 \begin{definition}[Nash Equilibrium]
-A pair of strategies $(\sigma_i, \sigma_{-i})$ is a Nash equilibrium profile if and only if $\sigma_i \in BR_i(\sigma_{-i})$ 
+A strategy profile $(\sigma_i, \sigma_{-i})$ is a Nash equilibrium profile if and only if $\sigma_i \in BR_i(\sigma_{-i})$ 
 and $\sigma_{-i} \in BR_{-i}(\sigma_i)$. 
 \end{definition}
 

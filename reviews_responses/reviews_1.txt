@@ -121,15 +121,21 @@ Indeed, the usage in Algorithm 3 was missing the game as the first argument. Thi
 These should be \alpha_s and \beta_s, respectively, which has been fixed. (TODO: Vilo, Brano, please check this then remove this note.)
 
 > * Alg. 4: \lambda_{a_i} needs a clearer explanation.
->
+
+TODO
+
 > * Alg. 4: Before line 10, v_{a_i, a_{-1}} should be initialized to 0 (I guess).
->
+
+Yes, this is done now. 
+
 > * Eq. 9: What does subscript "t" stand for?
 >
 > * Eq. 9 ff: I am not sure of you use \sigma_i and \sigma_i^t consistently.
 >
 > * Eq. 17: \pi_{-i}^{\sigma} and \pi^{\sigma} are undefined.
->
+
+These 
+
 > * Section 4.5.1 is a bit hard to understand in full detail. If there is anything in the paper I found really hard to grasp, then it was this section.
 
 We have rewrote this section and present a new version of Online Outcome Sampling that is simpler, more efficient, and less prone to numerical instabilitiy specifically intended for this class of games. The implementation has also been simplified to reflect this change, and affected experiments have been rerun as well.
