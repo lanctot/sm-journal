@@ -134,7 +134,7 @@ Yes, this is done now.
 >
 > * Eq. 17: \pi_{-i}^{\sigma} and \pi^{\sigma} are undefined.
 
-These 
+These have now been properly defined in Section 2.
 
 > * Section 4.5.1 is a bit hard to understand in full detail. If there is anything in the paper I found really hard to grasp, then it was this section.
 
