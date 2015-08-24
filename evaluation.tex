@@ -339,7 +339,7 @@ One particularly striking observation is that this simple addition leads to a la
 ranges from $[0.5,0.8]$ in the deterministic case, compared to $[0.01,0.05]$ with stochastic tie-breaking. Therefore, stochastic tie-breaking is 
 enabled in all of our experiments. 
 
-In summary, with this randomization UCT appears to be converging a an approximate equilibrium but not to an 
+In summary, with this randomization UCT appears to be converging to an approximate equilibrium but not to an 
 exact equilibrium, which is similar to results of UCT in Kuhn poker~\cite{Ponsen11Computing}.
 
 %mlanctot: is this true? %bbosansky: yes, we have run again experiments with randomized uct where deterministic uct had been used before
@@ -362,12 +362,30 @@ Unless otherwise stated, each data point represents a mean of at least $30$ runs
 \subsubsection{Goofspiel}
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{figures/GS.pdf}
-\caption{Comparison of running times on Goofspiel with increasing size of the deck.} \label{fig:off:res:gs}
+	\begin{subfigure}{0.49\textwidth}
+ 		\includegraphics[width=1\textwidth]{figures/GS-BT-NF.pdf}\caption{}\label{fig:off:res:gs-bt}
+ 	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+ 		\includegraphics[width=1\textwidth]{figures/GS-BF-NF.pdf}\caption{}\label{fig:off:res:gs-bf}
+ 	\end{subfigure}
+\caption{Running times on Goofspiel with fixed order of the nature's cards for increasing size of the deck; sub-figure (a) depicts the results with win-tie-loose utilities, (b) depicts the results with point utilities.} \label{fig:off:res:gs}
 \end{figure}
 
-Figure~\ref{fig:off:res:gs} depicts the results for the card game Goofspiel (note the logarithmic y-scale).
-The results show that a significant number of subgames has a pure subgame Nash equilibrium that can be computed using serialized alpha-beta algorithms.
+\begin{figure}
+\centering
+	\begin{subfigure}{0.49\textwidth}
+ 		\includegraphics[width=1\textwidth]{figures/GS-BT-NN.pdf}\caption{}\label{fig:off:res:gsn-bt}
+ 	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+ 		\includegraphics[width=1\textwidth]{figures/GS-BF-NN.pdf}\caption{}\label{fig:off:res:gsn-bf}
+ 	\end{subfigure}
+\caption{Running times on Goofspiel with fixed order of the nature's cards for increasing size of the deck; sub-figure (a) depicts the results with win-tie-loose utilities, (b) depicts the results with point utilities.} \label{fig:off:res:gsn}
+\end{figure}
+
+We now describe the results for the card game Goofspiel.
+First, we analyze the games with fixed ordering of the cards by nature. 
+The results are depicted in Figure~\ref{fig:off:res:gs} (note the logarithmic y-scale).
+The comparison shows that a significant number of subgames has a pure subgame Nash equilibrium that can be computed using serialized alpha-beta algorithms.
 Therefore, the performance of $\biab$ and $\doab$ is fairly similar and the gap only slowly increases in favor of $\doab$ with the increasing size of the game.
 Both of these algorithms significantly reduce the number of states visited by the backward induction algorithm (i.e., excluding the number of states evaluated by serialized alpha-beta algorithm).
 While \textsc{BI} algorithm evaluates on average more than $3.2\times10^7$ nodes in the setting with $7$ cards in more than $3$ hours, $\biab$ evaluates only $198,986$ nodes in less than $5$ minutes. 
