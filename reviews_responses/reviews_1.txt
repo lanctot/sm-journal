@@ -18,13 +18,13 @@ We thank all of the reviewers for their valuable feedback. Please find enclosed 
 > course has pros and cons as survey submissions are perfectly fine for AIJ. But then, the paper
 > is not organized as a survey.
 
-We agree that the paper does have (to some degree) a survey character in that it resumes existing algorithms published in different forums and venues. However, we feel that there are original technical contributions made by this paper (aside from simply organizing the information in one place). As such, we have chosen not to organize it as a survey paper. In this resubmission, we clarify the novel contributions that have not appeared in any preceeding paper by adding an explicit bullet-point list in the introduction.
+We agree that the paper does have (to some degree) a survey character in that it resumes existing algorithms published in different forums and venues. However, we feel that there are original technical contributions made by this paper, aside from simply organizing the information in one place. As such, we have chosen not to organize it as a survey paper. In this resubmission, we clarify the novel contributions that have not appeared in any preceeding paper by adding an explicit bullet-point list in the introduction.
 
 > The first reviewer said that he doesn't miss theory, but my judgement is that you should increase
 > insights to the theory, e.g., on correctness issues or running time efficiencies. What about
 > probabilistic completeness?
 
-TODO!
+TODO 
 
 > As a result, I would like you to cristalize the contribution, elaborate on the theory/analysis,
 > follow the comments in detail and try a resubmission.
@@ -70,7 +70,7 @@ TODO: Add Vilo's results of the variance analysis at the root and some discussio
 >
 > YES. When new concepts and ideas are presented, the authors succeed in clarifying in what respect they differ from previous work. A clearer separation of the description of previous work by other authors and the new contribution would be nice at some points, though.
 
-We agreed. (Section 1.1 has been added for this purpose.)
+We agree. (Section 1.1 has been added for this purpose.)
 
 > Does it clearly indicate why this work is important?
 > ----------------------------------------------------
@@ -86,7 +86,7 @@ TODO: However, we have elaborated on the importance and potential applicibality 
 >
 > NO. At least one of the authors's English. It is possible to tell apart paragraphs by different authors by just observing whether the language is correct. The paragraphs not written by that particular author are fine. In the problematic paragraphs, the problem is mostly grammar (not vocabulary): definite and indefinite articles are incorrectly used and omitted, sometimes singular and plural are incorrectly used, plus some other minor mistakes. Fortunately, this only interferes with the reading flow but does not prevent understanding. Still, someone should re-read and correct the affected paragraphs.
 
-Several full passes of the paper has been done by the native speaker and all of these problems have been fixed.
+TODO: Several full passes of the paper has been done by the native speaker and all of these problems have been fixed.
 
 > *****************************
 > * Part B: DETAILED COMMENTS *
@@ -121,15 +121,21 @@ Indeed, the usage in Algorithm 3 was missing the game as the first argument. Thi
 These should be \alpha_s and \beta_s, respectively, which has been fixed. (TODO: Vilo, Brano, please check this then remove this note.)
 
 > * Alg. 4: \lambda_{a_i} needs a clearer explanation.
->
+
+TODO
+
 > * Alg. 4: Before line 10, v_{a_i, a_{-1}} should be initialized to 0 (I guess).
->
+
+Yes, this is done now. 
+
 > * Eq. 9: What does subscript "t" stand for?
 >
 > * Eq. 9 ff: I am not sure of you use \sigma_i and \sigma_i^t consistently.
 >
 > * Eq. 17: \pi_{-i}^{\sigma} and \pi^{\sigma} are undefined.
->
+
+These have now been properly defined in Section 2.
+
 > * Section 4.5.1 is a bit hard to understand in full detail. If there is anything in the paper I found really hard to grasp, then it was this section.
 
 We have rewrote this section and present a new version of Online Outcome Sampling that is simpler, more efficient, and less prone to numerical instabilitiy specifically intended for this class of games. The implementation has also been simplified to reflect this change, and affected experiments have been rerun as well.
@@ -160,13 +166,19 @@ In addition, we note that at the content of one of the papers has only been pres
 > Largely yes, but some basics are missing, e.g., the notion of Nash
 > equilibria and the concept of dominance have not been introduced when
 > they are used.
-> ----
+
+Explicit definitions for dominance, Nash equilibria, and best response have now been added to Section 2.
+
 >
 > Is the English satisfactory?
 > No.
 
+We have addressed this by doing a full pass of the final version, after edits. (TODO)
+
 > Is the presentation otherwise satisfactory?
 > No. There are many small inconsistencies in the formalizations.
+
+We have made all the necessary edits to fix these. Again, we thank the reviewers for such detailed remarks.
 
 > Part B: DETAILED COMMENTS
 > -------------------------
@@ -218,6 +230,9 @@ In addition, we note that at the content of one of the papers has only been pres
 > in my opinion a journal article should be as self-contained as
 > possible. Especially introductions into the concept of Nash equilibria
 > and dominance should be given.
+
+We have added explicit definitions for dominance, Nash equilibria, and best response to Section 2.
+
 > Many concepts in Section 3 (Related Work) are also only barely
 > scratched, but here it is OK, as they are not part of the actual
 > article.
@@ -233,19 +248,26 @@ In addition, we note that at the content of one of the papers has only been pres
 > Finally, there are many small mistakes and inconsistencies in the
 > formalizations and the algorithms. I will point out many of those in
 > what follows.
->
->
+
+We appreciate the attention to detail and effort made to improve the quality of the paper. We believe to have found and fixed all of these. 
+
 > Section 2:
 > I get it why for A_{rc} r (row) and c (column) are chosen; however,
 > before c was defined as the chance player, so this might cause some
 > confusion.
->
+
+Agreed. We have kept (r,c) for row and column, and changed the chance player to \star.
+
 > Notion of dominance and Nash equilibria used (on p. 4) but not
 > properly introduced.
->
+
+We have added explicit definitions for dominance, Nash equilibria, and best response to Section 2.
+
 > In Eq. (1): What is Z? Is it the set of terminal states? Those were
 > defined with a different font style.
->
+
+Fixed. 
+
 > "It guarantees the payoff of at least V*" -> Is that so? I thought
 > that's only the expected outcome. So, in a single game the actual
 > payoff may be much lower.
@@ -256,9 +278,9 @@ Agreed, the wording here is ambiguous. What was meant was "It guarantees an _exp
 > paragraph (i.e., 3 lines) referencing this are not much help. Either
 > properly introduce the concept of two-player finite-horizon Markov
 > Games, or maybe think about dropping this paragraph.
->
->
->
+
+We have moved the reference to Markov games and Fig 2 to the start of the section, when these are first being introduced.
+
 > Section 4:
 > Overall, this is a nice introduction into all the used algorithms,
 > providing most of the necessary background.
@@ -268,25 +290,34 @@ Agreed, the wording here is ambiguous. What was meant was "It guarantees an _exp
 > In the text I actually stumbled over the meaning of T(s,r,c). Again,
 > using c as the name for the chance player and the name for player 2
 > (column) is extremely confusing.
->
+
+We have fixed these so that chance is now \star.
+
 > In the definition on page 4, \Delta_c is defined over \cal S \mapsto
 > \Delta(\cal S). However, in Section 4.1, \cal S \times \cal S \mapsto
 > \Delta(\cal S) is used (i.e., current and successor state are taken as
 > input). This seems to make more sense, but it has to be made
 > consistent throughout the article, especially so that it matches the
 > original definition (which seems to be what is wrong here).
->
+
+To clarify, we have introduced a new term \cal{P}_\star(s,r,c,s') to represent a transition probability, and redefined \Delta_\star : \cal{C} \mapso \Delta(\cal S) to refer specifically to the distribution of the outcomes at chance nodes.
+
 > In Alg. 1, line 5: What is s' \in S; especially: what is S? If it is
 > the set of all possible states, that was defined as \cal S on page 3
 > -- note the different font! (same in Alg. 2+3+4)
->
+
+Fixed.
+
 > In equation (3): What is A_{-i}? Is it supposed to be A_{3-i}, i.e.,
 > the actions of the opponent of player i? (same throughout the
 > remainder of the article)
->
+
+We have now added a paragraph to explain the -i syntax and examples on how it applies in each context.
+
 > In equations (3), (4), and (5): What is \delta^s_i?
->
->
+
+It refers to a probability of a strategy. \delta has been replaced by \sigma to stay consistent. TODO: @Brano, please confirm this was not intended to be any different.
+
 > Section 4.2:
 > How is the actual serialization performed for a multi-step game (as
 > opposed to a simple matrix game)? That is, is it enough to consider
@@ -295,70 +326,103 @@ Agreed, the wording here is ambiguous. What was meant was "It guarantees an _exp
 > state consider the two possibilities? The latter sounds way too
 > expensive, but I would have expected to see some argumentation why the
 > former is enough to get proper bounds.
->
->
+
+TODO: @Brano, maybe give an overview of the argument from your IJCAI paper?
+
 > Section 4.3:
 > In Alg. 3, "solve matrix game" returns a pair (the value and \delta,
 > which seems to be the mixed equilibrium strategy); before "solve
 > matrix game" returned only the value -- this should be made consistent
 > (e.g., call it somewhat differently in Alg. 3 to make it clear that
 > this is based on more than just the LP in equations (2) to (5).
->
+
+Solving the LP in equations (2) to (5) necessarily yields both the value and the equilibrium strategy(ies) that acheive this value. We have fixed each use to return both.
+
 > In Alg. 4, BS takes the current state as first argument; this is not
 > passed in Alg. 3. Also the order of the strategy and the bound is
 > different in the two algorithms. Overall, BS in Alg. 4 takes 4
 > arguments, while its call in Alg. 3 has only 3.
->
+
+Fixed. 
+
 > Alg. 4, l. 12: What is v_{a_i,a_{-i}}? This is used here for the first
 > time, but its new value is dependent on its old value, so this must be
 > initialized somewhere.
->
+
+Agreed, we forgot to initialize this. We added an initialization (line 6). TODO: Brano, please check this-- I initialized it to 0.
+
 > In the description of Alg. 4: "until the game for state s is not
 > solved" -> should be until it is solved
->
->
+
+Fixed. 
+
 > Section 4.4:
 > Fig. 6 is supposed to be a possible result after running MCTS for four
 > iterations on the game from Fig. 2. However, the subgames after
 > playing (t,l) and (b,l) are simple matrix games. For the latter, the
 > top-left cell has a fixed value of 0 in Fig. 2, but in Fig. 6 we
 > somehow could get a value of 1 -- this should be made consistent.
->
+
+Fixed, along with the text that referred to it (in subsection 4.4.1). 
+
 > In equation (9): What does the t in \sigma^t_i stand for?
->
+
+Time step / iteration. We've added some text to clarify this. We remove most of the superscripts with t in these subsections, as they are not needed.
+
 > In equation (9): The summand \gamma / |\cal A_i(s)| is missing; this
 > way, equation (9) is not equivalent to equation (8), as is stated in
 > the text.
->
+
+Indeed, the exploration term is missing from this equation. Fixed.
+
 > In equation (10): What are v_{max} and v_{min}?
->
+
+These are defined at the start of Section 2. These define the range of the utility function, i.e. v_{min} <= u(...) <= v_{max}.
+
 > In equation (11): Should it not be \sigma^t_i(a_i)?
->
+
+We have now removed the t supercript from these subsections, and only explicitly define it where necessary.
+
 > In equation (12): Should it not be \bar\sigma_i(a_i) (i.e., without
 > ^t)?
->
+
+Indeed, the superscript t here is incorrect. But. actually, here the superscript should really be T. We want to emphasize that the average strategy exists at each iteration for all iterations up to that point.
+
 > At the bottom of page 24: with probability \gamma / |\cal A(s)|...
 > Should it not be \cal A_i(s)?
->
+
+Corrected.
+
 > In equation (17): What is \pi^\sigma_{-i} of a history? What is
 > \pi^\sigma of two histories, where the first is a prefix of the
 > second?
->
+
+We have added the missing definitions, some at the start of Section 2.
+
 > Right after equation (17): z \in Z -> should it be z \in \cal Z? If
 > so, how can a history be in the set of terminal states?
->
+
+We have changed all instances of Z to \cal{Z}. There is a one-to-one correspondence between terminal states and terminal histories, so we use the same set to denote them. We have added text to clarify this.
+
 > Next line: strategy \sigma_i^t is defined; the next sentence uses
 > \sigma^t (i.e., without the _i). Is this correct?
->
+
+We have reworded to clarify this. 
+
 > a \in A(I) -> what is A(I)?
->
+
+We have changed all instances of A(I) to \cal{A}(I).
+
 > In equation (18), denominator: should be \sum_{t=1}^T (^T is missing)
->
+
+Fixed.
+
 > Bottom of page 26: R^T(I,a) is defined "for information set I of
 > player i in state s" -> I guess, i should be mentioned somewhere in
 > R^T.
->
->
+
+True. Added subscripts to R^T and r^t.
+
 > Section 6.2:
 > In Goofspiel, with the assumption that the players know the sequence
 > of nature's cards, the chance player is basically removed, right? In
@@ -390,13 +454,18 @@ Increasing the minimum bid M significantly simplifies the game by removing possi
 > which the value of b is specified; what about the other cases?
 >
 > In Tron, what are the rewards?
->
+
++1 for win, -1 for loss, 0 for draw. TODO: @[bb], please verify this.
+
 >
 > Section 6.4.5:
 > Why is there no graph for the comparison of the exact algorithms in
 > Tron?
->
->
+
+The amount of computation required grows too quickly as a function of the grid size, therefore we only talk about it in the text for a few instances. 
+
+TODO: @Brano, Vilo: is this answer accurate? Maybe we should still put a graph for these few points? Also please check the text, something is unclear to me in this section, so I put a remark.
+
 > Section 6.5.2:
 > The authors claim that RM clearly dominates all other approaches.
 > However, according to the table this is not always the case. In fact,
