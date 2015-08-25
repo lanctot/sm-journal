@@ -87,16 +87,19 @@ A player that selects a higher card wins the round and receives a number of poin
 In case both players select the card with the same value, the nature's card is discarded. 
 When there are no more cards to be played, the winner of the game is chosen based on the sum of card values he received during the whole game. 
 
-There are two factors that create four different variants of Goofspiel.
-Firstly, we can either use an assumption made in previous work that used Goofspiel as a benchmark for evaluation of algorithms \cite{Saffidine12SMAB}, or we can treat nature in a standard way. 
-The games are fairly similar in terms of results, however, the second variant induces considerably larger game tree.
-Secondly, we use two different utility functions. 
-Either we treat the game as a win-tie-loose (i.e., the players receive utility from set $\lbrace -1, 0, 1 \rbrace$), or the utility of the players equals to the points they received during the game.
+There are two parameters of the game that can be altered to create four different variants of Goofspiel.
+The first parameter relates to nature. 
+We can use an assumption made in the previous work that used Goofspiel as a benchmark for evaluation of the exact offline algorithms \cite{Saffidine12SMAB}, where the order of the cards of nature is randomly chosen at the beginning of the game and it is known to both players. 
+We refer to this setting as with the fixed ordering of cards of nature.
+Alternatively, we can treat nature in a standard way, where the players do not know the exact future sequence of the cards of nature.
+The games are fairly similar in terms of performance of the algorithms, however, the second variant induces considerably larger game tree.
+The second parameter relates to the utility functions. 
+Either we treat the game as a win-tie-loose game (i.e., the players receive utility from set $\lbrace -1, 0, 1 \rbrace$), or the utility values for the players are equal to the points they gain during the game.
 
-Goofspiel correspond to game trees with interesting properties. 
-First unique feature is that the branching factor is uniformly decreasing by $1$ with the depth.
+Goofspiel forms game trees with interesting properties. 
+First unique feature is that the number of actions for each player is uniformly decreasing by $1$ with the depth.
 Secondly, algorithms must randomize in NE strategies, and this randomization is present throughout the whole course of the game.
-As an example, the following table depicts the number of states with pure strategies and mixed strategies for each depth in a subgame-perfect NE calculated by backward induction for Goofspiel with $5$ cards and fixed sequence of nature's cards:
+As an example, the following table depicts the number of states with pure strategies and mixed strategies for each depth in a subgame-perfect NE calculated by backward induction for Goofspiel with $5$ cards and fixed sequence of cards of nature:
 
 \vspace{0.1cm}
 
@@ -379,7 +382,7 @@ Unless otherwise stated, each data point represents a mean of at least $30$ runs
 % mlanctot: check this %bbosansky: ?
 
 \subsubsection{Goofspiel}
-\begin{figure}
+\begin{figure} [t]
 \centering
 	\begin{subfigure}{0.49\textwidth}
  		\includegraphics[width=1\textwidth]{figures/GS-BT-NF.pdf}\caption{}\label{fig:off:res:gs-bt}
@@ -390,7 +393,32 @@ Unless otherwise stated, each data point represents a mean of at least $30$ runs
 \caption{Running times on Goofspiel with fixed order of the nature's cards for increasing size of the deck; sub-figure (a) depicts the results with win-tie-loose utilities, (b) depicts the results with point utilities.} \label{fig:off:res:gs}
 \end{figure}
 
-\begin{figure}
+We now describe the results for the card game Goofspiel.
+First, we analyze the games with a fixed ordering of the cards by nature. 
+
+\paragraph{Exact algorithms with fixed ordering}
+The results are depicted in Figure~\ref{fig:off:res:gs} (note the logarithmic vertical scale), where the left subfigure depicts the results for win-tie-loose utilities and the right subfigure depicts the results for point utilities.
+The comparison on the win-tie-loose variant shows that there is a significant number of subgames with pure Nash equilibrium that can be computed using serialized alpha-beta algorithms.
+Therefore, the performance of $\biab$ and $\doab$ is fairly similar and the gap only slowly increases in favor of $\doab$ with the increasing size of the game.
+Since serialized alpha-beta is able to solve a large portion of subgames, both of these algorithms significantly reduce the number of the states visited by the backward induction algorithm.
+While \textsc{BI} algorithm evaluates on average more than $3.2\times10^7$ nodes in the setting with $7$ cards in more than $2.5$ hours, $\biab$ evaluates only $198,986$ nodes in less than $4$ minutes. 
+The performance is further improved by $\doab$ that evaluates on average $79,105$ nodes in less than $3$ minutes.
+However, the overhead of the algorithm is slightly higher in case of $\doab$; hence, the difference between $\doab$ and $\biab$ is relatively small in this case.
+Finally, the results show that even simple \textsc{DO} algorithm without serialized alpha-beta search can improve the performance of \textsc{BI}.
+In the setting with $7$ cards, \textsc{DO} evaluates more than $6\times10^6$ nodes which takes on average almost 30 minutes.
+
+The results for the point utilities are fairly similar for BI, while DO is slightly worse. 
+On the other hand, the success of serialized alpha-beta algorithm is significantly lower and it takes both algorithms much more time to solve instances of the game of same size.
+With $7$ cards, $\biab$ now evaluates more than $2\times10^6$ nodes and it takes the algorithm on average $32$ minutes to find the solution.
+$\doab$ is still the fastest and it evaluates more than $3\times10^5$ nodes in less than $13$ minutes on average.
+
+The performance of algorithms $\biab$ and $\doab$ represent a significant improvement over the results of the pruning algorithm 
+SMAB presented in \cite{Saffidine12SMAB}. 
+In their work, the number of evaluated nodes was at best around $29\%$, and the running time improvement was only marginal. 
+
+\paragraph{Exact algorithms with chance nodes}
+
+\begin{figure}[t]
 \centering
 	\begin{subfigure}{0.49\textwidth}
  		\includegraphics[width=1\textwidth]{figures/GS-BT-NN.pdf}\caption{}\label{fig:off:res:gsn-bt}
@@ -401,29 +429,33 @@ Unless otherwise stated, each data point represents a mean of at least $30$ runs
 \caption{Running times on Goofspiel with fixed order of the nature's cards for increasing size of the deck; sub-figure (a) depicts the results with win-tie-loose utilities, (b) depicts the results with point utilities.} \label{fig:off:res:gsn}
 \end{figure}
 
-We now describe the results for the card game Goofspiel.
-First, we analyze the games with fixed ordering of the cards by nature. 
-The results are depicted in Figure~\ref{fig:off:res:gs} (note the logarithmic y-scale).
-The comparison shows that a significant number of subgames has a pure subgame Nash equilibrium that can be computed using serialized alpha-beta algorithms.
-Therefore, the performance of $\biab$ and $\doab$ is fairly similar and the gap only slowly increases in favor of $\doab$ with the increasing size of the game.
-Both of these algorithms significantly reduce the number of states visited by the backward induction algorithm (i.e., excluding the number of states evaluated by serialized alpha-beta algorithm).
-While \textsc{BI} algorithm evaluates on average more than $3.2\times10^7$ nodes in the setting with $7$ cards in more than $3$ hours, $\biab$ evaluates only $198,986$ nodes in less than $5$ minutes. 
-The performance is further improved by $\doab$ that evaluates on average $51,035$ nodes in less than $4$ minutes.
-However, the overhead of the algorithm is slightly higher in case of $\doab$; hence, the difference between $\doab$ and $\biab$ is relatively small in this case.
-Finally, the results show that even simple \textsc{DO} algorithm without serialized alpha-beta search can improve the performance of \textsc{BI}.
-In the setting with $7$ cards, \textsc{DO} evaluates more than $6\times10^6$ nodes which takes on average almost 40 minutes.
+Next we compare the exact algorithms in the variant of Goofspiel with standard chance nodes.
+Introducing another branching due to moves by nature causes a significant increase in the size of the game tree.
+For $7$ cards, the game tree has more than $10^{11}$ nodes, which is $4$ orders of magnitude more than in the case with fixed ordering of nature's cards.
+The results depicted in Figure~\ref{fig:off:res:gsn} show that the games become quickly too large to solve exactly and the fastest algorithms solved games with at most $6$ cards.
+Relative performance of the algorithms is similar to the case with fixed ordering: with win-tie-loose utilities, serialized alpha-beta is again able to find pure NE in most of the subgames and prunes out a large fraction of the states.
+BI evaluates more than $2 \times 10^6$ nodes for $5$ cards in almost $10$ minutes, while $\biab$ evaluates only $17,315$ nodes in $27$ seconds and $\doab$ evaluates $6,980$ nodes in $23$ seconds.
+As before, serialized alpha-beta algorithm is less helpful in the case with point utilities -- $\biab$ evaluates $91,419$ nodes in more than $100$ seconds and $\doab$ evaluates $14,536$ nodes in almost $55$ seconds.
 
-The results on Goofspiel represent a significant improvement over the Goofspiel results of the pruning algorithm 
-SMAB presented in \cite{Saffidine12SMAB}. In their work, the number of evaluated nodes was at best around $29\%$, 
-and the running time improvement was only marginal. 
+
+\paragraph{Sampling algorithms with fixed ordering}
 
 \begin{figure}
-\centering
-\includegraphics[width=0.85\textwidth]{figures/convergence-gs.pdf}
-\caption{Convergence comparison of different sampling algorithms on Goofspiel with $5$ cards. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:gs}
+	\begin{subfigure}{1\textwidth}
+		\centering
+		\includegraphics[width=0.85\textwidth]{figures/convergence-gs-tf.pdf}%\caption{}\label{fig:off:conv:gs-bt}
+	\end{subfigure}
+	\begin{subfigure}{1\textwidth}
+		\centering
+		\includegraphics[width=0.85\textwidth]{figures/convergence-gs-ff.pdf}%\caption{}\label{fig:off:conv:gs-bf}
+	\end{subfigure}
+\caption{Convergence of different sampling algorithms on Goofspiel with $5$ cards. 
+Vertical lines correspond to computation times for exact algorithms.
+(Top) Goofspiel with win-tie-loose utility values; 
+(Bottom) Goofspiel with point utilities.} \label{fig:off:conv:gs}
 \end{figure}
 
-Next, we focus on the convergence of sampling algorithms -- i.e., their ability to approximate Nash equilibrium strategies of the complete game. 
+We now turn to the analysis of the convergence of the sampling algorithms -- i.e., their ability to approximate Nash equilibrium strategies of the complete game. 
 Figure~\ref{fig:off:conv:gs} depicts the results in this offline settings for Goofspiel game with $5$ cards (note the logarithmic horizontal scale).
 We compare MCTS algorithms with three different selection functions (UCT, Exp3, and RM), and OOS.
 The results are means out of $20$ runs of each algorithm.
@@ -556,7 +588,7 @@ Finally, $\doab$ evaluates $\approx2\times10^6$ nodes on average and it takes th
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\textwidth]{figures/convergence-rg-fix.pdf}
+\includegraphics[width=0.85\textwidth]{figures/convergence-rg.pdf}
 \caption{Convergence comparison of different sampling algorithms on random game with branching factor $4$ and depth $5$. The vertical lines correspond to computation times for exact algorithms.} \label{fig:off:conv:rg}
 \end{figure}
 
