@@ -31,14 +31,14 @@ Once the algorithm computes the value of each possible subgame following the cur
 solves the matrix game $A$ using standard linear program (LP) for solving normal-form games:
 \begin{eqnarray}
 \max & v_s & \\
-\textrm{s.t.} & \sum_{a_i \in \cA_{i}}A_{a_i,a_{-i}} \cdot \sigma_i(s,a_i) \geq v_s & \forall a_{-i} \in \cA_{-i}\\
+\textrm{s.t.} & \sum_{a_i \in \cA_{i}}A_{a_i,a_{-i}} \cdot \sigma_i(s,a_i) \geq v_s & \forall a_{-i} \in \cA_{-i}(s)\\
 & \sum_{a_{i} \in \cA_{i}} \sigma_i(s,a_{i}) = 1 \\
-& \sigma_i(s,a_{i}) \geq 0 & \forall a_{i} \in \cA_{i} 
+& \sigma_i(s,a_{i}) \geq 0 & \forall a_{i} \in \cA_{i}(s) 
 \end{eqnarray}
-Using the linear programming, the algorithm computes the value of the matrix game, which is propagated to the predecessor~(line~\ref{alg:bi:stop2}). 
+Using the linear programming, the algorithm computes the value of the matrix game $v_s$, which is propagated to the predecessor~(line~\ref{alg:bi:stop2}). 
 If the algorithm evaluates a terminal state, it directly returns the utility value of the state~(line~\ref{alg:bi:stop1}).
-A strategy can be easily extracted from the algorithm by keeping the equilibrium strategies from matrix games $A$ in each state.
-\reviewchange{To be clear, solving a game by solving this linear program yields both the optimal value and the strategy that acheives it.}
+A strategy can be easily extracted from the algorithm by keeping the equilibrium strategies $\sigma_i(s,a)$ from LP for matrix games $A$ in each state.
+\reviewchange{To be clear, solving a game by solving this linear program yields both the optimal value and the strategy that achieves it.}
 
 Evaluating each successor and solving the linear programs in each state of the game is the main computational bottleneck of the backward induction algorithm. 
 The following algorithms try to prune certain branches of the tree in order to avoid this step even for the price of multiple traversals of the game tree.
@@ -47,11 +47,13 @@ The following algorithms try to prune certain branches of the tree in order to a
 
 Backward induction algorithm can be easily enhanced by using bounds on the value of subgames. 
 These bounds can be calculated very quickly by using a transformation of a simultaneous move game into a perfect information extensive-form game and applying wide range of search improvements developed for this more standard setting.
-Consider a matrix game representing a simultaneous choice of both players.
+Consider a matrix game representing a single simultaneous choice of both players.
 This matrix can be serialized by discarding the notion of information sets; hence, letting one player to play first following by the play of the second player. 
 The crucial difference between a serialized and a simultaneous move matrix game is that the second player to move has an advantage of knowing what action the first player chose. 
-Therefore, the value of a serialized game where player $i$ is second to move is an upper bound on the value of the matrix game from the perspective of player~$i$ \cite{Bosansky13Using}.
-
+\reviewchange{
+Given this advantage, the value of a serialized game consisting of a single simultaneous move such that player $i$ is second to move is greater or equal than the value of the original simultaneous move game from the perspective of player~$i$. 
+Furthermore, we can generalize this argument using induction to game trees with multiple simultaneous moves -- if we obtain an upper bound from the perspective of player $i$ by solving each subgame with $d$ steps, then serializing the additional step of a $(d+1)$-step simultaneous move game can again yield value only greater or equal than the value of the original simultaneous move game~\cite{Bosansky13Using}.
+}
 \begin{figure}
 \centering
 %\begin{tabular}{|l|c|c|}
@@ -121,6 +123,14 @@ $\left\langle v_s, \sigma_i \right\rangle \leftarrow$ solve matrix game $A$\;
 \caption{Backward Induction with Serialized Bounds $(\biab)$.}\label{alg:backwardinduction-ab}
 \end{algorithm2e}
 
+\reviewchange{
+The performance of $\biab$ depends on the existence of pure NE in the simultaneous move game.
+In the best case (i.e., there exists a pure NE), the algorithm finds the solution by solving each serialization exactly once starting from the root state.
+The worst case appears, when the only NE requires mixed strategies in each state of the game. 
+In this case, the algorithm not only solves LP in each state similarly to BI, but also repeatedly solves serialized subgames by calling the alpha-beta algorithm.
+In practice, however, this is rarely the case.
+}
+
 \subsection{Backward Induction with Double Oracle and Serialized Bounds}\label{sec:algs:doab}
 
 Solving a matrix game can be further improved by using iterative double-oracle algorithm~\cite{McMahan03Planning}. 
@@ -153,7 +163,7 @@ The double-oracle algorithm for matrix games can be directly incorporated into t
 %\mlanctot{Shouldn't the recursive call in 14 of Algorithm \ref{alg:doab} be $\doab(...)$ rather than double-oracle written out?}
 %bbosansky: done
 
-In each state of the game, the algorithm initializes the restricted game with an arbitrary action (line~\ref{alg:doab:init}) -- $A'$ represents the restricted matrix game, $\cA'_i$ represents the restricted set of available actions to player~$i$. 
+In each state of the game, the algorithm initializes the restricted game with an arbitrary action (line~\ref{alg:doab:init})\footnote{\reviewchange{In practice we use the first action of a shuffled ordered set $\cA_i$ for each player $i$. This initialization step can be improved with a domain knowledge by adding more actions.}} -- $A'$ represents the restricted matrix game, $\cA'_i$ represents the restricted set of available actions to player~$i$. 
 Afterwards, the algorithm starts the iterations of the double-oracle algorithm.
 First, the algorithm needs to calculate the value for each of the successors of the restricted game, for which the current value is not known (lines~\ref{alg:doab:restr1}-\ref{alg:doab:saving}). This evaluation is same as in the case of backward induction with alpha-beta algorithm. 
 Once all values for the restricted game $A'$ are known, the algorithm solves the restricted game (line~\ref{alg:doab:NE}) and keeps the optimal strategies $\sigma'$ of the restricted game. 
@@ -256,6 +266,16 @@ If the currently evaluated action $a_i$ can still be the best response, the valu
 
 When extracting strategies from the double-oracle algorithm with serialized alpha-beta, we proceed exactly as in the case of $\biab$: either a double-oracle is initialized and solved for certain matrix game and we keep equilibrium strategies from the final restricted game, or the strategy is extracted from the serialized alpha-beta algorithms as before.
 
+\reviewchange{
+Similarly to $\biab$, the performance of $\doab$ also depends on the existence of pure NE in the simultaneous move game.
+The best case is identical to $\biab$ and the algorithm finds the solution by solving each serialization exactly once starting from the root state.
+In the worst case, none of the serialized games yield useful bounds and the algorithm needs to call the double-oracle algorithm in every state.
+Moreover, the worst case for the double-oracle algorithm is such that all actions in this state must be added and only a single action is added in each iteration causing the largest number of iterations repeatedly resolving the linear program.
+Again in practice, however, this is rarely the case.
+Moreover, the computational overhead from repeatedly solving a LP is relatively small in practice.
+This is due to the size of each LP that is determined by the number of actions in each state (number of constraints and variables is bounded by the number of actions in each state).
+Therefore, the size of each LP is small compared to the number of states $\doab$ can prune out, especially if the pruning occurs close to the root of the game tree.
+}
 
 \subsection{Simultaneous Move Monte Carlo Tree Search (SM-MCTS)} \label{sec:algs:smmcts}
 

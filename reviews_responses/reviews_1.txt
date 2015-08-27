@@ -26,6 +26,8 @@ We agree that the paper does have (to some degree) a survey character in that it
 
 TODO 
 
+[bb] I have added the description of the complexity for the exact algorithms, although I have just described it in words. Not really sure, whether unleashing another set of symbols just to describe obvious complexity is necessary, but if you guys think that it should be more formal, I can do that.
+
 > As a result, I would like you to cristalize the contribution, elaborate on the theory/analysis,
 > follow the comments in detail and try a resubmission.
 
@@ -108,9 +110,13 @@ TODO: Several full passes of the paper has been done by the native speaker and a
 > Minor remarks:
 > --------------
 >
-> * Description of Double-Oracle algorithm: I missed a remark about how much computational overhead is involved in incrementally updating LPs and solving them again. Also, I was wondering about how exactly you choose the initial restriction.
+> * Description of Double-Oracle algorithm: I missed a remark about how much computational overhead is involved in incrementally updating LPs and solving them again. 
 
-TODO, @Vilo, Brano: can you answer this?
+We have added the description of the worst case for all exact algorithms, including DOab. In the worst case, DOab algorithm performs maximum number of iterations in each state. This means that all actions in each state must be added and only a single action is added in each iteration. In practice, however, this is rarely the case. The computational overhead from repeatedly solving a LP is relatively small in practice. This is due to the size of each LP that is determined by the number of actions in each state (number of constraints and variables is bounded by the number of actions in each state). Therefore, the size of each LP is small compared to the number of states DOab can prune out, especially if the pruning occurs close to the root of the game tree.
+
+> Also, I was wondering about how exactly you choose the initial restriction.
+
+We wanted to minimize unwanted side effects of using some particular initial action and therefore we used the first action from a shuffled ordered set of available actions in each state. We have added this information to the description of DOab algorithm.
 
 > * Algorithms 3 and 4: BR(...) has different signatures in usage in Alg. 3 and definition in Alg. 4.
 
@@ -316,7 +322,7 @@ We have now added a paragraph to explain the -i syntax and examples on how it ap
 
 > In equations (3), (4), and (5): What is \delta^s_i?
 
-It refers to a probability of a strategy. \delta has been replaced by \sigma to stay consistent. TODO: @Brano, please confirm this was not intended to be any different.
+It refers to a probability of a behavioral strategy and correctly set to \sigma to preserve consistency. 
 
 > Section 4.2:
 > How is the actual serialization performed for a multi-step game (as
@@ -327,7 +333,7 @@ It refers to a probability of a strategy. \delta has been replaced by \sigma to 
 > expensive, but I would have expected to see some argumentation why the
 > former is enough to get proper bounds.
 
-TODO: @Brano, maybe give an overview of the argument from your IJCAI paper?
+We agree that the current explanation was not entirely clear and we have added an explanation for a game trees with multiple steps.
 
 > Section 4.3:
 > In Alg. 3, "solve matrix game" returns a pair (the value and \delta,
@@ -349,7 +355,7 @@ Fixed.
 > time, but its new value is dependent on its old value, so this must be
 > initialized somewhere.
 
-Agreed, we forgot to initialize this. We added an initialization (line 6). TODO: Brano, please check this-- I initialized it to 0.
+Agreed, we forgot to initialize this. We added an initialization (line 6).
 
 > In the description of Alg. 4: "until the game for state s is not
 > solved" -> should be until it is solved
@@ -430,9 +436,8 @@ True. Added subscripts to R^T and r^t.
 > mentioned (e.g., in Tab. 1). This sounds like a very simplifying
 > restriction. Why was this made?
 
-In the offline experiments, the nature cards have been fixed due to the consistence with the previous work by Saffidine et al.
-However, we agree that we can also explore the standard setting with chance and therefore we have added the experiments also with chance.
-@[bb] add some comments about the results here
+In the offline experiments, the nature cards have been fixed due to the consistence with the previous work by Saffidine et al. However, we agree that the standard setting with chance should be explored and analyzed, and therefore additional experiments were made and the section on Goofspiel has been expanded to cover both larger range of utility values as well as chance nodes.
+
 
 >
 > What is the branching factor of a simultaneous move game? I had
@@ -441,13 +446,13 @@ However, we agree that we can also explore the standard setting with chance and 
 > the number of actions available to one of the players in a given
 > state.
 
-@[bb] TODO
+TODO
 
 >
 > In Oshi-Zumo, it is said that the number of coins N and the size of
 > the playing field 2K+1 are varied. What about the minimum bid M?
 
-Increasing the minimum bid M significantly simplifies the game by removing possible options for players and does not give results that are different enough to present.
+Increasing the minimum bid M significantly simplifies the game by removing possible options for players and does not give results that are interesting and different enough to present.
 
 >
 > In the evaluation function for Oshi-Zumo: There are two cases for
@@ -455,16 +460,14 @@ Increasing the minimum bid M significantly simplifies the game by removing possi
 >
 > In Tron, what are the rewards?
 
-+1 for win, -1 for loss, 0 for draw. TODO: @[bb], please verify this.
++1 for win, -1 for loss, 0 for draw.
 
 >
 > Section 6.4.5:
 > Why is there no graph for the comparison of the exact algorithms in
 > Tron?
 
-The amount of computation required grows too quickly as a function of the grid size, therefore we only talk about it in the text for a few instances. 
-
-TODO: @Brano, Vilo: is this answer accurate? Maybe we should still put a graph for these few points? Also please check the text, something is unclear to me in this section, so I put a remark.
+We have intentionally omitted the graph for exact algorithms on Tron due to the same performance of BIab and DOab, and poor BI performance that is capable of solving only very small instances. However, we have added the graph to unify the description of the results.
 
 > Section 6.5.2:
 > The authors claim that RM clearly dominates all other approaches.
