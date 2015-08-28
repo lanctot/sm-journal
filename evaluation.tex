@@ -21,8 +21,9 @@ $\textrm{error}(\sigma_1,\sigma_2) = \max_{\sigma_1' \in \Sigma_1} \bE_{z \sim (
 which is equal to $0$ at a Nash equilibrium.
 In each offline convergence setting, the reported values are means out of at least $20$ runs of each sampling algorithm on a single instance of the game.
 We compared at least $3$ different settings for the exploration parameter and present the result only for the best exploration parameter.
-For OOS, Exp3, and RM the best values for the parameters were always $0.6$, $0.1$, and $0.1$ and we give the values for UCT for each domain.
-\bbosansky{TODO update}
+For OOS, Exp3, and RM the best values for the parameters were almost always $0.6$, $0.1$, and $0.1$.
+The only exception was Goofspiel with chance nodes, where both Exp3 and RM converge more quickly with parameter set to $0.3$.
+For UCT, however, the performance was quite different and we give the values for UCT for each domain.
 % mlanctot: please check the definition of error
 %\vlisy{is the 20 runs enough?}\bbosansky{this is the lowest number, some games (e.g., Goofspiel) had more samples (40)}
 
@@ -162,7 +163,7 @@ If the bids are the same, the wrestler does not move.
 The game proceeds until the money runs out for both players, or the wrestler is pushed out of the field. 
 The winner is determined based on the position of the wrestler -- the player in whose half the wrestler is located loses the game. 
 If the final position of the wrestler is the center, the game is a draw.
-Again, the utility values are restricted to $\lbrace -1, 0, 1 \rbrace$.
+Again, we have examined two different settings of the utility values: they are either restricted to win-tie-loose values $\lbrace -1, 0, 1 \rbrace$, or they correspond to the relative position of the wrestler $\lbrace \textrm{wrestler} - K, K - \textrm{wrestler} \rbrace$.
 In the experiments we varied the number of coins and parameter~$K$.
 
 Many instances of the Oshi-Zumo game have pure Nash equilibrium.
@@ -376,7 +377,6 @@ exact equilibrium, which is similar to results of UCT in Kuhn poker~\cite{Ponsen
 %discover the 1 and -1 rewards with high probability and allow the algorithm the break out or avoid this synchronization trap.
 
 \subsection{Offline Equilibrium Computation}
-\bbosansky{TODO: replot convergence graphs $\rightarrow$ UCT is used instead of RUCT, legend is not displayed properly}
 We now compare the offline performance of the algorithm on all the remaining games. 
 We measure the overall computation time for each of the algorithms and number of evaluated nodes -- i.e., nodes for which the main method of the backward induction algorithm executed (i.e., nodes evaluated by serialized alpha-beta algorithms are not included in this count, since they may be evaluated repeatedly).
 Unless otherwise stated, each data point represents a mean of at least $30$ runs.
@@ -442,7 +442,7 @@ Again with $5$ cards, $\biab$ evaluates $91,419$ nodes in more than $100$ second
 
 \paragraph{Sampling algorithms with fixed ordering}
 
-\begin{figure}
+\begin{figure}[t]
 	\begin{subfigure}{1\textwidth}
 		\centering
 		\includegraphics[width=0.85\textwidth]{figures/convergence-gs-tf.pdf}%\caption{}\label{fig:off:conv:gs-bt}
@@ -467,10 +467,11 @@ RM is the fastest with more than $2.6\times 10^5$ iterations per second, OOS has
 The results show that OOS converges the fastest out of all sampling algorithms.
 This is especially noticeable in the point-utility settings, where none of the other sampling algorithms were approaching zero error due to the exploration.
 MCTS with RM selection function is only slightly slower in the win-tie-loose case, however, other two selection functions perform worse. 
-While Exp3 eventually converges close to $0$ in the win-tie-loose case, the exploitability of UCT decreases rather slowly and it was still over $0.35$ at the time limit of $300$ seconds. \bbosansky{TODO UPDATE!}
-The best $C$ constant for UCT was 5 in this setting. While setting lower constant typically improved slightly the 
+While Exp3 eventually converges close to $0$ in the win-tie-loose case, the exploitability of UCT decreases rather slowly and it was still over $0.35$ at the time limit of $500$ seconds. 
+The best $C$ constant for UCT was 5 in win-tie-loose setting, and $10$ in the point utility setting. 
+While setting lower constant typically improved slightly the 
 convergence during the first iterations, the final error was always larger.
-Moreover, when we have not used randomization in UCT, the algorithm was not able to converge to error lower than $0.5$ in the time limit. 
+%Moreover, when we have not used randomization in UCT, the algorithm was not able to converge to error lower than $0.5$ in the time limit. 
 %On the other hand, both OOS and RM confirm their quick convergence, witch is aligned with previous results~\cite{Lanctot13Goofspiel}.
 The vertical lines represent times for exact algorithms.
 In the win-tie-loose case, $\biab$ is slightly faster and finishes first in $0.64$ second, followed by $\doab$ ($0.69$ seconds), \textsc{DO} ($3.1$ seconds), and \textsc{BI} ($6$ seconds).
@@ -478,7 +479,7 @@ In the point case, $\doab$ is the fastest ($0.97$ seconds), followed by $\biab$ 
 
 \paragraph{Sampling algorithms with chance nodes}
 
-\begin{figure}
+\begin{figure}[t]
 	\begin{subfigure}{1\textwidth}
 		\centering
 		\includegraphics[width=0.85\textwidth]{figures/convergence-gs-tn.pdf}%\caption{}\label{fig:off:conv:gs-bt}
@@ -496,7 +497,8 @@ Vertical lines correspond to computation times of exact algorithms.
 We also performed the experiments in the setting with chance nodes.
 Due to the size of the game tree, we have reduced the number of cards to $4$, since the size of this game tree is comparable to the case with $5$ cards and fixed ordering of cards.
 The results depicted in Figure~\ref{fig:off:conv:gsn} show a similar behavior of the sampling algorithms as we have observed in the previous case.
-OOS is converges the fastest, followed by RM, and EXP3.
+OOS converges the fastest, followed by RM, and EXP3.
+Main difference is in the convergence of UCT, however, this is mostly due to the fact that pure NE exists in Goofspiel with 4 cards; hence, UCT can better identify the best action to play and converges more quickly to less exploitable strategy than in the case with 5 cards.
 Surprisingly, the convergence of the algorithms does not change that dramatically with the introduction of point utilities as in the previous case.
 The main reason is that the range of the utility values is smaller compared to the previous case (there is one card less in the present setting and the missing cards has the highest value).
 For comparison, we again use the vertical lines to denote times of exact algorithms.
@@ -572,10 +574,17 @@ Therefore, their performance is identical and it takes around $1.5$ seconds to s
 Although with an increasing number of coins the algorithms $\biab$ and $\doab$ need to find mixed Nash equilibria, their performance is very similar for both types of utilities.
 As expected, the case with point utilities is more challenging and the algorithms scale worse -- for $18$ coins both algorithms solve the game with win-tie-loose utilities in approximately $1$ hour ($\biab$ in $50$ minutes, $\doab$ in $64$), it takes the algorithms around $3$ hours to solve the case with point utilities ($\biab$ in $191$ minutes, $\doab$ in $172$ minutes).
 
-\begin{figure}
+\begin{figure}[t]
 \centering
-\includegraphics[width=0.85\textwidth]{figures/convergence-oz.pdf}
-\caption{Convergence of sampling algorithms on Oshi-Zumo game, with $10$ coins, $K=3$, and $M=1$. The vertical lines correspond to computation times of exact algorithms.} \label{fig:off:conv:oz}
+	\begin{subfigure}{0.85\textwidth}
+		\includegraphics[width=1\textwidth]{figures/convergence-oz.pdf}
+	\end{subfigure}
+	\begin{subfigure}{0.85\textwidth}
+		\includegraphics[width=1\textwidth]{figures/convergence-oz-bf.pdf}
+	\end{subfigure}
+\caption{Convergence of sampling algorithms on Oshi-Zumo game, with $10$ coins, $K=3$, and $M=1$. The vertical lines correspond to computation times of exact algorithms.
+(Top) Oshi-Zumo with win-tie-loose utility values; 
+(Bottom) Oshi-Zumo with point utilities.} \label{fig:off:conv:oz}
 \end{figure}
 
 Turing to the sampling algorithms reveals that the game is difficult to approximate even in the win-tie-loose setting.
@@ -589,6 +598,16 @@ OOS is again the fastest and converges to error $0.45$ within the time limit, RM
 
 
 \subsubsection{Random Games}
+\begin{figure}[t]
+\centering
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=1\textwidth]{figures/RG-BF4-BIN-FALSE.pdf}\caption{}\label{fig:off:res:rgbf4}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=1\textwidth]{figures/RG-BF5-BIN-FALSE.pdf}\caption{}\label{fig:off:res:rgbf5}
+	\end{subfigure}
+\caption{Running times of exact algorithms on randomly generated games with increasing depth: sub-figure (a) depicts the results with branching factor set to $4$ actions for each player, (b) depicts the results with branching factor $5$.} \label{fig:off:res:rg}
+\end{figure}
 
 In the first variant of the randomly generated games we used games with utility values randomly drawn from a uniform distribution $[0,1]$. 
 Such games represent an extreme case, where neither alpha-beta search, nor double-oracle algorithm can save much computation time, since each action can lead to arbitrarily good or bad terminal state. 
@@ -608,21 +627,10 @@ For case with branching factor set to $4$ for both players, and depth $7$, \text
 \textsc{DO} evaluates even more nodes compared to $\biab$ ($\approx1.2\times10^7$) and it is slower compared to both \textsc{BI} and $\biab$. 
 Finally, $\doab$ evaluates $\approx2\times10^6$ nodes on average and it takes the algorithm slightly over $80$ minutes.
 
-\begin{figure}
-\centering
-	\begin{subfigure}{0.49\textwidth}
-		\includegraphics[width=1\textwidth]{figures/RG-BF4-BIN-FALSE.pdf}\caption{}\label{fig:off:res:rgbf4}
-	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
-		\includegraphics[width=1\textwidth]{figures/RG-BF5-BIN-FALSE.pdf}\caption{}\label{fig:off:res:rgbf5}
-	\end{subfigure}
-\caption{Running times of exact algorithms on randomly generated games with increasing depth: sub-figure (a) depicts the results with branching factor set to $4$ actions for each player, (b) depicts the results with branching factor $5$.} \label{fig:off:res:rg}
-\end{figure}
-
-\begin{figure}
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/convergence-rg.pdf}
-\caption{CConvergence of sampling algorithms on random game with branching factor $4$ and depth $5$. The vertical lines correspond to computation times of exact algorithms.} \label{fig:off:conv:rg}
+\caption{Convergence of sampling algorithms on random game with branching factor $4$ and depth $5$. The vertical lines correspond to computation times of exact algorithms.} \label{fig:off:conv:rg}
 \end{figure}
 
 Figure~\ref{fig:off:conv:rg} depicts the results for convergence of the sampling algorithms for the random game with correlated utility values, branching factor set to $4$ and depth $5$. 
