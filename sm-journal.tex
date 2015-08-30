@@ -227,8 +227,9 @@ resources are abundant and closely approximating the optimal strategy is a prior
 the online search case, where computational resources are limited and acting quickly is necessary.
 Thorough experimental evaluation in six substantially different games shows that augmenting Backward Induction with a double oracle
 method and serialized bounds can compute an exact optimal strategy in less than 2\% of the time required by previous algorithms.
-When used in online search with a good evaluation function, this method performs well in games with high support and accurate
-assessment from limited look-ahead is required.
+% MarcL: I struggled a bit trying to summarize the results below, so please fix as needed.
+When used in online search, this method can match or out-perform the Monte Carlo algorithms when an accurate short-term assessment
+is needed, the overhead of sampling is significant, or the game has high support.
 For the Monte Carlo sampling algortihms, UCT can often find a good pure strategy quickly if one exixts, but in other games its
 recommendation can become consistently worse over time, diverging away from the optimal choice.
 In games where mixing among strategies is important, strategies built on regret matching perform well and are generally
