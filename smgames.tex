@@ -28,7 +28,8 @@ The transition function $\cT : \cS \times \cA_1 \times \cA_2 \mapsto \cS$ define
 state and actions for both players. $\Delta_\star:\cC \mapsto \Delta(\cS)$ describes a probability distribution over
 possible successor states of the chance event.
 \reviewchange{Induced by $\Delta_\star$, we also define
-$\cP_\star(s, r, c, s')$ as the probability of transitioning to $s'$ after choosing joint action $(r,c)$ from $s$.}
+$\cP_\star(s, r, c, s')$ as the probability of transitioning to $s'$ after choosing joint action $(r,c)$ from $s$, or
+simply $1$ when $\cT(s, r, c) \not\in \cC$.}
 The utility functions $u_i : \cZ \mapsto [v_{\min}, v_{\max}] \subseteq \mathbb{R}$ gives the utility of player $i$, with
 $v_{min}$ and $v_{\max}$ denoting the minimum and maximum possible utility respectively. We assume constant-sum
 games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$.
