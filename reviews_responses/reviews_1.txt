@@ -24,7 +24,7 @@ We agree that the paper does have (to some degree) a survey character in that it
 > insights to the theory, e.g., on correctness issues or running time efficiencies. What about
 > probabilistic completeness?
 
-TODO 
+TODO
 
 [bb] I have added the description of the complexity for the exact algorithms, although I have just described it in words. Not really sure, whether unleashing another set of symbols just to describe obvious complexity is necessary, but if you guys think that it should be more formal, I can do that.
 
@@ -47,7 +47,7 @@ There are new algorithms and new analyses beyond what has been previously publis
 
 We believe the formality is necessary to make the algorithms precise. However, in this revision we have removed a number of technical details that obstructed the main message and did not add much value.
 
-TODO: Add a paragraph summarizing the NIPS results + say something about online double-oracle. 
+TODO: Add a paragraph summarizing the NIPS results + say something about online double-oracle.
 
 > Is the paper complete? (Generally, a paper is complete if it includes all relevant proofs
 > and/or experimental data, a thorough  discussion of connections with the existing literature,
@@ -79,7 +79,7 @@ We agree. (Section 1.1 has been added for this purpose.)
 >
 > NO. It does mention general game playing and real-time decision making in physical environments as possible application areas of the algorithms, and I am convinced that this is correct, but still this could be elaborated upon. E.g., why not present a real-world case study besides the benchmark domains?
 
-We believe that a real-world case study requires a full significant investigation of techniques and challenges that would reach beyond the scope of this paper. 
+We believe that a real-world case study requires a full significant investigation of techniques and challenges that would reach beyond the scope of this paper.
 
 TODO: However, we have elaborated on the importance and potential applicibality of this work in the introduction.
 
@@ -110,7 +110,7 @@ TODO: Several full passes of the paper has been done by the native speaker and a
 > Minor remarks:
 > --------------
 >
-> * Description of Double-Oracle algorithm: I missed a remark about how much computational overhead is involved in incrementally updating LPs and solving them again. 
+> * Description of Double-Oracle algorithm: I missed a remark about how much computational overhead is involved in incrementally updating LPs and solving them again.
 
 We have added the description of the worst case for all exact algorithms, including DOab. In the worst case, DOab algorithm performs maximum number of iterations in each state. This means that all actions in each state must be added and only a single action is added in each iteration. In practice, however, this is rarely the case. The computational overhead from repeatedly solving a LP is relatively small in practice. This is due to the size of each LP that is determined by the number of actions in each state (number of constraints and variables is bounded by the number of actions in each state). Therefore, the size of each LP is small compared to the number of states DOab can prune out, especially if the pruning occurs close to the root of the game tree.
 
@@ -132,7 +132,7 @@ TODO
 
 > * Alg. 4: Before line 10, v_{a_i, a_{-1}} should be initialized to 0 (I guess).
 
-Yes, this is done now. 
+Yes, this is done now.
 
 > * Eq. 9: What does subscript "t" stand for?
 >
@@ -255,7 +255,7 @@ We have added explicit definitions for dominance, Nash equilibria, and best resp
 > formalizations and the algorithms. I will point out many of those in
 > what follows.
 
-We appreciate the attention to detail and effort made to improve the quality of the paper. We believe to have found and fixed all of these. 
+We appreciate the attention to detail and effort made to improve the quality of the paper. We believe to have found and fixed all of these.
 
 > Section 2:
 > I get it why for A_{rc} r (row) and c (column) are chosen; however,
@@ -272,7 +272,7 @@ We have added explicit definitions for dominance, Nash equilibria, and best resp
 > In Eq. (1): What is Z? Is it the set of terminal states? Those were
 > defined with a different font style.
 
-Fixed. 
+Fixed.
 
 > "It guarantees the payoff of at least V*" -> Is that so? I thought
 > that's only the expected outcome. So, in a single game the actual
@@ -322,7 +322,7 @@ We have now added a paragraph to explain the -i syntax and examples on how it ap
 
 > In equations (3), (4), and (5): What is \delta^s_i?
 
-It refers to a probability of a behavioral strategy and correctly set to \sigma to preserve consistency. 
+It refers to a probability of a behavioral strategy and correctly set to \sigma to preserve consistency.
 
 > Section 4.2:
 > How is the actual serialization performed for a multi-step game (as
@@ -349,7 +349,7 @@ Solving the LP in equations (2) to (5) necessarily yields both the value and the
 > different in the two algorithms. Overall, BS in Alg. 4 takes 4
 > arguments, while its call in Alg. 3 has only 3.
 
-Fixed. 
+Fixed.
 
 > Alg. 4, l. 12: What is v_{a_i,a_{-i}}? This is used here for the first
 > time, but its new value is dependent on its old value, so this must be
@@ -360,7 +360,7 @@ Agreed, we forgot to initialize this. We added an initialization (line 6).
 > In the description of Alg. 4: "until the game for state s is not
 > solved" -> should be until it is solved
 
-Fixed. 
+Fixed.
 
 > Section 4.4:
 > Fig. 6 is supposed to be a possible result after running MCTS for four
@@ -369,7 +369,7 @@ Fixed.
 > top-left cell has a fixed value of 0 in Fig. 2, but in Fig. 6 we
 > somehow could get a value of 1 -- this should be made consistent.
 
-Fixed, along with the text that referred to it (in subsection 4.4.1). 
+Fixed, along with the text that referred to it (in subsection 4.4.1).
 
 > In equation (9): What does the t in \sigma^t_i stand for?
 
@@ -413,7 +413,7 @@ We have changed all instances of Z to \cal{Z}. There is a one-to-one corresponde
 > Next line: strategy \sigma_i^t is defined; the next sentence uses
 > \sigma^t (i.e., without the _i). Is this correct?
 
-We have reworded to clarify this. 
+We have reworded to clarify this.
 
 > a \in A(I) -> what is A(I)?
 
@@ -476,14 +476,17 @@ We have intentionally omitted the graph for exact algorithms on Tron due to the 
 > best, though that clearly is not the case in some of the cases (E.g.,
 > against DO\alpha\beta EXP3 shows better performance, and against
 > random DO\alpha\beta is best in the decreasing cards settings).
->
+
+We have rerun several results with different parameters and have updated the abstract and discussion accordingly. Also, we have significantly changed the highlighting and discussion of the results. We believe this point is addressed in this new version, not only for Goofspiel.
+
 > I am surprised by the results of the random player overall. Basically,
 > it seems that DO\alpha\beta is the worst approach, OOS slightly better
 > and RM the best (in most cases). However, against random this trend is
 > inverted. Is there an explanation why the worse players fare best
 > against a random player?
->
->
+
+Yes, we believe this is due to the random player in Goofspiel being particularly good compared to the quality of the random player in other games. This is partly due to the importance of mixing in Goofspiel. Any pure strategy in Goofspiel can be maximally exploited, suggesting that an optimal strategy should have have high support (to fool your opponent preventing them from modeling your decisions). For a more detailed argument see (Rhoads & Bartholdi, "Goofspiel is Solved", 2012) and/or (Lanctot et al., "Monte Carlo Tree Search in Simultaneous Move Games with Applications to Goofspiel", 2013).
+
 > Section 6.5:
 > Is there an explanation why the good convergence of OOS does not
 > translate to good performance in online play? E.g., in Section 6.5.5
@@ -491,9 +494,12 @@ We have intentionally omitted the graph for exact algorithms on Tron due to the 
 > offline convergence results. However, in every single domain it is
 > said that OOS, which converged fastest in most cases, is the worst
 > approach in the online setting.
->
->
->
+
+Yes, this is due to the variance in the estimates introduced by the updates in OOS. The quantities OOS estimates are a function of the entire sample's history, whereas in regret matching the estimates only look ahead one step using the next state's value as an estimate for the subgame. So, the correction applied by importance sampling in OOS will have higher variance due to exploring over the entire history's actions. In contrast, regret matching's estimates may introduce bias (since it is using the childrens' current estimates as a proxy for the optimal value of the subgame), it seems that in online search setting the bias introduced here is less of a problem in practice. In essence, when time is severely limited, then it may be advantageous to have a bit of bias if it can drastically reduce variance.
+
+TODO(@Vilo): We have added experimental results demonstrating this point.
+TODO(@Marc): And we have added a discussion to support these arguments.
+
 > The tables in Section 6.5 should be explained in more detail.
 > Especially, it should be noted much earlier that the rows stand for
 > player 1 and the columns for player 2. While this is not relevant in
@@ -503,38 +509,44 @@ We have intentionally omitted the graph for exact algorithms on Tron due to the 
 > other games as well? Clearly not in Goofspiel and Oshi-Zumo, but in
 > Tron it might depend on the actual starting positions, and in the
 > random games I have no intuitions on this at all.
->
->
+
+We have added a new paragraph at the start of this subsection with an additional example to clarify this point. In Tron, we only use symmetric boards and initial position, so there is no possible advantage as well. In the random games, a bias could be introduced but we did not notice any statistically significant biases in practice, as shown in Table 3. TODO(@Vilo: Can you verify that this last statement is true?)
+
 > In the parameter-tuning experiments, according to Tab. 6, the
 > performance of Exp3 and RM was still improving with increasing
 > parameter value. Thus, it might make sense to test even higher values
 > for these two approaches.
->
+
+We have added results to this table to confirm where the improvement stops in most cases.
+
 > Also, I find it surprising to see that RM performs better against
 > DO\alpha\beta when a higher exploration factor is used, but in
 > self-play such a high factor is much worse than a lower one; also, the
 > higher value results in worse performance against the other
 > simulation-based approaches. Is there any explanation for this
 > behavior?
->
->
->
+
+In Goofspiel, this pattern is mostly not stastically significant but it seems to be true in Oshi-Zumo.
+
+This is likely due to proper versus improper matching of the opponent's model. If RM plays against DO\alpha\beta then higher exploration is necessary because the implicit assumption made in the search algorithm is that the opponent uses the same algorithm. So, when playing against a DO\alpha\beta opponent, the actual states reached will not be the ones expected by RM search algorithm (which assumes an RM opponent) therefore it must explore more to reach those states in order to compute good strategies there (since the strategy above is based on the assessments made below). A similar (but inverted) argument applies when playing against an opponent that does use the same algorithm; instead here the assumed opponent model matches and so it is advantageous to search deeper rather than wider. This is also consistent with the effects of results from different opponents noted in (Tak et al., "Monte Carlo Tree Search Variants for Simultaneous Move Games", 2014).
+
 > In all the pseudocodes:
 > Sometimes a line ends with a semicolon; sometimes it does not. This
 > should be made consistent.
->
->
->
+
+The semicolons have been removed in all of the pseudo-code.
+
 > The references should be made consistent. One thing I noticed is that,
 > e.g., Czech, accents are not always there. This holds among others for
 > one of the authors of this article: In papers 6 and 8 Viliam Lisy
 > comes without the accent over the y, while in paper 7 it is there.
 > Furthermore, sometimes editors are mentioned, sometimes not; sometimes
 > publishers are mentioned, sometimes not; etc.
->
->
->
->
+
+The inconsistencies in the references have now been fixed.
+
+TODO: Vilo, Brano: I don't know what you prefer regarding the accents. I added them, but please remove them if you prefer it.
+
 > Overall, in my opinion this is a nice overview paper over current
 > approaches for solving and playing two-player simultaneous move games,
 > possibly including chance events. Unfortunately, it suffers a lot from
@@ -547,4 +559,8 @@ We have intentionally omitted the graph for exact algorithms on Tron due to the 
 > quite different characteristics, I do not see this as a severe
 > shortcoming. The paper clearly needs a serious rewrite, but in my
 > opinion it will be possible to end up with a nice article after all.
->
+
+We have now added results for different reward functions corresponding to point differences in both Goofspiel and Oshi-Zumo, in both the offline and online case. TODO: @Brano, please verify this claim.
+
+Again, we would to sincerely thank the effort from both reviewers for catching many of the small and sometimes subtle mistakes. As a result, we believe this review process has led to a greatly improved paper.
+
