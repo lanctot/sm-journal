@@ -215,25 +215,29 @@ $^1$Corresponding author; phone: +420 22435 7581
 
 %\address{}
 \begin{abstract}
-Simultaneous move games model discrete, multistage interactions where at each stage
-players choose their actions simultaneously. This formalism has been used to express
-games in general game playing and can model discrete approximations of realistic scenarios
-such as real-time decision-making in a physical environment.
-In this paper, we survey the literature on algorithms that compute strategies
-for two-player zero-sum simultaneous move games and describe our recent algorithms that advance the state of the art.
+Simultaneous move games model discrete, multistage interactions where at each stage players simultaneously choose their actions. 
+\reviewchange{
+This formalism has been used to express games in general game playing and can also model many discrete approximations of real-world scenarios.
+In this paper, we describe both novel and existing algorithms that compute strategies for the class of two-player zero-sum simultaneous move games.}
 The algorithms include both backward induction methods with efficient pruning, as well as Monte Carlo sampling algorithms.
 We evaluate the algorithms in two settings: the offline case, where computational
 resources are abundant and closely approximating the optimal strategy is a priority, and
 the online search case, where computational resources are limited and acting quickly is necessary.
-Thorough experimental evaluation in six substantially different games shows that augmenting Backward Induction with a double oracle
-method and serialized bounds can compute an exact optimal strategy in less than 2\% of the time required by previous algorithms.
-% MarcL: I struggled a bit trying to summarize the results below, so please fix as needed.
-When used in online search, this method can match or out-perform the Monte Carlo algorithms when an accurate short-term assessment
-is needed, the overhead of sampling is significant, or the game has high support.
-For the Monte Carlo sampling algortihms, UCT can often find a good pure strategy quickly if one exixts, but in other games its
-recommendation can become consistently worse over time, diverging away from the optimal choice.
-In games where mixing among strategies is important, strategies built on regret matching perform well and are generally
-more robust to changes in parameter settings.
+We perform a thorough experimental evaluation on six substantially different games for both settings.
+\reviewchange{
+For exact algorithms, the results show that our pruning techniques for backward induction dramatically improve the computation time required by previous exact algorithms.
+For sampling algorithms, the results provide unique insights by identifying favorable scenarios for different sampling algorithms.
+}
+
+%Thorough experimental evaluation in six substantially different games shows that augmenting Backward Induction with a double oracle
+%method and serialized bounds can compute an exact optimal strategy in less than 2\% of the time required by previous algorithms.
+%% MarcL: I struggled a bit trying to summarize the results below, so please fix as needed.
+%When used in online search, this method can match or out-perform the Monte Carlo algorithms when an accurate short-term assessment
+%is needed, the overhead of sampling is significant, or the game has high support.
+%For the Monte Carlo sampling algorithms, UCT can often find a good pure strategy quickly if one exixts, but in other games its
+%recommendation can become consistently worse over time, diverging away from the optimal choice.
+%In games where mixing among strategies is important, strategies built on regret matching perform well and are generally
+%more robust to changes in parameter settings.
 % Seems a bit too strong, now.
 %   Furthermore, a new sampling algorithm
 %   based on regret matching, dominates in the head-to-head tournament compared to
@@ -293,11 +297,13 @@ in Backgammon~\cite{Tesauro95TDGammon} and super-human play in Atari~\cite{mnih-
 The most common model for these multistage environments is one with strictly {\it sequential}
 interactions. That is, each player chooses an action when it is their turn to act, and the environment
 generates a new state, with the next player's turn to act, and so on. This model is sufficient in many
-settings~\cite{AIbook}, such as in the examples used above, but it is not a good representation of the
-environment when agents are allowed to act simultaneously, such as in real-world situations like auctions and
-autonomous driving.
+settings~\cite{AIbook}, such as in the examples used above.
+\reviewchange{
+On the other hand, it is not a good representation of the environment when agents are allowed to act simultaneously.
+These situations occur in many real-world scenarios like auctions, or autonomous driving, and many of computer and board games in the expanding gaming industry are of this nature.
+In all of these scenarios, the simultaneousness of the decision of all players is crucial and we have to include it directly into the model when computing strategies to play in these games.}
 
-One of the key differences compared to strictly sequential
+One of the fundamental differences of simultaneous move games compared to strictly sequential
 games is that the agents may need to use randomized (or \textit{mixed}) strategies in order to
 play optimally~\cite{Gintis09},
 \ie to maximize their worst-case expected utility.

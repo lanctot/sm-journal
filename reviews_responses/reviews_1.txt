@@ -79,9 +79,7 @@ We agree. (Section 1.1 has been added for this purpose.)
 >
 > NO. It does mention general game playing and real-time decision making in physical environments as possible application areas of the algorithms, and I am convinced that this is correct, but still this could be elaborated upon. E.g., why not present a real-world case study besides the benchmark domains?
 
-We believe that a real-world case study requires a full significant investigation of techniques and challenges that would reach beyond the scope of this paper.
-
-TODO: However, we have elaborated on the importance and potential applicibality of this work in the introduction.
+We believe that a full real-world case study requires a significant investigation of techniques and challenges tailored for the particular scenario that would reach beyond the scope of this paper. We have, however, elaborated on the importance and potential applicability of this work in the introduction. TODO: @Marc, Vilo -- I have tried to sketch something in intro. Please, let me know what do you think.
 
 > Is the English satisfactory?
 > ----------------------------
@@ -124,11 +122,11 @@ Indeed, the usage in Algorithm 3 was missing the game as the first argument. Thi
 
 > * Alg. 3: Before line 3, v_s^{i} and v_s^{-i} should somehow be initialized.
 
-These should be \alpha_s and \beta_s, respectively, which has been fixed. (TODO: Vilo, Brano, please check this then remove this note.)
+This part of the algorithm was not properly explained and corresponds to checking whether the whole game can be solved solely by using the serialized versions. We have corrected this and made the condition more explicit.
 
 > * Alg. 4: \lambda_{a_i} needs a clearer explanation.
 
-TODO
+We have improved the explanation of $\labmda_{a_i}$ including the reasoning behind the calculation -- $\lambda_{a_i}$ represents the lowest possible expected utility action $a_i$ must gain against the current action of the opponent $a_{-i}$ in order for action $a_i$ to be the best response. Calculation of $\lambda_{a_i}$ corresponds to situation when player $i$ achieves the best possible utility by playing action $a_i$ against all other actions from the strategy of the opponent and it needs to achieve at least $\lambda_{a_i}$ against $a_{-i}$ so that expected value for playing $a_i$ is at least $v_i^{BR}$.
 
 > * Alg. 4: Before line 10, v_{a_i, a_{-1}} should be initialized to 0 (I guess).
 
@@ -446,7 +444,7 @@ In the offline experiments, the nature cards have been fixed due to the consiste
 > the number of actions available to one of the players in a given
 > state.
 
-TODO
+We are typically refer to branching factor in the context of specific experimental domains, where mentioning and highlighting the number of actions for specific player is preferable. We have, however, added a clarification of this term in Section 2.
 
 >
 > In Oshi-Zumo, it is said that the number of coins N and the size of
@@ -545,7 +543,7 @@ The semicolons have been removed in all of the pseudo-code.
 
 The inconsistencies in the references have now been fixed.
 
-TODO: Vilo, Brano: I don't know what you prefer regarding the accents. I added them, but please remove them if you prefer it.
+TODO: Vilo, Brano: I don't know what you prefer regarding the accents. I added them, but please remove them if you prefer it. (bb -- I think accents are better, since we have them also on the first page).
 
 > Overall, in my opinion this is a nice overview paper over current
 > approaches for solving and playing two-player simultaneous move games,

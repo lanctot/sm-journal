@@ -23,7 +23,7 @@ The player set $\cN = \{ 1, 2, \star \}$ contains player labels, where
 $\star$ denotes the chance player, and by convention a player is denoted $i \in \cN$.
 $\cS$ is a set of states, with $\cZ$ denoting the terminal states, $\cD$ the states where players make decisions,
 and $\cC$ the possibly empty set of states where chance events occur. $\cA = \cA_1 \times \cA_2$ is the set of
-joint actions of individual players. We denote $\cA_i(s)$ the actions available to player $i$ in state $s \in \cS$.
+joint actions of individual players. We denote $\cA_i(s)$ the actions available to player $i$ in state $s \in \cS$ \reviewchange{and denote the number of actions $|\cA_i(s)|$ as the \emph{branching factor for player $i$}. When player is not specified, we are talking about branching factor of all players and number of joint actions $|\cA|$.}
 The transition function $\cT : \cS \times \cA_1 \times \cA_2 \mapsto \cS$ defines the successor state given a current
 state and actions for both players. $\Delta_\star:\cC \mapsto \Delta(\cS)$ describes a probability distribution over
 possible successor states of the chance event.

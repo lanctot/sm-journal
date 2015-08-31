@@ -83,9 +83,13 @@ This situation occurs in our example in Figure~\ref{fig:serialization}, where bo
 
 By using bounds calculated in this way we can speed-up the backward induction algorithm (denoted $\biab$).
 Algorithm~\ref{alg:backwardinduction-ab} depicts the pseudocode.
-When the backward induction starts evaluating successors of the current state, the algorithm calculates upper and lower bounds using alpha-beta algorithm on serialized variants of the subgame rooted in the successor $s'$ (lines~\ref{alg:biab:ab1}-\ref{alg:biab:ab2}).
-The serialized game is solved using the standard alpha-beta algorithm, where the second player to move in the serialization is the player in the argument of the method.
-If the bounds are equal, the algorithm uses the value directly (line~\ref{alg:biab:saving}) instead of performing a recursive call~(line~\ref{alg:biab:recursive}).
+\reviewchange{
+The algorithm first serializes and solve the whole game using the standard alpha-beta algorithm and returns directly the value from the serialized games if the bounds are equal (line~\ref{alg:biab:stop15}).
+The second player to move in the serialization is the player in the argument of the method.
+}
+If the bounds are not equal, the algorithm starts evaluating successors of the current state.
+First, the algorithm calculates upper and lower bounds using alpha-beta algorithm on serialized variants of the subgame rooted in the successor $s'$ (lines~\ref{alg:biab:ab1}-\ref{alg:biab:ab2}).
+As before, the algorithm uses the value directly (line~\ref{alg:biab:saving}) instead of performing a recursive call~(line~\ref{alg:biab:recursive}) if the bounds are equal.
 
 We distinguish two cases when extracting the equilibrium strategies from the backward induction with alpha-beta search.
 In case that a state was fully evaluated by the algorithm (i.e., a linear program was built and solved for this state), we proceed as before and keep the pair of equilibrium strategies in this state.
@@ -103,6 +107,7 @@ Such a strategy provides guarantees for player~$i$ that is not exploitable and d
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \Input{$s$ -- current matrix game; $i$ -- searching player}
 \If{$s \in \cZ$} {\Return $u_i(s)$} \label{alg:biab:stop1}
+\If{$\left(s\;\textrm{is root}\right) \wedge \left(\textrm{alpha-beta}(s,i) = \textrm{alpha-beta}(s,-i)\right)$} {\Return $\textrm{alpha-beta}(s,-i)$} \label{alg:biab:stop15}
 \For{$r \in \cA_1(s)$}{
 	\For{$c \in \cA_2(s)$} {
 		$A_{rc} \leftarrow 0$\;
@@ -163,11 +168,14 @@ The double-oracle algorithm for matrix games can be directly incorporated into t
 %\mlanctot{Shouldn't the recursive call in 14 of Algorithm \ref{alg:doab} be $\doab(...)$ rather than double-oracle written out?}
 %bbosansky: done
 
-In each state of the game, the algorithm initializes the restricted game with an arbitrary action (line~\ref{alg:doab:init})\footnote{\reviewchange{In practice we use the first action of a shuffled ordered set $\cA_i$ for each player $i$. This initialization step can be improved with a domain knowledge by adding more actions.}} -- $A'$ represents the restricted matrix game, $\cA'_i$ represents the restricted set of available actions to player~$i$.
+\reviewchange{
+Similarly to $\biab$, the algorithm first verifies, whether the whole game cannot be solved by using the serialized variants of the game (line~\ref{alg:doab:stop15}).
+}
+If not, then in each state of the game the algorithm initializes the restricted game with an arbitrary action (line~\ref{alg:doab:init})\footnote{\reviewchange{In practice we use the first action of a shuffled ordered set $\cA_i$ for each player $i$. This initialization step can be improved with a domain knowledge by adding more actions.}} -- $A'$ represents the restricted matrix game, $\cA'_i$ represents the restricted set of available actions to player~$i$.
 Afterwards, the algorithm starts the iterations of the double-oracle algorithm.
 First, the algorithm needs to calculate the value for each of the successors of the restricted game, for which the current value is not known (lines~\ref{alg:doab:restr1}-\ref{alg:doab:saving}). This evaluation is same as in the case of backward induction with alpha-beta algorithm.
 Once all values for the restricted game $A'$ are known, the algorithm solves the restricted game (line~\ref{alg:doab:NE}) and keeps the optimal strategies $\sigma'$ of the restricted game.
-Next, the algorithm calculates best responses for each of the player~(lines~\ref{alg:doab:br1},\ref{alg:doab:br2}) using Algorithm~\ref{alg:br} below, and updates the lower and upper bounds (line~\ref{alg:doab:bounds}). Finally, the algorithm expands the restricted game with best response actions (line~\ref{alg:doab:expand}) until the lower and upper bound are equal. In this case, neither of the best responses improves the current solution from the restricted game; hence, the algorithm has found an equilibrium of the complete unrestricted matrix game corresponding to state $s$.
+Next, the algorithm calculates best responses for each of the player~(lines~\ref{alg:doab:br1},\ref{alg:doab:br2}) using Algorithm~\ref{alg:br} below, and updates the lower and upper bounds (line~\ref{alg:doab:bounds}). Finally, the algorithm expands the restricted game with best response actions (line~\ref{alg:doab:expand}) until the lower and upper bound are equal. In this case, neither of the best responses improves the current solution from the restricted game; hence, the algorithm has found an equilibrium of the complete unrestricted matrix game corresponding to state~$s$.
 
 \begin{algorithm2e}[t!]
 \small
@@ -177,9 +185,12 @@ Next, the algorithm calculates best responses for each of the player~(lines~\ref
 %\If{$v_s^{-i} = v_s^i$} {
 %	\Return $v_s^{i}$
 %}
-\If{$\alpha_s = \beta_s$} {
-  \Return $\beta_s$
-}
+%
+%\textrm{alpha-beta}(s',i)
+%\If{$\alpha_s = \beta_s$} {
+%  \Return $\beta_s$
+%}
+\If{$\left(s\;\textrm{is root}\right) \wedge \left(\textrm{alpha-beta}(s,i) = \textrm{alpha-beta}(s,-i)\right)$} {\Return $\textrm{alpha-beta}(s,-i)$} \label{alg:doab:stop15}
 initialize $\cA'_i$, $\cA'_{-i}$ with arbitrary actions from $\cA_i, \cA_{-i}$\; \label{alg:doab:init}
 \Repeat{$\alpha_s = \beta_s$}{
 	\For{$r \in \cA'_i$, $c \in \cA'_{-i}$}{
@@ -222,7 +233,7 @@ $a_i^{BR} \leftarrow \textbf{null}$ \;
     $v_{a_i,a_{-i}} \leftarrow 0$\;
 		$\lambda_{a_i} \leftarrow \frac{v_i^{BR} - \sum_{a'_{-i} \in \cA'_{-i} \setminus \lbrace a_{-i} \rbrace} \sigma'_{-i}(a'_{-i}) \cdot v^i_{\cT(s,a_i,a'_{-i})}}{\sigma'_{-i}(a_{-i})}$\; \label{alg:br:bound}
 		\If{	$\lambda_{a_i} > v^i_{\cT(s,a_i,a_{-i})}$}{
-		continue from line~\ref{alg:br:start} with next $a_i$
+		continue from line~\ref{alg:br:start} with next $a_i$ \label{alg:br:next}
 		}
 		\Else{
 		\For{$s' \in \cS \;:\; \cP_\star(s,a_i,a_{-i},s') > 0$} {
@@ -257,10 +268,14 @@ Moreover, once the algorithm calculates the exact value of a particular subgame,
 
 The algorithm iteratively examines all actions of player $i$ from the unrestricted game (line~\ref{alg:br:start}).
 Every action $a_i$ is evaluated against the actions of the opponent that are used in the optimal strategy from the restricted game (line~\ref{alg:br:opp}).
-Before evaluating against an action of the opponent the algorithm determines, whether the current action of the searching player, $a_i$, can still be the best response action (line~\ref{alg:br:bound}).
-The value $\lambda_{a_i}$ represents the lowest possible expected utility this action must gain against the current action of the opponent $a_{-i}$.
-If this value is strictly higher than the upper bound of the successor (i.e., the value $v^i_{\cT(s,a_i,a_{-i})}$) then the algorithm knows that the action $a_i$ can never be the best response action, and the algorithm proceeds with the next action.
-$\lambda_{a_i}$ is calculated by subtracting from the current best response value ($v_i^{BR}$) upper bound of the expected value against all other actions of the opponent ($v^i_{\cT(s,a_i,a'_{-i})}$). Recall that these values are updated once the algorithm calculates exact values.
+Before evaluating the successors, the algorithm determines, whether current action of the searching player $a_i$ can still be the best response action against the strategy of the opponent.
+\reviewchange{In order to determine this, the algorithm computes value $\lambda_{a_i}$ that represents the lowest possible expected utility this action must gain against the current action of the opponent $a_{-i}$ in order for action $a_i$ to be the best response.
+$\lambda_{a_i}$ is calculated (line~\ref{alg:br:bound}) by subtracting upper bound of the expected value against all other actions of the opponent ($v^i_{\cT(s,a_i,a'_{-i})}$) from the current best response value ($v_i^{BR}$) and normalizing with the probability that the action $a_{-i}$ is played by the opponent ($\sigma'_{-i}(a_{-i})$).
+This calculation corresponds to situation when player $i$ achieves the best possible utility by playing action $a_i$ against all other actions from the strategy of the opponent and it needs to achieve at least $\lambda_{a_i}$ against $a_{-i}$ so that expected value for playing $a_i$ is at least $v_i^{BR}$.}
+%The value $\lambda_{a_i}$ represents the lowest possible expected utility this action must gain against the current action of the opponent $a_{-i}$.
+If value $\lambda_{a_i}$ is strictly higher than the upper bound of the successor (i.e., the value $v^i_{\cT(s,a_i,a_{-i})}$) then the algorithm knows that the action $a_i$ can never be the best response action, and can proceed with the next action (line~\ref{alg:br:next}).
+\reviewchange{$\lambda_{a_i}$ is recalculated for each action of the opponent since the upper bound values of the successor nodes $s'$ can become tighter due to the recursive call (line~\ref{alg:br:recursive}).}
+%
 
 If the currently evaluated action $a_i$ can still be the best response, the value of the successor is determined (first by comparing the bounds). Once the expected outcome against all actions of the opponent is evaluated, the expected value of action $a_i$ is compared against the current best-response value (line~\ref{alg:br:max}) and saved, if the expected utility is higher~(line~\ref{alg:br:save}). The best response actions are allowed in the next iteration of the double-oracle algorithm and the algorithm progresses further as described.
 
