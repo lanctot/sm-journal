@@ -36,7 +36,9 @@ Marc: I agree that this is fine.
 > As a result, I would like you to cristalize the contribution, elaborate on the theory/analysis,
 > follow the comments in detail and try a resubmission.
 
-We have clarified the contribution and specifically what are the novel contributions. We have added a section (Section 6) containing a theoretical discussion to increase the insights into the guarantees and limitations.
+We have clarified the contribution and specifically what the novel contributions are.
+
+For theory and analysis, we have added text to sections 4.2-4.3, two new subsections 4.6 and 5.3, to increase the insights into the guarantees and limitations.
 
 > Is the work described original?
 > -------------------------------
