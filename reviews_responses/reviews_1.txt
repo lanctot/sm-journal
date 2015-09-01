@@ -38,7 +38,9 @@ Marc: I agree that this is fine.
 
 We have clarified the contribution and specifically what the novel contributions are.
 
-For theory and analysis, we have added text to sections 4.2-4.3, two new subsections 4.6 and 5.3, to increase the insights into the guarantees and limitations.
+For theory and analysis, we have added text to sections 4.2-4.3, two new subsections 4.6 and 5.3, to increase the insights into the guarantees and limitations. 
+
+We have also added more experiments (including a new section 6.6) to substantiate some of the claims we had regarding the behavior of the algorithms.
 
 > Is the work described original?
 > -------------------------------
