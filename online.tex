@@ -26,6 +26,8 @@ In case there is no strategy stored for the state $s'$ due to pruning, iterative
 \subsection{Online Search using Sampling Algorithms}
 
 \bbosansky{The following subsection is quite wordy -- feel free to make it more compact and technical.}
+\mlanctot{Ok, will do. (Soon!)}
+
 Using sampling algorithms in an online settings is simpler compared to the algorithms based on the backward induction, since no significant changes are needed and the algorithms do not need an evaluation function.
 The algorithms are stopped after given time limit and the move to play or the complete strategy is extracted as described for each sampling algorithm in Section~\ref{sec:offline}.
 There are two concepts that have to be discussed.
@@ -39,4 +41,9 @@ by directly using the value of the evaluation function in the current state for 
 line~\ref{alg:smmcts:rollout} of Algorithm~\ref{alg:smmcts} or line~\ref{alg:oos:rollout} of Algorithm~\ref{alg:oos} is replaced by $eval(s)$.
 This has been commonly used in several previous works in Monte Carlo search~\cite{Lorentz08Amazons,Lorentz13Breakthrough,Lanctot14Implicit,RamanujanS11,Lanctot13MCMS}.
 
-Again, such a modification does not generally affect theoretical properties of the algorithms -- the proofs of the convergence (e.g., \cite{lisy2013-nips}) assume that a whole game tree is eventually built and any statistics in the nodes collected before (either by random play-outs or evaluation functions) can eventually be over-weighted. For MCTS algorithms there is no reason to believe that a good evaluation function would give worse estimate of the quality of a sub-tree as a random play-out. The only complication can, again, be with the probabilities in OOS. The weight of the sample in equation~\ref{eq:scv} is lowered by the probability of reaching the sampled leaf from the updated information set. When using $\epsilon$-on-policy sampling, this ``tail'' probability is mostly cancelled by the probability of reaching the sampled leaf form the root in the denominator. If the sample is terminated earlier, it does not have a substantial effect on the scale of the regret updates.
+Again, such a modification does not generally affect theoretical properties of the algorithms -- the proofs of the convergence (\eg \cite{lisy2013-nips}) assume that a whole game tree is eventually built and any statistics in the nodes collected before (either by random play-outs or evaluation functions) can eventually be over-weighted. For MCTS algorithms there is no reason to believe that a good evaluation function would give worse estimate of the quality of a sub-tree as a random play-out. The only complication can, again, be with the probabilities in OOS. The weight of the sample in equation~\ref{eq:scv} is lowered by the probability of reaching the sampled leaf from the updated information set. When using $\epsilon$-on-policy sampling, this ``tail'' probability is mostly cancelled by the probability of reaching the sampled leaf form the root in the denominator. If the sample is terminated earlier, it does not have a substantial effect on the scale of the regret updates.
+
+\reviewchange{
+\subsection{Theoretical Properties and Convergence}
+\mlanctot{Will not be able to say much here, but one of the reviewers asked for it specifically, so I'll write something.}
+}

@@ -36,8 +36,8 @@ shown to minimize regret over time~\cite{Zinkevich03Online,Bowling05Convergence}
 guarantees in multiagent learning. More no-regret algorithms followed and were applied to an imperfect information 
 games in sequence-form (One-Card Poker)~\cite{Gordon06No}. Soon later, counterfactual regret (CFR) minimization was 
 introduced for large imperfect information games~\cite{CFR}. CFR has gained much attention due to its success in 
-computing Poker AI strategies, and in this paper we analyze the effectiveness of a specific form of Monte Carlo CFR 
-for the first time in simultaneous move games. 
+computing Poker AI strategies, and recently an application of CFR has solved Heads Up Limit Texas Hold'em Poker~\cite{Bowling15science}.
+In this paper we analyze the effectiveness of a specific form of Monte Carlo CFR for the first time in simultaneous move games. 
 
 As we focus on zero-sum simultaneous move games in this paper, the work on multiagent learning in general-sum and 
 cooperative games has been omitted. For surveys of the relevant previous work in multiagent 
@@ -49,10 +49,10 @@ see~\cite{Nowe12MARLchapter,Busoniu08Comprehensive,Bloembergen15Evolutionary}.
 The techniques in this section are based on the backward induction algorithm (cf. \cite{Shoham09}), 
 a form of dynamic programming~\cite{Bellman57} often presented for purely sequential games. 
 A slightly modified variant of the algorithm can also be applied to simultaneous move 
-games (e.g., see \cite{Ross71Goofspiel,buro2003,Rhoads12Computer}). 
+games (\eg, see \cite{Ross71Goofspiel,buro2003,Rhoads12Computer}). 
 %\bbosansky{We do need some better reference here.}) 
 % mlanctot: added the Ross 1971 paper; as far as I know it's the earliest one. Would be nice to have a text book cover this.
-The algorithm searches through the game tree in the depth-first manner and after computing the values of all the succeeding subgames, it solves the normal-form game corresponding to this state (i.e., computes a NE of the matrix game in the current state of the game), and propagates the calculated game value to the predecessor. The result of the backward-induction algorithm is a refinement of NE called \emph{subgame-perfect Nash equilibrium}. 
+The algorithm searches through the game tree in the depth-first manner and after computing the values of all the succeeding subgames, it solves the normal-form game corresponding to this state (\ie computes a NE of the matrix game in the current state of the game), and propagates the calculated game value to the predecessor. The result of the backward-induction algorithm is a refinement of NE called \emph{subgame-perfect Nash equilibrium}. 
 
 There are two notable algorithms that improve the standard backward induction in simultaneous move games. 
 First is an algorithm by Saffidine et al.~\cite{Saffidine12SMAB} termed simultaneous move alpha-beta algorithm (SMAB). 

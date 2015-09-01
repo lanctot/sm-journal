@@ -24,9 +24,14 @@ We agree that the paper does have (to some degree) a survey character in that it
 > insights to the theory, e.g., on correctness issues or running time efficiencies. What about
 > probabilistic completeness?
 
-TODO
+For the exact algorithms, we have added a description of the complexity to each of the subsections 4.2-4.3. 
 
-[bb] I have added the description of the complexity for the exact algorithms, although I have just described it in words. Not really sure, whether unleashing another set of symbols just to describe obvious complexity is necessary, but if you guys think that it should be more formal, I can do that.
+We have also added a new subsection 4.6 that summarizes the theory and guarantees for these algorithms.
+
+TODO(Remove comments below once Vilo has read them.)
+
+bb: I have added the description of the complexity for the exact algorithms, although I have just described it in words. Not really sure, whether unleashing another set of symbols just to describe obvious complexity is necessary, but if you guys think that it should be more formal, I can do that.
+Marc: I agree that this is fine.
 
 > As a result, I would like you to cristalize the contribution, elaborate on the theory/analysis,
 > follow the comments in detail and try a resubmission.
@@ -47,7 +52,10 @@ There are new algorithms and new analyses beyond what has been previously publis
 
 We believe the formality is necessary to make the algorithms precise. However, in this revision we have removed a number of technical details that obstructed the main message and did not add much value.
 
-TODO: Add a paragraph summarizing the NIPS results + say something about online double-oracle.
+We have added section 4.6 as a summary of existing convergence properties of these algorithms. 
+
+TODO(@Marc): add something about convergence in the online case to Section 5.
+
 
 > Is the paper complete? (Generally, a paper is complete if it includes all relevant proofs
 > and/or experimental data, a thorough  discussion of connections with the existing literature,
@@ -63,7 +71,7 @@ TODO: Add a paragraph summarizing the NIPS results + say something about online 
 > NO. Well, except for a better/deeper explanation of the different OOS behavior in offline and online settings. But that might already be beyond the scope of the present article.
 >
 
-We agree. We have added a significant amount of content based on these two previous comments. As a result, we believe the insight gained by the experiments and discussion have significantly improved.
+We agree. We have added a significant amount of content based on these two previous comments. As a result, we believe the insight gained by the experiments and discussion has significantly improved.
 
 TODO: Add Vilo's results of the variance analysis at the root and some discussion.
 
@@ -79,7 +87,9 @@ We agree. (Section 1.1 has been added for this purpose.)
 >
 > NO. It does mention general game playing and real-time decision making in physical environments as possible application areas of the algorithms, and I am convinced that this is correct, but still this could be elaborated upon. E.g., why not present a real-world case study besides the benchmark domains?
 
-We believe that a full real-world case study requires a significant investigation of techniques and challenges tailored for the particular scenario that would reach beyond the scope of this paper. We have, however, elaborated on the importance and potential applicability of this work in the introduction. TODO: @Marc, Vilo -- I have tried to sketch something in intro. Please, let me know what do you think.
+We believe that a full real-world case study requires a significant investigation of techniques and challenges tailored for the particular scenario that would reach beyond the scope of this paper. We have, however, elaborated on the importance and potential applicability of this work in the introduction. 
+TODO: bb: @Marc, Vilo -- I have tried to sketch something in intro. Please, let me know what do you think.
+      Marc: @Brano -- Looks good to me. I did some minor rephrasing and added some small things.
 
 > Is the English satisfactory?
 > ----------------------------
@@ -133,9 +143,13 @@ We have improved the explanation of $\labmda_{a_i}$ including the reasoning behi
 Yes, this is done now.
 
 > * Eq. 9: What does subscript "t" stand for?
->
+
+It stood for the time step, but it has been removed.
+
 > * Eq. 9 ff: I am not sure of you use \sigma_i and \sigma_i^t consistently.
->
+
+Agreed, the usage was inconsistent in this section. For now, in Section 4.4 we only use the superscript t where it is absolutely necessary, such as when defining the average in Eq. 12, and in Section 4.5 to define the cumulative regrets and strategies.
+
 > * Eq. 17: \pi_{-i}^{\sigma} and \pi^{\sigma} are undefined.
 
 These have now been properly defined in Section 2.
@@ -495,8 +509,7 @@ Yes, we believe this is due to the random player in Goofspiel being particularly
 
 Yes, this is due to the variance in the estimates introduced by the updates in OOS. The quantities OOS estimates are a function of the entire sample's history, whereas in regret matching the estimates only look ahead one step using the next state's value as an estimate for the subgame. So, the correction applied by importance sampling in OOS will have higher variance due to exploring over the entire history's actions. In contrast, regret matching's estimates may introduce bias (since it is using the childrens' current estimates as a proxy for the optimal value of the subgame), it seems that in online search setting the bias introduced here is less of a problem in practice. In essence, when time is severely limited, then it may be advantageous to have a bit of bias if it can drastically reduce variance.
 
-TODO(@Vilo): We have added experimental results demonstrating this point.
-TODO(@Marc): And we have added a discussion to support these arguments.
+TODO(@Marc): We have added experimental results demonstrating this point. And we have added a discussion to support these arguments.
 
 > The tables in Section 6.5 should be explained in more detail.
 > Especially, it should be noted much earlier that the rows stand for
@@ -508,7 +521,7 @@ TODO(@Marc): And we have added a discussion to support these arguments.
 > Tron it might depend on the actual starting positions, and in the
 > random games I have no intuitions on this at all.
 
-We have added a new paragraph at the start of this subsection with an additional example to clarify this point. In Tron, we only use symmetric boards and initial position, so there is no possible advantage as well. In the random games, a bias could be introduced but we did not notice any statistically significant biases in practice, as shown in Table 3. TODO(@Vilo: Can you verify that this last statement is true?)
+We have added a new paragraph at the start of this subsection with an additional example to clarify this point. In Tron, we only use symmetric boards and initial positions, so there is no possible advantage as well. In the random games, a bias could be introduced but we did not notice any statistically significant biases in practice, as shown in Table 3. TODO(@Vilo: Can you verify that this last statement is true?)
 
 > In the parameter-tuning experiments, according to Tab. 6, the
 > performance of Exp3 and RM was still improving with increasing
@@ -543,8 +556,10 @@ The semicolons have been removed in all of the pseudo-code.
 
 The inconsistencies in the references have now been fixed.
 
-TODO: Vilo, Brano: I don't know what you prefer regarding the accents. I added them, but please remove them if you prefer it. (bb -- I think accents are better, since we have them also on the first page).
-
+TODO: Marc: @Vilo, @Brano: I don't know what you prefer regarding the accents. I added them, but please remove them if you prefer it.
+      bb: I think accents are better, since we have them also on the first page
+      Marc: Ok, also I noticed in your previous papers they also mostly contain the accents. I'll remove this on Friday.
+      
 > Overall, in my opinion this is a nice overview paper over current
 > approaches for solving and playing two-player simultaneous move games,
 > possibly including chance events. Unfortunately, it suffers a lot from
@@ -558,7 +573,8 @@ TODO: Vilo, Brano: I don't know what you prefer regarding the accents. I added t
 > shortcoming. The paper clearly needs a serious rewrite, but in my
 > opinion it will be possible to end up with a nice article after all.
 
-We have now added results for different reward functions corresponding to point differences in both Goofspiel and Oshi-Zumo, in both the offline and online case. TODO: @Brano, please verify this claim.
+We have now added results for different reward functions corresponding to point differences in both Goofspiel and Oshi-Zumo, in both the offline and online case.
+TODO: @Brano, please verify this claim and then remove this comment.
 
 Again, we would to sincerely thank the effort from both reviewers for catching many of the small and sometimes subtle mistakes. As a result, we believe this review process has led to a greatly improved paper.
 

@@ -1,21 +1,21 @@
 
 
-%\begin{figure}[t!]
-%\centering
-%\begin{tabular}{c|c|c|}
-% \multicolumn{1}{c}{~} & \multicolumn{1}{c}{H}  &  \multicolumn{1}{c}{T}\\\cline{2-3}
-%H &  1  &  0\\\cline{2-3}
-%T  & 0  &  1\\\cline{2-3}
-%\end{tabular}
-%~~~~~~~~~
-%\begin{tabular}{c|c|c|}
-% \multicolumn{1}{c}{~} & \multicolumn{1}{c}{A}  &  \multicolumn{1}{c}{B}\\\cline{2-3}
-%a &  0  &  1\\\cline{2-3}
-%b & -1  &  0\\\cline{2-3}
-%\end{tabular}
-%\caption{Matrix games of Matching Pennies (left), and one with a pure Nash equilibrium (right).
-%Payoffs to the row player are shown. \label{fig:egMatrixGames}}
-%\end{figure}
+\begin{figure}[t!]
+\centering
+\begin{tabular}{c|c|c|}
+ \multicolumn{1}{c}{~} & \multicolumn{1}{c}{H}  &  \multicolumn{1}{c}{T}\\\cline{2-3}
+H &  1  &  0\\\cline{2-3}
+T  & 0  &  1\\\cline{2-3}
+\end{tabular}
+~~~~~~~~~
+\begin{tabular}{c|c|c|}
+ \multicolumn{1}{c}{~} & \multicolumn{1}{c}{A}  &  \multicolumn{1}{c}{B}\\\cline{2-3}
+a &  0  &  1\\\cline{2-3}
+b & -1  &  0\\\cline{2-3}
+\end{tabular}
+\caption{Matrix games of Matching Pennies (left), and one with a pure Nash equilibrium (right).
+Payoffs to the row player are shown. \label{fig:egMatrixGames}}
+\end{figure}
 
 A finite game with simultaneous moves and chance events (also called \emph{Markov games}, or \emph{stacked matrix games}) can be described
 by a tuple $(\cN, \cS = \cD\cup\cC\cup\cZ, \cA, \cT, \Delta_\star, u_i, s_0)$.
@@ -56,14 +56,14 @@ The value $V$ is known as the \emph{value of the game} and is the same for every
 
 A {\it matrix game} is a single step simultaneous move game with action sets $\cA_1$ and $\cA_2$ (see matrices in example game in Figure~\ref{fig:example}).
 Each entry in the matrix $A_{rc}$ where $(r,c) \in \cA_1 \times \cA_2$ corresponds to a value of the subgame rooted in state $\cT(s,r,c)$ that is reached if row $r$ is chosen by player 1 and column $c$ by player 2.
-%For example, in Matching Pennies in the left side of Figure~\ref{fig:egMatrixGames}, each player has two actions (heads or tails).
-%The row player receives a payoff of 1
-%if both players choose the same action and 0 if they do not match.
-%Two-player simultaneous move games are sometimes called {\it stacked matrix games} because at every state
-%$s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$ that either leads to a terminal state or (possibly after a
-%chance transition) to a subgame which is itself another stacked matrix game.
-%In the matrix game on the right of Figure~\ref{fig:egMatrixGames}, $b$ and $B$ are strictly dominated, leaving $(a,A)$ as a
-%pure and only Nash equilibrium (NE) strategy.
+For example, in Matching Pennies in the left side of Figure~\ref{fig:egMatrixGames}, each player has two actions (heads or tails).
+The row player receives a payoff of 1
+if both players choose the same action and 0 if they do not match.
+Two-player simultaneous move games are sometimes called {\it stacked matrix games} because at every state
+$s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$ that either leads to a terminal state or (possibly after a
+chance transition) to a subgame which is itself another stacked matrix game.
+In the matrix game on the right of Figure~\ref{fig:egMatrixGames}, $b$ and $B$ are strictly dominated, leaving $(a,A)$ as a
+pure and only Nash equilibrium (NE) strategy.
 
 A {\it behavioral strategy} for player $i$ is a mapping from states $s \in \cS$
 to a probability distribution over the actions $\cA_i(s)$, denoted $\sigma_i(s)$.
@@ -80,9 +80,10 @@ Finally, define $\Sigma_i$ to be the set of behavioral strategies for player $i$
 %In a game with chance events, then the $-i$ also includes the chance player, so \eg if $i = 1$ then $\pi^\sigma_{-i}(h) = \pi^\sigma_2(h) \pi^\sigma_\star(h)$.
 %Whereas, in the case of a matrix game, $\cA_{-i} = \cA_{3-i}$.
 \bbosansky{@Marc I have changed this: $-i$ is used to denote the opponent excluding the chance (chance is handled separately). How is it in sampling algorithms? I think, that it is the same there as well, no? If not, it would be easier to make a fix there than throughout all exact algorithms.}
+\mlanctot{@Brano: All of the previous literature on CFR (+ OOS) includes chance in $-i$, because it kind of makes more sense when defining the reach probabilities. But I think this change is still OK. None of the pseudocode for the sampling algorithms (except OOS) actually uses $-i$. So then we only include chance in the definition of $\pi_{-i}$, in section \ref{sec:algs:cfros}.}
 
 There are three important concepts used in the paper that deserve explicit definition. These concepts are used to define
-optimal behavior for this class of games, metrics for evaluation, and within the algorithms as well.
+optimal behavior for this class of games, to define metrics for evaluation, and within the algorithms as well.
 
 \begin{definition}[Dominated Action]
 In a matrix game, an action $a_i \in \cA_i$ is dominated if $\forall a_{-i} \in \cA_{-i}, \forall a_i' \in \Sigma_i \setminus \{ a_i \}: u(a_i, a_{-i}) < u(a_i', a_{-i})$.

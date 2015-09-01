@@ -75,7 +75,7 @@ $a_2$ &  3  &  4\\\cline{2-3}
 \end{figure}
 
 An example of this serialization is depicted in Figure~\ref{fig:serialization}.
-There is a simple matrix game for two players (the circle and the box player; the utility values are depicted for the circle player i.e., the box player in the column is minimizing this value) and two ways this game can be transformed into a serialized perfect-information extensive-form game.
+There is a simple matrix game for two players (the circle and the box player; the utility values are depicted for the circle player \ie the box player in the column is minimizing this value) and two ways this game can be transformed into a serialized perfect-information extensive-form game.
 If the circle player moves first (the left game tree), then the value of this serialized game is the lower bound of the value of the game; if this player moves second (the right game tree), then the value of this serialized game is the upper bound of the value of the game.
 Since the serialized games are zero-sum perfect-information games in the extensive form, they can be solved quite quickly by using a classic AI
 algorithm such as alpha-beta or negascout.
@@ -92,7 +92,7 @@ First, the algorithm calculates upper and lower bounds using alpha-beta algorith
 As before, the algorithm uses the value directly if the bounds are equal (line~\ref{alg:biab:saving}), or perform a recursive call otherwise~(line~\ref{alg:biab:recursive}).
 
 We distinguish two cases when extracting the equilibrium strategies from the backward induction with alpha-beta search.
-In case that a state was fully evaluated by the algorithm (i.e., a linear program was built and solved for this state), we proceed as before and keep the pair of equilibrium strategies in this state.
+In case that a state was fully evaluated by the algorithm (\ie a linear program was built and solved for this state), we proceed as before and keep the pair of equilibrium strategies in this state.
 However, the algorithms prunes certain branches and does not create a linear program for all states.
 In this case, the algorithm keeps the strategy calculated by the serialized alpha-beta algorithm.
 More precisely, for player~$i$ the algorithm keeps the pure strategy computed by alpha-beta($s$, $-i$), where the opponent has an advantage of knowing the moves of player $i$.
@@ -107,7 +107,7 @@ Such a strategy provides guarantees for player~$i$ that is not exploitable and d
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \Input{$s$ -- current matrix game; $i$ -- searching player}
 \If{$s \in \cZ$} {\Return $u_i(s)$} \label{alg:biab:stop1}
-\If{$\left(s\;\textrm{is root}\right) \wedge \left(\textrm{alpha-beta}(s,i) = \textrm{alpha-beta}(s,-i)\right)$} {\Return $\textrm{alpha-beta}(s,-i)$} \label{alg:biab:stop15}
+\If{$\left(s\;\textrm{is root}\right)~\mathbf{and}~\left(\textrm{alpha-beta}(s,i) = \textrm{alpha-beta}(s,-i)\right)$} {\Return $\textrm{alpha-beta}(s,-i)$} \label{alg:biab:stop15}
 \For{$r \in \cA_1(s)$}{
 	\For{$c \in \cA_2(s)$} {
 		$A_{rc} \leftarrow 0$\;
@@ -130,7 +130,7 @@ $\left\langle v_s, \sigma_i \right\rangle \leftarrow$ solve matrix game $A$\;
 
 \reviewchange{
 The performance of $\biab$ depends on the existence of pure NE in the simultaneous move game.
-In the best case (i.e., there exists a pure NE), the algorithm finds the solution by solving each serialization exactly once starting from the root state.
+In the best case (\ie there exists a pure NE), the algorithm finds the solution by solving each serialization exactly once starting from the root state.
 The worst case appears, when the only NE requires mixed strategies in each state of the game.
 In this case, the algorithm not only solves LP in each state similarly to BI, but also repeatedly solves serialized subgames by calling the alpha-beta algorithm.
 In practice, however, this is rarely the case.
@@ -190,7 +190,7 @@ Next, the algorithm calculates best responses for each of the player~(lines~\ref
 %\If{$\alpha_s = \beta_s$} {
 %  \Return $\beta_s$
 %}
-\If{$\left(s\;\textrm{is root}\right) \wedge \left(\textrm{alpha-beta}(s,i) = \textrm{alpha-beta}(s,-i)\right)$} {\Return $\textrm{alpha-beta}(s,-i)$} \label{alg:doab:stop15}
+\If{$\left(s\;\textrm{is root}\right)~\mathbf{and}~\left(\textrm{alpha-beta}(s,i) = \textrm{alpha-beta}(s,-i)\right)$} {\Return $\textrm{alpha-beta}(s,-i)$} \label{alg:doab:stop15}
 initialize $\cA'_i$, $\cA'_{-i}$ with arbitrary actions from $\cA_i, \cA_{-i}$\; \label{alg:doab:init}
 \Repeat{$\alpha_s = \beta_s$}{
 	\For{$r \in \cA'_i$, $c \in \cA'_{-i}$}{
@@ -263,7 +263,7 @@ The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:br}.
 %\mlanctot{Shouldn't the recursive call in 12 of Algorithm \ref{alg:br} be something line BR(...) rather the double-oracle(...)? Also, the function name should be put into the caption as with the other ones.}
 %bbosansky: not really, this is actually solving a subgame; hence, DOab is called on the subgame
 The goal of the algorithm is to find the best action from the original unrestricted game against current strategy of the opponent $\sigma'_{-i}$.
-Throughout the algorithm we use, as before, $v^i_{s'}$ to denote the upper bound of the value of the subgame rooted in state $s'$ calculated using alpha-beta$(s',i)$. These values are calculated on demand, i.e., they are calculated once needed and cached until the game for state $s$ is solved.
+Throughout the algorithm we use, as before, $v^i_{s'}$ to denote the upper bound of the value of the subgame rooted in state $s'$ calculated using alpha-beta$(s',i)$. These values are calculated on demand, \ie they are calculated once needed and cached until the game for state $s$ is solved.
 Moreover, once the algorithm calculates the exact value of a particular subgame, both upper and lower bounds are updated to be equal to actual value of the game.
 
 The algorithm iteratively examines all actions of player $i$ from the unrestricted game (line~\ref{alg:br:start}).
@@ -273,7 +273,7 @@ Before evaluating the successors, the algorithm determines, whether current acti
 $\lambda_{a_i}$ is calculated (line~\ref{alg:br:bound}) by subtracting upper bound of the expected value against all other actions of the opponent ($v^i_{\cT(s,a_i,a'_{-i})}$) from the current best response value ($v_i^{BR}$) and normalizing with the probability that the action $a_{-i}$ is played by the opponent ($\sigma'_{-i}(a_{-i})$).
 This calculation corresponds to situation when player $i$ achieves the best possible utility by playing action $a_i$ against all other actions from the strategy of the opponent and it needs to achieve at least $\lambda_{a_i}$ against $a_{-i}$ so that expected value for playing $a_i$ is at least $v_i^{BR}$.}
 %The value $\lambda_{a_i}$ represents the lowest possible expected utility this action must gain against the current action of the opponent $a_{-i}$.
-If value $\lambda_{a_i}$ is strictly higher than the upper bound on the value of the subgame rooted in the successor (i.e., $v^i_{\cT(s,a_i,a_{-i})}$) then the algorithm knows that the action $a_i$ can never be the best response action, and can proceed with the next action (line~\ref{alg:br:next}).
+If value $\lambda_{a_i}$ is strictly higher than the upper bound on the value of the subgame rooted in the successor (\ie $v^i_{\cT(s,a_i,a_{-i})}$) then the algorithm knows that the action $a_i$ can never be the best response action, and can proceed with the next action (line~\ref{alg:br:next}).
 \reviewchange{Note that $\lambda_{a_i}$ is recalculated for each action of the opponent since the upper bound values can become tighter when the exact values are computed for successor nodes $s'$ (line~\ref{alg:br:recursive}).}
 %
 
@@ -305,7 +305,7 @@ its simplest form, the tree is initially empty and a single leaf is added each i
 starts by visiting nodes in the tree, selecting which actions to take based on a \emph{selection function} and
 information maintained in the node. Consequently, the algorithm transitions to a successor state. When a
 node is visited whose immediate children are not all in the tree, the node is expanded by adding a
-new leaf to the tree. Then, \emph{a rollout policy} (e.g., random action selection) is applied from the new
+new leaf to the tree. Then, \emph{a rollout policy} (\eg random action selection) is applied from the new
 leaf to a terminal state. The outcome of the simulation is then returned as a reward to the new leaf
 and the information stored in the tree is updated.
 
@@ -349,7 +349,7 @@ After four simulations, every cell in the root state has a value.
 \Else{
 	Add $s$ as a new child in the MCTS tree\;
 	$v_{s} \leftarrow$ Rollout($s$)\;\label{alg:smmcts:rollout}
-	\Return $v_{s}$\;
+	\Return $v_{s}$\; \label{alg:smmcts:return}
 }
 \caption{Simultaneous Move Monte Carlo Tree Search (SM-MCTS)}\label{alg:smmcts}
 \end{algorithm2e}
@@ -370,7 +370,7 @@ These actions are executed (line 8) and the algorithm is called recursively on t
 The result of this call is used to update the statistics maintained for state $s$ (line~\ref{alg:smmcts:up}).
 If the current state is not stored in tree, it is added to the tree (line 13) and its value is estimated using the rollout policy (line 14).
 
-Different algorithms can be the bases for the selection functions (e.g., UCB~\cite{UCB}, Exp3~\cite{Auer2003Exp3}, and regret-matching~\cite{Hart00}).
+Different algorithms can be the bases for the selection functions (\eg UCB~\cite{UCB}, Exp3~\cite{Auer2003Exp3}, and regret-matching~\cite{Hart00}).
 We now present the variants of SM-MCTS that were consistently the most successful in the previous works,
 though more variants can be found in~\cite{Perick12Comparison,Lanctot13Tron,Tak14smmcts}.
 
@@ -438,8 +438,8 @@ The probability of selecting action $a_i$ is proportional to the exponential of 
   \mbox{ where } \eta = \frac{\gamma}{|\cA_i(s)|}.
 \end{equation}
 
-This standard formulation of Exp3 is suitable for deriving its properties, but a straightforward implementation of this formula leads to problems with numerical stability. Both the numerator and denominator of the fraction can quickly become too large. For this reason, other formulations has been suggested, e.g., in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS} that are more numerically stable. We use the following equivalent formulation from \cite{Cowling12ISMCTS}:
-\begin{equation}
+This standard formulation of Exp3 is suitable for deriving its properties, but a straightforward implementation of this formula leads to problems with numerical stability. Both the numerator and denominator of the fraction can quickly become too large. For this reason, other formulations has been suggested, \eg in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS} that are more numerically stable. We use the following equivalent formulation from \cite{Cowling12ISMCTS}:
+\begin{equation} \label{eq:exp3:stable}
 \sigma_i(a_i) = \frac{(1-\gamma)}{\sum_{b_i \in A_i(s)}\exp(\eta(\hat{X}_{b_i}-\hat{X}_{a_i}))} + \frac{\gamma}{|\cA_i(s)|}.
 \end{equation}
 
@@ -501,7 +501,8 @@ After all simulations, the strategy to play in state $s$ is defined by the mean 
 
 \subsection{Counterfactual Regret Minimization and Outcome Sampling} \label{sec:algs:cfros}
 
-Finally, we describe algorithms based on Counterfactual Regret (CFR; a notion of regret at the information set level), first designed for extensive-form games with imperfect information~\cite{CFR} and first applied to simultaneous move games in~\cite{Lanctot13Goofspiel}.
+Finally, we describe algorithms based on Counterfactual Regret (CFR; a notion of regret at the information set level),
+first designed for extensive-form games with imperfect information~\cite{CFR} and first applied to simultaneous move games in~\cite{Lanctot13Goofspiel}.
 
 \reviewchange{Recall from Section~\ref{sec:smg} the set of histories $\cH$. Here we also use $\cZ$ defined previously as the set of terminal states,
 to refer to the set of {\it terminal histories} since there is a one-to-one correspondence between them.}
@@ -648,4 +649,38 @@ RM does not distinguish whether its utility comes from exploration or otherwise,
 sampled ($x_i$) and the sampling probability of the sequence ($q_i$); when $\sigma_i(s,a) = 0$, due to exploration, then $x_i = 0$ and value of the update increments
 are also $0$. RM uses coupled dynamics, whereas OOS is uncoupled, not requiring information about what action the opponent chose; RM uses the means from the subgames
 as estimates of utility for those subgames, which could introduce some bias in the estimators. We further discuss the comparison in Section~\ref{sec:eval}.
+
+\reviewchange{
+\subsection{Theoretical Properties, Guarantees, and Limitations}
+
+Firstly, recall that optimal strategies exist for simultaneous move games as a result of von Neumman's minimax theorem, which guarantees each player 
+their minimax value (Equation~\ref{eq:ne}). So, one desirable property of these algorithms is completeness: will an optimal solution be found if one exists?
+Another question is how long it can take to find an optimal solution, and yet another is if the algorithm is terminated early, how accurate would the
+current approximation be? And finally, what is the time and space complexities of the algorithms?
+
+The backward induction algorithms always return an optimal solution. The correctness of BI follows by induction, the Markov property, and the uniqueness of
+each subgame's $V$ value from Equation~\ref{eq:ne}. As discussed in subsections~\ref{sec:algs:biab}-\ref{sec:algs:doab}, the time taken by $\biab$ and $\doab$
+are inherently determined by the number of dominated actions in each subgame game, the specific serializations, and/or order used to expand the
+strategies. However, the worst case of all these algorithms is one where every matrix game has no dominated actions, and therefore needs to be expanded fully.
+An example of such a game would be finitely-repeated Rock, Paper, Scissors, or any biased variant that has no dominated actions, \eg the one
+in subsection~\ref{sec:eval:domains}.
+There are no guarantees on the quality of the strategy computed by the exact algorithms if terminated early, because due to bad tie-breaking a single
+pure NE could be expanded at the last step and previous solutions could have arbitrarily worst utility.
+
+The concept of completeness is less clear for the sampling algorithms due to randomization, so we instead discuss a form of probabilistic completeness. 
+When using RM or Exp3 and back-propagating the mean value of all samples at each state, then an eventual convergence can be guaranteed by
+induction~\cite{lisy2013-nips};
+however, back-propagation of the sampled value (as done on line~\ref{alg:smmcts:return} of Algorithm~\ref{alg:smmcts}) seems to work better in practice.
+Also, the proof does not include a finite-time bound, so there is no known guarantee for the quality of the solution if Algorithm~\ref{alg:smmcts} is
+terminated early.
+Among the algorithms presented above, the only one with a finite-time probabilistic convergence guarantee is OOS, which is inherited from its base
+algorithm MCCFR. By~\cite[Theorem 5]{Lanctot09Sampling}, when OOS is run from the root, with probability $1-p$ an $\epsilon$-NE will is reached after
+$O(\frac{(|\cA||\cS|^2}{p \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest
+probability of sampling any single $z \in \cZ$. We will see in Section~\ref{sec:eval:offline} that this bound is often loose in practice. 
+
+As for computational complexity, the time cost per node is linear in $|\cA_i|$ in OOS, UCT, and RM. The time cost per node
+is quadratic in the case
+of Exp3 due to the numerical stability implemeted by Equation~\ref{eq:exp3:stable}. The memory required per node is linear in all of the decoupled
+algorithms OOS, UCT, and Exp3, and quadratic in RM due to storing estimates of each child subgame.
+}
 

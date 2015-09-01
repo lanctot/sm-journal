@@ -220,7 +220,7 @@ Simultaneous move games model discrete, multistage interactions where at each st
 This formalism has been used to express games in general game playing and can also model many discrete approximations of real-world scenarios.
 In this paper, we describe both novel and existing algorithms that compute strategies for the class of two-player zero-sum simultaneous move games.}
 The algorithms include both backward induction methods with efficient pruning, as well as Monte Carlo sampling algorithms.
-We evaluate the algorithms in two settings: the offline case, where computational
+We evaluate the algorithms in two different settings: the offline case, where computational
 resources are abundant and closely approximating the optimal strategy is a priority, and
 the online search case, where computational resources are limited and acting quickly is necessary.
 We perform a thorough experimental evaluation on six substantially different games for both settings.
@@ -246,7 +246,7 @@ For sampling algorithms, the results provide unique insights by identifying favo
 
 \begin{keyword}
 %% keywords here, in the form: keyword \sep keyword
-simultaneous move games \sep backward induction \sep Monte Carlo tree search \sep alpha-beta pruning \sep double-oracle algorithm \sep regret matching \sep game playing \sep Nash equilibrium
+simultaneous move games \sep Markov games \sep backward induction \sep Monte Carlo tree search \sep alpha-beta pruning \sep double-oracle algorithm \sep regret matching \sep game playing \sep Nash equilibrium
 
 %% MSC codes here, in the form: \MSC code \sep code
 %% or \MSC[2008] code \sep code (2000 is the default)
@@ -278,8 +278,10 @@ simultaneous move games \sep backward induction \sep Monte Carlo tree search \se
 %% main text
 \section{Introduction}
 \label{sec:intro}
-\bbosansky{unify subgame/sub-game; subfigure/sub-figure; etc.}
-\mlanctot{Ok, I'll do this on my full pass this week.}
+%\bbosansky{unify subgame/sub-game; subfigure/sub-figure; etc.}
+%\mlanctot{Ok, I'll do this on my full pass this week.}
+% Done.
+
 Strategic decision-making in multiagent environments is an important problem in artificial intelligence.
 With the growing number of agents interacting with humans and with each other, the need to
 understand these strategic interactions at a fundamental level is becoming increasingly important.
@@ -291,23 +293,23 @@ Much research has been devoted to developing algorithms that reason about or lea
 interactions. As an example, adversarial search has been a central topic of artificial intelligence
 since the inception of the field itself, leading to very strong rational behavior in
 Chess~\cite{Campbell02deepblue} and Checkers~\cite{Schaeffer96chinook}. Advances in machine learning for multi-step interactions
-(\eg reinforcement learning) have led to self-play learning of evaluation function achieving master level play
-in Backgammon~\cite{Tesauro95TDGammon} and super-human play in Atari~\cite{mnih-atari-2013,mnih-dqn-2015}.
+(\eg reinforcement learning) have led to self-play learning of evaluation functions achieving master level play
+in Backgammon~\cite{Tesauro95TDGammon} and super-human control in Atari~\cite{mnih-atari-2013,mnih-dqn-2015}.
 
 The most common model for these multistage environments is one with strictly {\it sequential}
 interactions. That is, each player chooses an action when it is their turn to act, and the environment
 generates a new state, with the next player's turn to act, and so on. This model is sufficient in many
 settings~\cite{AIbook}, such as in the examples used above.
 \reviewchange{On the other hand, it is not a good representation of the environment when agents are allowed to act simultaneously.
-These situations occur in many real-world scenarios like auctions~(e.g.,~\cite{Keuter1997}), or autonomous driving, and many of video and board games in the expanding gaming industry are of this nature~(e.g.,~\cite{Beard12Using} and games we use for our experiments).
-In all of these scenarios, the simultaneousness of the decision of all players is crucial and we have to include it directly into the model when computing strategies to play in these games.}
-One of the fundamental differences of simultaneous move games compared to strictly sequential
+These situations occur in many real-world scenarios like auctions~(\eg,~\cite{Keuter1997}), autonomous driving, and many of video and board games in the expanding gaming industry are of this nature~(\eg~\cite{Beard12Using,Teytaud11Upper} and games we use for our experiments).
+In all of these scenarios, the simultaneity of the decision-making is crucial and we have to include it directly into the model when computing strategies to play in these games.}
+One of the fundamental differences of simultaneous move games and strictly sequential
 games is that the agents may need to use randomized (or \textit{mixed}) strategies in order to
 play optimally~\cite{Gintis09},
 \ie to maximize their worst-case expected utility.
 This means that agents may need to randomize over several actions in some situations of the game.
-This does not occur in strictly sequential games, where optimal solution always exists in deterministic
-(or \textit{pure}) strategies.
+Unless some information is hidden, this does not occur in strictly sequential games, where optimal
+solution always exists in deterministic (or \textit{pure}) strategies.
 
 \reviewchange{We therefore focus specifically on simultaneous move games and} we cover both the offline case, where computation time is
 abundant and strategies are computed and stored, and the online case, where computation time is limited and
@@ -316,7 +318,7 @@ their worst-case performance in theory and their observed performance in practic
 contrast the algorithms and choices in the offline and online cases, and thoroughly evaluate each
 algorithm on a suite of games. Our collection covers Biased Rock, Paper Scissors, Goofspiel, Oshi-Zumo,
 Pursuit Evasion Games, and Tron, all of which have been used for benchmark purposes
-in the previous work, and we also perform experiments on randomly generated games. These games differ
+in the previous work. We also perform experiments on randomly generated games. These games differ
 in number of possible actions, number of moves before the game ends, variance of the utility values,
 and whether and when the agents need to use mixed strategies in order to play optimally.
 

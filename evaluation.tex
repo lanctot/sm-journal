@@ -26,7 +26,7 @@ For OOS, Exp3, and RM the best values for the parameters were almost always $0.6
 \reviewchange{The only exception was Goofspiel with chance nodes, where both Exp3 and RM converge more quickly with parameter set to $0.3$.}
 For UCT, however, the performance was quite different and we give the values for UCT for each domain.
 % mlanctot: please check the definition of error
-%\vlisy{is the 20 runs enough?}\bbosansky{this is the lowest number, some games (e.g., Goofspiel) had more samples (40)}
+%\vlisy{is the 20 runs enough?}\bbosansky{this is the lowest number, some games (\eg, Goofspiel) had more samples (40)}
 
 Finally, we turn to the comparison of the algorithms in the online setting and we present head-to-head tournament on each domain.
 We used larger instances of games and calculated win-rate for each algorithm.
@@ -47,8 +47,8 @@ Therefore, with the exception of the evaluation function used in selected online
 \subsection{Domains}\label{sec:eval:domains}
 
 In this subsection, we describe the six domains used in our experiments.
-The games in our collection differ in characteristics, such as the number of available actions for each player (i.e., the branching factor), maximal depth, and number of possible utility values.
-Moreover, the games also differ in the \emph{randomization factor} -- i.e., how often it is necessary to use mixed strategies and whether this randomization occurs at the beginning of the game, near the end of the game, or it is spread throughout the whole course of the game.
+The games in our collection differ in characteristics, such as the number of available actions for each player (\ie the branching factor), maximal depth, and number of possible utility values.
+Moreover, the games also differ in the \emph{randomization factor} -- \ie how often it is necessary to use mixed strategies and whether this randomization occurs at the beginning of the game, near the end of the game, or it is spread throughout the whole course of the game.
 
 For each domain we also describe the evaluation function used in the online experiments.
 Note that we are not seeking the best-performing algorithm for a particular game; hence, we have not aimed for the most accurate evaluation functions for each game.
@@ -83,7 +83,7 @@ S & -50 &  5 &  0\\\cline{2-4}
 \end{figure}
 
 \paragraph{\textbf{Goofspiel}}
-Goofspiel is a card game that appears in many works dedicated to simultaneous move games (e.g., \cite{Ross71Goofspiel,Rhoads12Computer,Saffidine12SMAB,Lanctot13Goofspiel}).
+Goofspiel is a card game that appears in many works dedicated to simultaneous move games (\eg \cite{Ross71Goofspiel,Rhoads12Computer,Saffidine12SMAB,Lanctot13Goofspiel}).
 There are $3$ identical decks of $d$ cards with values $\{0,\dots, (d-1)\}$ (one for nature and one for each player), where $d$ is a parameter of the game (classical Goofspiel is played with $13$ cards).
 The game is played in rounds: at the beginning of each round, nature reveals one card from its deck and both players bid for the card by simultaneously selecting (and removing) a card from their hands.
 A player that selects a higher card wins the round and receives a number of points equal to the value of the nature's card.
@@ -98,7 +98,7 @@ We refer to this setting as with the fixed ordering of cards of nature.
 Alternatively, we can treat nature in a standard way, where the players do not know the exact future sequence of the cards of nature.
 The games are fairly similar in terms of performance of the algorithms, however, the second variant induces considerably larger game tree.
 The second parameter relates to the utility functions.
-Either we treat the game as a win-tie-lose game (i.e., the players receive utility from set $\lbrace -1, 0, 1 \rbrace$), or the utility values for the players are equal to the points they gain during the game.}
+Either we treat the game as a win-tie-lose game (\ie the players receive utility from set $\lbrace -1, 0, 1 \rbrace$), or the utility values for the players are equal to the points they gain during the game.}
 
 Goofspiel forms game trees with interesting properties.
 First unique feature is that the number of actions for each player is uniformly decreasing by~$1$ with the depth.
@@ -147,7 +147,7 @@ For the win-tie-loose case we use $\tanh$ to scale the evaluation function into 
 %  u_1(s) & \mbox{if $c_1 + c_2 = 0$ (end)};\\
 %  \tanh\left(\frac{p_1 - p_2}{p_1 + p_2}\cdot\frac{r}{d} + \frac{c_1 - c_2}{c_1 + c_2}\cdot\frac{c_c}{0.5 \cdot d(d+1)}\right) & \mbox{otherwise.} \end{array} \right.
 %\]
-%$eval(s)$ is equal to $0$ in the beginning of the game (i.e., when $p_1 + p_2$ is $0$) and to the utility value of the game at the end (i.e., when $c_1 + c_2$ is $0$).
+%$eval(s)$ is equal to $0$ in the beginning of the game (\ie, when $p_1 + p_2$ is $0$) and to the utility value of the game at the end (\ie, when $c_1 + c_2$ is $0$).
 %For the win-tie-loose case we use $\tanh$ to scale the evaluation function into the interval $[-1,1]$; this function is omitted in the exact point case.
 %Moreover, if the position is clearly winning for one of the players (there is not enough cards to change the current score), the evaluation function is set to $1$, or $-1$.
 %\item[Oshi-Zumo]$(N,K,M)$ is a wrestling simulation game played on a discrete single-dimensional grid with
@@ -160,7 +160,7 @@ For the win-tie-loose case we use $\tanh$ to scale the evaluation function into 
 
 Oshi-Zumo is a board game analyzed from the perspective of computational game theory in \cite{buro2003}.
 There are two players in the game, both starting with $N$ coins, and there is a playing board represented as a one-dimensional playing field with $2K+1$ locations (indexed $0, \ldots, 2K$).
-At the beginning, there is a stone (or a wrestler) located in the center of the playing field (i.e., at position $K$).
+At the beginning, there is a stone (or a wrestler) located in the center of the playing field (\ie at position $K$).
 During each move, both players simultaneously place their bid from the amount of coins they have (but at least $M$ if they still have some coins).
 Afterwards, the bids are revealed, both bids are subtracted from the number of coins of the players, and the highest bidder can push the wrestler one location towards the opponent's side.
 If the bids are the same, the wrestler does not move.
@@ -381,9 +381,10 @@ exact equilibrium, which is similar to results of UCT in Kuhn poker~\cite{Ponsen
 %However, each player can than improve by playing first action with probability 1. Breaking ties stochastically will lead the algorithm to
 %discover the 1 and -1 rewards with high probability and allow the algorithm the break out or avoid this synchronization trap.
 
-\subsection{Offline Equilibrium Computation}
+\subsection{Offline Equilibrium Computation} \label{sec:eval:offline}
+
 We now compare the offline performance of the algorithm on all the remaining games.
-We measure the overall computation time for each of the algorithms and number of evaluated nodes -- i.e., nodes for which the main method of the backward induction algorithm executed (i.e., nodes evaluated by serialized alpha-beta algorithms are not included in this count, since they may be evaluated repeatedly).
+We measure the overall computation time for each of the algorithms and number of evaluated nodes -- \ie nodes for which the main method of the backward induction algorithm executed (\ie nodes evaluated by serialized alpha-beta algorithms are not included in this count, since they may be evaluated repeatedly).
 Unless otherwise stated, each data point represents a mean of at least $30$ runs.
 % mlanctot: check this %bbosansky: ?
 
@@ -396,7 +397,7 @@ Unless otherwise stated, each data point represents a mean of at least $30$ runs
 	\begin{subfigure}{0.49\textwidth}
  		\includegraphics[width=1\textwidth]{figures/GS-BF-NF.pdf}\caption{}\label{fig:off:res:gs-bf}
  	\end{subfigure}
-\caption{Running times of exact algorithms on Goofspiel with fixed order of the nature's cards for increasing size of the deck; sub-figure (a) depicts the results with win-tie-loose utilities, (b) depicts the results with point utilities.} \label{fig:off:res:gs}
+\caption{Running times of exact algorithms on Goofspiel with fixed order of the nature's cards for increasing size of the deck; subfigure (a) depicts the results with win-tie-loose utilities, (b) depicts the results with point utilities.} \label{fig:off:res:gs}
 \end{figure}
 
 We now describe the results for the card game Goofspiel.
@@ -433,7 +434,7 @@ In their work, the number of evaluated nodes was at best around $29\%$, and the 
 	\begin{subfigure}{0.49\textwidth}
  		\includegraphics[width=1\textwidth]{figures/GS-BF-NN.pdf}\caption{}\label{fig:off:res:gsn-bf}
  	\end{subfigure}
-\caption{Running times of exact algorithms on Goofspiel with chance nodes for increasing size of the deck; sub-figure (a) depicts the results with win-tie-loose utilities, (b) depicts the results with point utilities.} \label{fig:off:res:gsn}
+\caption{Running times of exact algorithms on Goofspiel with chance nodes for increasing size of the deck; subfigure (a) depicts the results with win-tie-loose utilities, (b) depicts the results with point utilities.} \label{fig:off:res:gsn}
 \end{figure}
 
 Next we compare the exact algorithms in the variant of Goofspiel with standard chance nodes.
@@ -464,7 +465,7 @@ Vertical lines correspond to computation times for exact algorithms.
 (Bottom) Goofspiel with point utilities.} \label{fig:off:conv:gs}
 \end{figure}
 
-We now turn to the analysis of the convergence of the sampling algorithms -- i.e., their ability to approximate Nash equilibrium strategies of the complete game.
+We now turn to the analysis of the convergence of the sampling algorithms -- \ie their ability to approximate Nash equilibrium strategies of the complete game.
 Figure~\ref{fig:off:conv:gs} depicts the results for Goofspiel game with $5$ cards with fixed ordering cards of nature (note the logarithmic horizontal scale).
 We compare MCTS algorithms with three different selection functions (UCT, Exp3, and RM), and OOS.
 The results are means out of $30$ runs of each algorithm.
@@ -522,7 +523,7 @@ $\biab$ and $\doab$ are almost identically fast, with $\doab$ being slightly fas
 	\begin{subfigure}{0.49\textwidth}
 		\includegraphics[width=1\textwidth]{figures/PEG5x5.pdf}\caption{}\label{fig:off:res:peg5}
 	\end{subfigure}
-\caption{Running times of exact algorithms on pursuit-evasion game with increasing number of moves: sub-figure (a) depicts the results on $4\times4$ grid graph, (b) depicts results for $5\times5$ grid.} \label{fig:off:res:peg}
+\caption{Running times of exact algorithms on pursuit-evasion game with increasing number of moves: subfigure (a) depicts the results on $4\times4$ grid graph, (b) depicts results for $5\times5$ grid.} \label{fig:off:res:peg}
 \end{figure}
 
 The results on pursuit-evasion games show more significant improvement when comparing $\doab$ and $\biab$ (see Figure~\ref{fig:off:res:peg}). In all settings, the $\doab$ is significantly the fastest. When we compare the performance on graph $5\times5$ with depth set to $6$, \textsc{BI} evaluates more than $4.9\times10^7$ nodes that takes more than $13$ hours. On the other hand, $\biab$ evaluates on average $42001$ nodes taking almost $10$ minutes ($584$ seconds). Interestingly, the benefits of pure integration with alpha-beta search is not that helpful in this game.
@@ -563,7 +564,7 @@ In pursuit-evasion game of this setting, $\doab$ is slightly faster and finishes
 	\begin{subfigure}{0.49\textwidth}
 		\includegraphics[width=1\textwidth]{figures/OZ-K4-BF.pdf}\caption{}\label{fig:off:res:oz4-bf}
 	\end{subfigure}
-\caption{Running times of exact algorithms on Oshi-Zumo with $K$ set to $4$ and increasing number of coins: sub-figure (a) depicts the results for binary utilities, (b) depicts the results with point utilities.} \label{fig:off:res:oz}
+\caption{Running times of exact algorithms on Oshi-Zumo with $K$ set to $4$ and increasing number of coins: subfigure (a) depicts the results for binary utilities, (b) depicts the results with point utilities.} \label{fig:off:res:oz}
 \end{figure}
 
 Many instances of the Oshi-Zumo game have Nash equilibria in pure strategies regardless on the type of utility function.
@@ -571,7 +572,7 @@ Although this does not hold for all the instances, the size of the subgames with
 If the game does not have equilibria in pure strategies, the mixed strategies are still required only near the root node and large end-games are solved using alpha-beta search.
 Note that this is different to pursuit-evasion games, where mixed strategies were necessary close to the end of the game tree.
 \reviewchange{
-Figure~\ref{fig:off:res:oz} depicts the results with the parameter $K$ set to $4$ and for two different settings of utility function\footnote{\reviewchange{We have also performed the same experiments with $K$ set to $3$, but the conclusions were the same as in case $K=4$.}}; either a win-tie-loose utilities (left sub-figure) or point utilities (right sub-figure).}
+Figure~\ref{fig:off:res:oz} depicts the results with the parameter $K$ set to $4$ and for two different settings of utility function\footnote{\reviewchange{We have also performed the same experiments with $K$ set to $3$, but the conclusions were the same as in case $K=4$.}}; either a win-tie-loose utilities (left subfigure) or point utilities (right subfigure).}
 In both cases, the graphs show the breaking point when the game stops having an equilibrium in pure strategies ($15$ coins and more for each player).
 The advantage of $\biab$ and $\doab$ algorithms that exploit serialized variants of alpha-beta algorithms is dramatic.
 We can see that both \textsc{BI} and \textsc{DO} scale rather badly.
@@ -617,7 +618,7 @@ OOS is again the fastest and converges to error $0.45$ within the time limit, RM
 	\begin{subfigure}{0.49\textwidth}
 		\includegraphics[width=1\textwidth]{figures/RG-BF5-BIN-FALSE.pdf}\caption{}\label{fig:off:res:rgbf5}
 	\end{subfigure}
-\caption{Running times of exact algorithms on randomly generated games with increasing depth: sub-figure (a) depicts the results with branching factor set to $4$ actions for each player, (b) depicts the results with branching factor $5$.} \label{fig:off:res:rg}
+\caption{Running times of exact algorithms on randomly generated games with increasing depth: subfigure (a) depicts the results with branching factor set to $4$ actions for each player, (b) depicts the results with branching factor $5$.} \label{fig:off:res:rg}
 \end{figure}
 
 In the first variant of the randomly generated games we used games with utility values randomly drawn from a uniform distribution $[0,1]$.
@@ -647,7 +648,7 @@ Finally, $\doab$ evaluates $\approx2\times10^6$ nodes on average and it takes th
 Figure~\ref{fig:off:conv:rg} depicts the results for convergence of the sampling algorithms for the random game with correlated utility values, branching factor set to $4$ and depth $5$.
 The number of iterations per second is similar to Goofspiel, with Exp3 being the exception able to achieve more than $6.5\times10^4$ iterations per second, which is still significantly the lowest number of iterations.
 Interestingly, there is a much less difference between the performance of the sampling algorithms in this game.
-Since these games are generally more mixed (i.e., NE require to use mixed strategies in many states of the game), they are much more suitable for the sampling algorithms.
+Since these games are generally more mixed (\ie NE require to use mixed strategies in many states of the game), they are much more suitable for the sampling algorithms.
 OOS can be considered a winner in this setting, however, the performance of RM is very similar.
 Again, since the game is more mixed, Exp3 outperforms UCT in the longer run.
 Exploration constant for UCT was set to 12 due to larger utility variance in this setting.
@@ -662,7 +663,7 @@ Exploration constant for UCT was set to 12 due to larger utility variance in thi
 	\begin{subfigure}{0.49\textwidth}
 		\includegraphics[width=1\textwidth]{figures/Tron-2.pdf}\caption{}\label{fig:off:res:tron2}
 	\end{subfigure}
-\caption{Running times of exact algorithms on Tron with increasing $width$ of the graph: sub-figure (a) depicts the results with $height$ of the graph set to $width - 1$, (b) depicts the results with $height = width$.} \label{fig:off:res:tron}
+\caption{Running times of exact algorithms on Tron with increasing $width$ of the graph: subfigure (a) depicts the results with $height$ of the graph set to $width - 1$, (b) depicts the results with $height = width$.} \label{fig:off:res:tron}
 \end{figure}
 
 Performance of exact algorithms in Tron is affected by the fact that pure NE exist in all smaller instances \reviewchange{
@@ -690,15 +691,14 @@ Similarly, both RM and Exp3 are again eventually able to converge to a very smal
 Finally, UCT ($C=5$) performs reasonably good during the first $10$ seconds, where the exploitability is better than both RM and Exp3.
 This is most likely due to existence pure NE, however, the length of the game tree prohibits UCT to converge and the best error the algorithm was able to achieve in the time limit was equal to $0.68$.
 
-\subsubsection{Summary}
+\subsubsection{Summary of Offline Equilibrium Computation Experiments}
 
 The offline comparison of the algorithms offers several conclusions.
-Among the exact algorithms, $\doab$ is clearly the best algorithm, since it typically outperforms all other algorithms (especially in pursuit-evasion games and random games). Although for smaller games (e.g., Goofspiel with $5$ cards)  $\biab$ can be slightly faster, this difference is not significant and $\doab$ is never significantly slower compared to $\biab$.
+Among the exact algorithms, $\doab$ is clearly the best algorithm, since it typically outperforms all other algorithms (especially in pursuit-evasion games and random games). Although for smaller games (\eg Goofspiel with $5$ cards)  $\biab$ can be slightly faster, this difference is not significant and $\doab$ is never significantly slower compared to $\biab$.
 
 Among the sampling algorithms, OOS is the clear winner since it is often able to quickly converge to a very small error and significantly outperforms all variants of MCTS.
 On the other hand, comparing OOS and $\doab$, the exact $\doab$ algorithm is always faster and it is able to find an exact solution much faster compared to OOS.
 Moreover, $\doab$ has significantly lower memory requirements since it is a depth-first search algorithm and does not use any form of global cache, while OOS iteratively constructs the game tree in memory.
-
 
 \subsection{Online Search}
 
@@ -760,7 +760,7 @@ RAND&-6.67(0.99)&-14.42(0.96)&-13.30(1.00)&-15.89(1.00)&-14.20(0.98)&\\
 \caption{Results of head-to-head matches in Goofspiel variants with exploration parameter settings indicated in the header.}\label{fig:matches:goof}
 \end{table}
 
-In head-to-head comparison, we use the standard Goofspiel with 13 cards. Additionally, for the sake of consistency with the offline results, we also evaluate the variant with a fixed known sequence of the point cards, removing all chance nodes. The full game has more than $2.4\times 10^{29}$ leaf nodes and the variant with fixed point card sequence has still more than $3.8\times 10^{19}$ leaf nodes. The results are presented in Table~\ref{fig:matches:goof}, where the top table shows the win rates of the algorithms in the full game and the other two tables the win rates and expected number of points gained by the algorithms in the game with a fixed point card sequence. The results for the know card sequence are the mean of $10$ fixed random orderings. For each table, the algorithms were set up to optimize the presented measure (\ie, win rate or expected points) and the exploration parameters were tuned to the values presented in the header of the table.
+In head-to-head comparison, we use the standard Goofspiel with 13 cards. Additionally, for the sake of consistency with the offline results, we also evaluate the variant with a fixed known sequence of the point cards, removing all chance nodes. The full game has more than $2.4\times 10^{29}$ leaf nodes and the variant with fixed point card sequence has still more than $3.8\times 10^{19}$ leaf nodes. The results are presented in Table~\ref{fig:matches:goof}, where the top table shows the win rates of the algorithms in the full game and the other two tables the win rates and expected number of points gained by the algorithms in the game with a fixed point card sequence. The results for the know card sequence are the mean of $10$ fixed random orderings. For each table, the algorithms were set up to optimize the presented measure (\ie win rate or expected points) and the exploration parameters were tuned to the values presented in the header of the table.
 
 First, we can see that finding a good strategy in Goofspiel is difficult for all the algorithms.
 This is noticeable thanks to the results of RAND player, that performs reasonably well
@@ -876,7 +876,10 @@ The next set of matches was played on 10 different random games with each player
 
 The clearly best performing algorithm in this domain is UCT.
 RM is the second, losing only to UCT.
-OOS has the weakest performance in spite of good convergence results in the offline settings (see~Figure~\ref{fig:off:conv:rg}). The reason is the quickly growing variance and decreasing number of samples in longer games, which we discuss in more details in Section~\ref{???}. \mlanctot{TODO: Fix this reference, are we adding a section for this? I'm happy to talk about it but could use a few numbers.}
+OOS has the weakest performance in spite of good convergence results in the offline settings (see~Figure~\ref{fig:off:conv:rg}).
+\reviewchange{
+The reason is the quickly growing variance and decreasing number of samples in longer games, which we discuss in more detail in Section~\ref{sec:oos_vs_rm}.
+}
 %We also performed an experiment with larger branching factor (15) and smaller depth (5), but the results were very similar to this setting.\vlisy{I assume the new OOS would perform much better there!}
 
 \subsubsection{Tron}
@@ -1049,7 +1052,7 @@ The presented parameter tuning table are very representative of the behaviour of
 While in the presented results in Oshi Zumo with evaluation function, even 0.8 seems to be too low for Exp3, in Tron with evaluation function, the optimal parameter for Exp3 is 0.1.
 The range of optimal parameters is much smaller for OOS and and RM, which were always between 0.1 and 0.3. This can be a notable advantage for playing previously unknown games without sufficient time to tune the parameters for the specific domain.
 
-\subsubsection{Summary}
+\subsubsection{Summary of Online Search Experiments}
 
 \begin{table}
 \centering
@@ -1087,3 +1090,14 @@ Finally, RM seems to be consistently the best performing algorithm in game playi
 %- OOS did not proove to be good even though it converges the fastest
 %- RM is very consistently the overall winner with UCT to consider with evaluation function
 %- more time causes less sensitivity to parameters
+
+\reviewchange{
+\subsection{Online Outcome Sampling versus Regret Matching} \label{sec:oos_vs_rm}
+
+Given the similar nature of these two algorithms, one might wonder why RM performs consistently better in online search
+than OOS, despite OOS being the only algorithm with provable convergence properties.
+\mlanctot{Will present Viliam's variance argument and results from Aug 10th email here. Will write this section Wednesday+Thursday evening. }
+
+}
+
+
