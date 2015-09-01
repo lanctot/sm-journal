@@ -91,8 +91,8 @@
 \newcommand{\cS}{\mathcal{S}}
 \newcommand{\cT}{\mathcal{T}}
 \newcommand{\cZ}{\mathcal{Z}}
-\newcommand{\eg}{{\it e.g.,}~}
-\newcommand{\ie}{{\it i.e.,}~}
+\newcommand{\eg}{{e.g.,}~}
+\newcommand{\ie}{{i.e.,}~}
 \newcommand{\defword}[1]{\textbf{\boldmath{#1}}}
 \newcommand{\reviewchange}[1]{{\color{blue}#1}}
 
@@ -298,11 +298,9 @@ The most common model for these multistage environments is one with strictly {\i
 interactions. That is, each player chooses an action when it is their turn to act, and the environment
 generates a new state, with the next player's turn to act, and so on. This model is sufficient in many
 settings~\cite{AIbook}, such as in the examples used above.
-\reviewchange{
-On the other hand, it is not a good representation of the environment when agents are allowed to act simultaneously.
-These situations occur in many real-world scenarios like auctions, or autonomous driving, and many of computer and board games in the expanding gaming industry are of this nature.
+\reviewchange{On the other hand, it is not a good representation of the environment when agents are allowed to act simultaneously.
+These situations occur in many real-world scenarios like auctions~(e.g.,~\cite{Keuter1997}), or autonomous driving, and many of video and board games in the expanding gaming industry are of this nature~(e.g.,~\cite{Beard12Using} and games we use for our experiments).
 In all of these scenarios, the simultaneousness of the decision of all players is crucial and we have to include it directly into the model when computing strategies to play in these games.}
-
 One of the fundamental differences of simultaneous move games compared to strictly sequential
 games is that the agents may need to use randomized (or \textit{mixed}) strategies in order to
 play optimally~\cite{Gintis09},
@@ -310,7 +308,8 @@ play optimally~\cite{Gintis09},
 This means that agents may need to randomize over several actions in some situations of the game.
 This does not occur in strictly sequential games, where optimal solution always exists in deterministic
 (or \textit{pure}) strategies.
-In our analysis, we cover both the offline case, where computation time is
+
+\reviewchange{We therefore focus specifically on simultaneous move games and} we cover both the offline case, where computation time is
 abundant and strategies are computed and stored, and the online case, where computation time is limited and
 agents must search online. We are concerned both with the quality of strategies based on
 their worst-case performance in theory and their observed performance in practice. We compare and
@@ -322,9 +321,8 @@ in number of possible actions, number of moves before the game ends, variance of
 and whether and when the agents need to use mixed strategies in order to play optimally.
 
 Our experimental comparison shows different performance of the algorithms in both cases.
-In the offline case, the fastest exact algorithms based on backward induction are able to solve the game very quickly.
-In some cases, our novel algorithm ($\doab$) solves the game in less than 2\% of time required by standard backward
-induction algorithm.
+\reviewchange{Exact algorithms based on backward induction are much better in the offline setting, where they are able to find the optimal strategy very quickly compared to the sampling algorithms.}
+In some cases, our novel algorithm ($\doab$) solves the game in less than 2\% of time required by standard backward induction algorithm.
 However, the exact algorithms are less competitive in the online settings.
 On the other hand, approximative sampling algorithms can perform very well in the online setting and
 find very good strategies to play within a few seconds, however, they are not well suited for offline solving of games.

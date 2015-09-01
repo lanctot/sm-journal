@@ -3,14 +3,14 @@ This section focuses on algorithms that compute strategies for simultaneous move
 The baseline algorithm for solving simultaneous move games exactly is backward induction~(Subsection~\ref{sec:algs:bi}).
 %Therefore, we start our description of the algorithms focusing on algorithms based on the backward induction, then we introduce algorithms based on no-regret learning and Monte Carlo sampling.
 Afterwards we present a modification that exploits quick calculation of upper and lower bounds in a simultaneous move game~(Subsection~\ref{sec:algs:biab}).
-Then, we further improve the algorithm by speeding up the calculation of NE in stage games, exploiting the iterative framework known as the double-oracle algorithm~(Subsection~\ref{sec:algs:doab}).
+Then, we further improve the algorithm by speeding up the calculation of NE in matrix games, exploiting the iterative framework known as the double-oracle algorithm~(Subsection~\ref{sec:algs:doab}).
 In Subsection~\ref{sec:algs:smmcts} we describe Monte Carlo tree search for simultaneous move games.
 Finally, we present counterfactual regret minimization and its sampling variant outcome sampling in Subsection~\ref{sec:algs:cfros}.
 
 
 \subsection{Backward Induction}\label{sec:algs:bi}
 
-Standard backward induction algorithm is based on the depth-first search that at each state of the game evaluates all successors, creates matrix game for the current state, solves the matrix game, and propagates back the value of the matrix game. The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:backwardinduction}. If the succeeding node $\cT(s,r,c)$ is a chance node, the algorithm directly evaluates all successors of this chance node computing an expected utility: the value of each subgame rooted in node $s'$ calculated by recursive call is weighted by the probability of the stochastic transition $\cP_\star(s,r,c,s')$~(line~\ref{alg:bi:recursive}).
+Standard backward induction algorithm is based on the depth-first search that at each state of the game evaluates all successors, creates matrix game for the current state, solves the matrix game, and propagates back the value of the matrix game. The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:backwardinduction}. If the succeeding node $\cT(s,r,c)$ is a chance node, the algorithm directly evaluates all successors of this chance node computing an expected utility: the value of each subgame rooted in node $s'$ computed by recursive call is weighted by the probability of the stochastic transition $\cP_\star(s,r,c,s')$~(line~\ref{alg:bi:recursive}).
 
 \begin{algorithm2e}[t]
 \small
@@ -27,32 +27,33 @@ $\left\langle v_s, \sigma_i(s) \right\rangle \leftarrow$ solve matrix game $A$\;
 \caption{Backward Induction algorithm (BI).}\label{alg:backwardinduction}
 \end{algorithm2e}
 
-Once the algorithm computes the value of each possible subgame following the current state $s$, the matrix game $A$ is complete and the algorithm
-solves the matrix game $A$ using standard linear program (LP) for solving normal-form games:
+Once the algorithm computes the value of each possible subgame following the current state $s$, the matrix game $A$ is well defined and the algorithm
+solves the matrix game $A$ using standard linear program (LP) for solving normal-form games\footnote{\reviewchange{By solving a game we mean computing both the optimal value and the strategy that achieves it.}}:
 \begin{eqnarray}
 \max & v_s & \\
 \textrm{s.t.} & \sum_{a_i \in \cA_{i}}A_{a_i,a_{-i}} \cdot \sigma_i(s,a_i) \geq v_s & \forall a_{-i} \in \cA_{-i}(s)\\
 & \sum_{a_{i} \in \cA_{i}} \sigma_i(s,a_{i}) = 1 \\
 & \sigma_i(s,a_{i}) \geq 0 & \forall a_{i} \in \cA_{i}(s)
 \end{eqnarray}
-Using the linear programming, the algorithm computes the value of the matrix game $v_s$, which is propagated to the predecessor~(line~\ref{alg:bi:stop2}).
+Using the linear programming, the algorithm computes both the value $v_s$ of the matrix game $A$, as well as strategy to play in this matrix game (variables $\sigma_i(s,a)$).
+Value $v_s$ is then propagated to the predecessor~(line~\ref{alg:bi:stop2}) and the optimal strategy $\sigma_i(s,a)$ is stored for this state.
 If the algorithm evaluates a terminal state, it directly returns the utility value of the state~(line~\ref{alg:bi:stop1}).
-A strategy can be easily extracted from the algorithm by keeping the equilibrium strategies $\sigma_i(s,a)$ from LP for matrix games $A$ in each state.
-\reviewchange{To be clear, solving a game by solving this linear program yields both the optimal value and the strategy that achieves it.}
 
-Evaluating each successor and solving the linear programs in each state of the game is the main computational bottleneck of the backward induction algorithm.
-The following algorithms try to prune certain branches of the tree in order to avoid this step even for the price of multiple traversals of the game tree.
+Evaluating each successor and solving a linear program in each state of the game is the main computational bottleneck of the backward induction algorithm.
+The following algorithms try to prune some of the branches of the game tree in order to reduce this bottleneck even for the price of multiple traversals of the game tree.
 
 \subsection{Backward Induction with Serialized Alpha-Beta Bounds}\label{sec:algs:biab}
 
 Backward induction algorithm can be easily enhanced by using bounds on the value of subgames.
 These bounds can be calculated very quickly by using a transformation of a simultaneous move game into a perfect information extensive-form game and applying wide range of search improvements developed for this more standard setting.
 Consider a matrix game representing a single simultaneous choice of both players.
-This matrix can be serialized by discarding the notion of information sets; hence, letting one player to play first following by the play of the second player.
+This matrix can be serialized by discarding the notion of information sets; hence, letting one player to play first, following by the play of the second player.
 The crucial difference between a serialized and a simultaneous move matrix game is that the second player to move has an advantage of knowing what action the first player chose.
 \reviewchange{
 Given this advantage, the value of a serialized game consisting of a single simultaneous move such that player $i$ is second to move is greater or equal than the value of the original simultaneous move game from the perspective of player~$i$.
-Furthermore, we can generalize this argument using induction to game trees with multiple simultaneous moves -- if we obtain an upper bound from the perspective of player $i$ by solving each subgame with $d$ steps, then serializing the additional step of a $(d+1)$-step simultaneous move game can again yield value only greater or equal than the value of the original simultaneous move game~\cite{Bosansky13Using}.
+Furthermore, we can generalize this argument using induction to game trees with multiple simultaneous moves: when solving a serialized game with $(d+1)$ steps, we know that solving each subgame with $d$ steps yields an upper bound on the value of that subgame from the perspective of player $i$. 
+Therefore, entries in matrix $A$ of the root state are upper bounds on the actual values of the subgames.
+By serializing and solving this additional step, we can again get value that is only greater or equal than the value of the original simultaneous move game with $(d+1)$ steps~\cite{Bosansky13Using}.
 }
 \begin{figure}
 \centering
@@ -85,11 +86,10 @@ By using bounds calculated in this way we can speed-up the backward induction al
 Algorithm~\ref{alg:backwardinduction-ab} depicts the pseudocode.
 \reviewchange{
 The algorithm first serializes and solve the whole game using the standard alpha-beta algorithm and returns directly the value from the serialized games if the bounds are equal (line~\ref{alg:biab:stop15}).
-The second player to move in the serialization is the player in the argument of the method.
-}
+The second player to move in the serialization is the player in the argument of the method.}
 If the bounds are not equal, the algorithm starts evaluating successors of the current state.
 First, the algorithm calculates upper and lower bounds using alpha-beta algorithm on serialized variants of the subgame rooted in the successor $s'$ (lines~\ref{alg:biab:ab1}-\ref{alg:biab:ab2}).
-As before, the algorithm uses the value directly (line~\ref{alg:biab:saving}) instead of performing a recursive call~(line~\ref{alg:biab:recursive}) if the bounds are equal.
+As before, the algorithm uses the value directly if the bounds are equal (line~\ref{alg:biab:saving}), or perform a recursive call otherwise~(line~\ref{alg:biab:recursive}).
 
 We distinguish two cases when extracting the equilibrium strategies from the backward induction with alpha-beta search.
 In case that a state was fully evaluated by the algorithm (i.e., a linear program was built and solved for this state), we proceed as before and keep the pair of equilibrium strategies in this state.
@@ -268,16 +268,16 @@ Moreover, once the algorithm calculates the exact value of a particular subgame,
 
 The algorithm iteratively examines all actions of player $i$ from the unrestricted game (line~\ref{alg:br:start}).
 Every action $a_i$ is evaluated against the actions of the opponent that are used in the optimal strategy from the restricted game (line~\ref{alg:br:opp}).
-Before evaluating the successors, the algorithm determines, whether current action of the searching player $a_i$ can still be the best response action against the strategy of the opponent.
-\reviewchange{In order to determine this, the algorithm computes value $\lambda_{a_i}$ that represents the lowest possible expected utility this action must gain against the current action of the opponent $a_{-i}$ in order for action $a_i$ to be the best response.
+Before evaluating the successors, the algorithm determines, whether current action $a_i$ of the searching player $i$ can still be the best response action against the strategy of the opponent $\sigma'_{-i}$.
+\reviewchange{In order to determine this, the algorithm computes value $\lambda_{a_i}$ that represents the lower bound on the expected utility this action must gain against the current action of the opponent $a_{-i}$ in order for action $a_i$ to be the best response.
 $\lambda_{a_i}$ is calculated (line~\ref{alg:br:bound}) by subtracting upper bound of the expected value against all other actions of the opponent ($v^i_{\cT(s,a_i,a'_{-i})}$) from the current best response value ($v_i^{BR}$) and normalizing with the probability that the action $a_{-i}$ is played by the opponent ($\sigma'_{-i}(a_{-i})$).
 This calculation corresponds to situation when player $i$ achieves the best possible utility by playing action $a_i$ against all other actions from the strategy of the opponent and it needs to achieve at least $\lambda_{a_i}$ against $a_{-i}$ so that expected value for playing $a_i$ is at least $v_i^{BR}$.}
 %The value $\lambda_{a_i}$ represents the lowest possible expected utility this action must gain against the current action of the opponent $a_{-i}$.
-If value $\lambda_{a_i}$ is strictly higher than the upper bound of the successor (i.e., the value $v^i_{\cT(s,a_i,a_{-i})}$) then the algorithm knows that the action $a_i$ can never be the best response action, and can proceed with the next action (line~\ref{alg:br:next}).
-\reviewchange{$\lambda_{a_i}$ is recalculated for each action of the opponent since the upper bound values of the successor nodes $s'$ can become tighter due to the recursive call (line~\ref{alg:br:recursive}).}
+If value $\lambda_{a_i}$ is strictly higher than the upper bound on the value of the subgame rooted in the successor (i.e., $v^i_{\cT(s,a_i,a_{-i})}$) then the algorithm knows that the action $a_i$ can never be the best response action, and can proceed with the next action (line~\ref{alg:br:next}).
+\reviewchange{Note that $\lambda_{a_i}$ is recalculated for each action of the opponent since the upper bound values can become tighter when the exact values are computed for successor nodes $s'$ (line~\ref{alg:br:recursive}).}
 %
 
-If the currently evaluated action $a_i$ can still be the best response, the value of the successor is determined (first by comparing the bounds). Once the expected outcome against all actions of the opponent is evaluated, the expected value of action $a_i$ is compared against the current best-response value (line~\ref{alg:br:max}) and saved, if the expected utility is higher~(line~\ref{alg:br:save}). The best response actions are allowed in the next iteration of the double-oracle algorithm and the algorithm progresses further as described.
+If the currently evaluated action $a_i$ can still be the best response, the value of the successor is determined (first by comparing the bounds). Once the expected outcome against all actions of the opponent is known, the expected value of action $a_i$ is compared against the current best-response value (line~\ref{alg:br:max}) and saved, if the expected utility is higher~(line~\ref{alg:br:save}). The best response actions are allowed in the next iteration of the double-oracle algorithm and the algorithm progresses further as described.
 
 When extracting strategies from the double-oracle algorithm with serialized alpha-beta, we proceed exactly as in the case of $\biab$: either a double-oracle is initialized and solved for certain matrix game and we keep equilibrium strategies from the final restricted game, or the strategy is extracted from the serialized alpha-beta algorithms as before.
 
