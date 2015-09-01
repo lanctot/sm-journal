@@ -68,7 +68,9 @@ TODO(@Marc): add something about convergence in the online case to Section 5.
 >
 > YES (mostly). The paper is purely algorithmic and experimental, so the lack of theory and proofs is unproblematic (there is nothing to prove). What is do miss, though, is a more convincing discussion of what we really learn from the experimental results. We see numbers that tell us in which setting and which domain which algorithm performs best, but it is not always clear why this is the case. There are successful attempts in the paper at explaining some of the results informally, but I would have liked some more formal depth here. Reading the "future work" part of the paper, it becomes clear that the authors are aware of this limitation of their work. Still, it would be nice to know a bit more about the limitations of pruning using the various presented algorithms, and it would be nice to understand better why the fast convergence and low exploitability of OOS in the small game instances is such a poor predictor of its performance in the online setting. In Section 6.5.7,
 > the authors attempt at coming up with an explanation, but it is too speculative to be convincing.
->
+
+TODO
+
 > Does anything need to be added or deleted?
 > ------------------------------------------
 >
