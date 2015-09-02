@@ -673,6 +673,9 @@ induction~\cite{lisy2013-nips};
 however, back-propagation of the sampled value (as done on line~\ref{alg:smmcts:return} of Algorithm~\ref{alg:smmcts}) seems to work better in practice.
 Also, the proof does not include a finite-time bound, so there is no known guarantee for the quality of the solution if Algorithm~\ref{alg:smmcts} is
 terminated early.
+Also, since these algorithms have a fixed exploration parameter $\gamma$, there is an easy-to-construct example game that if the strategy can converges 
+to an $\epsilon$-NE it can be no closer than $\epsilon \ge \gamma D > 0$, where $D$ is the depth of the game~\cite{Kovarik2015Analysis}.
+\mlanctot{@Vilo, please check that I interpreted this correctly.}
 Among the algorithms presented above, the only one with a finite-time probabilistic convergence guarantee is OOS, which is inherited from its base
 algorithm MCCFR. By~\cite[Theorem 5]{Lanctot09Sampling}, when OOS is run from the root, with probability $1-p$ an $\epsilon$-NE will is reached after
 $O(\frac{(|\cA||\cS|^2}{p \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest

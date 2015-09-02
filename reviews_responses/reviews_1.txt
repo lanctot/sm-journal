@@ -18,7 +18,9 @@ We thank all of the reviewers for their valuable feedback. Please find enclosed 
 > course has pros and cons as survey submissions are perfectly fine for AIJ. But then, the paper
 > is not organized as a survey.
 
-We agree that the paper does have (to some degree) a survey character in that it resumes existing algorithms published in different forums and venues. However, we feel that there are original technical contributions made by this paper, aside from simply organizing the information in one place. As such, we have chosen not to organize it as a survey paper. In this resubmission, we clarify the novel contributions that have not appeared in any preceeding paper by adding an explicit bullet-point list in the introduction.
+We agree that the paper does have (to some degree) a survey character in that it resumes existing algorithms published in different forums and venues. However, we feel that there are original technical contributions made by this paper, aside from simply organizing the information in one place under harmonized notation. In addition, we prefer to cover a few algorithms in depth rather than summarize the full breadth of all candidate algorithms. As such, we have chosen not to organize it as a survey paper. 
+
+In this resubmission, we clarify the novel contributions that have not appeared in any preceeding paper by adding an explicit bullet-point list in the introduction.
 
 > The first reviewer said that he doesn't miss theory, but my judgement is that you should increase
 > insights to the theory, e.g., on correctness issues or running time efficiencies. What about
@@ -29,7 +31,6 @@ For the exact algorithms, we have added a description of the complexity to each 
 We have also added a new subsection 4.6 that summarizes the theory and guarantees for these algorithms.
 
 TODO(Remove comments below once Vilo has read them.)
-
 bb: I have added the description of the complexity for the exact algorithms, although I have just described it in words. Not really sure, whether unleashing another set of symbols just to describe obvious complexity is necessary, but if you guys think that it should be more formal, I can do that.
 Marc: I agree that this is fine.
 
@@ -38,7 +39,7 @@ Marc: I agree that this is fine.
 
 We have clarified the contribution and specifically what the novel contributions are.
 
-For theory and analysis, we have added text to sections 4.2-4.3, two new subsections 4.6 and 5.3, to increase the insights into the guarantees and limitations. 
+For theory and analysis, we have added text to sections 4.2-4.3, and two new subsections 4.6 and 5.3, to increase the insights into the guarantees and limitations. 
 
 We have also added more experiments (including a new section 6.6) to substantiate some of the claims we had regarding the behavior of the algorithms.
 
