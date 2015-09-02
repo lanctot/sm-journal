@@ -1,4 +1,4 @@
-> ** First round of reviews, received early March 2015.
+
 > ** Please do not edit this document. I have included reviews_1.txt that we can modify.
 >
 
@@ -80,7 +80,7 @@ TODO
 
 We agree. We have added a significant amount of content based on these two previous comments. As a result, we believe the insight gained by the experiments and discussion has significantly improved.
 
-TODO: Add Vilo's results of the variance analysis at the root and some discussion.
+We have added a section (6.6) to help explain the problem with OOS in the online setting. We believe it is due to variance from such a low number of iterations.
 
 > Does it explain clearly what was done that is new?
 > --------------------------------------------------
@@ -516,7 +516,7 @@ Yes, we believe this is due to the random player in Goofspiel being particularly
 
 Yes, this is due to the variance in the estimates introduced by the updates in OOS. The quantities OOS estimates are a function of the entire sample's history, whereas in regret matching the estimates only look ahead one step using the next state's value as an estimate for the subgame. So, the correction applied by importance sampling in OOS will have higher variance due to exploring over the entire history's actions. In contrast, regret matching's estimates may introduce bias (since it is using the childrens' current estimates as a proxy for the optimal value of the subgame), it seems that in online search setting the bias introduced here is less of a problem in practice. In essence, when time is severely limited, then it may be advantageous to have a bit of bias if it can drastically reduce variance.
 
-TODO(@Marc): We have added experimental results demonstrating this point. And we have added a discussion to support these arguments.
+We have added experimental results demonstrating this point (Section 6.6), and some results and discussion to support these arguments.
 
 > The tables in Section 6.5 should be explained in more detail.
 > Especially, it should be noted much earlier that the rows stand for
