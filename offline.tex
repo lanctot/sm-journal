@@ -1,16 +1,16 @@
 
 This section focuses on algorithms that compute strategies for simultaneous move games.
-The baseline algorithm for solving simultaneous move games exactly is backward induction~(Subsection~\ref{sec:algs:bi}).
+The baseline algorithm for solving simultaneous move games exactly is backward induction~(BI)~(Subsection~\ref{sec:algs:bi}).
 %Therefore, we start our description of the algorithms focusing on algorithms based on the backward induction, then we introduce algorithms based on no-regret learning and Monte Carlo sampling.
 Afterwards we present a modification that exploits quick calculation of upper and lower bounds in a simultaneous move game~(Subsection~\ref{sec:algs:biab}).
 Then, we further improve the algorithm by speeding up the calculation of NE in matrix games, exploiting the iterative framework known as the double-oracle algorithm~(Subsection~\ref{sec:algs:doab}).
-In Subsection~\ref{sec:algs:smmcts} we describe Monte Carlo tree search for simultaneous move games.
+In Subsection~\ref{sec:algs:smmcts} we describe Monte Carlo Tree Search for simultaneous move games.
 Finally, we present counterfactual regret minimization and its sampling variant outcome sampling in Subsection~\ref{sec:algs:cfros}.
 
 
 \subsection{Backward Induction}\label{sec:algs:bi}
 
-Standard backward induction algorithm is based on the depth-first search that at each state of the game evaluates all successors, creates matrix game for the current state, solves the matrix game, and propagates back the value of the matrix game. The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:backwardinduction}. If the succeeding node $\cT(s,r,c)$ is a chance node, the algorithm directly evaluates all successors of this chance node computing an expected utility: the value of each subgame rooted in node $s'$ computed by recursive call is weighted by the probability of the stochastic transition $\cP_\star(s,r,c,s')$~(line~\ref{alg:bi:recursive}).
+The standard backward induction algorithm, first described for simultaneous move games in~\cite{Ross71Goofspiel}, is based on the depth-first search that at each state of the game evaluates all successors, creates a matrix game for the current state, solves the matrix game, and propagates back the value of the matrix game. The pseudocode of the algorithm is depicted in Algorithm~\ref{alg:backwardinduction}. If the succeeding node $\cT(s,r,c)$ is a chance node, the algorithm directly evaluates all successors of this chance node computing an expected utility: the value of each subgame rooted in node $s'$ computed by recursive call is weighted by the probability of the stochastic transition $\cP_\star(s,r,c,s')$~(line~\ref{alg:bi:recursive}).
 
 \begin{algorithm2e}[t]
 \small
@@ -28,7 +28,7 @@ $\left\langle v_s, \sigma_i(s) \right\rangle \leftarrow$ solve matrix game $A$\;
 \end{algorithm2e}
 
 Once the algorithm computes the value of each possible subgame following the current state $s$, the matrix game $A$ is well defined and the algorithm
-solves the matrix game $A$ using standard linear program (LP) for solving normal-form games\footnote{\reviewchange{By solving a game we mean computing both the optimal value and the strategy that achieves it.}}:
+solves the matrix game $A$ by presenting it as a standard linear program (LP) for solving normal-form games\footnote{\reviewchange{By solving a game we mean computing both the optimal value and the strategy that achieves it.}}:
 \begin{eqnarray}
 \max & v_s & \\
 \textrm{s.t.} & \sum_{a_i \in \cA_{i}}A_{a_i,a_{-i}} \cdot \sigma_i(s,a_i) \geq v_s & \forall a_{-i} \in \cA_{-i}(s)\\
@@ -39,7 +39,7 @@ Using the linear programming, the algorithm computes both the value $v_s$ of the
 Value $v_s$ is then propagated to the predecessor~(line~\ref{alg:bi:stop2}) and the optimal strategy $\sigma_i(s,a)$ is stored for this state.
 If the algorithm evaluates a terminal state, it directly returns the utility value of the state~(line~\ref{alg:bi:stop1}).
 
-Evaluating each successor and solving a linear program in each state of the game is the main computational bottleneck of the backward induction algorithm.
+Evaluating each successor and solving an LP in each state of the game is the main computational bottleneck of the backward induction algorithm.
 The following algorithms try to prune some of the branches of the game tree in order to reduce this bottleneck even for the price of multiple traversals of the game tree.
 
 \subsection{Backward Induction with Serialized Alpha-Beta Bounds}\label{sec:algs:biab}
@@ -51,7 +51,7 @@ This matrix can be serialized by discarding the notion of information sets; henc
 The crucial difference between a serialized and a simultaneous move matrix game is that the second player to move has an advantage of knowing what action the first player chose.
 \reviewchange{
 Given this advantage, the value of a serialized game consisting of a single simultaneous move such that player $i$ is second to move is greater or equal than the value of the original simultaneous move game from the perspective of player~$i$.
-Furthermore, we can generalize this argument using induction to game trees with multiple simultaneous moves: when solving a serialized game with $(d+1)$ steps, we know that solving each subgame with $d$ steps yields an upper bound on the value of that subgame from the perspective of player $i$. 
+Furthermore, we can generalize this argument using induction to game trees with multiple simultaneous moves: when solving a serialized game with $(d+1)$ steps, we know that solving each subgame with $d$ steps acheives an upper bound on the value of that subgame from the perspective of player $i$. 
 Therefore, entries in matrix $A$ of the root state are upper bounds on the actual values of the subgames.
 By serializing and solving this additional step, we can again get value that is only greater or equal than the value of the original simultaneous move game with $(d+1)$ steps~\cite{Bosansky13Using}.
 }
@@ -76,9 +76,9 @@ $a_2$ &  3  &  4\\\cline{2-3}
 
 An example of this serialization is depicted in Figure~\ref{fig:serialization}.
 There is a simple matrix game for two players (the circle and the box player; the utility values are depicted for the circle player \ie the box player in the column is minimizing this value) and two ways this game can be transformed into a serialized perfect-information extensive-form game.
-If the circle player moves first (the left game tree), then the value of this serialized game is the lower bound of the value of the game; if this player moves second (the right game tree), then the value of this serialized game is the upper bound of the value of the game.
+If the circle player moves first (the left game tree), then the value of this serialized game is the lower bound of the value of the game. If this player moves second (the right game tree), then the value of this serialized game is the upper bound of the value of the game.
 Since the serialized games are zero-sum perfect-information games in the extensive form, they can be solved quite quickly by using a classic AI
-algorithm such as alpha-beta or negascout.
+algorithm such as alpha-beta or negascout~\cite{Negascout}.
 If the values of both serialized games are equal, then this value is also equal to the value of the original simultaneous move game.
 This situation occurs in our example in Figure~\ref{fig:serialization}, where both serialized games have value equal to~$3$.
 
@@ -92,9 +92,9 @@ First, the algorithm calculates upper and lower bounds using alpha-beta algorith
 As before, the algorithm uses the value directly if the bounds are equal (line~\ref{alg:biab:saving}), or perform a recursive call otherwise~(line~\ref{alg:biab:recursive}).
 
 We distinguish two cases when extracting the equilibrium strategies from the backward induction with alpha-beta search.
-In case that a state was fully evaluated by the algorithm (\ie a linear program was built and solved for this state), we proceed as before and keep the pair of equilibrium strategies in this state.
-However, the algorithms prunes certain branches and does not create a linear program for all states.
-In this case, the algorithm keeps the strategy calculated by the serialized alpha-beta algorithm.
+In case that a state was fully evaluated by the algorithm (\ie an LP was built and solved for this state), we proceed as before and keep the pair of equilibrium strategies in this state.
+However, in the other case, the algorithms prunes certain branches and does not create an LP for all states.
+The algorithm then keeps the strategy calculated by the serialized alpha-beta algorithm.
 More precisely, for player~$i$ the algorithm keeps the pure strategy computed by alpha-beta($s$, $-i$), where the opponent has an advantage of knowing the moves of player $i$.
 Such a strategy provides guarantees for player~$i$ that is not exploitable and due to the cut-off we know that there is no better strategy for player~$i$ with higher expected utility.
 %When such a cut-off occurs, one needs to extract the strategy from alpha-beta.
@@ -171,7 +171,7 @@ The double-oracle algorithm for matrix games can be directly incorporated into t
 \reviewchange{
 Similarly to $\biab$, the algorithm first verifies, whether the whole game cannot be solved by using the serialized variants of the game (line~\ref{alg:doab:stop15}).
 }
-If not, then in each state of the game the algorithm initializes the restricted game with an arbitrary action (line~\ref{alg:doab:init})\footnote{\reviewchange{In practice we use the first action of a shuffled ordered set $\cA_i$ for each player $i$. This initialization step can be improved with a domain knowledge by adding more actions.}} -- $A'$ represents the restricted matrix game, $\cA'_i$ represents the restricted set of available actions to player~$i$.
+If not, then in each state of the game the algorithm initializes the restricted game with an arbitrary action (line~\ref{alg:doab:init})\footnote{\reviewchange{In practice we use the first action of a shuffled ordered set $\cA_i$ for each player $i$. This initialization step can be improved with domain knowledge by adding more actions.}} -- $A'$ represents the restricted matrix game, $\cA'_i$ represents the restricted set of available actions to player~$i$.
 Afterwards, the algorithm starts the iterations of the double-oracle algorithm.
 First, the algorithm needs to calculate the value for each of the successors of the restricted game, for which the current value is not known (lines~\ref{alg:doab:restr1}-\ref{alg:doab:saving}). This evaluation is same as in the case of backward induction with alpha-beta algorithm.
 Once all values for the restricted game $A'$ are known, the algorithm solves the restricted game (line~\ref{alg:doab:NE}) and keeps the optimal strategies $\sigma'$ of the restricted game.
@@ -438,7 +438,7 @@ The probability of selecting action $a_i$ is proportional to the exponential of 
   \mbox{ where } \eta = \frac{\gamma}{|\cA_i(s)|}.
 \end{equation}
 
-This standard formulation of Exp3 is suitable for deriving its properties, but a straightforward implementation of this formula leads to problems with numerical stability. Both the numerator and denominator of the fraction can quickly become too large. For this reason, other formulations has been suggested, \eg in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS} that are more numerically stable. We use the following equivalent formulation from \cite{Cowling12ISMCTS}:
+This standard formulation of Exp3 is suitable for deriving its properties, but a straightforward implementation of this formula leads to problems with numerical stability. Both the numerator and denominator of the fraction can quickly become too large. For this reason, other formulations have been suggested, \eg in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS} that are more numerically stable. We use the following equivalent formulation from \cite{Cowling12ISMCTS}:
 \begin{equation} \label{eq:exp3:stable}
 \sigma_i(a_i) = \frac{(1-\gamma)}{\sum_{b_i \in A_i(s)}\exp(\eta(\hat{X}_{b_i}-\hat{X}_{a_i}))} + \frac{\gamma}{|\cA_i(s)|}.
 \end{equation}

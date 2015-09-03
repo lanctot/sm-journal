@@ -31,7 +31,7 @@ possible successor states of the chance event.
 $\cP_\star(s, r, c, s')$ as the probability of transitioning to $s'$ after choosing joint action $(r,c)$ from $s$, or
 simply $1$ when $\cT(s, r, c) \not\in \cC$.}
 The utility functions $u_i : \cZ \mapsto [v_{\min}, v_{\max}] \subseteq \mathbb{R}$ gives the utility of player $i$, with
-$v_{min}$ and $v_{\max}$ denoting the minimum and maximum possible utility respectively. We assume constant-sum
+$v_{min}$ and $v_{\max}$ denoting the minimum and maximum possible utility respectively. We assume zero-sum
 games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$.
 The game begins in an initial state $s_0$ \reviewchange{and a subset of a game that starts in some node $s$ is called a \emph{subgame}}.
 An example of such game is depicted in Figure~\ref{fig:example} (more examples can be found in \cite[Chapter 5]{Saffidine2013thesis}).
@@ -43,16 +43,16 @@ An example of such game is depicted in Figure~\ref{fig:example} (more examples c
 \includegraphics[width=8.0cm]{figures/tree}\\
 %\includegraphics[width=10.0cm]{figures/goof3}\\
 \end{subfigure}%\\
-\caption{An example of a two-player simultaneous game without chance nodes.% which has Matching Pennies as a subgame. %, and a portion of 3-card Goofspiel including chance nodes (bottom).
+\caption{An example of a two-player simultaneous game. % which has Matching Pennies as a subgame. %, and a portion of 3-card Goofspiel including chance nodes (bottom).
 The dark squares are terminal states. The values shown in the matrices correspond to the values of subgames that can be obtained by backward induction.\\
 %bbosansky: if that's ok, I have removed the goofspiel figure since I do not think it is specifically referenced anywhere and we do not need to figures. Plus, since we do not specifically experiment with games with chance nodes, it is better not to include the figure :)
 \label{fig:example}}
 \end{figure}
-In two-player constant sum games a (subgame perfect) Nash equilibrium strategy is often considered to be optimal (formal definition follows).
+In two-player zero-sum games a (subgame perfect) Nash equilibrium strategy is often considered to be optimal (formal definition follows).
 It guarantees an expected payoff of at least $V$ against any opponent. Any non-equilibrium strategy has its nemesis, which makes it win less
 than $V$ in expectation. Moreover, subgame perfect Nash equilibrium strategy can earn more than $V$ against weak opponents. After the
 opponent makes a sub-optimal move, the strategy will never allow it to gain the loss back.
-The value $V$ is known as the \emph{value of the game} and is the same for every equilibrium profile by von Neumann's minimax theorem.
+The value $V$ is known as the \emph{value of the game} and is the same for every equilibrium profile by von Neumann's minimax theorem~\cite{VonNeumann1928}.
 
 A {\it matrix game} is a single step simultaneous move game with action sets $\cA_1$ and $\cA_2$ (see matrices in example game in Figure~\ref{fig:example}).
 Each entry in the matrix $A_{rc}$ where $(r,c) \in \cA_1 \times \cA_2$ corresponds to a value of the subgame rooted in state $\cT(s,r,c)$ that is reached if row $r$ is chosen by player 1 and column $c$ by player 2.
@@ -62,8 +62,7 @@ if both players choose the same action and 0 if they do not match.
 Two-player simultaneous move games are sometimes called {\it stacked matrix games} because at every state
 $s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$ that either leads to a terminal state or (possibly after a
 chance transition) to a subgame which is itself another stacked matrix game.
-In the matrix game on the right of Figure~\ref{fig:egMatrixGames}, $b$ and $B$ are strictly dominated, leaving $(a,A)$ as a
-pure and only Nash equilibrium (NE) strategy.
+In the matrix game on the right of Figure~\ref{fig:egMatrixGames}, $(a,A)$ is a pure and only Nash equilibrium (NE) strategy.
 
 A {\it behavioral strategy} for player $i$ is a mapping from states $s \in \cS$
 to a probability distribution over the actions $\cA_i(s)$, denoted $\sigma_i(s)$.
@@ -79,8 +78,9 @@ Finally, define $\Sigma_i$ to be the set of behavioral strategies for player $i$
 \reviewchange{We adopt a standard convention that the index $-i$ refers to the opponent of player $i$.
 %In a game with chance events, then the $-i$ also includes the chance player, so \eg if $i = 1$ then $\pi^\sigma_{-i}(h) = \pi^\sigma_2(h) \pi^\sigma_\star(h)$.
 %Whereas, in the case of a matrix game, $\cA_{-i} = \cA_{3-i}$.
-\bbosansky{@Marc I have changed this: $-i$ is used to denote the opponent excluding the chance (chance is handled separately). How is it in sampling algorithms? I think, that it is the same there as well, no? If not, it would be easier to make a fix there than throughout all exact algorithms.}
-\mlanctot{@Brano: All of the previous literature on CFR (+ OOS) includes chance in $-i$, because it kind of makes more sense when defining the reach probabilities. But I think this change is still OK. None of the pseudocode for the sampling algorithms (except OOS) actually uses $-i$. So then we only include chance in the definition of $\pi_{-i}$, in section \ref{sec:algs:cfros}.}
+
+%\bbosansky{@Marc I have changed this: $-i$ is used to denote the opponent excluding the chance (chance is handled separately). How is it in sampling algorithms? I think, that it is the same there as well, no? If not, it would be easier to make a fix there than throughout all exact algorithms.}
+%\mlanctot{@Brano: All of the previous literature on CFR (+ OOS) includes chance in $-i$, because it kind of makes more sense when defining the reach probabilities. But I think this change is still OK. None of the pseudocode for the sampling algorithms (except OOS) actually uses $-i$. So then we only include chance in the definition of $\pi_{-i}$, in section \ref{sec:algs:cfros}.}
 
 There are three important concepts used in the paper that deserve explicit definition. These concepts are used to define
 optimal behavior for this class of games, to define metrics for evaluation, and within the algorithms as well.
@@ -90,10 +90,11 @@ In a matrix game, an action $a_i \in \cA_i$ is dominated if $\forall a_{-i} \in 
 \end{definition}
 
 No rational player would want to play a dominated action, because there is always a better one to play instead, for any action used by the opponent. The concept also
-extends natrually to behavioral strategies.
+extends naturally to behavioral strategies.
+For example, in the game on the right of Figure~\ref{fig:egMatrixGames}, both $b$ and $B$ are strictly dominated.
 
 \begin{definition}[Best Response]
-Suppose $\sigma_{-i} \in \Sigma_{-i}$ is a fixed oppenent strategy. Define the set of best response strategies
+Suppose $\sigma_{-i} \in \Sigma_{-i}$ is a fixed opponent strategy. Define the set of best response strategies
 $BR_i(\sigma_{-i}) = \{ \sigma_i~|~u(\sigma_i, \sigma_{-i}) = \max_{\sigma_i' \in \Sigma_i} u(\sigma_i', \sigma_{-i})) \}$.
 A single strategy in this set, \eg $\sigma_i \in BR_i(\sigma_{-i})$, is called a best response strategy to $\sigma_{-i}$.
 \end{definition}
@@ -135,8 +136,8 @@ to act at $I$ cannot distinguish which of these states the game is currently in.
 using information sets to represent a half-completed transition, \ie $\cT(s, a_1, ?)$ or $\cT(s, ?, a_2)$.
 The matrix game of Rock, Paper, Scissors can also be thought of as a two-step process where the first player commits
 to a choice, writing it on a face-down piece of paper, and then second player responds. Figure~\ref{fig:rps-equiv} shows this
-transformation, which can generally be applied to every state in a simultaneous move game by placing the root of subgame following
-both players' decisions, or a successor chance node outcome.
+transformation, which can generally be applied to every state in a simultaneous move game.
+%by placing the root of subgame following both players' decisions, or a successor chance node outcome.
 Therefore, algorithms intended for two-player zero-sum imperfect information games may also be applied to the
 simultaneous move game's equivalent extensive form.
 
