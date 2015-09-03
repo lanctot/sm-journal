@@ -83,18 +83,18 @@ S & -50 &  5 &  0\\\cline{2-4}
 
 \paragraph{\textbf{Goofspiel}}
 Goofspiel is a card game that appears in many works dedicated to simultaneous move games (\eg \cite{Ross71Goofspiel,Rhoads12Computer,Saffidine12SMAB,Lanctot13Goofspiel}).
-There are $3$ identical decks of $d$ cards with values $\{0,\dots, (d-1)\}$ (one for nature and one for each player), where $d$ is a parameter of the game (classical Goofspiel is played with $13$ cards).
-The game is played in rounds: at the beginning of each round, nature reveals one card from its deck and both players bid for the card by simultaneously selecting (and removing) a card from their hands.
-A player that selects a higher card wins the round and receives a number of points equal to the value of the nature's card.
-In case both players select the card with the same value, the nature's card is discarded.
+There are $3$ identical decks of $d$ cards with values $\{0,\dots, (d-1)\}$ (one for chance and one for each player), where $d$ is a parameter of the game (classical Goofspiel is played with $13$ cards).
+The game is played in rounds: at the beginning of each round, chance reveals one card from its deck and both players bid for the card by simultaneously selecting (and removing) a card from their hands.
+A player that selects a higher card wins the round and receives a number of points equal to the value of the chance's card.
+In case both players select the card with the same value, the chance's card is discarded.
 When there are no more cards to be played, the winner of the game is chosen based on the sum of card values he received during the whole game.
 
 \reviewchange{
 There are two parameters of the game that can be altered to create four different variants of Goofspiel.
-The first parameter relates to nature.
-We can use an assumption made in the previous work that used Goofspiel as a benchmark for evaluation of the exact offline algorithms \cite{Saffidine12SMAB}, where the sequence of the cards of nature is randomly chosen at the beginning of the game and it is known to both players.
-We refer to this setting as with the \emph{fixed sequence} of cards of nature.
-Alternatively, we can treat nature in a standard way, where the players do not know the exact future sequence of the cards of nature (we refer to this setting as with an \emph{unknown sequence}).
+The first parameter relates to chance.
+We can use an assumption made in the previous work that used Goofspiel as a benchmark for evaluation of the exact offline algorithms \cite{Saffidine12SMAB}, where the sequence of the cards are randomly chosen at the beginning of the game and it is known to both players.
+We refer to this setting as with the \emph{fixed sequence} of cards.
+Alternatively, we can treat chance in a standard way, where the players do not know the exact future sequence of the cards (we refer to this setting as with an \emph{unknown sequence}).
 The games are fairly similar in terms of performance of the algorithms, however, the second variant induces considerably larger game tree.
 The second parameter relates to the utility functions.
 Either we treat the game as a win-tie-lose game (\ie the players receive utility from set $\lbrace -1, 0, 1 \rbrace$), or the utility values for the players are equal to the points they gain during the game.}
@@ -102,7 +102,7 @@ Either we treat the game as a win-tie-lose game (\ie the players receive utility
 Goofspiel forms game trees with interesting properties.
 First unique feature is that the number of actions for each player is uniformly decreasing by~$1$ with the depth.
 Secondly, algorithms must randomize in NE strategies, and this randomization is present throughout the whole course of the game.
-As an example, the following table depicts the number of states with pure strategies and mixed strategies for each depth in a subgame-perfect NE calculated by backward induction for Goofspiel with $5$ cards and fixed sequence of cards of nature:
+As an example, the following table depicts the number of states with pure strategies and mixed strategies for each depth in a subgame-perfect NE calculated by backward induction for Goofspiel with $5$ cards and fixed sequence of cards:
 
 \vspace{0.1cm}
 
@@ -396,11 +396,11 @@ Unless otherwise stated, each data point represents a mean of at least $30$ runs
 	\begin{subfigure}{0.49\textwidth}
  		\includegraphics[width=1\textwidth]{figures/GS-BF-NF.pdf}\caption{}\label{fig:off:res:gs-bf}
  	\end{subfigure}
-\caption{Running times of exact algorithms on Goofspiel with fixed sequence of the nature's cards for increasing size of the deck; subfigure (a) depicts the results with win-tie-loose utilities, (b) depicts the results with point utilities.} \label{fig:off:res:gs}
+\caption{Running times of exact algorithms on Goofspiel with fixed sequence of cards for increasing size of the deck; subfigure (a) depicts the results with win-tie-loose utilities, (b) depicts the results with point utilities.} \label{fig:off:res:gs}
 \end{figure}
 
 We now describe the results for the card game Goofspiel.
-First, we analyze the games with a fixed sequence of the cards by nature.
+First, we analyze the games with a fixed sequence of the cards.
 
 \paragraph{Exact algorithms with fixed sequence}
 The results are depicted in Figure~\ref{fig:off:res:gs} (note the logarithmic vertical scale), where the left subfigure depicts the results for win-tie-loose utilities and the right subfigure depicts the results for point utilities.
@@ -437,8 +437,8 @@ In their work, the number of evaluated nodes was at best around $29\%$, and the 
 \end{figure}
 
 Next we compare the exact algorithms in the variant of Goofspiel with standard chance nodes.
-Introducing another branching due to moves by nature causes a significant increase in the size of the game tree.
-For $7$ cards, the game tree has more than $10^{11}$ nodes, which is $4$ orders of magnitude more than in the case with fixed sequence of nature's cards.
+Introducing another branching due to moves by chance causes a significant increase in the size of the game tree.
+For $7$ cards, the game tree has more than $10^{11}$ nodes, which is $4$ orders of magnitude more than in the case with fixed sequence of cards.
 The results depicted in Figure~\ref{fig:off:res:gsn} show that the games become quickly too large to solve exactly and the fastest algorithms solved games with at most $6$ cards.
 Relative performance of the algorithms, however, is similar to the case with fixed sequence.
 With win-tie-loose utilities, serialized alpha-beta is again able to find pure NE in most of the subgames and prunes out a large fraction of the states.
@@ -458,14 +458,14 @@ Again with $5$ cards, $\biab$ evaluates $91,419$ nodes in more than $100$ second
 		\centering
 		\includegraphics[width=0.85\textwidth]{figures/convergence-gs-ff.pdf}%\caption{}\label{fig:off:conv:gs-bf}
 	\end{subfigure}
-\caption{Convergence of sampling algorithms on Goofspiel with $5$ cards and fixed sequence of nature's cards.
+\caption{Convergence of sampling algorithms on Goofspiel with $5$ cards and fixed sequence of cards.
 Vertical lines correspond to computation times for exact algorithms.
 (Top) Goofspiel with win-tie-loose utility values;
 (Bottom) Goofspiel with point utilities.} \label{fig:off:conv:gs}
 \end{figure}
 
 We now turn to the analysis of the convergence of the sampling algorithms -- \ie their ability to approximate Nash equilibrium strategies of the complete game.
-Figure~\ref{fig:off:conv:gs} depicts the results for Goofspiel game with $5$ cards with fixed sequence cards of nature (note the logarithmic horizontal scale).
+Figure~\ref{fig:off:conv:gs} depicts the results for Goofspiel game with $5$ cards with fixed sequence of cards (note the logarithmic horizontal scale).
 We compare MCTS algorithms with three different selection functions (UCT, Exp3, and RM), and OOS.
 The results are means out of $30$ runs of each algorithm.
 Due to the different selection and update functions, the algorithms differ in the number of iterations per second.
@@ -720,7 +720,7 @@ Each entry represents a mean of at least $1000$ matches with the half of the wid
 \centering
 \begin{scriptsize}
 
-Goofspiel: 13 cards, unknown sequence of cards of nature, win rate
+Goofspiel: 13 cards, unknown sequence of cards, win rate
 \begin{tabular}{|r|cccccc|}\hline
 &$\doab$&OOS(0.2)&UCT(0.6)&EXP3(0.3)&RM(0.1)&RAND\\\hline
 $\doab$&$\bullet$&26.6(2.7)&36.0(2.9)&26.1(2.7)&25.9(2.7)&67.2(1.4)\\
@@ -732,7 +732,7 @@ RAND&32.8(1.4)&18.6(1.7)&22.7(1.8)&13.9(1.5)&14.8(2.2)&$\bullet$\\
 \hline
 \end{tabular}
 
-Goofspiel: 13 cards, known sequence of cards of nature, win rate
+Goofspiel: 13 cards, known sequence of cards, win rate
 \begin{tabular}{|r|cccccc|}\hline
 &$\doab$&OOS(0.3)&UCT(0.8)&EXP3(0.2)&RM(0.1)&RAND\\\hline
 $\doab$&$\bullet$&28.2(2.8)&35.0(2.9)&30.1(2.8)&31.5(2.8)&67.2(2.9)\\
@@ -744,7 +744,7 @@ RAND&32.8(2.9)&16.2(2.3)&20.5(2.5)&14.2(2.1)&15.8(2.2)&$\bullet$\\
 \hline
 \end{tabular}
 
-Goofspiel: 13 cards, known sequence of cards of nature, point utilities
+Goofspiel: 13 cards, known sequence of cards, point utilities
 \begin{tabular}{|r|cccccc|}\hline
 &$\doab$&OOS(0.3)&UCT(0.8)&EXP3(0.2)&RM(0.1)&RAND\\\hline
 $\doab$&$\bullet$&-7.74(0.94)&-8.89(0.91)&-6.45(0.94)&-7.88(0.96)&6.67(0.99)\\
@@ -759,7 +759,7 @@ RAND&-6.67(0.99)&-14.42(0.96)&-13.30(1.00)&-14.79(0.97)&-14.20(0.98)&$\bullet$\\
 \caption{Results of head-to-head matches in Goofspiel variants with exploration parameter settings indicated in the table headers.}\label{fig:matches:goof}
 \end{table}
 
-\reviewchange{In head-to-head comparison, our focus is primarily on the standard Goofspiel with 13 cards and chance nodes. Additionally, for the sake of consistency with the offline results, we also evaluate the variant with a fixed known sequence of the cards of nature. The full game has more than $2.4\times 10^{29}$ leaf nodes and the variant with fixed sequence has still more than $3.8\times 10^{19}$ leaf nodes. The results are presented in Table~\ref{fig:matches:goof}, where the top table shows the win rates of the algorithms in the full game and the other two tables the win rates and expected number of points gained by the algorithms in the game with a fixed point card sequence. The results for the know card sequence are the mean of $10$ fixed random sequences. For each table, the algorithms were set up to optimize the presented measure (\ie win rate or points) and the exploration parameters were tuned to the values presented in the header of the table.
+\reviewchange{In head-to-head comparison, our focus is primarily on the standard Goofspiel with 13 cards and chance nodes. Additionally, for the sake of consistency with the offline results, we also evaluate the variant with a fixed known sequence of cards. The full game has more than $2.4\times 10^{29}$ leaf nodes and the variant with fixed sequence has still more than $3.8\times 10^{19}$ leaf nodes. The results are presented in Table~\ref{fig:matches:goof}, where the top table shows the win rates of the algorithms in the full game and the other two tables the win rates and expected number of points gained by the algorithms in the game with a fixed point card sequence. The results for the know card sequence are the mean of $10$ fixed random sequences. For each table, the algorithms were set up to optimize the presented measure (\ie win rate or points) and the exploration parameters were tuned to the values presented in the header of the table.
 
 First, we can see that finding a good strategy in Goofspiel is difficult for all the algorithms.
 This is noticeable thanks to the results of RAND player, that performs reasonably well
