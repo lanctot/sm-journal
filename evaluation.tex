@@ -1134,13 +1134,13 @@ To understand, we need to look at the convergence properties of OOS, which is es
 Since outcome sampling uses unbiased estimators of its counterfactual values,
 from~\cite{Gibson12probing} the bound on its overall average regret after $T$ iterations is, with probability $1-p$, 
 \[ \bar{R}_i^T \le O\left( |\cS| \frac{\tilde{\Delta}_i }{\sqrt{T}} + \sqrt{\frac{\bVar}{pT} + \frac{\bCov}{p}} \right), \] 
-where $\cI_i$ and $\tilde{\Delta}_i$ are constants determined by the game structure, and 
-$\bVar$ and $\bCov$ are the maximal variance and covariance of the term $r^t(s,a) - \tilde{r}^t(s,a)$ over all information sets of
+where $\tilde{\Delta}_i$ is a constant determined by the game's structure, and 
+$\bVar$ and $\bCov$ are the maximal variance and covariance of the terms $r^t(s,a) - \tilde{r}^t(s,a)$ over all information sets of
 player $i$, actions, and time steps. Since $\bar{R}^T_1,\bar{R}^T_2 \le \epsilon \Rightarrow (\bar{\sigma}^T_1, \bar{\sigma}^T_2)$ is a 
 $2\epsilon$-NE, then the variance of estimates in OOS affects it rate of convergence.
 
 Computing these quantities exactly is prohibitively expensive, and since $r^t(s,a) \in [0,1]$ the scale is much smaller than $\tilde{r}^t(s,a)$, 
-so we can get a good estimate by instead computing
+we can get a good estimate by instead computing
 $\widehat{\bVar} = \text{Var}[\max_{a \in \cA(s)} \tilde{r}^t(s, a)]$. We do this for a representative state $s$, \ie the root. Regret matching
 also computes an $\tilde{r}^t(s,a)$ quantity at each node, the only difference is that they are not counterfactual. We show these variances for
 Goofspiel(13), OZ(50,3,1), and Tron(13, 13) in Table~\ref{tab:oos_vs_rm}.
@@ -1175,7 +1175,7 @@ Tron(13,13)	& $3$	& $13000$	& $22.23$ & $10075$ & $0.75$ \\
 
 From these numbers, we see that the variance of OOS is significantly higher than RM. As such, even though RM may be introducing
 some kind of bias by bootstrapping from its own estimates of the subgames, when there are so few samples this trade-off may be worthwhile
-to avoid the uncertainty introduced by the variance. This problem does not demonstrate in the smaller games, because the the updates have smaller variance and OOS performs much more samples per second. For example, in Goofspiel(5) used for offline convergence experiments, OOS performs approximately 150 thousand iterations per second and the variance is only around 350. 
+to avoid the uncertainty introduced by the variance. This problem does not show up in the smaller games, because the the updates have smaller variance and OOS performs much more samples per second. For example, in Goofspiel(5) used for offline convergence experiments, OOS performs approximately 150000 iterations per second and the variance is only around 350. 
 
 
 %\mlanctot{Will present Viliam's variance argument and results from Aug 10th email here. Will write this section Wednesday+Thursday evening. }

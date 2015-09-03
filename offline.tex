@@ -660,7 +660,7 @@ current approximation be? And finally, what is the time and space complexities o
 
 The backward induction algorithms always return an optimal solution. The correctness of BI follows by induction, the Markov property, and the uniqueness of
 each subgame's $V$ value from Equation~\ref{eq:ne}. As discussed in subsections~\ref{sec:algs:biab}-\ref{sec:algs:doab}, the time taken by $\biab$ and $\doab$
-are inherently determined by the number of dominated actions in each subgame game, the specific serializations, and/or order used to expand the
+are inherently determined by the number of dominated actions in each subgame, the specific serializations, and/or order used to expand the
 strategies. However, the worst case of all these algorithms is one where every matrix game has no dominated actions, and therefore needs to be expanded fully.
 An example of such a game would be finitely-repeated Rock, Paper, Scissors, or any biased variant that has no dominated actions, \eg the one
 in subsection~\ref{sec:eval:domains}.
@@ -673,7 +673,7 @@ induction~\cite{lisy2013-nips};
 however, back-propagation of the sampled value (as done on line~\ref{alg:smmcts:return} of Algorithm~\ref{alg:smmcts}) seems to work better in practice.
 Also, the proof does not include a finite-time bound, so there is no known guarantee for the quality of the solution if Algorithm~\ref{alg:smmcts} is
 terminated early.
-Also, since these algorithms have a fixed exploration parameter $\gamma$, there is an easy-to-construct example game that if the strategy can converges 
+Also, since these algorithms have a fixed exploration parameter $\gamma$, there is an easy-to-construct example game that if the strategy converges 
 to an $\epsilon$-NE it can be no closer than $\epsilon \ge \gamma D > 0$, where $D$ is the depth of the game~\cite{Kovarik2015Analysis}.
 \mlanctot{@Vilo, please check that I interpreted this correctly.}
 Among the algorithms presented above, the only one with a finite-time probabilistic convergence guarantee is OOS, which is inherited from its base
