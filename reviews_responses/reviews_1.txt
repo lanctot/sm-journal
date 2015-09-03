@@ -70,7 +70,7 @@ TODO(@Marc): add something about convergence in the online case to Section 5.
 > YES (mostly). The paper is purely algorithmic and experimental, so the lack of theory and proofs is unproblematic (there is nothing to prove). What is do miss, though, is a more convincing discussion of what we really learn from the experimental results. We see numbers that tell us in which setting and which domain which algorithm performs best, but it is not always clear why this is the case. There are successful attempts in the paper at explaining some of the results informally, but I would have liked some more formal depth here. Reading the "future work" part of the paper, it becomes clear that the authors are aware of this limitation of their work. Still, it would be nice to know a bit more about the limitations of pruning using the various presented algorithms, and it would be nice to understand better why the fast convergence and low exploitability of OOS in the small game instances is such a poor predictor of its performance in the online setting. In Section 6.5.7,
 > the authors attempt at coming up with an explanation, but it is too speculative to be convincing.
 
-TODO
+TODO (say here that we have added additional experiments explaining the weak performance for OOS)
 
 > Does anything need to be added or deleted?
 > ------------------------------------------
@@ -95,8 +95,6 @@ We agree. (Section 1.1 has been added for this purpose.)
 > NO. It does mention general game playing and real-time decision making in physical environments as possible application areas of the algorithms, and I am convinced that this is correct, but still this could be elaborated upon. E.g., why not present a real-world case study besides the benchmark domains?
 
 We believe that a full real-world case study requires a significant investigation of techniques and challenges tailored for the particular scenario that would reach beyond the scope of this paper. We have, however, elaborated on the importance and potential applicability of this work in the introduction. 
-TODO: bb: @Marc, Vilo -- I have tried to sketch something in intro. Please, let me know what do you think.
-      Marc: @Brano -- Looks good to me. I did some minor rephrasing and added some small things.
 
 > Is the English satisfactory?
 > ----------------------------
@@ -563,10 +561,7 @@ The semicolons have been removed in all of the pseudo-code.
 
 The inconsistencies in the references have now been fixed.
 
-TODO: Marc: @Vilo, @Brano: I don't know what you prefer regarding the accents. I added them, but please remove them if you prefer it.
-      bb: I think accents are better, since we have them also on the first page
-      Marc: Ok, also I noticed in your previous papers they also mostly contain the accents. I'll remove this on Friday.
-      
+     
 > Overall, in my opinion this is a nice overview paper over current
 > approaches for solving and playing two-player simultaneous move games,
 > possibly including chance events. Unfortunately, it suffers a lot from
@@ -581,7 +576,7 @@ TODO: Marc: @Vilo, @Brano: I don't know what you prefer regarding the accents. I
 > opinion it will be possible to end up with a nice article after all.
 
 We have now added results for different reward functions corresponding to point differences in both Goofspiel and Oshi-Zumo, in both the offline and online case.
-TODO: @Brano, please verify this claim and then remove this comment.
+
 
 Again, we would to sincerely thank the effort from both reviewers for catching many of the small and sometimes subtle mistakes. As a result, we believe this review process has led to a greatly improved paper.
 

@@ -25,16 +25,15 @@ In case there is no strategy stored for the state $s'$ due to pruning, iterative
 
 \subsection{Online Search using Sampling Algorithms}
 
-\bbosansky{The following subsection is quite wordy -- feel free to make it more compact and technical.}
-\mlanctot{Ok, will do. (Soon!)}
+%\bbosansky{The following subsection is quite wordy -- feel free to make it more compact and technical.}
+%\mlanctot{Ok, will do. (Soon!)}
+% These were old TODOS -- removing them.
 
 Using sampling algorithms in an online settings is simpler compared to the algorithms based on the backward induction, since no significant changes are needed and the algorithms do not need an evaluation function.
 The algorithms are stopped after given time limit and the move to play or the complete strategy is extracted as described for each sampling algorithm in Section~\ref{sec:offline}.
 There are two concepts that have to be discussed.
 First of all, the algorithms can re-use all information and statistics gained in previous iterations; hence, after returning a move and advancing to a succeeding state of the game $s'$, the subtree rooted in $s'$ of the incrementally built tree is preserved and used in the next iterations.
 Note that reusing the previously gathered statistics in the sub-tree rooted in $s'$ has no potentially negative effect on any variant of the MCTS algorithms since the behavior of the algorithm is exactly the same when the iteration is started in this node, or if this node is reached from its predecessor. On the other hand, this does not hold generally for OOS, where the regret values are weighted by the reach probabilities depending on the strategy used in the preceding nodes.  However, this fact does not negatively affect the convergence of the algorithm. In the definition of sampled counterfactual value in Equation~\ref{eq:scv}, the value of the leaf sampled in the current iteration is scaled up by one over the probability of reaching the leaf. This scaling also translates to regret values. After the root of the game is moved to a sub-tree and therefore the samples are shorter, it will generally have a larger reach probability and larger weight in the regret updates. As a result, the later and more precise samples have larger weight in cumulative regret and mean strategy updates than the earlier iterations. This should only help the algorithm. Moreover, the number of the updates after moving to the subtree is substantially larger; hence, any potentially negative effect of this difference in weights will be quickly minimised.
-
-\vlisy{This is still a little unclear, but it might be the reason why OOS dost not work well online. I have implemented a modified version and I will run some experiments.}
 
 Secondly, even though the sampling algorithms do not require to use domain-specific knowledge for online search, they often incorporate this type of knowledge to better guide the sampling and thus to evaluate more relevant parts of the state space~\cite{Gelly07Combining,Lorentz08Amazons,Winands10MCTS-LOA,Lorentz13Breakthrough,Lanctot14Implicit}. When directly comparing sampling-based algorithms with the backward-induction algorithms that are clearly dependent on the evaluation function, the outcome of such a comparison strictly depends on the quality of the evaluation function -- in case of a very large game, a backward induction algorithm with precise evaluation function will be significantly better (we will see such examples in the experimental evaluation). Therefore, we also use sampling algorithms combined with an evaluation function. The integration is done via replacing the random rollout
 by directly using the value of the evaluation function in the current state for MCTS or OOS algorithms; \ie Rollout($s$) in
