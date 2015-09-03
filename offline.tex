@@ -574,14 +574,14 @@ The required number of iterations for convergence is much larger, but each itera
 \subsubsection{Online Outcome Sampling} \label{sec:oos}
 
 We now present Online Outcome Sampling (OOS) for simultaneous move games. Note, importantly, that OOS is different from the general SM-MCTS
-algorithms presented in Section~\ref{sec:algs:smmcts}. OOS is an adaptation of a more general
+algorithms presented in Subsection~\ref{sec:algs:smmcts}. OOS is an adaptation of a more general
 algorithm which has been proposed for search in imperfect information games~\cite{15aamas-iioos}. However, since simultaneous move games are
 decomposable into subgames, the typical problems encountered in the fully imperfect information search setting are not present here. Hence, we present
 a simpler OOS specifically intended for simultaneous move games.
 
 Online Outcome Sampling resembles MCTS in that it builds its tree incrementally. However the algorithm is based on MCCFR, from
-Section~\ref{sec:algs:cfros}, rather than on stochastic and adversarial bandits.
-A previous version of this algorithm for simultaneous move gameswas presented by Lanctot et al.~\cite{Lanctot13Goofspiel}. The version presented
+Subsection~\ref{sec:algs:cfros}, rather than on stochastic and adversarial bandits.
+A previous version of this algorithm for simultaneous move games was presented by Lanctot et al.~\cite{Lanctot13Goofspiel}. The version presented
 here is simpler for implementation and it further reduces variance of the regret estimates, which leads to faster convergence and better game play.
 The main novelty in this version is that in any state $s$, it defines the counterfactual values as if the game actually started in $s$. This is
 possible in simultaneous move games, because the optimal strategy in any state depends only on the part of the game below the state.
@@ -643,27 +643,27 @@ required to compute the sampled counterfactual value.
 Regardless on whether the current node was in the tree or not, the algorithm updates the regret table of player $i$ based on the simplified definition of sampled counterfactual regret for simultaneous move games (lines~\ref{alg:oos:update1}-\ref{alg:oos:update2}) and the mean strategy of player $-i$ (line~\ref{alg:oos:update3}).
 Finally, the function returns the updated probabilities to the upper level of the tree.
 
-OOS appears similar to SM-MCTS using the RM selection mechanism (Section~\ref{sec:rm}). However, there are a number of differences:
+OOS appears similar to SM-MCTS using the RM selection mechanism (Subsection~\ref{sec:rm}). However, there are a number of differences:
 OOS uses importance sampling of a sequence of probabilities to keep its estimate unbiased, but will suffer higher variance than RM which uses only a one-step correction.
 RM does not distinguish whether its utility comes from exploration or otherwise, whereas OOS separates the two into tail probabilities of the strategy for the sequence
 sampled ($x_i$) and the sampling probability of the sequence ($q_i$); when $\sigma_i(s,a) = 0$, due to exploration, then $x_i = 0$ and value of the update increments
 are also $0$. RM uses coupled dynamics, whereas OOS is uncoupled, not requiring information about what action the opponent chose; RM uses the means from the subgames
-as estimates of utility for those subgames, which could introduce some bias in the estimators. We further discuss the comparison in Section~\ref{sec:eval}.
+as estimates of utility for those subgames, which could introduce some bias in the estimators. We further discuss the comparison in Subsection~\ref{sec:eval}.
 
 \reviewchange{
 \subsection{Theoretical Properties, Guarantees, and Limitations}
 
-Firstly, recall that optimal strategies exist for simultaneous move games as a result of von Neumman's minimax theorem, which guarantees each player 
+Firstly, recall that optimal strategies exist for simultaneous move games as a result of von Neumann's minimax theorem, which guarantees each player 
 their minimax value (Equation~\ref{eq:ne}). So, one desirable property of these algorithms is completeness: will an optimal solution be found if one exists?
 Another question is how long it can take to find an optimal solution, and yet another is if the algorithm is terminated early, how accurate would the
 current approximation be? And finally, what is the time and space complexities of the algorithms?
 
 The backward induction algorithms always return an optimal solution. The correctness of BI follows by induction, the Markov property, and the uniqueness of
-each subgame's $V$ value from Equation~\ref{eq:ne}. As discussed in subsections~\ref{sec:algs:biab}-\ref{sec:algs:doab}, the time taken by $\biab$ and $\doab$
+each subgame's $V$ value from Equation~\ref{eq:ne}. As discussed in Subsections~\ref{sec:algs:biab}-\ref{sec:algs:doab}, the time taken by $\biab$ and $\doab$
 are inherently determined by the number of dominated actions in each subgame, the specific serializations, and/or order used to expand the
 strategies. However, the worst case of all these algorithms is one where every matrix game has no dominated actions, and therefore needs to be expanded fully.
 An example of such a game would be finitely-repeated Rock, Paper, Scissors, or any biased variant that has no dominated actions, \eg the one
-in subsection~\ref{sec:eval:domains}.
+in Subsection~\ref{sec:eval:domains}.
 There are no guarantees on the quality of the strategy computed by the exact algorithms if terminated early, because due to bad tie-breaking a single
 pure NE could be expanded at the last step and previous solutions could have arbitrarily worst utility.
 
@@ -679,7 +679,7 @@ to an $\epsilon$-NE it can be no closer than $\epsilon \ge \gamma D > 0$, where 
 Among the algorithms presented above, the only one with a finite-time probabilistic convergence guarantee is OOS, which is inherited from its base
 algorithm MCCFR. By~\cite[Theorem 5]{Lanctot09Sampling}, when OOS is run from the root, with probability $1-p$ an $\epsilon$-NE will is reached after
 $O(\frac{(|\cA||\cS|^2}{p \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest
-probability of sampling any single $z \in \cZ$. We will see in Section~\ref{sec:eval:offline} that this bound is often loose in practice. 
+probability of sampling any single $z \in \cZ$. We will see in Subsection~\ref{sec:eval:offline} that this bound is often loose in practice. 
 
 As for computational complexity, the time cost per node is linear in $|\cA_i|$ in OOS, UCT, and RM. The time cost per node
 is quadratic in the case
