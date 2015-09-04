@@ -405,7 +405,7 @@ First, we analyze the games with fixed sequences of the cards.
 
 \paragraph{Exact algorithms with fixed sequences}
 The results are depicted in Figure~\ref{fig:off:res:gs} (note the logarithmic vertical scale), where the left subfigure depicts the results for win-tie-lose utilities and the right subfigure depicts the results for point utilities.
-\reviewchange{We present the mean results from 20 different fixed sequences.}
+\reviewchange{We present the mean results from 10 different fixed sequences.}
 The comparison on the win-tie-lose variant shows that there is a significant number of subgames with pure Nash equilibrium that can be computed using serialized alpha-beta algorithms.
 Therefore, the performance of $\biab$ and $\doab$ is fairly similar and the gap only slowly increases in favor of $\doab$ with the increasing size of the game.
 Since serialized alpha-beta is able to solve a large portion of subgames, both of these algorithms significantly reduce the number of the states visited by the backward induction algorithm.
@@ -1028,7 +1028,7 @@ RM&0.05&74.5(2.7)&51.6(3.0)&60.1(2.9)&59.0(3.0)&49.0(3.1)&58.84\\
 \hline
 \end{tabular}
 
-Oshi Zumo: 50 coins, 2$\cdot$3 + 1 positions, win rate, evaluation function
+Oshi Zumo: 50 coins, $K=3$, win rate, evaluation function
 \begin{tabular}{|lr|ccccc|c|}\hline
 &&$\doab$&OOS(0.6)&UCT(2)&EXP3(0.2)&RM(0.1)&Mean\\\hline
 OOS&0.5&35.3(2.9)&50.9(3.6)&28.5(3.3)&54.9(3.6)&43.7(3.5)&42.66\\
