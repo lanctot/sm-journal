@@ -124,7 +124,7 @@ We wanted to minimize unwanted side effects of using some particular initial act
 
 > * Algorithms 3 and 4: BR(...) has different signatures in usage in Alg. 3 and definition in Alg. 4.
 
-Thank you for pointing out this mistake, where Algorithm 3 was missing the game as the first argument. This has now been fixed.
+Thank you for pointing out this mistake, Algorithm 3 was missing the game as the first argument. This has now been fixed.
 
 > * Alg. 3: Before line 3, v_s^{i} and v_s^{-i} should somehow be initialized.
 
@@ -189,7 +189,7 @@ Explicit definitions for dominance, Nash equilibria, and best response have now 
 > Is the English satisfactory?
 > No.
 
-We have addressed this by doing a full pass of the final version, after edits. (TODO)
+We have addressed this by doing a full pass of the final version by a native speaker.
 
 > Is the presentation otherwise satisfactory?
 > No. There are many small inconsistencies in the formalizations.
@@ -426,7 +426,7 @@ We have changed all instances of Z to \cal{Z}. There is a one-to-one corresponde
 > Next line: strategy \sigma_i^t is defined; the next sentence uses
 > \sigma^t (i.e., without the _i). Is this correct?
 
-We have reworded to clarify this.
+We have reworded the text to clarify this.
 
 > a \in A(I) -> what is A(I)?
 
@@ -470,6 +470,9 @@ Increasing the minimum bid M significantly simplifies the game by removing possi
 >
 > In the evaluation function for Oshi-Zumo: There are two cases for
 > which the value of b is specified; what about the other cases?
+
+Otherwise b is set to zero. We have included this missing case in the text now.
+
 >
 > In Tron, what are the rewards?
 
