@@ -30,9 +30,6 @@ For the exact algorithms, we have added a description of the complexity to each 
 
 We have also added a new subsection 4.6 that summarizes the theory and guarantees for these algorithms.
 
-TODO(Remove comments below once Vilo has read them.)
-bb: I have added the description of the complexity for the exact algorithms, although I have just described it in words. Not really sure, whether unleashing another set of symbols just to describe obvious complexity is necessary, but if you guys think that it should be more formal, I can do that.
-Marc: I agree that this is fine.
 
 > As a result, I would like you to cristalize the contribution, elaborate on the theory/analysis,
 > follow the comments in detail and try a resubmission.
@@ -71,6 +68,7 @@ TODO(@Marc): add something about convergence in the online case to Section 5.
 > the authors attempt at coming up with an explanation, but it is too speculative to be convincing.
 
 TODO (say here that we have added additional experiments explaining the weak performance for OOS)
+TODO (it is now weak only in some games. We investigate it because of the contrast to offline performance)
 
 > Does anything need to be added or deleted?
 > ------------------------------------------
@@ -526,7 +524,7 @@ We have added experimental results demonstrating this point (Section 6.6), and s
 > Tron it might depend on the actual starting positions, and in the
 > random games I have no intuitions on this at all.
 
-We have added a new paragraph at the start of this subsection with an additional example to clarify this point. In Tron, we only use symmetric boards and initial positions, so there is no possible advantage as well. In the random games, a bias could be introduced but we did not notice any statistically significant biases in practice, as shown in Table 3. TODO(@Vilo: Can you verify that this last statement is true?)
+We have added a new paragraph at the start of this subsection with an additional example to clarify this point. In Tron, we only use symmetric boards and initial positions, so there is no possible advantage as well. In the random games, a bias could be introduced, but since it does not rely any interesting information, we run each random game with the players on both positions to reduce variance of the results.
 
 > In the parameter-tuning experiments, according to Tab. 6, the
 > performance of Exp3 and RM was still improving with increasing

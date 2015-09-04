@@ -1,3 +1,4 @@
+%!TEX root = sm-journal.tex
 
 This section focuses on algorithms that compute strategies for simultaneous move games.
 The baseline algorithm for solving simultaneous move games exactly is backward induction~(BI)~(Subsection~\ref{sec:algs:bi}).
@@ -668,22 +669,19 @@ There are no guarantees on the quality of the strategy computed by the exact alg
 pure NE could be expanded at the last step and previous solutions could have arbitrarily worst utility.
 
 The concept of completeness is less clear for the sampling algorithms due to randomization, so we instead discuss a form of probabilistic completeness. 
-When using RM or Exp3 and back-propagating the mean value of all samples at each state, then an eventual convergence can be guaranteed by
-induction~\cite{lisy2013-nips};
-however, back-propagation of the sampled value (as done on line~\ref{alg:smmcts:return} of Algorithm~\ref{alg:smmcts}) seems to work better in practice.
-Also, the proof does not include a finite-time bound, so there is no known guarantee for the quality of the solution if Algorithm~\ref{alg:smmcts} is
-terminated early.
-Also, since these algorithms have a fixed exploration parameter $\gamma$, there is an easy-to-construct example game that if the strategy converges 
-to an $\epsilon$-NE it can be no closer than $\epsilon \ge \gamma D > 0$, where $D$ is the depth of the game~\cite{Kovarik2015Analysis}.
-\mlanctot{@Vilo, please check that I interpreted this correctly.}
+When using RM or Exp3 and using the means of all samples that used a particular action to update the selection function, then an eventual convergence can be guaranteed by
+induction~\cite{lisy2013-nips, Kovarik2015Analysis};
+however, updating the selector by the sampled value (as done on line~\ref{alg:smmcts:return} of Algorithm~\ref{alg:smmcts}) works better in practice.
+Since there is no known finite-time bound, there is no known guarantee for the quality of the solution if Algorithm~\ref{alg:smmcts} is terminated early.
+Furthermore, these algorithms use a fixed exploration parameter $\gamma$ that imposes a lower bound on how close Algorithm~\ref{alg:smmcts} can get to the Nash equilibrium in the worst case.
+There is an example game presented in \cite{Kovarik2015Analysis}, in which it is impossible for SM-MCTS with any regret minimizing selection function with fixed exploration to converge to an $\epsilon$-Nash equilibrium for any $\epsilon < \gamma D$, where $D$ is the depth of the game.
 Among the algorithms presented above, the only one with a finite-time probabilistic convergence guarantee is OOS, which is inherited from its base
-algorithm MCCFR. By~\cite[Theorem 5]{Lanctot09Sampling}, when OOS is run from the root, with probability $1-p$ an $\epsilon$-NE will is reached after
+algorithm MCCFR. By~\cite[Theorem 5]{Lanctot09Sampling}, when OOS is run from the root, with probability $1-p$ an $\epsilon$-NE is reached after
 $O(\frac{(|\cA||\cS|^2}{p \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest
-probability of sampling any single $z \in \cZ$. We will see in Subsection~\ref{sec:eval:offline} that this bound is often loose in practice. 
+probability of sampling any single $z \in \cZ$. We will see in Subsection~\ref{sec:eval:offline} that this bound is often loose in practice. \vlisy{I believe this is true, but it is a little too bold statement with all the modification we did to MCCFR. We should give it more thought before the final version.}
 
 As for computational complexity, the time cost per node is linear in $|\cA_i|$ in OOS, UCT, and RM. The time cost per node
 is quadratic in the case
-of Exp3 due to the numerical stability implemeted by Equation~\ref{eq:exp3:stable}. The memory required per node is linear in all of the decoupled
-algorithms OOS, UCT, and Exp3, and quadratic in RM due to storing estimates of each child subgame.
+of Exp3 due to the numerical stability implemeted by Equation~\ref{eq:exp3:stable}. The memory required per node is linear in OOS, UCT, and Exp3, and quadratic in RM due to storing estimates of each child subgame.
 }
 

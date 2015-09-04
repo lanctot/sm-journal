@@ -713,7 +713,9 @@ We first present the comparison of different algorithms and we discuss the influ
 
 \reviewchange{In this subsection, we show cross tables of each algorithm (on the row) matched up against each competitor algorithm (on the column).}
 Each entry represents a mean of at least $1000$ matches with the half of the width of the $95\%$ confidence interval in brackets, \eg $52.9(0.3)$ refers to $52.9\% \pm 0.3\%$.
-\reviewchange{The result shown is the win rate for the row player, so as an example in the standard game of Goofspiel (top of Table~\ref{fig:matches:goof}) $\doab$ wins $67.2 \% \pm 1.4 \%$ of games against the random player.}
+\reviewchange{The result shown is the win rate for the row player, so as an example in the standard game of Goofspiel (top of Table~\ref{fig:matches:goof}) $\doab$ wins $67.2 \% \pm 1.4 \%$ of games against the random player.
+All evaluated games, besides the pursuit evasion game, are symmetric from the position of the first and the second player. We made even the random games symmetric by always playing matches on the same game instance in pairs with alternating players' positions. However, for easier comparison of the algorithms, we mirror the same results to both fields corresponding to a pair of players in the cross tables.
+}
 
 \subsubsection{Goofspiel}
 
@@ -897,10 +899,7 @@ The clearly best performing algorithm in this domain is UCT, which significantly
 This is true even though UCT performs around $11 \times 10^3$ iterations per second, which is the least form all sampling algorithms.
 $\doab$ wins over all other sampling algorithms.
 OOS has the weakest performance in spite of good convergence results in the offline settings (see~Figure~\ref{fig:off:conv:rg}).
-\reviewchange{The reason is the quickly growing variance and decreasing number of samples in longer games, which we discuss in more details in Subsection~\ref{sec:oos_vs_rm}. OOS performs $20 \times 10^3$ iterations per second and only around $3 \times 10^3$ of them actually update the regrets in the root. \bbosansky{We need one sentence here about the reason for this difference (even if it seems obvious to you).}
-Even though, the variance of the updates ranges between $1.5\times 10^5$ and $4\times 10^5$. 
-It is approximately 10 times more than for the Goofspiel with similar number of root updates.
-\bbosansky{These last two sentences are not clear. I do not understand them.}}
+\reviewchange{The reason is the quickly growing variance and decreasing number of samples in longer games, which we discuss in more details in Subsection~\ref{sec:oos_vs_rm}. OOS performs $20 \times 10^3$ iterations per second and only around $3 \times 10^3$ of them actually update the regrets in the root. All the other iterations return with zero tail probability ($x_i$) in the root.}
 
 %We also performed an experiment with larger branching factor (15) and smaller depth (5), but the results were very similar to this setting.\vlisy{I assume the new OOS would perform much better there!}
 
@@ -946,7 +945,7 @@ Again, OOS performs the worst despite its clearly fastest convergence on the sma
 It won only 21.8\% matches against $\doab$ and 29.4\% matches against UCT.
 In this game, the variance is likely not the key factor, since it is between 20 and 40.
 However, only 1,000 out of only 12,000 iterations per second update regrets in the root.
-All the other iterations return with zero tail probability ($x_i$) in the root.}
+}
 
 As in the case of Oshi Zumo, we also run the matches with the evaluation function to replace the random rollout simulation in the sampling algorithms.
 We present the results in the second table of Table~\ref{fig:matches:tron}.
@@ -1031,26 +1030,26 @@ RM&0.05&74.5(2.7)&51.6(3.0)&60.1(2.9)&59.0(3.0)&49.0(3.1)&58.84\\
 Oshi Zumo: 50 coins, 2$\cdot$3 + 1 positions, win rate, evaluation function
 \begin{tabular}{|lr|ccccc|c|}\hline
 &&$\doab$&OOS(0.6)&UCT(2)&EXP3(0.2)&RM(0.1)&Mean\\\hline
-OOS&0.5&41.9(3.6)&50.9(3.6)&28.5(3.3)&54.9(3.6)&43.7(3.5)&43.98\\
-OOS&0.4&40.1(3.6)&56.0(3.6)&26.6(3.2)&56.1(3.6)&42.6(3.6)&44.28\\
-OOS&\textbf{0.3}&42.8(3.6)&57.8(3.5)&27.7(3.2)&55.7(3.6)&44.8(3.6)&\textbf{45.76}\\
-OOS&0.2&39.5(3.6)&53.1(3.6)&26.8(3.2)&54.1(3.6)&41.4(3.5)&42.98\\
-OOS&0.1&38.9(3.6)&55.6(3.6)&24.1(3.1)&56.2(3.6)&43.0(3.6)&43.56\\\hline
-UCT&1.5&88.9(2.5)&74.0(3.8)&79.1(2.9)&87.4(2.9)&70.6(3.9)&80\\
-UCT&1&90.4(2.4)&74.8(3.7)&81.4(2.7)&89.8(2.6)&68.8(4.0)&81.04\\
-UCT&\textbf{0.8}&94.3(1.8)&77.9(3.6)&77.1(3.0)&89.2(2.7)&74.1(3.8)&\textbf{82.52}\\
-UCT&0.6&98.8(0.8)&75.7(3.7)&54.9(3.9)&90.0(2.6)&74.1(3.7)&78.7\\
-UCT&0.4&97.7(1.2)&75.0(3.7)&31.4(3.7)&89.8(2.6)&70.6(3.9)&72.9\\\hline
-EXP3&0.9&61.2(3.0)&68.2(2.8)&23.1(2.4)&67.2(2.8)&55.2(2.8)&54.98\\
-EXP3&\textbf{0.8}&59.2(3.9)&68.4(3.6)&23.0(3.1)&74.2(3.4)&61.5(3.7)&\textbf{57.26}\\
-EXP3&0.6&57.8(3.9)&67.6(3.7)&20.4(3.1)&65.4(3.7)&59.4(3.8)&54.12\\
-EXP3&0.5&50.9(4.0)&60.9(3.8)&15.1(2.7)&64.7(3.7)&52.9(3.9)&48.9\\
-EXP3&0.4&47.4(4.0)&57.5(3.9)&17.5(3.0)&64.1(3.8)&54.9(3.9)&48.28\\\hline
-RM&0.5&46.4(3.7)&41.1(3.5)&31.7(3.3)&49.4(3.6)&34.3(3.3)&40.58\\
-RM&0.3&49.4(3.7)&52.1(3.5)&33.8(3.4)&61.2(3.5)&43.7(3.5)&48.04\\
-RM&0.2&46.4(3.7)&55.7(3.6)&30.7(3.3)&59.2(3.5)&46.4(3.6)&47.68\\
-RM&\textbf{0.1}&42.3(3.6)&58.1(3.5)&34.9(3.4)&57.6(3.6)&54.1(3.6)&\textbf{49.4}\\
-RM&0.05&43.1(3.6)&59.6(3.5)&29.7(3.3)&59.3(3.5)&51.1(3.6)&48.56\\
+OOS&0.5&35.3(2.9)&50.9(3.6)&28.5(3.3)&54.9(3.6)&43.7(3.5)&42.66\\
+OOS&0.4&35.0(2.9)&56.0(3.6)&26.6(3.2)&56.1(3.6)&42.6(3.6)&43.26\\
+OOS&\textbf{0.3}&36.5(3.0)&57.8(3.5)&27.7(3.2)&55.7(3.6)&44.8(3.6)&\textbf{44.5}\\
+OOS&0.2&35.0(2.9)&53.1(3.6)&26.8(3.2)&54.1(3.6)&41.4(3.5)&42.08\\
+OOS&0.1&34.6(2.9)&55.6(3.6)&24.1(3.1)&56.2(3.6)&43.0(3.6)&42.7\\\hline
+UCT&1.5&83.2(2.2)&74.0(3.8)&79.1(2.9)&87.4(2.9)&70.6(3.9)&78.86\\
+UCT&1&83.8(2.1)&74.8(3.7)&81.4(2.7)&89.8(2.6)&68.8(4.0)&79.72\\
+UCT&\textbf{0.8}&86.5(2.0)&77.9(3.6)&77.1(3.0)&89.2(2.7)&74.1(3.8)&\textbf{80.96}\\
+UCT&0.6&89.4(1.8)&75.7(3.7)&54.9(3.9)&90.0(2.6)&74.1(3.7)&76.82\\
+UCT&0.4&75.8(2.6)&75.0(3.7)&31.4(3.7)&89.8(2.6)&70.6(3.9)&68.52\\\hline
+EXP3&0.9&47.8(3.1)&68.2(2.8)&23.1(2.4)&67.2(2.8)&55.2(2.8)&52.3\\
+EXP3&\textbf{0.8}&46.9(3.1)&68.4(3.6)&23.0(3.1)&74.2(3.4)&61.5(3.7)&\textbf{54.8}\\
+EXP3&0.6&42.5(3.1)&67.6(3.7)&20.4(3.1)&65.4(3.7)&59.4(3.8)&51.06\\
+EXP3&0.5&38.7(3.0)&60.9(3.8)&15.1(2.7)&64.7(3.7)&52.9(3.9)&46.46\\
+EXP3&0.4&35.9(3.0)&57.5(3.9)&17.5(3.0)&64.1(3.8)&54.9(3.9)&45.98\\\hline
+RM&0.5&44.5(3.0)&41.1(3.5)&31.7(3.3)&49.4(3.6)&34.3(3.3)&40.2\\
+RM&0.3&42.8(3.0)&52.1(3.5)&33.8(3.4)&61.2(3.5)&43.7(3.5)&46.72\\
+RM&0.2&41.8(3.0)&55.7(3.6)&30.7(3.3)&59.2(3.5)&46.4(3.6)&46.76\\
+RM&\textbf{0.1}&37.0(2.9)&58.1(3.5)&34.9(3.4)&57.6(3.6)&54.1(3.6)&\textbf{48.34}\\
+RM&0.05&36.4(3.0)&59.6(3.5)&29.7(3.3)&59.3(3.5)&51.1(3.6)&47.22\\
 \hline
 \end{tabular}
 
@@ -1141,20 +1140,19 @@ Given the similar nature of OOS and RM, one might wonder why RM performs in onli
 In this subsection, we investigate this phenomenon and present the results of additional experiments.
 
 \bbosansky{I am unable to follow the text below ... I guess it would be beneficial to avoid most of the math if possible and if something is necessary to explain then repeat the meaning because people have forgotten everything while reading through these long experiments.}
-To understand, we need to look at the convergence properties of OOS, which is essentially an application of outcome sampling MCCFR.
-Since outcome sampling uses unbiased estimators of its counterfactual values,
-from~\cite{Gibson12probing} the bound on its overall average regret after $T$ iterations is, with probability $1-p$, 
-\[ \bar{R}_i^T \le O\left( |\cS| \frac{\tilde{\Delta}_i }{\sqrt{T}} + \sqrt{\frac{\bVar}{pT} + \frac{\bCov}{p}} \right), \] 
-where $\tilde{\Delta}_i$ is a constant determined by the game's structure, and 
-$\bVar$ and $\bCov$ are the maximal variance and covariance of the terms $r^t(s,a) - \tilde{r}^t(s,a)$ over all information sets of
-player $i$, actions, and time steps. Since $\bar{R}^T_1,\bar{R}^T_2 \le \epsilon \Rightarrow (\bar{\sigma}^T_1, \bar{\sigma}^T_2)$ is a 
-$2\epsilon$-NE, then the variance of estimates in OOS affects it rate of convergence.
 
-Computing these quantities exactly is prohibitively expensive, and since $r^t(s,a) \in [0,1]$ the scale is much smaller than $\tilde{r}^t(s,a)$, 
-we can get a good estimate by instead computing
-$\widehat{\bVar} = \text{Var}[\max_{a \in \cA(s)} \tilde{r}^t(s, a)]$. We do this for a representative state $s$, \ie the root. Regret matching
-also computes an $\tilde{r}^t(s,a)$ quantity at each node, the only difference is that they are not counterfactual. We show these variances for
+To understand, we need to look at the convergence properties of OOS, which is essentially an application of outcome sampling MCCFR.
+The bound on convergence of outcome sampling MCCFR presented in \cite{Gibson12probing} says that after $T$ iterations, the strategy produced by the algorithm is an $\epsilon$-Nash equilibrium with probability $1-p$ and
+\[ \epsilon \le O\left( \frac{|\cS|}{\sqrt{T}} + \sqrt{\frac{\bVar}{pT} + \frac{\bCov}{p}} \right), \]  
+where  $\bVar$ and $\bCov$ are the maximal variance and covariance of the difference between the exact value of a regret of an action and its estimate computed based on the selected sample ($r^t(s,a) - \tilde{r}^t(s,a)$) over all states, actions, and time steps. 
+Computing these quantities exactly is prohibitively expensive, and since the scale of exact regrets is bounded by a relatively small range of utilities, we can estimate the variance by of the difference by variance of the sampled regrets, which often have very large range due to the importance sampling correction.
+We measure the estimate
+$\widehat{\bVar} = \text{Var}[\max_{a \in \cA(s)} \tilde{r}^t(s, a)]$ in the root of the games, singe they have the largest range of possible values of $\tilde{r}^t(s, a)$.
+ Regret matching
+also computes a quantity similar to $\tilde{r}^t(s,a)$. 
+The only difference is that they are not counterfactual, \ie they take into account only the value of the current sample and not the expected value of the whole strategies in the game. We show these variances for
 Goofspiel(13), OZ(50,3,1), and Tron(13, 13) in Table~\ref{tab:oos_vs_rm}.
+
 
 \begin{table}
 \centering
@@ -1162,10 +1160,6 @@ Goofspiel(13), OZ(50,3,1), and Tron(13, 13) in Table~\ref{tab:oos_vs_rm}.
 \begin{tabular}{|c||c|c|c|c|c|}
 \hline
 Game & Run & $T_{\text{OOS}}$ & $\widehat{\bVar}_{\text{OOS}}$ & $T_{\text{RM}}$ & $\widehat{\bVar}_{\text{RM}}$ \\
-\hline
-RG(15,5)	& $1$	& $20,730$	& $198,220.92$	& $22,100$	& $3,306.38$ \\
-RG(15,5)	& $2$	& $16,420$	& $157,326.58$	& $17,357$	& $3,480.39$ \\
-RG(15,5)	& $3$	& $16,222$	& $400,370.47$	& $7,897$	& $552.24$ \\
 \hline
 Goofspiel(13)	& $1$	& $12,582$	& $32,939.94$	& $11,939$	& $283.03$ \\
 Goofspiel(13)	& $2$	& $13,888$	& $26,737.95$	& $7,160$	& $359.96$ \\
@@ -1186,7 +1180,7 @@ Tron(13,13)	& $3$	& $13,000$	& $22.23$ & $10,075$ & $0.75$ \\
 
 The results show that the variance of OOS is significantly higher than in case of RM. As such, even though RM may be introducing
 some kind of bias by bootstrapping from its own estimates of the subgames, when there are so few samples this trade-off may be worthwhile
-to avoid the uncertainty introduced by the variance. This problem does not show up in the smaller games, because the the updates have smaller variance and OOS performs much more samples per second. For example, in Goofspiel(5) used for offline convergence experiments, OOS performs approximately $1.5 \times 10^5$ iterations per second and the variance is only around 350. 
+to avoid the uncertainty introduced by the variance. This problem is not apparent in the smaller games, because the higher probability of sampling individual leaves causes smaller variance and OOS performs enough samples  to make the regret estimates sufficiently exact. For example, in Goofspiel(5) used for offline convergence experiments, OOS performs approximately $2 \times 10^5$ iterations per second and the variance is only around 350. 
 
 
 %\mlanctot{Will present Viliam's variance argument and results from Aug 10th email here. Will write this section Wednesday+Thursday evening. }
