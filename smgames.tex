@@ -17,7 +17,7 @@ The player set $\cN = \{ 1, 2, \star \}$ contains player labels, where
 $\star$ denotes the chance player, and by convention a player is denoted $i \in \cN$.
 $\cS$ is a set of states, with $\cZ$ denoting the terminal states, $\cD$ the states where players make decisions,
 and $\cC$ the possibly empty set of states where chance events occur. $\cA = \cA_1 \times \cA_2$ is the set of
-joint actions of individual players. We denote $\cA_i(s)$ the actions available to player $i$ in state $s \in \cS$ \reviewchange{and denote the number of actions $|\cA_i(s)|$ as the \emph{branching factor for player $i$}. When the player is not specified, we are talking about branching factor for all players and number of joint actions $|\cA|$.}
+joint actions of individual players. We denote $\cA_i(s)$ the actions available to player $i$ in state $s \in \cS$ \reviewchange{and denote the number of actions $|\cA_i(s)|$ as the \emph{branching factor for player $i$}. When the player is not specified, we mean the joint branching factor $|\cA|$.}
 The transition function $\cT : \cS \times \cA_1 \times \cA_2 \mapsto \cS$ defines the successor state given a current
 state and actions for both players. $\Delta_\star:\cC \mapsto \Delta(\cS)$ describes a probability distribution over
 possible successor states of the chance event.
@@ -28,23 +28,15 @@ The utility functions $u_i : \cZ \mapsto [v_{\min}, v_{\max}] \subseteq \mathbb{
 $v_{min}$ and $v_{\max}$ denoting the minimum and maximum possible utility respectively. We assume zero-sum
 games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$.
 The game begins in an initial state $s_0$ \reviewchange{and a subset of a game that starts in some node $s$ is called a \emph{subgame}}.
-An example of such game is depicted in Figure~\ref{fig:example} (more examples can be found in \cite[Chapter 5]{Saffidine2013thesis}).
-
-
-In two-player zero-sum games a (subgame perfect) Nash equilibrium strategy is often considered to be optimal (formal definition follows).
-It guarantees an expected payoff of at least $V$ against any opponent. Any non-equilibrium strategy has its nemesis, which makes it win less
-than $V$ in expectation. Moreover, subgame perfect Nash equilibrium strategy can earn more than $V$ against weak opponents. After the
-opponent makes a sub-optimal move, the strategy will never allow it to gain the loss back.
-The value $V$ is known as the \emph{value of the game} and is the same for every equilibrium profile by von Neumann's minimax theorem~\cite{VonNeumann1928}.
+An example of such game is depicted in Figure~\ref{fig:example}. More examples can be found in \cite[Chapter 5]{Saffidine2013thesis}.
 
 A {\it matrix game} is a single step simultaneous move game with action sets $\cA_1$ and $\cA_2$ (see matrices in example game in Figure~\ref{fig:example}).
 Each entry in the matrix $A_{rc}$ where $(r,c) \in \cA_1 \times \cA_2$ corresponds to a value of the subgame rooted in state $\cT(s,r,c)$ that is reached if row $r$ is chosen by player 1 and column $c$ by player 2.
 For example, in Matching Pennies in the left side of Figure~\ref{fig:egMatrixGames}, each player has two actions (heads or tails).
 The row player receives a payoff of 1
 if both players choose the same action and 0 if they do not match.
-Two-player simultaneous move games are sometimes called {\it stacked matrix games} because at every state
-$s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$ that either leads to a terminal state or (possibly after a
-chance transition) to a subgame which is itself another stacked matrix game.
+In simultaneous move games, at every state $s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$ that either leads to a terminal state or (possibly after a
+chance transition) to a subgame which is itself another simultaneous move subgame.
 In the matrix game on the right of Figure~\ref{fig:egMatrixGames}, $(a,A)$ is a pure and only Nash equilibrium (NE) strategy.
 
 \begin{figure}[t!]
@@ -70,7 +62,7 @@ to a probability distribution over the actions $\cA_i(s)$, denoted $\sigma_i(s)$
 \reviewchange{We denote $\sigma_i(s,a)$ as the probability that strategy $\sigma$ assigns to $a$ in $s$.
 These strategies are often called {\it randomized}, or {\it mixed} because they represent a mixture over {\it pure} strategies, each of
 which is a point in the Cartesian product space $\times_{s \in \cS} \cA_i(s)$.\footnote{\reviewchange{Notice that a pure strategy is also a mixed strategy that assigns probability 1 to a single pure strategy and probability 0 to every other pure strategy. However, as is common in the literature, we sometimes refer to a mixed strategy
-to specifically mean not a pure strategy. This is mostly clear from the context, but we will clarify where necessary.}}}
+to specifically mean not a pure strategy. This is mostly clear from the context, but we clarify where necessary.}}}
 \reviewchange{Let $\cH$ be a global set of histories (sequences of actions from the start of the game).}
 Given a profile $\sigma = (\sigma_1, \sigma_2)$, define the probability of reaching a history $h$ under $\sigma$ as
 $\pi^\sigma(h) = \pi^\sigma_1(h) \pi^\sigma_2(h) \pi^\sigma_\star(h)$, where each $\pi^\sigma_i(h)$ is a product of probabilities of the actions taken
@@ -96,7 +88,7 @@ For example, in the game on the right of Figure~\ref{fig:egMatrixGames}, both $b
 
 \begin{definition}[Best Response]
 Suppose $\sigma_{-i} \in \Sigma_{-i}$ is a fixed opponent strategy. Define the set of best response strategies
-$BR_i(\sigma_{-i}) = \{ \sigma_i~|~u(\sigma_i, \sigma_{-i}) = \max_{\sigma_i' \in \Sigma_i} u(\sigma_i', \sigma_{-i})) \}$.
+$BR_i(\sigma_{-i}) = \{ \sigma_i~|~u_i(\sigma_i, \sigma_{-i}) = \max_{\sigma_i' \in \Sigma_i} u_i(\sigma_i', \sigma_{-i})) \}$.
 A single strategy in this set, \eg $\sigma_i \in BR_i(\sigma_{-i})$, is called a best response strategy to $\sigma_{-i}$.
 \end{definition}
 
@@ -124,6 +116,13 @@ exists, it is not always possible to find a Nash equilibrium for which both stra
 For the same reason, randomized strategies are often necessary also in the multi-stage simultaneous move games.
 If the strategies also optimize Equation \ref{eq:ne} in each subgame starting in an arbitrary state, the equilibrium strategy
 is termed {\it subgame perfect.}
+
+In two-player zero-sum games a subgame perfect Nash equilibrium strategy is often considered to be optimal.
+It guarantees an expected payoff of at least $V$ against any opponent. Any non-equilibrium strategy has its nemesis, which makes it win less
+than $V$ in expectation. Moreover, a subgame perfect Nash equilibrium strategy can earn more than $V$ against weak opponents. After the
+opponent makes a sub-optimal move, the strategy will never allow it to gain the loss back.
+The value $V$ is known as the \emph{value of the game} and is the same for every equilibrium
+profile by von Neumann's minimax theorem~\cite{VonNeumann1928}.
 
 Finally, a two-player simultaneous move game is a specific type of two-player imperfect information extensive-form game.
 In imperfect information
