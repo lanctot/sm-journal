@@ -265,6 +265,9 @@ We have added explicit definitions for dominance, Nash equilibria, and best resp
 > rewards make life easier for the exact or the approximative
 > approaches? What would happen if the rewards were taken from much
 > larger sets?
+
+We have added additional experiments for these games to demonstrate the difference in the results if the utility values are from a larger set.
+
 >
 > Finally, there are many small mistakes and inconsistencies in the
 > formalizations and the algorithms. I will point out many of those in
