@@ -92,7 +92,7 @@ We believe that a full real-world case study requires a significant investigatio
 >
 > NO. At least one of the authors's English. It is possible to tell apart paragraphs by different authors by just observing whether the language is correct. The paragraphs not written by that particular author are fine. In the problematic paragraphs, the problem is mostly grammar (not vocabulary): definite and indefinite articles are incorrectly used and omitted, sometimes singular and plural are incorrectly used, plus some other minor mistakes. Fortunately, this only interferes with the reading flow but does not prevent understanding. Still, someone should re-read and correct the affected paragraphs.
 
-TODO: Several full passes of the paper has been done by the native speaker and all of these problems have been fixed.
+Several full passes of the paper has been done by the native speaker and all of these problems have been fixed.
 
 > *****************************
 > * Part B: DETAILED COMMENTS *
