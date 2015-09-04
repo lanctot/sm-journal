@@ -12,7 +12,6 @@ as an example that MCTS with UCT selection function does not converge to a Nash 
 We reproduce this experiment and show the differences in performance of the sampling algorithms -- primarily the impact of randomization in UCT.
 Then, we compare the offline performance of the algorithms on other domains.
 For each domain, we first analyze the exact algorithms and measure the computation time taken to solve a particular instance of the game.
-We compute the mean over at least $30$ runs for each game setting.
 Afterward, we analyze the convergence of the approximative algorithms.
 At the specified time step the algorithm produces strategies $(\sigma_1,\sigma_2)$, and using best responses we compute
 $\textrm{error}(\sigma_1,\sigma_2) = \max_{\sigma_1' \in \Sigma_1} \bE_{z \sim (\sigma_1',\sigma_2)}[u_1(z)]
@@ -96,8 +95,8 @@ The first parameter determines whether or not the chance player is included.
 We can use an assumption made in the previous work that used Goofspiel as a benchmark for evaluation of the exact offline algorithms~\cite{Saffidine12SMAB},
 where the sequence of the cards are randomly chosen at the beginning of the game and it is known to both players.
 We refer to this setting as with the \emph{fixed sequence} of cards.
-Alternatively, we can treat chance in a standard way, where chance nodes determine the card that gets drawn. We refer to this as the
-\emph{stochastic sequence}).
+Alternatively, we can treat chance in a standard way, where chance nodes determine the card that gets drawn. We refer to this settings as with the
+\emph{stochastic sequence}.
 The games are fairly similar in terms of performance of the algorithms, however, the second variant induces a considerably larger game tree.
 The second parameter relates to the utility functions.
 Either we treat the game as a win-tie-lose game (\ie the players receive utility from set $\lbrace -1, 0, 1 \rbrace$), or the utility values for the players are equal to the points they gain during the game.}
@@ -113,7 +112,7 @@ As an example, the following table depicts the number of states with pure strate
 \small
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline Depth & 0 & 1 & 2 & 3 & 4 \\
-\hline Pure  & 0 & 17 & 334 & 3354 & 14400 \\
+\hline Pure  & 0 & 17 & 334 & 3,354 & 14,400 \\
 \hline Mixed & 1 &  8 &  66 &  246 & 0 \\
 \hline
 \end{tabular}
@@ -129,12 +128,12 @@ In the last round, each player has only a single card; hence, there cannot be an
 \reviewchange{
 Our hand-tuned evaluation function used in Goofspiel takes into consideration the remaining cards in the deck weighted by a chance of winning these cards depending on the remaining cards on hand for each player.
 Moreover, if the position is clearly winning for one of the players (there is not enough cards to change the current score), the evaluation function is set to maximal (or minimal) value.
-For the win-tie-lose case, the formal definition follows ($c_i$ are the sum of values the remaining cards of player $i$):
+The formal definition follows ($c_i$ are the sum of values the remaining cards of player $i$):
 
 \[
 eval(s) = \left\{ \begin{array}{ll}
   u_1(s) & \mbox{if $c_1 + c_2 = 0$ };\\
-  \tanh\left(\frac{c_1 - c_2}{c_1 + c_2}\cdot\frac{c_c}{0.5 \cdot d(d+1)}\right) & \mbox{otherwise.} \end{array} \right.
+  \tanh\left(\frac{c_1 - c_2}{c_1 + c_2}\cdot\frac{c_\star}{0.5 \cdot d(d+1)}\right) & \mbox{otherwise.} \end{array} \right.
 \]
 For the win-tie-lose case we use $\tanh$ to scale the evaluation function into the interval $[-1,1]$; this function is omitted in the exact point case.
 }
@@ -164,7 +163,7 @@ Oshi-Zumo is a board game analyzed from the perspective of computational game th
 There are two players in the game, both starting with $N$ coins, and there is a playing board represented as a one-dimensional playing field with $2K+1$ locations (indexed $0, \ldots, 2K$).
 At the beginning, there is a stone (or a \emph{wrestler}) located in the center of the playing field (\ie at position $K$).
 During each move, both players simultaneously place their bid from the amount of coins they have (but at least $M$ if they still have some coins).
-Afterwards, the bids are revealed, both bids are subtracted from the number of coins of the players, and the highest bidder can push the wrestler one location towards the opponent's side.
+Afterward, the bids are revealed, both bids are subtracted from the number of coins of the players, and the highest bidder can push the wrestler one location towards the opponent's side.
 If the bids are the same, the wrestler does not move.
 The game proceeds until the money runs out for both players, or the wrestler is pushed out of the field.
 The winner is determined based on the position of the wrestler -- the player in whose half the wrestler is located loses the game.
@@ -182,7 +181,7 @@ As an example, the following table depicts the number of states with pure strate
 \small
 \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|}
 \hline Depth & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\
-\hline Pure  & 1 & 98 & 2012 & 14767 & 48538 & 79926 & 69938 & 33538 & 8351 & 861\\
+\hline Pure  & 1 & 98 & 2,012 & 14,767 & 48,538 & 79,926 & 69,938 & 33,538 & 8,351 & 861\\
 \hline Mixed & 0 &  1 &  4 &  17 & 8 & 0 & 0 & 0 & 0 & 0 \\
 \hline
 \end{tabular}
@@ -195,7 +194,8 @@ $$
 eval(s) = \tanh\left(\frac{b}{2}+\frac{1}{3}\left(\frac{\textrm{coins}_1 - \textrm{coins}_2}{M} + \textrm{wrestler} - K\right)\right),
 $$
 where $b$ equals to 1 if $\textrm{coins}_1 \geq \textrm{coins}_2$ and $wrestler \geq K$, and at least one of the inequalities is strict;
-$b$ equals to $-1$, if $\textrm{coins}_1 \leq \textrm{coins}_2$ and $wrestler \leq K$, and at least one of the inequalities is strict.
+$b$ equals to $-1$, if $\textrm{coins}_1 \leq \textrm{coins}_2$ and $wrestler \leq K$, and at least one of the inequalities is strict;
+\reviewchange{$b$ equals to zero otherwise.}
 Again, we use $\tanh$ to scale the evaluation function into the interval $[-1,1]$ \reviewchange{only in the win-tie-lose case}.
 
 \paragraph{\textbf{Pursuit Evasion Games}}
@@ -225,8 +225,8 @@ This can be seen on our small example on a graph with $4\times4$ nodes and depth
 \small
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline Depth & 0 & 1 & 2 & 3 & 4 \\
-\hline Pure  & 1 & 12 & 261 & 7656 & 241986 \\
-\hline Mixed & 0 & 0 & 63 & 1008 & 6726 \\
+\hline Pure  & 1 & 12 & 261 & 7,656 & 241,986 \\
+\hline Mixed & 0 & 0 & 63 & 1,008 & 6,726 \\
 \hline
 \end{tabular}
 \end{center}
@@ -258,8 +258,8 @@ The following table shows the number of states depending on the depth for random
 \small
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline Depth & 0 & 1 & 2 & 3 & 4 \\
-\hline Pure  & 0 & 2 & 29 & 665 & 20093 \\
-\hline Mixed & 1 & 14 & 227 & 3431 & 45443 \\
+\hline Pure  & 0 & 2 & 29 & 665 & 20,093 \\
+\hline Mixed & 1 & 14 & 227 & 3,431 & 45,443 \\
 \hline
 \end{tabular}
 \end{center}
@@ -298,7 +298,7 @@ The following table comparing the number of states demonstrates this characteris
 \begin{flushleft}
 \begin{tabular}{|l|c|c|c|c|c|c|c|}
 \hline Depth & 0 & 1 & 2 & 3 & 4 & 5 & $\ldots$\\
-\hline Pure  & 1 & 4 & 14 & 100 & 565 & 2598 & \\
+\hline Pure  & 1 & 4 & 14 & 100 & 565 & 2,598 & \\
 \hline Mixed & 0 & 0 & 2 & 0 & 9 & 7 & \\
 \hline
 \end{tabular}
@@ -306,7 +306,7 @@ The following table comparing the number of states demonstrates this characteris
 \begin{flushright}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
 \hline  $\ldots$ & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13\\
-\hline  & 9508 & 25964 & 54304 & 83624 & 87009 & 63642 & 23296 & 3127\\
+\hline  & 9,508 & 25,964 & 54,304 & 83,624 & 87,009 & 63,642 & 23,296 & 3,127\\
 \hline  & 51 & 92 & 106 & 121 & 74 & 0 & 0 & 0 \\
 \hline
 \end{tabular}
@@ -534,8 +534,8 @@ $\biab$ and $\doab$ are almost identically fast, with $\doab$ being slightly fas
 \caption{Running times of exact algorithms on pursuit-evasion game with increasing number of moves: subfigure (a) depicts the results on $4\times4$ grid graph, (b) depicts results for $5\times5$ grid.} \label{fig:off:res:peg}
 \end{figure}
 
-The results on pursuit-evasion games show more significant improvement when comparing $\doab$ and $\biab$ (see Figure~\ref{fig:off:res:peg}). In all settings, the $\doab$ is significantly the fastest. When we compare the performance on a $5\times5$ graph with depth set to $6$, \textsc{BI} evaluates more than $4.9\times10^7$ nodes that taking more than $13$ hours. On the other hand, $\biab$ evaluates on average $42001$ nodes taking almost $10$ minutes ($584$ seconds). Interestingly, the benefits of pure integration with alpha-beta search is not that helpful in this game.
-This is apparent from results of \textsc{DO} algorithm that evaluates less than $2\times10^6$ nodes but it takes slightly over $9$ minutes on average ($547$ seconds). Finally, $\doab$ evaluates only $6692$ nodes and it takes the algorithm less than $3$ minutes.
+The results on pursuit-evasion games show more significant improvement when comparing $\doab$ and $\biab$ (see Figure~\ref{fig:off:res:peg}). In all settings, the $\doab$ is significantly the fastest. When we compare the performance on a $5\times5$ graph with depth set to $6$, \textsc{BI} evaluates more than $4.9\times10^7$ nodes that taking more than $13$ hours. On the other hand, $\biab$ evaluates on average $42,001$ nodes taking almost $10$ minutes ($584$ seconds). Interestingly, the benefits of pure integration with alpha-beta search is not that helpful in this game.
+This is apparent from results of \textsc{DO} algorithm that evaluates less than $2\times10^6$ nodes but it takes slightly over $9$ minutes on average ($547$ seconds). Finally, $\doab$ evaluates only $6,692$ nodes and it takes the algorithm less than $3$ minutes.
 
 Large parts of these pursuit-evasion games can be solved by serialized alpha-beta algorithms.
 These parts typically corresponds to clearly winning, or clearly losing positions for a player; hence, serialized alpha-beta algorithms are able to prune substantial portion of the space.
@@ -654,7 +654,7 @@ Finally, $\doab$ evaluates $\approx2\times10^6$ nodes on average and it takes th
 \end{figure}
 
 Figure~\ref{fig:off:conv:rg} depicts the results for convergence of the sampling algorithms for the random game with correlated utility values, branching factor set to $4$ and depth $5$.
-The number of iterations per second is similar to in Goofspiel, with Exp3 being the exception able to achieve more than $6.5\times10^4$ iterations per second, which is still significantly the lowest number of iterations.
+The number of iterations per second is similar to the situation in Goofspiel, with Exp3 being the exception able to achieve more than $6.5\times10^4$ iterations per second, which is still significantly the lowest number of iterations.
 Interestingly, there is a much less difference between the performance of the sampling algorithms in these games.
 Since these games are generally more mixed (\ie NE require to use mixed strategies in many states of the game), they are much more suitable for the sampling algorithms.
 OOS can be considered a winner in this setting, however, the performance of RM is very similar.
@@ -952,7 +952,7 @@ This is again because of the low need for mixed strategies in this game (see Sub
 Again, OOS performs the worst despite its clearly fastest convergence on the smaller game variant in the offline setting due to the great depth of the game tree in this setting. 
 It won only 21.8\% matches against $\doab$ and 29.4\% matches against UCT.
 In this game, the variance is likely not the key factor, since it is between 20 and 40.
-However, only 1,000 out of only 12,000 iterations per second update regrets in the root.}
+However, only $1 \times 10^3$ out of $12 \times 10^3$ iterations per second update regrets in the root.}
 
 \reviewchange{The good performance of $\doab$ is consistent with previous analysis in Tron where the best-performing algorithms, including the winner of the 2011 Google AI Challenge, were based on depth-limited minimax searches~\cite{DenTeuling12Tron,Perick12Comparison}.}
 
