@@ -30,6 +30,12 @@ games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$.
 The game begins in an initial state $s_0$ \reviewchange{and a subset of a game that starts in some node $s$ is called a \emph{subgame}}.
 An example of such game is depicted in Figure~\ref{fig:example}. More examples can be found in \cite[Chapter 5]{Saffidine2013thesis}.
 
+In two-player zero-sum games a (subgame perfect) Nash equilibrium strategy is often considered to be optimal (formal definition follows).
+It guarantees an expected payoff of at least $V$ against any opponent. Any non-equilibrium strategy has its nemesis, which makes it win less
+than $V$ in expectation. Moreover, a subgame perfect Nash equilibrium strategy can earn more than $V$ against weak opponents. After the
+opponent makes a sub-optimal move, the strategy will never allow it to gain the loss back.
+The value $V$ is known as the \emph{value of the game} and is the same for every equilibrium profile by von Neumann's minimax theorem~\cite{VonNeumann1928}.
+
 A {\it matrix game} is a single step simultaneous move game with action sets $\cA_1$ and $\cA_2$ (see matrices in example game in Figure~\ref{fig:example}).
 Each entry in the matrix $A_{rc}$ where $(r,c) \in \cA_1 \times \cA_2$ corresponds to a value of the subgame rooted in state $\cT(s,r,c)$ that is reached if row $r$ is chosen by player 1 and column $c$ by player 2.
 For example, in Matching Pennies in the left side of Figure~\ref{fig:egMatrixGames}, each player has two actions (heads or tails).
@@ -37,6 +43,7 @@ The row player receives a payoff of 1
 if both players choose the same action and 0 if they do not match.
 In simultaneous move games, at every state $s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$ that either leads to a terminal state or (possibly after a
 chance transition) to a subgame which is itself another simultaneous move subgame.
+In the matrix game on the right of Figure~\ref{fig:egMatrixGames}, $(a,A)$ is a pure and only Nash equilibrium (NE) strategy.
 
 \begin{figure}[t!]
 \centering
@@ -115,13 +122,6 @@ exists, it is not always possible to find a Nash equilibrium for which both stra
 For the same reason, randomized strategies are often necessary also in the multi-stage simultaneous move games.
 If the strategies also optimize Equation \ref{eq:ne} in each subgame starting in an arbitrary state, the equilibrium strategy
 is termed {\it subgame perfect.}
-
-In two-player zero-sum games a subgame perfect Nash equilibrium strategy is often considered to be optimal.
-It guarantees an expected payoff of at least $V$ against any opponent. Any non-equilibrium strategy has its nemesis, which makes it win less
-than $V$ in expectation. Moreover, a subgame perfect Nash equilibrium strategy can earn more than $V$ against weak opponents. After the
-opponent makes a sub-optimal move, the strategy will never allow it to gain the loss back.
-The value $V$ is known as the \emph{value of the game} and is the same for every equilibrium
-profile by von Neumann's minimax theorem~\cite{VonNeumann1928}.
 
 Finally, a two-player simultaneous move game is a specific type of two-player imperfect information extensive-form game.
 In imperfect information
