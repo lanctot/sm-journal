@@ -18,7 +18,7 @@ We thank all of the reviewers for their valuable feedback. Please find enclosed 
 > course has pros and cons as survey submissions are perfectly fine for AIJ. But then, the paper
 > is not organized as a survey.
 
-We agree that the paper does have (to some degree) a survey character in that it resumes existing algorithms published in different forums and venues. However, we feel that there are original technical contributions made by this paper, aside from simply organizing the information in one place under harmonized notation. In addition, we prefer to cover a few algorithms in depth rather than summarize the full breadth of all candidate algorithms. As such, we have chosen not to organize it as a survey paper. 
+We agree that the paper does have (to some degree) a survey character in that it resumes existing algorithms published in different forums and venues. However, we feel that there are original technical contributions made by this paper, aside from simply organizing the information in one place under harmonized notation. In addition, we prefer to cover most promising algorithms in depth rather than summarize the full breadth of all candidate algorithms. As such, we have chosen not to organize it as a survey paper. 
 
 In this resubmission, we clarify the novel contributions that have not appeared in any preceeding paper by adding an explicit bullet-point list in the introduction.
 
@@ -35,7 +35,11 @@ For the sampling algorithms, we have added a new Subsection 4.6 that summarizes 
 We have clarified the contribution and specifically what the novel contributions are.
 For theory and analysis, we have added text to Subsections 4.2-4.3, and created new Subsection 4.6 to increase the insights into the guarantees and limitations. We have also added more experiments (including a new Subsection 6.6) to substantiate some of the claims we had regarding the behavior of the algorithms.
 
-
+>
+> Reviewer #1: **********
+> * Part A *
+> **********
+>
 > Is the work described original?
 > -------------------------------
 >
@@ -164,10 +168,13 @@ Every pure strategy is indeed also a mixed strategies, by definition. However, i
 
 We have simplified the evaluation function for Goofspiel and described it more precisely as a multicase function.
 
+>
+> Reviewer #2: AIJ Review Form
+> ===============
 > Is the work described original?
 > It is an overview of existing approaches.
 
-We have now clarified the original contributions.
+We have now clarified the original contributions in Subsection 1.1.
 
 > Is the paper sufficiently novel? (A paper is novel if the results it describes
 > were not previously published by other authors, and were not previously published
@@ -331,7 +338,7 @@ We have fixed this mistake.
 > the actions of the opponent of player i? (same throughout the
 > remainder of the article)
 
-We have now added a paragraph to explain the -i syntax and examples on how it applies in each context. Typically, -i refers to the opponent of player i.
+We have added an explaination that -i typically refers to the opponent of player i.
 
 > In equations (3), (4), and (5): What is \delta^s_i?
 
@@ -346,7 +353,7 @@ It refers to a probability of a behavioral strategy and correctly set to \sigma 
 > expensive, but I would have expected to see some argumentation why the
 > former is enough to get proper bounds.
 
-We agree that the current explanation was not entirely clear and we have added an explanation for a game trees with multiple steps – it is sufficient to consider the cases where one player is always first (or second) to move and this can be shown by induction.
+We agree that the current explanation was not entirely clear and we have added an explanation for game trees with multiple steps – it is sufficient to consider the cases where one player is always first (or second) to move and this can be shown by induction.
 
 > Section 4.3:
 > In Alg. 3, "solve matrix game" returns a pair (the value and \delta,
@@ -386,13 +393,13 @@ Fixed, along with the text that referred to it (in Subsection 4.4.1).
 
 > In equation (9): What does the t in \sigma^t_i stand for?
 
-Time step / iteration. We've added some text to clarify this. We remove most of the superscripts with t in these subsections, as they are not needed.
+'t' stands for time step, or iteration. We have clarified this. We remove most of the superscripts with t in these subsections, as they are not needed.
 
 > In equation (9): The summand \gamma / |\cal A_i(s)| is missing; this
 > way, equation (9) is not equivalent to equation (8), as is stated in
 > the text.
 
-Indeed, the exploration term was missing from this equation. We have fixed this mistake..
+Indeed, the exploration term was missing from this equation. We have fixed this mistake.
 
 > In equation (10): What are v_{max} and v_{min}?
 
@@ -400,12 +407,12 @@ These are defined at the start of Section 2. These define the range of the utili
 
 > In equation (11): Should it not be \sigma^t_i(a_i)?
 
-We have now removed the t supercript from these subsections, and only explicitly define it where necessary.
+We have now removed the t superscript from these subsections, and only explicitly define it where necessary.
 
 > In equation (12): Should it not be \bar\sigma_i(a_i) (i.e., without
 > ^t)?
 
-Indeed, the superscript t here is incorrect. But. actually, here the superscript should really be T. We want to emphasize that the average strategy exists at each iteration for all iterations up to that point.
+Indeed, the superscript t here is incorrect. In this equation the superscript should be T. We want to emphasize that the average strategy exists at each iteration for all iterations up to that point.
 
 > At the bottom of page 24: with probability \gamma / |\cal A(s)|...
 > Should it not be \cal A_i(s)?
@@ -511,7 +518,7 @@ Yes, we believe this is due to the random player in Goofspiel being particularly
 > said that OOS, which converged fastest in most cases, is the worst
 > approach in the online setting.
 
-Yes, this is due to the variance in the estimates introduced by the updates in OOS. The quantities OOS estimates are a function of the entire sample's history, whereas in regret matching the estimates only look ahead one step using the next state's value as an estimate for the subgame. So, the correction applied by importance sampling in OOS will have higher variance due to exploring over the entire history's actions. In contrast, regret matching's estimates may introduce bias (since it is using the childrens' current estimates as a proxy for the optimal value of the subgame), it seems that in online search setting the bias introduced here is less of a problem in practice. In essence, when time is severely limited, then it may be advantageous to have a bit of bias if it can drastically reduce variance.
+Yes, this is due to the variance in the estimates introduced by the updates in OOS. The quantities OOS estimates are a function of the entire sample's history, whereas in regret matching the estimates only look ahead one step using the next state's value as an estimate for the subgame. So, the correction applied by importance sampling in OOS will have higher variance due to exploring over the entire history's actions. In contrast, regret matching's estimates may introduce bias (since it is using the children's current estimates as a proxy for the optimal value of the subgame), it seems that in online search setting the bias introduced here is less of a problem in practice. In essence, when time is severely limited, then it may be advantageous to have a bit of bias if it can drastically reduce variance.
 
 We have added experimental results demonstrating this point (Subsection 6.6), and some results and discussion to support these arguments.
 
