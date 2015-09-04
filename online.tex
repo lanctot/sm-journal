@@ -8,28 +8,27 @@ to any-time search within a limited time.
 Minimax search~\cite{AIbook} has been used with much success in sequential perfect information games,
 leading to superhuman strength in Computer chess game play, one of the key advances of artificial
 intelligence~\cite{Campbell02deepblue}.
-Minimax search is an online application of backward induction run on approximated game.
+Minimax search is an online application of backward induction run on an approximated game.
 The game is approximated by searching to a fixed depth limit $d$, treating the states at depth $d$
-as terminal states, evaluating their values using a heuristic evaluation function, $v(s)$.
+as terminal states, evaluating their values using a heuristic evaluation function, $eval(s)$.
 The main focus is to compute an optimal strategy for this heuristic approximation of the original game.
 
-Under limited time settings, a search algorithm is given a fixed time budget to compute a strategy.
+Similarly to the perfect information case, we can modify our algorithms based on backward induction for simultaneous move games.
+Under the limited time settings, a search algorithm is given a fixed time budget to compute a strategy.
 We use the classic approach of {\it iterative deepening}~\cite{AIbook} that runs several depth-limited
-minimax searches, starting at a low depth and iteratively increasing the depth of each successive search.
+searches, starting at a low depth and iteratively increasing the depth of each successive search.
 Note that the depth limit of $d$ means that the algorithm evaluates $d$ joint actions (\ie pairs of simultaneous actions) possibly preceded by chance outcome if present.
 %In sequential perfect information games, several enhancements can be applied due to researching the same
 %nodes, most of which are not immediately applicable in simultaneous move games. However, whether new
 %enhancements can be defined for this class of games remains an open research question.
 
-In iterative deepening, by default the depth starts at $d = 1$ and gradually increases $d$ until there is no more time.
-If the time limit does not allow full evaluation of the subgame with the root in $s'$, the algorithm reuses the result from previous computation.
+In iterative deepening, the algorithm by default starts at depth $d = 1$ and gradually increases $d$ until there is no more time.
+%If the time limit does not allow full evaluation of a subgame with the root in $s'$, the algorithm can reuses the result from previous computation.
 In our implementation of iterative deepening we follow a natural observation that saves computation time {\it between different searches}: 
-a solution computed in state $s$ by player $i$ to depth $d$ from a previous search contains depth $d-1$ solutions to all possible 
-next states $\cT(s,a_i,?)$, where $a_i$ is the action selected for player $i$.
-So when iterative deepening starts a new search from state $s' \in \cT(s,a_i,?)$, it can often begin with already at depth $d$.
-This can require space exponential in the depth $d$ in the worst case, but due to pruning this is often not the case.
-When information is missing due to pruning, then a search starts with the lowest $d$ that contains all the previous search information.
-In case there is no strategy stored for the state $s'$ due to pruning, iterative deepening is started with $d = 1$.
+a solution computed in state $s$ by player $i$ to depth $d$ contains depth $d-1$ solutions in possible next states $\cT(s,r,c)$, where $r$ is the action selected for the player performing the search and $c$ is the action of the opponent.
+Therefore, when iterative deepening starts a new search in state $s' \in \cT(s,r,c)$, it can often begin with already at depth $d$.
+This can require space exponential in the depth $d$ in the worst case, but it is often beneficial in practice.
+When information is missing due to pruning, then a search starts with the lowest possible depth $d = 1$.
 
 \subsection{Online Search using Sampling Algorithms}
 
@@ -45,7 +44,7 @@ First of all, the algorithms can re-use all information and statistics gained in
 Note that reusing the previously gathered statistics in the sub-tree rooted in $s'$ has no potentially negative effect on any variant of the MCTS algorithms since the behavior of the algorithm is exactly the same when the iteration is started in this node, or if this node is reached from its predecessor. 
 \reviewchange{This is true also in the novel OOS variant presented in this paper. Its main design objective to make it run from each node exactly as if the node was the root of the game. This is possible thanks to the structure of the simultaneous move games and a similar adaptation of the algorithm is not possible in imperfect information games \cite{15aamas-iioos}.}
 
-Secondly, even though the sampling algorithms do not require the use of domain-specific knowledge for online search, they often incorporate this type of knowledge to better guide the sampling and thus to evaluate more relevant parts of the state space~\cite{Gelly07Combining,Lorentz08Amazons,Winands10MCTS-LOA,Lorentz13Breakthrough,Lanctot14Implicit}. When directly comparing approximative sampling algorithms with the backward induction algorithms that are clearly dependent on the evaluation function, the outcome of such a comparison strictly depends on the quality of the evaluation function. In a very large game, a backward induction algorithm with precise evaluation function will be significantly better %(we will see such examples in the experimental evaluation).
+Secondly, even though the sampling algorithms do not require the use of domain-specific knowledge for online search, they often incorporate this type of knowledge to better guide the sampling and thus to evaluate more relevant parts of the state space~\cite{Gelly07Combining,Lorentz08Amazons,Winands10MCTS-LOA,Lorentz13Breakthrough,Lanctot14Implicit}. When directly comparing approximative sampling algorithms with the backward induction algorithms that are clearly dependent on the evaluation function, the outcome of such a comparison strictly depends on the quality of the evaluation function. In a very large game, a backward induction algorithm with an accurate evaluation function will be significantly better. %(we will see such examples in the experimental evaluation).
 Therefore, we also use sampling algorithms combined with an evaluation function. The integration is done via replacing the random rollout
 by directly using the value of the evaluation function in the current state for MCTS and OOS algorithms; \ie Rollout($s$) in
 line~\ref{alg:smmcts:rollout} of Algorithm~\ref{alg:smmcts} or line~\ref{alg:oos:rollout} of Algorithm~\ref{alg:oos} is replaced by $eval(s)$.
