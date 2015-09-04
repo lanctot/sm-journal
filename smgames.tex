@@ -36,14 +36,16 @@ than $V$ in expectation. Moreover, a subgame perfect Nash equilibrium strategy c
 opponent makes a sub-optimal move, the strategy will never allow it to gain the loss back.
 The value $V$ is known as the \emph{value of the game} and is the same for every equilibrium profile by von Neumann's minimax theorem~\cite{VonNeumann1928}.
 
-A {\it matrix game} is a single step simultaneous move game with action sets $\cA_1$ and $\cA_2$ (see matrices in example game in Figure~\ref{fig:example}).
-Each entry in the matrix $A_{rc}$ where $(r,c) \in \cA_1 \times \cA_2$ corresponds to a value of the subgame rooted in state $\cT(s,r,c)$ that is reached if row $r$ is chosen by player 1 and column $c$ by player 2.
+A {\it matrix game} is a single step simultaneous move game with action sets $\cA_1$ and $\cA_2$ (see Figure~\ref{fig:egMatrixGames}).
+Each entry in the matrix $A_{rc}$ where $(r,c) \in \cA_1 \times \cA_2$ corresponds to a utility value reached if row $r$ is chosen by player 1 and column $c$ by player 2.
+%a value of the subgame rooted in state $\cT(s,r,c)$ that is reached if row $r$ is chosen by player 1 and column $c$ by player 2.
 For example, in Matching Pennies in the left side of Figure~\ref{fig:egMatrixGames}, each player has two actions (heads or tails).
 The row player receives a payoff of 1
 if both players choose the same action and 0 if they do not match.
-In simultaneous move games, at every state $s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$ that either leads to a terminal state or (possibly after a
-chance transition) to a subgame which is itself another simultaneous move subgame.
-In the matrix game on the right of Figure~\ref{fig:egMatrixGames}, $(a,A)$ is a pure and only Nash equilibrium (NE) strategy.
+In simultaneous move games, at every state $s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$ that either leads to another state $\cT(s,r,c)$ that is either a terminal state or (possibly after a
+chance transition) a subgame which is itself another simultaneous move subgame.
+In simultaneous move games, $A_{rc}$ refers to the value of the subgame rooted in state $\cT(s,r,c)$.
+%In the matrix game on the right of Figure~\ref{fig:egMatrixGames}, $(a,A)$ is a pure and only Nash equilibrium (NE) strategy.
 
 \begin{figure}[t!]
 \centering
@@ -70,10 +72,10 @@ These strategies are often called {\it randomized}, or {\it mixed} because they 
 which is a point in the Cartesian product space $\times_{s \in \cS} \cA_i(s)$.\footnote{\reviewchange{Notice that a pure strategy is also a mixed strategy that assigns probability 1 to a single pure strategy and probability 0 to every other pure strategy. However, as is common in the literature, we sometimes refer to a mixed strategy
 to specifically mean not a pure strategy. This is mostly clear from the context, but we clarify where necessary.}}}
 \reviewchange{Let $\cH$ be a global set of histories (sequences of actions from the start of the game).}
-Given a profile $\sigma = (\sigma_1, \sigma_2)$, define the probability of reaching a history $h$ under $\sigma$ as
+Given a strategy profile $\sigma = (\sigma_1, \sigma_2)$, define the probability of reaching a history $h$ under $\sigma$ as
 $\pi^\sigma(h) = \pi^\sigma_1(h) \pi^\sigma_2(h) \pi^\sigma_\star(h)$, where each $\pi^\sigma_i(h)$ is a product of probabilities of the actions taken
 by player $i$ along the path to $h$ ($\pi_\star$ being chance's probabilities).
-Finally, define $\Sigma_i$ to be the set of behavioral strategies for player $i$.
+Finally, define $\Sigma_i$ to be the set of all behavioral strategies for player $i$.
 \reviewchange{We adopt a standard convention that the index $-i$ refers to the opponent of player $i$.
 %In a game with chance events, then the $-i$ also includes the chance player, so \eg if $i = 1$ then $\pi^\sigma_{-i}(h) = \pi^\sigma_2(h) \pi^\sigma_\star(h)$.
 %Whereas, in the case of a matrix game, $\cA_{-i} = \cA_{3-i}$.
@@ -84,8 +86,8 @@ Finally, define $\Sigma_i$ to be the set of behavioral strategies for player $i$
 There are three important concepts used in the paper that deserve explicit definition. These concepts are used to define
 optimal behavior for this class of games, to define metrics for evaluation, and within the algorithms as well.
 
-\begin{definition}[Dominated Action]
-In a matrix game, an action $a_i \in \cA_i$ is dominated if $\forall a_{-i} \in \cA_{-i}, \forall a_i' \in \Sigma_i \setminus \{ a_i \}: u(a_i, a_{-i}) < u(a_i', a_{-i})$.
+\begin{definition}[Strictly Dominated Action]
+In a matrix game, an action $a_i \in \cA_i$ is strictly dominated if $\forall a_{-i} \in \cA_{-i}, \forall a_i' \in \Sigma_i \setminus \{ a_i \}: u(a_i, a_{-i}) < u(a_i', a_{-i})$.
 \end{definition}
 
 No rational player would want to play a dominated action, because there is always a better one to play instead, for any action used by the opponent. The concept also
@@ -119,7 +121,7 @@ $V = 0$.
 Note that using a mixed strategy is necessary in this game to achieve a guaranteed payoff of $V$.
 Any pure strategy of one player can be exploited by the opponent; \reviewchange{so while a pure best response to a fixed strategy always
 exists, it is not always possible to find a Nash equilibrium for which both strategies are pure.}
-For the same reason, randomized strategies are often necessary also in the multi-stage simultaneous move games.
+For the same reason, randomized strategies are often necessary also in the multi-step simultaneous move games.
 If the strategies also optimize Equation \ref{eq:ne} in each subgame starting in an arbitrary state, the equilibrium strategy
 is termed {\it subgame perfect.}
 
@@ -130,7 +132,7 @@ In imperfect information
 %the distribution of chance event outcomes, and every player's utility function. This is in contrast to
 %{\it imcomplete information} games in which players may also not know (or be fully certain of) the utility functions of their opponents
 %or precisely how nature affects the game.}
-games, states are grouped into {\it information sets}: two states $s, s' \in I$ if the player
+games, states are grouped into {\it information sets}: two states $s, s'$ are grouped in information set $I$ if the player
 to act at $I$ cannot distinguish which of these states the game is currently in. Any simultaneous move game can be modeled
 using information sets to represent a half-completed transition, \ie $\cT(s, a_1, ?)$ or $\cT(s, ?, a_2)$.
 The matrix game of Rock, Paper, Scissors can also be thought of as a two-step process where the first player commits
