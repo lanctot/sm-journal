@@ -103,7 +103,7 @@ Either we treat the game as a win-tie-lose game (\ie the players receive utility
 Goofspiel forms game trees with interesting properties.
 First unique feature is that the number of actions for each player is uniformly decreasing by~$1$ with the depth.
 Secondly, algorithms must randomize in NE strategies, and this randomization is present throughout the whole course of the game.
-As an example, the following table depicts the number of states with pure strategies and mixed strategies for each depth in a subgame-perfect NE calculated by backward induction for Goofspiel with $5$ cards and fixed sequence of cards:
+As an example, the following table depicts the number of states with pure strategies and mixed strategies for each depth in a subgame-perfect NE calculated by backward induction for Goofspiel with $5$ cards and a fixed sequence of cards:
 
 \vspace{0.1cm}
 
@@ -119,7 +119,7 @@ As an example, the following table depicts the number of states with pure strate
 
 \vspace{0.1cm}
 
-We can see that the relative number of states with mixed strategies slowly decreases relatively, however, players need to mix throughout the whole game.
+We can see that the relative number of states with mixed strategies slowly decreases, however, players need to mix throughout the whole game. %[bb] I have changed it back ... "the relative number ... decreases" feels much better than "the number ... decreases relatively" ... 
 In the last round, each player has only a single card; hence, there cannot be any mixed strategy.
 
 %The evaluation function used in Goofspiel takes into consideration two components: (1) the difference in the current score for both players weighted by the current round in the game, and (2) the remaining cards in the deck weighted by a chance of winning these cards depending on the remaining cards on hand for each player. Formally, let $p_i$, $r$, $c_i$ be player $i$'s score (points), the current round, and the sum of values of player $i$'s remaining cards, respectively:
@@ -131,7 +131,7 @@ For the win-tie-lose case, the formal definition follows ($c_i$ are the sum of v
 
 \[
 eval(s) = \left\{ \begin{array}{ll}
-  u_i(s) & \mbox{if $c_1 + c_2 = 0$ };\\
+  u_1(s) & \mbox{if $c_1 + c_2 = 0$ };\\
   \tanh\left(\frac{c_1 - c_2}{c_1 + c_2}\cdot\frac{c_c}{0.5 \cdot d(d+1)}\right) & \mbox{otherwise.} \end{array} \right.
 \]
 For the win-tie-lose case we use $\tanh$ to scale the evaluation function into the interval $[-1,1]$; this function is omitted in the exact point case.
@@ -160,7 +160,7 @@ For the win-tie-lose case we use $\tanh$ to scale the evaluation function into t
 
 Oshi-Zumo is a board game analyzed from the perspective of computational game theory in \cite{buro2003}.
 There are two players in the game, both starting with $N$ coins, and there is a playing board represented as a one-dimensional playing field with $2K+1$ locations (indexed $0, \ldots, 2K$).
-At the beginning, there is a stone (or a wrestler) located in the center of the playing field (\ie at position $K$).
+At the beginning, there is a stone (or a \emph{wrestler}) located in the center of the playing field (\ie at position $K$).
 During each move, both players simultaneously place their bid from the amount of coins they have (but at least $M$ if they still have some coins).
 Afterwards, the bids are revealed, both bids are subtracted from the number of coins of the players, and the highest bidder can push the wrestler one location towards the opponent's side.
 If the bids are the same, the wrestler does not move.
@@ -209,8 +209,8 @@ In the experiments we varied the length of the game $d$ and we altered the start
 Similarly to Oshi-Zumo, many instances of pursuit-evasion games have a pure Nash equilibrium.
 However, the mixing can be required towards the actual end of the game in order to capture the evader.
 Therefore, depending on the length of the game and the distance between the units, there might be many states that do not require mixed strategies (units of the pursuers are simply going towards the evader).
-Once the units are close to each other, the game may require mixed strategies for final coordination.
-This can be seen on our small example on a graph $4\times4$ nodes and depth $5$:
+Once the units are close to each other, the game may require mixed strategies for the final coordination.
+This can be seen on our small example on a graph with $4\times4$ nodes and depth $5$:
 
 \vspace{0.1cm}
 
@@ -226,14 +226,14 @@ This can be seen on our small example on a graph $4\times4$ nodes and depth $5$:
 
 \vspace{0.1cm}
 
-The evaluation function used in pursuit-evasion games takes into consideration the distance between the units of the pursuer and evader (denoted $\textrm{distance}_j$ for the distance in moves of the game between the $j^{th}$ unit of the pursuer and the evader). Formally:
+The evaluation function used in pursuit-evasion games takes into consideration the distance between the units of the pursuer and the evader (denoted $\textrm{distance}_j$ for the distance in moves of the game between the $j^{th}$ unit of the pursuer and the evader). Formally:
 $$
 eval(s) = \frac{\min(\textrm{distance}_1,\textrm{distance}_2) + 0.01\cdot\max(\textrm{distance}_1,\textrm{distance}_2)}{1.01 \cdot (w+l)}
 $$
 where $w$ and $l$ are dimensions of the grid graph.
 
 \paragraph{\textbf{Random/Synthetic Games}}
-We also use randomly generated games to be able to experiment with additional parameters of the game, mainly larger utility values and their correlation.
+Finally, we also use randomly generated games to be able to experiment with additional parameters of the game, mainly larger utility values and their correlation.
 In randomly generated games, we fixed the number of actions that players can play in each stage to $4$ and $5$ (the results were similar for different branching factors) and we varied the depth of the game tree.
 We use $2$ different methods for randomly assigning the utility values to the terminal states of the game:
 (1) the utility values are uniformly selected from the interval $\left[0,1\right]$;
@@ -265,8 +265,8 @@ The evaluation function used in this case is calculated similarly as the utility
 \paragraph{\textbf{Tron}}
 Tron is a two-player simultaneous move game played on a discrete grid, possibly obstructed by
 walls~\cite{Samothrakis10Tron,Perick12Comparison,Lanctot13Tron}.
-At each step both players move to adjacent cells, and a wall is placed to players' original positions.
-A player exits the game if he hits the wall or the opponent.
+At each step, both players move to adjacent nodes and a wall is placed to the original positions of the players.
+If a player hits the wall or the opponent, the game ends.
 The goal of both players is to survive as long as possible.
 If both players move into a wall, off the board, or into each other at the same turn, the game ends in a draw.
 The utility is $+1$ for a win, $0$ for a draw, and $-1$ for a loss.
