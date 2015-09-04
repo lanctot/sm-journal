@@ -34,7 +34,7 @@ As indicated before, the algorithms based on the backward induction need to use 
 This may give these algorithms an advantage if the evaluation function is accurate.
 Therefore, we also run sampling-based algorithms with the evaluation function for selected domains to compare the algorithms in a more fair settings.
 \reviewchange{Moreover, we have also tuned parameters for the sampling algorithms specifically for each domain.}
-Reported results are means over at least $1000$ matches for each pair of algorithms.
+Reported results are means over at least $1,000$ matches for each pair of algorithms.
 %Where necessary, we run additional experiments to obtain statistically significant results.
 
 Each of the described algorithms was implemented in a generic framework for modeling and solving extensive-form games\footnote{Source code is available at \texttt{http://agents.felk.cvut.cz/topics/Computational\_\newline game\_theory}. We use IBM CPLEX 12.5 to solve the linear programs.}.
@@ -720,7 +720,7 @@ We report expected rewards and win rates of the algorithms, in which a tie is co
 We first present the comparison of different algorithms and we discuss the influence of the parameters in Subsection~\ref{sec:eval:online:tuning}.}
 
 \reviewchange{In this subsection, we show cross tables of each algorithm (on the row) matched up against each competitor algorithm (on the column).}
-Each entry represents a mean over at least $1000$ matches with the half of the width of the $95\%$ confidence interval in brackets, \eg $52.9(0.3)$ refers to $52.9\% \pm 0.3\%$.
+Each entry represents a mean over at least $1,000$ matches with the half of the width of the $95\%$ confidence interval in brackets, \eg $52.9(0.3)$ refers to $52.9\% \pm 0.3\%$.
 \reviewchange{The result shown is the win rate for the row player, so as an example in the standard game of Goofspiel (top of Table~\ref{fig:matches:goof}) $\doab$ wins $67.2 \% \pm 1.4 \%$ of games against the random player.
 All evaluated games except the pursuit-evasion game are symmetric from the position of the first and the second player. We made even the random games symmetric by always playing matches on the same game instance in pairs with alternating players' positions. However, for easier comparison of the algorithms, we mirror the same results to both fields corresponding to a pair of players in the cross tables.
 }
@@ -1084,7 +1084,7 @@ The differences are more noticeable in matches against other algorithms, but sin
 The differences between various parameter settings are larger in smaller games and mainly if an evaluation function is used.
 Consider the results for Oshi Zumo in Table~\ref{fig:tuning}.
 For OOS, the exploration parameter of $0.3$ is consistently the best against all opponents, with the exception of Exp3, which loses slightly more to OOS with exploration 0.4.
-However, the difference is far from significant even after 1000 matches.
+However, the difference is far from significant even after $1,000$ matches.
 The differences in performance of UCT with different parameters are more often statistically significant.
 Overall, the best parameter is 0.8, even though the performance is significantly better against $\doab$ with smaller exploration and against UCT(2) with higher exploration.
 The best performance for Exp3 was surprisingly achieved with very high exploration. The best of the tested values was 0.8, which means that 80\% of time, the next action to sample is selected randomly regardless of the collected statistics about move qualities.
