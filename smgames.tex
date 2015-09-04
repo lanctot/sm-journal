@@ -1,20 +1,14 @@
-
-
 \begin{figure}[t!]
 \centering
-\begin{tabular}{c|c|c|}
- \multicolumn{1}{c}{~} & \multicolumn{1}{c}{H}  &  \multicolumn{1}{c}{T}\\\cline{2-3}
-H &  1  &  0\\\cline{2-3}
-T  & 0  &  1\\\cline{2-3}
-\end{tabular}
-~~~~~~~~~
-\begin{tabular}{c|c|c|}
- \multicolumn{1}{c}{~} & \multicolumn{1}{c}{A}  &  \multicolumn{1}{c}{B}\\\cline{2-3}
-a &  0  &  1\\\cline{2-3}
-b & -1  &  0\\\cline{2-3}
-\end{tabular}
-\caption{Matrix games of Matching Pennies (left), and one with a pure Nash equilibrium (right).
-Payoffs to the row player are shown. \label{fig:egMatrixGames}}
+\begin{subfigure}{12cm}
+\centering
+\includegraphics[width=8.0cm]{figures/tree}\\
+%\includegraphics[width=10.0cm]{figures/goof3}\\
+\end{subfigure}%\\
+\caption{An example of a two-player simultaneous game. % which has Matching Pennies as a subgame. %, and a portion of 3-card Goofspiel including chance nodes (bottom).
+The dark squares are terminal states. The values shown in the matrices correspond to the values of subgames that can be obtained by backward induction.\\
+%bbosansky: if that's ok, I have removed the goofspiel figure since I do not think it is specifically referenced anywhere and we do not need to figures. Plus, since we do not specifically experiment with games with chance nodes, it is better not to include the figure :)
+\label{fig:example}}
 \end{figure}
 
 A finite game with simultaneous moves and chance events (also called \emph{Markov games}, or \emph{stacked matrix games}) can be described
@@ -36,18 +30,7 @@ games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$.
 The game begins in an initial state $s_0$ \reviewchange{and a subset of a game that starts in some node $s$ is called a \emph{subgame}}.
 An example of such game is depicted in Figure~\ref{fig:example} (more examples can be found in \cite[Chapter 5]{Saffidine2013thesis}).
 
-\begin{figure}[t!]
-\centering
-\begin{subfigure}{12cm}
-\centering
-\includegraphics[width=8.0cm]{figures/tree}\\
-%\includegraphics[width=10.0cm]{figures/goof3}\\
-\end{subfigure}%\\
-\caption{An example of a two-player simultaneous game. % which has Matching Pennies as a subgame. %, and a portion of 3-card Goofspiel including chance nodes (bottom).
-The dark squares are terminal states. The values shown in the matrices correspond to the values of subgames that can be obtained by backward induction.\\
-%bbosansky: if that's ok, I have removed the goofspiel figure since I do not think it is specifically referenced anywhere and we do not need to figures. Plus, since we do not specifically experiment with games with chance nodes, it is better not to include the figure :)
-\label{fig:example}}
-\end{figure}
+
 In two-player zero-sum games a (subgame perfect) Nash equilibrium strategy is often considered to be optimal (formal definition follows).
 It guarantees an expected payoff of at least $V$ against any opponent. Any non-equilibrium strategy has its nemesis, which makes it win less
 than $V$ in expectation. Moreover, subgame perfect Nash equilibrium strategy can earn more than $V$ against weak opponents. After the
@@ -63,6 +46,24 @@ Two-player simultaneous move games are sometimes called {\it stacked matrix game
 $s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$ that either leads to a terminal state or (possibly after a
 chance transition) to a subgame which is itself another stacked matrix game.
 In the matrix game on the right of Figure~\ref{fig:egMatrixGames}, $(a,A)$ is a pure and only Nash equilibrium (NE) strategy.
+
+\begin{figure}[t!]
+\centering
+\begin{tabular}{c|c|c|}
+ \multicolumn{1}{c}{~} & \multicolumn{1}{c}{H}  &  \multicolumn{1}{c}{T}\\\cline{2-3}
+H &  1  &  0\\\cline{2-3}
+T  & 0  &  1\\\cline{2-3}
+\end{tabular}
+~~~~~~~~~
+\begin{tabular}{c|c|c|}
+ \multicolumn{1}{c}{~} & \multicolumn{1}{c}{A}  &  \multicolumn{1}{c}{B}\\\cline{2-3}
+a &  0  &  1\\\cline{2-3}
+b & -1  &  0\\\cline{2-3}
+\end{tabular}
+\caption{Matrix games of Matching Pennies (left), and one with a pure Nash equilibrium (right).
+Payoffs to the row player are shown. \label{fig:egMatrixGames}}
+\end{figure}
+
 
 A {\it behavioral strategy} for player $i$ is a mapping from states $s \in \cS$
 to a probability distribution over the actions $\cA_i(s)$, denoted $\sigma_i(s)$.
