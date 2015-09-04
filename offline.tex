@@ -674,7 +674,7 @@ When using RM or Exp3 and using the means of all samples that used a particular 
 induction~\cite{lisy2013-nips, Kovarik2015Analysis};
 however, updating the selector by the sampled value (as done on line~\ref{alg:smmcts:return} of Algorithm~\ref{alg:smmcts}) works better in practice.
 Since there is no known finite-time bound, there is no known guarantee for the quality of the solution if Algorithm~\ref{alg:smmcts} is terminated early.
-Furthermore, these algorithms use a fixed exploration parameter $\gamma$ that imposes a lower bound on how close Algorithm~\ref{alg:smmcts} can get to the Nash equilibrium in the worst case.
+Furthermore, these algorithms use a fixed exploration parameter $\gamma$ that imposes a lower bound on how close Algorithm~\ref{alg:smmcts} can get to the Nash equilibrium. % in the worst case.
 There is an example game presented in \cite{Kovarik2015Analysis}, in which it is impossible for SM-MCTS with any regret minimizing selection function with fixed exploration to converge to an $\epsilon$-Nash equilibrium for any $\epsilon < \gamma D$, where $D$ is the depth of the game.
 Among the algorithms presented above, the only one with a finite-time probabilistic convergence guarantee is OOS, which is inherited from its base
 algorithm MCCFR. By~\cite[Theorem 5]{Lanctot09Sampling}, when OOS is run from the root, with probability $1-p$ an $\epsilon$-NE is reached after
