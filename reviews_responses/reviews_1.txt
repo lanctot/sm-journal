@@ -65,8 +65,6 @@ We have added Subsection 4.6 as a summary of existing convergence properties of 
 
 We have performed additional analysis and experiments (Subsection 6.6) that explain not very good performance of OOS compared to other sampling algorithms in contrast to the offline experiments, where OOS clearly dominates all the sampling algorithms. Our new analysis reveals that OOS has a much larger variance of regret values from such a low number of iterations in comparison to the most similar RM algorithm. This is caused by using counterfactual regret values in OOS.
 
-TODO: Explain that OOS does not update regrets in all iterations.
-
 > Does anything need to be added or deleted?
 > ------------------------------------------
 >
