@@ -305,7 +305,7 @@ settings~\cite{AIbook}, such as in the examples used above.
 \reviewchange{On the other hand, it is not a good representation of the environment when agents are allowed to act simultaneously.
 These situations occur in many real-world scenarios like auctions~(\eg~\cite{Keuter1997}), autonomous driving, and many of video
 and board games in the expanding gaming industry are of this nature~(\eg~\cite{Beard12Using,Teytaud11Upper} and games we use for our experiments).
-In all of these scenarios, the simultaneity of the decision-making is crucial and we have to include it directly into the model when computing strategies to play in these games.}
+In all of these scenarios, the simultaneity of the decision-making is crucial and we have to include it directly into the model when computing strategies to play.}
 One of the fundamental differences of simultaneous move games and strictly sequential
 games is that the agents may need to use randomized (or \textit{mixed}) strategies in order to
 play optimally~\cite{Gintis09},
@@ -353,14 +353,14 @@ Finally, we conclude in Section~\ref{sec:conc}.
 % bbosansky: I have reworded mentioning UCT, since we have not discussed MCTS, nor UCB/UCT here
 % mlanctot: I added it back in (Mark mentioned it)-- it's very popular, I don't think it will be a problem
 This paper presents detailed descriptions of recent exact~\cite{Bosansky13Using} and approximative
-algorithms~\cite{Lanctot13Goofspiel,lisy2013-nips} to compute strategies for two-player simultaneous move class of games.
+algorithms~\cite{Lanctot13Goofspiel,lisy2013-nips} that compute strategies for two-player simultaneous move class of games.
 While the paper does act in some way as a survey of existing work in this area and as a means to present this previous work under a single unified framework, we also make several new contributions that have not been previously published, including:
 
 \begin{itemize}
 % Just don't have time for these
 %\item A new algorithm, $\epsilon$-minimax, a variant of Littman's Minimax-Q~\cite{Littman94markovgames} adapted for online search. (**Marc is considering implementing it.. is it too much?
 %\item A new variant of Exp3 based on recent work (Exp3++ \cite{2014}). (**Marc is considering implementing it.. is it too much?)
-\item A detailed analysis of the original convergence analysis of a well-known approximative algorithm search algorithm UCT from \cite{Shafiei09}, showing also its sensitivity and a significant detrimental effect caused by deterministic exploration.
+\item A detailed analysis of the original convergence analysis of a well-known approximative search algorithm UCT from \cite{Shafiei09}, showing also its sensitivity and a significant detrimental effect caused by deterministic exploration.
 \item A first analysis of backward induction and double-oracle algorithms with serialized bounds in the online search setting using heuristic evaluation functions.
 \item An analysis and evaluation of these algorithms in two different computational contexts: offline computation and online search, in five different games as well as random games.
 \item An equivalent and simplified version of Online Outcome Sampling~\cite{15aamas-iioos} and its analysis for the first time in two-player simultaneous move games.
