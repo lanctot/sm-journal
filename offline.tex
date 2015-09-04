@@ -655,7 +655,8 @@ it is added (line~\ref{alg:oos:addtree}) and an action for each player is select
 (lines~\ref{alg:oos:uniform1}-\ref{alg:oos:uniform2}). Afterwards, random rollout of the game until a terminal node is initiated on line~\ref{alg:oos:rollout}.
 The rollout is similar to the MCTS case, but in addition, it has to compute the tail probability $x_i$ and sampling probability $q_i$
 required to compute the sampled counterfactual value.
-Regardless on whether the current node was in the tree or not, the algorithm updates the regret table of player $i$ based on the simplified definition of sampled counterfactual regret for simultaneous move games (lines~\ref{alg:oos:update1}-\ref{alg:oos:update2}) and the mean strategy of player $-i$ (line~\ref{alg:oos:update3}).
+For example, if in the rollout player $i$ acts $n_i$ times, and each time samples uniformly from exactly $b$ actions, then $x_i = \frac{1}{b^{n_i}}$.
+Regardless of whether the current node was in the tree, the algorithm updates the regret table of player $i$ based on the simplified definition of sampled counterfactual regret for simultaneous move games (lines~\ref{alg:oos:update1}-\ref{alg:oos:update2}) and the mean strategy of player $-i$ (line~\ref{alg:oos:update3}).
 Finally, the function returns the updated probabilities to the upper level of the tree.
 
 OOS appears similar to SM-MCTS using the RM selection mechanism (Subsection~\ref{sec:rm}). However, there are a number of differences:
