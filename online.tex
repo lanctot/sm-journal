@@ -46,8 +46,8 @@ This has been commonly used in several previous works in Monte Carlo search~\cit
 
 Again, such a modification does not generally affect theoretical properties of the algorithms -- the proofs of the convergence (\eg \cite{lisy2013-nips}) assume that a whole game tree is eventually built and any statistics in the nodes collected before (either by random play-outs or evaluation functions) can eventually be over-weighted. For MCTS algorithms there is no reason to believe that a good evaluation function would give worse estimate of the quality of a sub-tree as a random play-out. The only complication can, again, be with the probabilities in OOS. The weight of the sample in equation~\ref{eq:scv} is lowered by the probability of reaching the sampled leaf from the updated information set. When using $\epsilon$-on-policy sampling, this ``tail'' probability is mostly cancelled by the probability of reaching the sampled leaf form the root in the denominator. If the sample is terminated earlier, it does not have a substantial effect on the scale of the regret updates.
 
-\reviewchange{
-\subsection{Theoretical Properties and Convergence}
-\mlanctot{Will not be able to say much here, but one of the reviewers asked for it specifically, so I'll write something.}
-}
+%\reviewchange{
+%\subsection{Theoretical Properties and Convergence}
+%\mlanctot{Will not be able to say much here, but one of the reviewers asked for it specifically, so I'll write something.}
+%}
 

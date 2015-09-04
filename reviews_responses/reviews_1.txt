@@ -29,7 +29,6 @@ In this resubmission, we clarify the novel contributions that have not appeared 
 For the exact algorithms, we have added a description of the complexity to each of Subsections 4.2-4.3. 
 For the sampling algorithms, we have added a new Subsection 4.6 that summarizes the theory and guarantees for these algorithms.
 
-
 > As a result, I would like you to cristalize the contribution, elaborate on the theory/analysis,
 > follow the comments in detail and try a resubmission.
 
@@ -63,7 +62,6 @@ We have added Subsection 4.6 as a summary of existing convergence properties of 
 >
 > YES (mostly). The paper is purely algorithmic and experimental, so the lack of theory and proofs is unproblematic (there is nothing to prove). What is do miss, though, is a more convincing discussion of what we really learn from the experimental results. We see numbers that tell us in which setting and which domain which algorithm performs best, but it is not always clear why this is the case. There are successful attempts in the paper at explaining some of the results informally, but I would have liked some more formal depth here. Reading the "future work" part of the paper, it becomes clear that the authors are aware of this limitation of their work. Still, it would be nice to know a bit more about the limitations of pruning using the various presented algorithms, and it would be nice to understand better why the fast convergence and low exploitability of OOS in the small game instances is such a poor predictor of its performance in the online setting. In Section 6.5.7,
 > the authors attempt at coming up with an explanation, but it is too speculative to be convincing.
-
 
 We have performed additional analysis and experiments (Subsection 6.6) that explain not very good performance of OOS compared to other sampling algorithms in contrast to the offline experiments, where OOS clearly dominates all the sampling algorithms. Our new analysis reveals that OOS has a much larger variance of regret values from such a low number of iterations in comparison to the most similar RM algorithm. This is caused by using counterfactual regret values in OOS.
 
@@ -170,7 +168,9 @@ We have simplified the evaluation function for Goofspiel and described it more p
 
 > Is the work described original?
 > It is an overview of existing approaches.
->
+
+We have now clarified the original contributions.
+
 > Is the paper sufficiently novel? (A paper is novel if the results it describes
 > were not previously published by other authors, and were not previously published
 > by the same authors in any archival journal.)
@@ -575,5 +575,6 @@ The inconsistencies in the references have now been fixed.
 
 We have now added results for different reward functions corresponding to point differences in both Goofspiel and Oshi-Zumo, in both the offline and online case.
 
-
 Again, we would like to sincerely thank for all the effort from the reviewers for catching many of the small and sometimes subtle mistakes. As a result, we believe this review process has led to a greatly improved paper.
+
+
