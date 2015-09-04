@@ -1,7 +1,7 @@
 %!TEX root = sm-journal.tex
 
 We now turn to thorough experimental evaluation of the described algorithms.
-We analyze both offline and online case on a collection of games inspired by games used for experimental evaluation in previous works, and randomly generated games.
+We analyze both offline and online case on a collection of games inspired by previous work, and randomly generated games.
 After describing the rules of the games, we present the results for the offline strategy computation case and we follow with the online game playing.
 
 \subsection{Experimental Settings}
@@ -12,35 +12,35 @@ as an example that MCTS with UCT selection function does not converge to a Nash 
 We reproduce this experiment and show the differences in performance of the sampling algorithms -- primarily the impact of randomization in UCT.
 Then, we compare the offline performance of the algorithms on other domains.
 For each domain, we first analyze the exact algorithms and measure the computation time taken to solve a particular instance of the game.
-We compute mean out of at least $30$ runs for each game settings.
-Afterwards, we analyze the convergence of the approximative algorithms.
+We compute the mean over at least $30$ runs for each game setting.
+Afterward, we analyze the convergence of the approximative algorithms.
 At the specified time step the algorithm produces strategies $(\sigma_1,\sigma_2)$, and using best responses we compute
 $\textrm{error}(\sigma_1,\sigma_2) = \max_{\sigma_1' \in \Sigma_1} \bE_{z \sim (\sigma_1',\sigma_2)}[u_1(z)]
                                    + \max_{\sigma_2' \in \Sigma_2} \bE_{z \sim (\sigma_1,\sigma_2')}[u_2(z)]$,
 which is equal to $0$ at a Nash equilibrium.
-In each offline convergence setting, the reported values are means out of at least $20$ runs of each sampling algorithm on a single instance of the game.
+In each offline convergence setting, the reported values are means over at least $20$ runs of each sampling algorithm on a single instance of the game.
 We compared at least $3$ different settings for the exploration parameter and present the result only for the best exploration parameter.
-For OOS, Exp3, and RM the best values for the parameters were almost always $0.6$, $0.1$, and $0.1$.
+For OOS, Exp3, and RM the best values for the parameters were almost always $0.6$, $0.1$, and $0.1$, respectively.
 \reviewchange{The only exception was Goofspiel with chance nodes, where both Exp3 and RM converge more quickly with parameter set to $0.3$.}
 For UCT, however, the performance was quite different and we give the values for UCT for each domain.
 % mlanctot: please check the definition of error
 %\vlisy{is the 20 runs enough?}\bbosansky{this is the lowest number, some games (\eg, Goofspiel) had more samples (40)}
 
-Finally, we turn to the comparison of the algorithms in the online setting and we present head-to-head tournament on each domain.
+Finally, we turn to the comparison of the algorithms in the online setting and we present results from head-to-head tournaments in each domain.
 We used larger instances of games and compare the algorithms based on the actual game play with a limited time for each move. 
 %We use two different restrictions to computation time per move: 1 second and 5 seconds.\bbosansky{TODO @Vilo, remove the "5 seconds" when you finish with rewriting the online experiments.}
 % mlanctot: we do not have to justify this choice
 %The first one is more common in previous works focused on online comparison of the algorithms~\cite{XXX}\bbosansky{Reference missing -- ideally several works with different authors that use this settings.}, second one allows us to see the difference if the algorithms have more computation time.
 As indicated before, the algorithms based on the backward induction need to use domain-specific evaluation function in the online settings.
-This may give these algorithms an advantage if the evaluation function is very precise.
+This may give these algorithms an advantage if the evaluation function is accurate.
 Therefore, we also run sampling-based algorithms with the evaluation function for selected domains to compare the algorithms in a more fair settings.
 \reviewchange{Moreover, we have also tuned parameters for the sampling algorithms specifically for each domain.}
-Reported results are mean of at least $1000$ matches for each pair of algorithms.
+Reported results are means over at least $1000$ matches for each pair of algorithms.
 %Where necessary, we run additional experiments to obtain statistically significant results.
 
 Each of the described algorithms was implemented in a generic framework for modeling and solving extensive-form games\footnote{Source code is available at \texttt{http://agents.felk.cvut.cz/topics/Computational\_\newline game\_theory}. We use IBM CPLEX 12.5 to solve the linear programs.}.
 We are interested in the performance of the algorithms and their ability to find or approximate the optimal behavior.
-Therefore, with the exception of the evaluation function used in selected online experiments, no algorithm is using any domain-specific knowledge.
+Therefore, with the exception of the evaluation function used in selected online experiments, no algorithm uses any domain-specific knowledge.
 
 
 \subsection{Domains}\label{sec:eval:domains}
@@ -82,8 +82,9 @@ S & -50 &  5 &  0\\\cline{2-4}
 \end{figure}
 
 \paragraph{\textbf{Goofspiel}}
-Goofspiel is a card game that appears in many works dedicated to simultaneous move games (\eg \cite{Ross71Goofspiel,Rhoads12Computer,Saffidine12SMAB,Lanctot13Goofspiel}).
-There are $3$ identical decks of $d$ cards with values $\{0,\dots, (d-1)\}$ (one for chance and one for each player), where $d$ is a parameter of the game (classical Goofspiel is played with $13$ cards).
+Goofspiel is a card game that appear as a common example of a simultaneous move game (\eg \cite{Ross71Goofspiel,Rhoads12Computer,Saffidine12SMAB,Lanctot13Goofspiel}).
+There are $3$ identical decks of $d$ cards with values $\{0,\dots, (d-1)\}$, one for chance and one for each player, 
+where $d$ is a parameter of the game. Standard Goofspiel is played with $13$ cards.
 The game is played in rounds: at the beginning of each round, chance reveals one card from its deck and both players bid for the card by simultaneously selecting (and removing) a card from their hands.
 A player that selects a higher card wins the round and receives a number of points equal to the value of the chance's card.
 In case both players select the card with the same value, the chance's card is discarded.
@@ -91,12 +92,13 @@ When there are no more cards to be played, the winner of the game is chosen base
 
 \reviewchange{
 There are two parameters of the game that can be altered to create four different variants of Goofspiel.
-The first parameter relates to chance.
-We can use an assumption made in the previous work that used Goofspiel as a benchmark for evaluation of the exact offline algorithms \cite{Saffidine12SMAB}, where the sequence of the cards are randomly chosen at the beginning of the game and it is known to both players.
+The first parameter determines whether or not the chance player is included.
+We can use an assumption made in the previous work that used Goofspiel as a benchmark for evaluation of the exact offline algorithms~\cite{Saffidine12SMAB},
+where the sequence of the cards are randomly chosen at the beginning of the game and it is known to both players.
 We refer to this setting as with the \emph{fixed sequence} of cards.
 Alternatively, we can treat chance in a standard way, where chance nodes determine the card that gets drawn. We refer to this as the
 \emph{stochastic sequence}).
-The games are fairly similar in terms of performance of the algorithms, however, the second variant induces considerably larger game tree.
+The games are fairly similar in terms of performance of the algorithms, however, the second variant induces a considerably larger game tree.
 The second parameter relates to the utility functions.
 Either we treat the game as a win-tie-lose game (\ie the players receive utility from set $\lbrace -1, 0, 1 \rbrace$), or the utility values for the players are equal to the points they gain during the game.}
 
@@ -170,8 +172,8 @@ If the final position of the wrestler is the center, the game is a draw.
 \reviewchange{Again, we have examined two different settings of the utility values: they are either restricted to win-tie-lose values $\lbrace -1, 0, 1 \rbrace$, or they correspond to the relative position of the wrestler $\lbrace \textrm{wrestler} - K, K - \textrm{wrestler} \rbrace$.
 In the experiments we varied the number of coins and parameter~$K$.}
 
-Many instances of the Oshi-Zumo game have pure Nash equilibrium.
-With the increasing number of the coins the game necessarily need to use mixed strategies, however, mixing is typically required only at the beginning of the game.
+Many instances of the Oshi-Zumo game have a pure Nash equilibrium.
+With the increasing number of the coins players need to use mixed strategies, however, mixing is typically required only at the beginning of the game.
 As an example, the following table depicts the number of states with pure strategies and mixed strategies in a subgame-perfect NE calculated by backward induction for Oshi-Zumo with $N=10$ coins, $K=3$, and minimal bid $M=1$. The results show that there are very few states where mixed strategies are required, and they are present only at the beginning of the game tree. Also note, that contrary to Goofspiel, not all branches have the same length.
 
 \vspace{0.1cm}
@@ -190,25 +192,30 @@ As an example, the following table depicts the number of states with pure strate
 
 The evaluation function used in Oshi-Zumo takes into consideration two components: (1) the current position of the wrestler and, (2) the remaining coins for each player. Formally:
 $$
-eval(s) = \tanh\left(\frac{b}{2}+\frac{1}{3}\left(\frac{\textrm{coins}_1 - \textrm{coins}_2}{M} + \textrm{wrestler} - K\right)\right)
+eval(s) = \tanh\left(\frac{b}{2}+\frac{1}{3}\left(\frac{\textrm{coins}_1 - \textrm{coins}_2}{M} + \textrm{wrestler} - K\right)\right),
 $$
 where $b$ equals to 1 if $\textrm{coins}_1 \geq \textrm{coins}_2$ and $wrestler \geq K$, and at least one of the inequalities is strict;
 $b$ equals to $-1$, if $\textrm{coins}_1 \leq \textrm{coins}_2$ and $wrestler \leq K$, and at least one of the inequalities is strict.
-Again, we use $\tanh$ to scale the evaluation function into the interval $[-1,1]$ \reviewchange{for the win-tie-lose case}.
+Again, we use $\tanh$ to scale the evaluation function into the interval $[-1,1]$ \reviewchange{only in the win-tie-lose case}.
 
 \paragraph{\textbf{Pursuit Evasion Games}}
 
 Another important class of games is pursuit-evasion games (for example, see~\cite{nguyen2013monte}).
 There is a single evader and a pursuer that controls 2 pursuing units on a four-connected grid in our pursuit-evasion game.
 Since all units move simultaneously, the game has larger branching factor than Goofspiel (up to $16$ actions for the pursuer).
-The evader wins, if she successfully avoids the units of the pursuer for the whole game; pursuer wins, if her units successfully capture the evader. The evader is captured if either her position is the same as the position of a pursuing unit, or the evader used the same edge as a pursuing unit (in the opposite direction).
-The game is win-loss and the players receive utility from set $\lbrace -1, 1 \rbrace$.
+The evader wins if she successfully avoids the units of the pursuer for the whole game.
+The pursuer wins if her units successfully capture the evader. 
+The evader is captured if either her position is the same as the position of a pursuing unit, or the evader used the same edge as a pursuing unit (in the opposite direction).
+The game is win-loss and the players receive utility from the set $\lbrace -1, 1 \rbrace$.
 We use $3$ different square grid-graphs (with the size of a side 4, 5, and 10 nodes) for the experiments without any obstacles or holes.
-In the experiments we varied the length of the game $d$ and we altered the starting positions of the players (the distance between the pursuers and the evader was always at most $\left\lfloor\frac{2}{3} d\right\rfloor$ moves, in order to provide a possibility for the pursuers to capture the evader).
+In the experiments we varied the maximum length of the game $d$ and we altered the starting positions of the players 
+(the distance between the pursuers and the evader was always at most $\left\lfloor\frac{2}{3} d\right\rfloor$ moves, in order to provide a 
+possibility for the pursuers to capture the evader).
 
 Similarly to Oshi-Zumo, many instances of pursuit-evasion games have a pure Nash equilibrium.
 However, the mixing can be required towards the actual end of the game in order to capture the evader.
-Therefore, depending on the length of the game and the distance between the units, there might be many states that do not require mixed strategies (units of the pursuers are simply going towards the evader).
+Therefore, depending on the length of the game and the distance between the units, there might be many states that do not require mixed
+strategies (units of the pursuers are simply going towards the evader).
 Once the units are close to each other, the game may require mixed strategies for the final coordination.
 This can be seen on our small example on a graph with $4\times4$ nodes and depth $5$:
 
@@ -228,7 +235,7 @@ This can be seen on our small example on a graph with $4\times4$ nodes and depth
 
 The evaluation function used in pursuit-evasion games takes into consideration the distance between the units of the pursuer and the evader (denoted $\textrm{distance}_j$ for the distance in moves of the game between the $j^{th}$ unit of the pursuer and the evader). Formally:
 $$
-eval(s) = \frac{\min(\textrm{distance}_1,\textrm{distance}_2) + 0.01\cdot\max(\textrm{distance}_1,\textrm{distance}_2)}{1.01 \cdot (w+l)}
+eval(s) = \frac{\min(\textrm{distance}_1,\textrm{distance}_2) + 0.01\cdot\max(\textrm{distance}_1,\textrm{distance}_2)}{1.01 \cdot (w+l)},
 $$
 where $w$ and $l$ are dimensions of the grid graph.
 
@@ -270,7 +277,7 @@ If a player hits the wall or the opponent, the game ends.
 The goal of both players is to survive as long as possible.
 If both players move into a wall, off the board, or into each other at the same turn, the game ends in a draw.
 The utility is $+1$ for a win, $0$ for a draw, and $-1$ for a loss.
-In the experiments we used an empty grid with no obstacles and various sizes of the grid.
+In the experiments, we used an empty grid with no obstacles and various sizes of the grid.
 
 Similarly to pursuit-evasion games, there are many instances of Tron that have pure NE.
 However, even if mixed strategies are required, they appear in the middle of the game once both players reach the center of the board and compete over the advantage of possibly being able to occupy more squares.
