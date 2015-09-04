@@ -29,7 +29,7 @@ $\left\langle v_s, \sigma_i(s) \right\rangle \leftarrow$ solve matrix game $A$\;
 \end{algorithm2e}
 
 Once the algorithm computes the value of each possible subgame following the current state $s$, the matrix game $A$ is well-defined and the algorithm
-solves the matrix game $A$ by presenting it as a standard linear program (LP) for solving normal-form games\footnote{\reviewchange{By solving a game we mean computing both the optimal value and the strategy that achieves it.}}:
+solves the matrix game $A$ by using the standard linear program (LP) for solving normal-form games\footnote{\reviewchange{By solving a game we mean computing both the optimal value and the strategy that achieves it.}}:
 \begin{eqnarray}
 \max & v_s & \\
 \textrm{s.t.} & \sum_{a_i \in \cA_{i}}A_{a_i,a_{-i}} \cdot \sigma_i(s,a_i) \geq v_s & \forall a_{-i} \in \cA_{-i}(s)\\
@@ -48,11 +48,11 @@ The following algorithms try to prune some of the branches of the game tree in o
 The backward induction algorithm can be easily enhanced by using bounds on the value of subgames.
 These bounds can be calculated efficiently by using a transformation of a simultaneous move game into a perfect information extensive-form 
 game and applying wide range of search improvements developed for this more standard setting.
+\reviewchange{We call this purely alternating form a {\it serialization} of the original game.}
 Consider a matrix game representing a single joint action of both players.
 This matrix can be serialized by discarding the notion of information sets; hence, letting one player play first, followed by the second player.
 The difference between a serialized and a simultaneous move matrix game is that the second player to move has an advantage of knowing what action the first player chose.
 \reviewchange{
-We call is purely alternating form a {\it serialization} of the original game.
 Given this advantage, the value of a serialized game consisting of a single simultaneous move such that player $i$ is second to move
 is greater or equal to the value of the original simultaneous move game from the perspective of player~$i$.
 Furthermore, we can generalize this argument using induction to game trees with multiple simultaneous moves: when solving a serialized game with $(d+1)$ steps,
@@ -277,7 +277,7 @@ The pseudocode of this step is depicted in Algorithm~\ref{alg:br}.
 The goal of the best response algorithm is to find the best action from the original unrestricted game against current strategy of the opponent $\sigma'_{-i}$.
 Throughout the algorithm we use, as before, $v^i_{s'}$ to denote the upper bound of the value of the subgame rooted in state $s'$ calculated using alpha-beta$(s',i)$.
 These values are calculated on demand, \ie they are calculated once needed and cached until the game for state $s$ is solved.
-Moreover, once the algorithm calculates the exact value of a particular subgame, both upper and lower bounds are updated to be equal to actual value of the game.
+Moreover, once the algorithm calculates the exact value of a particular subgame, both upper and lower bounds are updated to be equal to the exact value of the game.
 
 The best response algorithm iteratively examines all actions of player $i$ from the unrestricted game (line~\ref{alg:br:start}).
 Every action $a_i$ is evaluated against the actions of the opponent that are used in the optimal strategy from the restricted game (line~\ref{alg:br:opp}).
@@ -299,7 +299,7 @@ When extracting strategies from $\doab$, we proceed exactly as in the case of $\
 Similarly to $\biab$, the performance of $\doab$ also depends on the existence of pure NE in the simultaneous move game.
 The best case is identical to $\biab$ and the algorithm finds the solution by solving each serialization exactly once starting from the root state.
 In the worst case, none of the serialized games yield useful bounds and the algorithm needs to call the double-oracle algorithm in every state.
-Moreover, the worst case for the double-oracle algorithm occurs when all actions in this state must be added and only a single action is added in each iteration causing the largest number of iterations repeatedly resolving the linear program.
+Moreover, the worst case for the double-oracle algorithm occurs when all actions in this state must be added and action for only a single player is added in each iteration causing the largest number of iterations repeatedly resolving the linear program.
 Again in practice, however, this is rarely the case.
 Moreover, the computational overhead from repeatedly solving a LP is relatively small in practice. % because algorithms can reuse the previous interval values help solve a similar LP. 
 This is due to the size of each LP that is determined by the number of actions in each state (number of constraints and variables is bounded by the number of actions in each state).
@@ -406,8 +406,8 @@ and $n_{a_i} \leftarrow n_{a_i} + 1$.
 Consider again the example shown in Figure~\ref{fig:smmcts-example}. Decoupled UCT now groups together all the payoffs obtained
 for an action. Therefore, at the root Max has $\bar{X}_t = 5/2 = 2.5, \bar{X}_b = 1/2 = 0.5$ and the exploration term for both is
 $C_i \sqrt{(\log 4) / 2}$, and so top is selected. For Min, $\bar{X}_l = 3/2 = 1.5 = \bar{X}_r$, so both actions have the same value.
-\reviewchange{So, in this situation Min must use a tie-breaking rule to decide which action to take.
-As we show in Subsection~\ref{sec:exp:brps}, the specific tie-breaking rule used here can lead to a significant effect on the quality
+\reviewchange{Therefore, Min must use a tie-breaking rule in this situation to decide which action to take.
+As we discuss later, the specific tie-breaking rule used here can lead to a significant effect on the quality
 of the strategy that UCT produces.}
 
 After all the simulations are done, there are two options how to determine the resulting action to play.
@@ -428,7 +428,7 @@ However, one of the issues when using UCT in game trees is an unspecified behavi
 This may have a significant impact on the performance of the UCT in simultaneous move games.
 Consider the matrix game at the right of Figure~\ref{fig:egMatrixGames}.
 This game has only one NE: $(a,A)$. However, if UCT selects the first or the last action among the options with the same value, it will always get only the rewards 0 and the bias term will cause the players to round-robin over the diagonal indefinitely. This is clearly not optimal, as each player can than improve by playing first action with probability 1. However, if we choose the action to play randomly among the tied actions (where ``tied'' could be defined as being within a small tolerance gap), UCT will quickly converge to the optimal solution in this game.
-We will experimentally analyze the impact of this randomization on the example used in~\cite{Shafiei09} and show that if a randomized variant of UCT is used, the algorithm still does not converge to a NE but does converges to a strategy that is much closer to a NE than without randomization (see Subsection~\ref{sec:exp:brps}).
+We experimentally analyze the impact of this randomization on the example used in~\cite{Shafiei09} and show that if a randomized variant of UCT is used, the algorithm still does not converge to a NE but does converges to a strategy that is much closer to a NE than without randomization (see Subsection~\ref{sec:exp:brps}).
 Therefore, unless stated otherwise, we use the randomized variant in our implementation.
 
 Even though UCT is not guaranteed to converge to the optimal solution, it is often very successful in practice.
@@ -469,13 +469,13 @@ Dividing the value by the probability of selecting the corresponding action make
 iterations, not only the ones where $a_i$ was selected.
 
 As the final strategy, after all iterations are executed, the algorithm computes the \emph{average strategy} of the Exp3 algorithm over all iterations for each player.
-\reviewchange{Let $\sigma^t_i$ be the strategy used at time $t$.} After $T$ iterations in the particular node, the average strategy is
+\reviewchange{Let $\sigma^t_i$ be the strategy used at time $t$.} After $T$ iterations in a particular node, the average strategy is
 \begin{equation}
 \bar{\sigma}^T_i(a_i) = \frac{1}{T}\sum_{t=1}^T \sigma^t_i(a_i).
 \end{equation}
 In our implementation, we maintain the cumulative sum and normalize it to obtain the average strategy after the iterations.
 
-Previous work \cite{Teytaud11Upper} suggests first removing the samples caused by the exploration.
+Previous work \cite{Teytaud11Upper} suggests removing the samples caused by the exploration first.
 This modification proved to be useful also in our experiments
 % and it has been shown not to reduce the performance substantially in the worst case \cite{kovarik}, \mlanctot{@Vilo, please add the missing reference; I don't know which paper you wanted to cite here}
 so as the resulting final mixed strategy, we use
@@ -531,7 +531,7 @@ v_i(I,\sigma) = \sum_{(h,z) \in \cZ_I} \pi^{\sigma}_{-i}(h) \pi^{\sigma}(h,z) u_
 where $\cZ_I = \{ (h,z)~|~z \in \cZ, h \in I, h \sqsubset z \}$, \reviewchange{$\pi^{\sigma}_{-i}(h)$ is the product of probabilities to reach $h$ under $\sigma$ excluding player $i$'s (\ie including chance)
 %\bbosansky{TODO @Marc -- I have added ``(i.e., including nature)'' so just checking. Remove, this note if it is OK.},
 and $\pi^\sigma(h,h')$, where $h \sqsubset h'$, is the probability of all actions taken along the path from $h$ to $h'$.}
-Suppose, at time $t$, players player with strategy profile $\sigma^t$.
+Suppose, at time $t$, players play with strategy profile $\sigma^t$.
 Define $\sigma^t_{I \rightarrow a}$ as identical to $\sigma^t_i$ except at $I$ action $a$ is taken with probability $1$.
 Player $i$'s counterfactual regret of not taking $a \in \cA(I)$ at time $t$ is $r_i^t(I,a) = v_i(I, \sigma^t_{I \rightarrow a}) - v_i(I,\sigma^t)$.
 The CFR algorithm maintains the cumulative regret $R_i^T(I,a) = \sum_{t=1}^T r_i^t(I,a)$, for every action at every information set.
