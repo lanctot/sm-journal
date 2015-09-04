@@ -1,4 +1,4 @@
-There has been a number of algorithms designed for simultaneous move games that can be classified into three categories: 
+There has been a number of algorithms designed for simultaneous move games that which be classified into three categories: 
 (1) iterative learning algorithms, 
 (2) exact backward induction algorithms, 
 (3) approximative sampling algorithms.
@@ -48,17 +48,23 @@ see~\cite{Nowe12MARLchapter,Busoniu08Comprehensive,Bloembergen15Evolutionary}.
 
 The techniques in this section are based on the backward induction algorithm (cf. \cite{Shoham09}), 
 a form of dynamic programming~\cite{Bellman57} often presented for purely sequential games. 
-A slightly modified variant of the algorithm can also be applied to simultaneous move 
-games (\eg, see \cite{Ross71Goofspiel,buro2003,Rhoads12Computer}). 
+A modified variant of the algorithm can also be applied to simultaneous move 
+games (\eg see \cite{Ross71Goofspiel,buro2003,Rhoads12Computer}). 
 %\bbosansky{We do need some better reference here.}) 
 % mlanctot: added the Ross 1971 paper; as far as I know it's the earliest one. Would be nice to have a text book cover this.
-The algorithm searches through the game tree in the depth-first manner and after computing the values of all the succeeding subgames, it solves the normal-form game corresponding to this state (\ie computes a NE of the matrix game in the current state of the game), and propagates the calculated game value to the predecessor. The result of the backward-induction algorithm is a refinement of NE called \emph{subgame-perfect Nash equilibrium}. 
+The algorithm enumerates states of the game tree in a depth-first manner and after computing the values of all the succeeding subgames of state $s \in \cS$, 
+it solves the normal-form game corresponding to $s$ (\ie computes a NE of the matrix game in $s$), and propagates the calculated game value to the predecessor.
+Backward induction then outputs a subgame perfect NE. 
 
 There are two notable algorithms that improve the standard backward induction in simultaneous move games. 
 First is an algorithm by Saffidine et al.~\cite{Saffidine12SMAB} termed simultaneous move alpha-beta algorithm (SMAB). 
-The main idea of the algorithm is to reduce the number of the recursive calls of the backward-induction algorithm by removing dominated actions in every stage game. The algorithm keeps bounds on the utility value for each successor in a game state. 
+The main idea of the algorithm is to reduce the number of the recursive calls of the backward induction
+algorithm by removing dominated actions in every stage game. The algorithm keeps bounds on the utility value for each successor in a game state. 
 The lower and upper bounds represent the threshold values, for which neither of the actions of the player is dominated by any other action in the current matrix game. These bounds are calculated by linear programs in the state given existing exact values (or appropriate bounds) of the utility values of all the other successors of the state. If they form an empty interval (the lower bound is higher than the upper bound), pruning takes place and the dominated action is no longer considered in this state afterward. 
-SMAB outperforms classic backward induction, however, the computational speed-up is only marginal. 
+
+% SMAB outperforms classic backward induction, however, the computational speed-up is only marginal. 
+% I really don't think this is necessary. If so, we should find a nicer or more technically justifiable way to say it. 
+% We can put something back in if the reviewers ask, but I think it's obvious that DOAB is better and that's why we chose it.
 
 % mlanctot: This seems overly negative toward SMAB and I don't think we need to justify ourselves at this point in the paper. 
 %           How about this.. in the evaluation section (next to the more impressive DOAB result) let's put something like:
@@ -67,7 +73,7 @@ SMAB outperforms classic backward induction, however, the computational speed-up
 %The reason is that computing dominated actions is a costly operation that does not prune many actions; hence, much of the game tree is still fully evaluated. The authors propose further enhancements in their work~\cite{Saffidine12SMAB}, however, these improvements are domain-specific heuristics and do not significantly change the overall performance of the algorithm. Since other exact algorithms achieve computation speed-up in several orders of magnitude compared to backward induction (as we show in Section~\ref{sec:eval}), we do not explicitly use SMAB in our experiments.
 % bbosansky: Ok, I agree.
 
-The second exact algorithm that is significantly faster compared to the classic backward induction was introduced in~\cite{Bosansky13Using}.
+The second exact algorithm that is significantly faster than classic backward induction was introduced in~\cite{Bosansky13Using}.
 This algorithm is described in detail in Subsection~\ref{sec:doab}. The main idea is to integrate two key components: (1) instead of evaluating all successors in each state of the game and solving a normal-form game, the algorithm exploits the iterative framework known in game theory as double-oracle algorithm~\cite{McMahan03Planning}; (2) the algorithm computes bounds on the utility values of the successors by serializing the subgames and running classic alpha-beta algorithm. 
 
 Finally, since simultaneous move games can be seen as standard extensive-form games with imperfect information, one can use techniques 
@@ -86,13 +92,14 @@ compared to tailored algorithms.
 
 Monte Carlo Tree Search (MCTS) is a simulation-based state space search technique often used in extensive-form games \cite{Coulom06,UCT}. 
 Having first seen practical success in computer Go \cite{Gelly2011,Gelly12}, MCTS has since been applied successfully to simultaneous move games and imperfect information games as well~\cite{Ciancarini10Kriegspiel,Cowling12ISMCTS,15aamas-iioos}. 
-Most of the successful applications use the Upper Confidence Bounds (UCB) formula~\cite{UCB} as a selection strategy. These variants of MCTS are also known as UCT (UCB applied to trees). The first application of MCTS to simultaneous move games was in general game playing (GGP)~\cite{GGP} programs: \textsc{Cadiaplayer}~\cite{Cadiaplayer,Finnsson12} uses UCB selection strategy for each player in a single game tree. The success of MCTS algorithm was demonstrated by success of \textsc{Cadiaplayer} which was the top-ranked player of the GGP competition between 2007 and 2009, and also in 2012.
+Most of the successful applications use the Upper Confidence Bounds (UCB) formula~\cite{UCB} as a selection strategy. These variants of MCTS are also known as UCT (UCB applied to trees). The first application of MCTS to simultaneous move games was in general game playing (GGP)~\cite{GGP} programs: \textsc{Cadiaplayer}~\cite{Cadiaplayer,Finnsson12} uses UCB selection strategy for each player in a single game tree. The success of MCTS algorithm was demonstrated by the success of \textsc{Cadiaplayer} which was the top-ranked player of the GGP competition between 2007 and 2009, and also in 2012.
 
-Despite this success, Shafiei et al. in \cite{Shafiei09} provide a counter-example showing that this straightforward application of UCT does not
+Despite this success, Shafiei et al. in~\cite{Shafiei09} provide a counter-example showing that this straightforward application of UCT does not
 converge to NE even in the simplest simultaneous move games and that a player playing a NE can exploit this strategy. Another variant of UCT, which has been applied to  Tron~\cite{Samothrakis10Tron}, builds the tree as if the players were moving sequentially giving one of the players an informational advantage. This approach also cannot converge to NE in general. For this reason, other variants of MCTS were considered for simultaneous move games. Teytaud and Flory describe a search algorithm for games with short-term imperfect information~\cite{Teytaud11Upper}, which are a generalization of simultaneous move games. Their algorithm uses a different selection strategy, called Exp3~\cite{Auer2003Exp3},
 and was shown to work well in the Internet card game Urban Rivals. We provide details of these two main existing selection functions in Subsections~\ref{sec:duct} and~\ref{sec:exp3}.
-A more thorough experimental investigation of different selection policies including UCB, UCB1-Tuned, UCB1-greedy, Exp3, and more is reported in the game of Tron \cite{Perick12Comparison}. The work by Lanctot et al.~\cite{Lanctot13Goofspiel} compares some of these variants and proposes Online Outcome Sampling, a search version of Monte Carlo CFR~\cite{Lanctot09Sampling}, which computes an approximate equilibrium strategy with high probability. We describe this algorithm in Subsection~\ref{sec:oos}.
-Finally, Lisy et al.~\cite{lisy2013-nips} present variants of MCTS that provably converge to Nash equilibria in simultaneous move games, in general, using any regret-minimizing algorithm at each stage, showing observed worst-case behavior in several cases. 
+A more thorough experimental investigation of different selection policies including UCB, UCB1-Tuned, UCB1-greedy, Exp3, and more is reported in the game of Tron \cite{Perick12Comparison}. The work by Lanctot et al.~\cite{Lanctot13Goofspiel} compares some of these variants and proposes Online Outcome Sampling, a search version of Monte Carlo CFR~\cite{Lanctot09Sampling}, which computes an approximate equilibrium strategy with high probability. \reviewchange{We describe a new formulation of this algorithm in Subsection~\ref{sec:oos}.}
+Finally, Lis\'{y} et al.~\cite{lisy2013-nips,Kovarik2015Analysis} present variants of MCTS that provably converge to Nash equilibria in simultaneous move games, eventually, 
+using any regret-minimizing algorithm at each stage, showing observed worst-case behavior in several cases. 
 
 There have been two recent studies that examine the head-to-head performance of these variants in practice. 
 The first~\cite{Lanctot13Tron} builds on previous work in Tron by varying the shape of the initial board, 
@@ -113,7 +120,7 @@ Results indicate that parameter-tuning landscapes do not seem as smooth as in th
 Real-time games are not turn-based and represent a realistic physical situations where agents can move freely in space. 
 The state of the game is a continuous function of time and the effect of some actions may only be realized some time 
 after the decision is made. These games are often appropriately modeled as a simultaneous move game with very short 
-delays (40 milliseconds) between frames. 
+delays (\eg 40 milliseconds) between frames. 
 
 MCTS has enjoyed some success in these types of games, in the single-agent 
 setting~\cite{Pepels14Monte,Perez14PTSP} and multiagent setting~\cite{Balla09UCT}, much of this work inspired by video 
