@@ -18,7 +18,7 @@ We thank all of the reviewers for their valuable feedback. Please find enclosed 
 > course has pros and cons as survey submissions are perfectly fine for AIJ. But then, the paper
 > is not organized as a survey.
 
-We agree that the paper does have (to some degree) a survey character in that it resumes existing algorithms published in different forums and venues. However, we feel that there are original technical contributions made by this paper, aside from simply organizing the information in one place under harmonized notation. In addition, we prefer to cover most promising algorithms in depth rather than summarize the full breadth of all candidate algorithms. As such, we have chosen not to organize it as a survey paper. 
+We agree that the paper does have (to some degree) a survey character in that it resumes existing algorithms published in different forums and venues. However, we feel that there are original technical contributions made by this paper, aside from simply organizing the information in one place under harmonized notation. In addition, we prefer to cover the most promising algorithms in depth rather than summarize the full breadth of all candidate algorithms. As such, we have chosen not to organize it as a survey paper. 
 
 In this resubmission, we clarify the novel contributions that have not appeared in any preceeding paper by adding an explicit bullet-point list in the introduction.
 
@@ -75,7 +75,7 @@ We have also added a discussion about the best and the worst case for exact algo
 > NO. Well, except for a better/deeper explanation of the different OOS behavior in offline and online settings. But that might already be beyond the scope of the present article.
 >
 
-As already explained, we have added a significant amount of content based on these two previous comments. As a result, we believe the insight gained by the experiments and discussion has significantly improved.
+We have added a significant amount of content based on these two previous comments. As a result, we believe the insight gained by the experiments and discussion has significantly improved.
 
 > Does it explain clearly what was done that is new?
 > --------------------------------------------------
@@ -162,7 +162,7 @@ Also, a more general version of the algorithm has been published since our initi
 
 > * Experiments: Usage of term "mixed strategy" confused me a bit, since each pure strategy is also a (trivial) mixed strategy.
 
-Every pure strategy is indeed also a mixed strategies, by definition. However, it is a convention in the games and game theory literature to refer to a mixed strategy as being in the set of mixed strategies minus the set of the pure strategies. We have made this clearer by added a note when first defining the terms.
+Every pure strategy is indeed also a mixed strategy, by definition. However, it is a convention in the games and game theory literature to refer to a mixed strategy as being in the set of mixed strategies minus the set of the pure strategies. We have made this clearer by added a note when first defining the terms.
 
 > * The evaluation function for Goofspiel looks wrong/weird. In the argument of tanh(), there are several divisions by zero that do actually occur at the beginning and the end of the game, respectively, and even if we interpret these situations in the limit, this would lead to eval-values of +/- 1 (after applying tanh), not 0, as claimed in the text for the beginning of the game. Uhm, okay, then the numerator is 0 as well. Anyway, this is somehow mathematically sloppy.
 
@@ -298,7 +298,7 @@ We have fixed this mistake.
 > that's only the expected outcome. So, in a single game the actual
 > payoff may be much lower.
 
-The wording here was ambiguous. What was meant was "It guarantees an _expected_ payoff of at least V*". This key word has now been added.
+The wording here was ambiguous. What was meant was "It guarantees an _expected_ payoff of at least V*". (Note V* has been replace by V). This key word has now been added.
 
 > Fig. 2 referenced much later (after Fig. 3). Also, the entire
 > paragraph (i.e., 3 lines) referencing this are not much help. Either
@@ -338,7 +338,7 @@ We have fixed this mistake.
 > the actions of the opponent of player i? (same throughout the
 > remainder of the article)
 
-We have added an explaination that -i typically refers to the opponent of player i.
+We have added an explaination that -i refers to the opponent of player i, by standard convention.
 
 > In equations (3), (4), and (5): What is \delta^s_i?
 
@@ -353,7 +353,7 @@ It refers to a probability of a behavioral strategy and correctly set to \sigma 
 > expensive, but I would have expected to see some argumentation why the
 > former is enough to get proper bounds.
 
-We agree that the current explanation was not entirely clear and we have added an explanation for game trees with multiple steps – it is sufficient to consider the cases where one player is always first (or second) to move and this can be shown by induction.
+We agree that the current explanation was not entirely clear and we have added an explanation for game trees with multiple steps -- it is sufficient to consider the cases where one player is always first (or second) to move and this can be shown by induction.
 
 > Section 4.3:
 > In Alg. 3, "solve matrix game" returns a pair (the value and \delta,
@@ -457,7 +457,6 @@ We have fixed this mistake and added subscripts to R^T and r^t.
 > restriction. Why was this made?
 
 In the offline experiments, the nature cards have been fixed due to the consistence with the previous work by Saffidine et al. However, we agree that the standard setting with chance should be explored and analyzed, and therefore additional experiments have been made and we considerably expanded the section on Goofspiel to cover both larger range of utility values as well as chance nodes.
-
 
 >
 > What is the branching factor of a simultaneous move game? I had
