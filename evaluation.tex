@@ -401,10 +401,11 @@ Unless otherwise stated, each data point represents a mean of at least $30$ runs
 \end{figure}
 
 We now describe the results for the card game Goofspiel.
-First, we analyze the games with a fixed sequence of the cards.
+First, we analyze the games with fixed sequences of the cards.
 
-\paragraph{Exact algorithms with fixed sequence}
+\paragraph{Exact algorithms with fixed sequences}
 The results are depicted in Figure~\ref{fig:off:res:gs} (note the logarithmic vertical scale), where the left subfigure depicts the results for win-tie-lose utilities and the right subfigure depicts the results for point utilities.
+\reviewchange{We present the mean results from 20 different fixed sequences.}
 The comparison on the win-tie-lose variant shows that there is a significant number of subgames with pure Nash equilibrium that can be computed using serialized alpha-beta algorithms.
 Therefore, the performance of $\biab$ and $\doab$ is fairly similar and the gap only slowly increases in favor of $\doab$ with the increasing size of the game.
 Since serialized alpha-beta is able to solve a large portion of subgames, both of these algorithms significantly reduce the number of the states visited by the backward induction algorithm.
@@ -448,7 +449,7 @@ As before, serialized alpha-beta algorithm is less helpful in the case with poin
 Again with $5$ cards, $\biab$ evaluates $91,419$ nodes in more than $100$ seconds and $\doab$ evaluates $14,536$ nodes in almost $55$ seconds.
 }
 
-\paragraph{Sampling algorithms with fixed sequence}
+\paragraph{Sampling algorithms with fixed sequences}
 
 \begin{figure}[t!]
 	\begin{subfigure}{1\textwidth}
@@ -1138,8 +1139,6 @@ Finally, the performance of Exp3 is the weakest in general. Its main problems ar
 
 Given the similar nature of OOS and RM, one might wonder why RM performs in online search typically better than OOS, despite OOS being the only algorithm with provable convergence properties and the fastest converging algorithm in the offline setting. 
 In this subsection, we investigate this phenomenon and present the results of additional experiments.
-
-\bbosansky{I am unable to follow the text below ... I guess it would be beneficial to avoid most of the math if possible and if something is necessary to explain then repeat the meaning because people have forgotten everything while reading through these long experiments.}
 
 To understand, we need to look at the convergence properties of OOS, which is essentially an application of outcome sampling MCCFR.
 The bound on convergence of outcome sampling MCCFR presented in \cite{Gibson12probing} says that after $T$ iterations, the strategy produced by the algorithm is an $\epsilon$-Nash equilibrium with probability $1-p$ and

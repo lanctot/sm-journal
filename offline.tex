@@ -143,11 +143,6 @@ Solving a matrix game can be further improved by using iterative double-oracle a
 First of all, we describe the main principles of the double-oracle algorithm in matrix games, following by describing the application of the algorithm in simultaneous move game~\cite{Bosansky13Using} (denoted $\doab$).
 
 \subsubsection{Double-oracle Algorithm for Matrix Games}\label{sec:doab}
-\begin{figure}[t!]
-\centering
-\includegraphics[width=0.9\textwidth]{figures/DO-scheme}
-\caption{Schematic of the double-oracle algorithm for a normal-form game.}\label{fig:do-scheme}
-\end{figure}
 
 The goal of the double-oracle algorithm is to find a solution of a matrix game without necessarily constructing the complete linear program that solves this game.
 The main idea is to create a restricted game where the players can only choose from a limited set of actions.
@@ -162,6 +157,12 @@ Figure~\ref{fig:do-scheme} shows a visualization of the main structure of the al
 \item for each player, compute a pure best response strategy against the equilibrium strategy of the opponent; pure best response can be \emph{any} action from the original unrestricted game
 \end{enumerate}
 The best response strategies computed in step 3 are added to the restricted game, the game matrix is expanded by adding new rows and columns, and the algorithm follows with the next iteration. The algorithm terminates if neither of the players can improve the outcome of the game by adding a new strategy to the restricted game; hence, both players play best response strategies to the strategy of the opponent. The algorithm maintains the values of the best expected utilities of the best-response strategies for each player throughout the iterations of the algorithm. These values provide bounds on the value of the original game $V$ (from Equation~\ref{eq:ne}), and their sum represents the error of the algorithm that converges to zero.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/DO-scheme}
+\caption{Schematic of the double-oracle algorithm for a normal-form game.}\label{fig:do-scheme}
+\end{figure}
 
 \subsubsection{Integrating Double-Oracle with Backward Induction}
 
@@ -394,7 +395,7 @@ Consider again the example shown in Figure~\ref{fig:smmcts-example}. Decoupled U
 for an action. Therefore, at the root Max has $\bar{X}_t = 5/2 = 2.5, \bar{X}_b = 1/2 = 0.5$ and the exploration term for both is
 $C_i \sqrt{(\log 4) / 2}$, and so top is selected. For Min, $\bar{X}_l = 3/2 = 1.5 = \bar{X}_r$, so both actions have the same value.
 \reviewchange{So, in this situation Min must use a tie-breaking rule to decide which action to take.
-As we show in subsection~\ref{sec:exp:brps}, the specific tie-breaking rule used here could lead to a significant effect on the quality
+As we show in Subsection~\ref{sec:exp:brps}, the specific tie-breaking rule used here could lead to a significant effect on the quality
 of the strategy UCT produces.}
 
 After all the simulations are done, there are two options how to determine the resulting action to play.
