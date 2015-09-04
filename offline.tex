@@ -670,9 +670,9 @@ as estimates of utility for those subgames, which could introduce some bias in t
 \subsection{Theoretical Properties, Guarantees, and Limitations} \label{sec:theory_discuss}
 
 Firstly, recall that optimal strategies exist for simultaneous move games as a result of von Neumann's minimax theorem, which guarantees each player 
-their minimax value (Equation~\ref{eq:ne}). So, one desirable property of these algorithms is completeness: will an optimal solution be found if one exists?
+their minimax value (Equation~\ref{eq:ne}). Therefore, one desirable property of these algorithms is completeness: will an optimal solution be found if one exists?
 Another question is how long it can take to find an optimal solution, and yet another is if the algorithm is terminated early, how accurate would the
-current approximation be? And finally, what is the time and space complexities of the algorithms?
+current approximation be? Finally, what is the time and space complexities of the algorithms?
 
 The backward induction algorithms always return an optimal solution. The correctness of BI follows by induction, the Markov property, and the uniqueness of
 each subgame's $V$ value from Equation~\ref{eq:ne}. As discussed in Subsections~\ref{sec:algs:biab}-\ref{sec:algs:doab}, the time taken by $\biab$ and $\doab$
