@@ -73,8 +73,10 @@ The lower and upper bounds represent the threshold values, for which neither of 
 %The reason is that computing dominated actions is a costly operation that does not prune many actions; hence, much of the game tree is still fully evaluated. The authors propose further enhancements in their work~\cite{Saffidine12SMAB}, however, these improvements are domain-specific heuristics and do not significantly change the overall performance of the algorithm. Since other exact algorithms achieve computation speed-up in several orders of magnitude compared to backward induction (as we show in Section~\ref{sec:eval}), we do not explicitly use SMAB in our experiments.
 % bbosansky: Ok, I agree.
 
-The second exact algorithm that is significantly faster than classic backward induction was introduced in~\cite{Bosansky13Using}.
-This algorithm is described in detail in Subsection~\ref{sec:doab}. The main idea is to integrate two key components: (1) instead of evaluating all successors in each state of the game and solving a normal-form game, the algorithm exploits the iterative framework known in game theory as double-oracle algorithm~\cite{McMahan03Planning}; (2) the algorithm computes bounds on the utility values of the successors by serializing the subgames and running classic alpha-beta algorithm. 
+While SMAB outperforms classic backward induction, the speed-up is less significant in comparison to the second exact algorithm introduced in~\cite{Bosansky13Using}, description of which is given in detail in Subsection~\ref{sec:doab}.
+%The second exact algorithm that is significantly faster than classic backward induction was introduced in~\cite{Bosansky13Using}.
+%This algorithm is described in detail in Subsection~\ref{sec:doab}. 
+The main idea is to integrate two key components: (1) instead of evaluating all successors in each state of the game and solving a normal-form game, the algorithm exploits the iterative framework known in game theory as double-oracle algorithm~\cite{McMahan03Planning}; (2) the algorithm computes bounds on the utility values of the successors by serializing the subgames and running classic alpha-beta algorithm. 
 
 Finally, since simultaneous move games can be seen as standard extensive-form games with imperfect information, one can use techniques 
 designed for large imperfect information games. 
