@@ -6,7 +6,7 @@ to any-time search within a limited time.
 \subsection{Iterative Deepening Backward Induction Algorithms} \label{sec:idbi}
 
 Minimax search~\cite{AIbook} has been used with much success in sequential perfect information games,
-leading to superhuman strength in computer chess game play, one of the key advances of artificial
+leading to superhuman strength in Computer chess game play, one of the key advances of artificial
 intelligence~\cite{Campbell02deepblue}.
 Minimax search is an online application of backward induction run on approximated game.
 The game is approximated by searching to a fixed depth limit $d$, treating the states at depth $d$
@@ -20,9 +20,15 @@ Note that the depth limit of $d$ means that the algorithm evaluates $d$ joint ac
 %In sequential perfect information games, several enhancements can be applied due to researching the same
 %nodes, most of which are not immediately applicable in simultaneous move games. However, whether new
 %enhancements can be defined for this class of games remains an open research question.
-In our implementation of iterative deepening we follow a natural observation that a solution computed in state $s$ by player $i$ to depth $d$ contains depth $d-1$ solutions to all possible next states $\cT(s,a_i,?)$, where $a_i$ is the action selected for player $i$.
-This allows us to start the iterative deepening in any state $s' \in \cT(s,a_i,?)$ with depth $d$.
+
+In iterative deepening, by default the depth starts at $d = 1$ and gradually increases $d$ until there is no more time.
 If the time limit does not allow full evaluation of the subgame with the root in $s'$, the algorithm reuses the result from previous computation.
+In our implementation of iterative deepening we follow a natural observation that saves computation time {\it between different searches}: 
+a solution computed in state $s$ by player $i$ to depth $d$ from a previous search contains depth $d-1$ solutions to all possible 
+next states $\cT(s,a_i,?)$, where $a_i$ is the action selected for player $i$.
+So when iterative deepening starts a new search from state $s' \in \cT(s,a_i,?)$, it can often begin with already at depth $d$.
+This can require space exponential in the depth $d$ in the worst case, but due to pruning this is often not the case.
+When information is missing due to pruning, then a search starts with the lowest $d$ that contains all the previous search information.
 In case there is no strategy stored for the state $s'$ due to pruning, iterative deepening is started with $d = 1$.
 
 \subsection{Online Search using Sampling Algorithms}
@@ -31,7 +37,7 @@ In case there is no strategy stored for the state $s'$ due to pruning, iterative
 %\mlanctot{Ok, will do. (Soon!)}
 % These were old TODOS -- removing them.
 
-Using sampling algorithms in online settings is simpler compared to the algorithms based on the backward induction, since no significant changes are needed and the algorithms do not need an evaluation function.
+Using sampling algorithms in online settings is simpler than the algorithms based on the backward induction, since no significant changes are needed and the algorithms do not need an evaluation function.
 The algorithms are stopped after given time limit and the move to play or the complete strategy is extracted as described for each sampling algorithm in Section~\ref{sec:offline}.
 
 There are two concepts that have to be discussed.
@@ -39,12 +45,14 @@ First of all, the algorithms can re-use all information and statistics gained in
 Note that reusing the previously gathered statistics in the sub-tree rooted in $s'$ has no potentially negative effect on any variant of the MCTS algorithms since the behavior of the algorithm is exactly the same when the iteration is started in this node, or if this node is reached from its predecessor. 
 \reviewchange{This is true also in the novel OOS variant presented in this paper. Its main design objective to make it run from each node exactly as if the node was the root of the game. This is possible thanks to the structure of the simultaneous move games and a similar adaptation of the algorithm is not possible in imperfect information games \cite{15aamas-iioos}.}
 
-Secondly, even though the sampling algorithms do not require to use domain-specific knowledge for online search, they often incorporate this type of knowledge to better guide the sampling and thus to evaluate more relevant parts of the state space~\cite{Gelly07Combining,Lorentz08Amazons,Winands10MCTS-LOA,Lorentz13Breakthrough,Lanctot14Implicit}. When directly comparing sampling-based algorithms with the backward-induction algorithms that are clearly dependent on the evaluation function, the outcome of such a comparison strictly depends on the quality of the evaluation function -- in case of a very large game, a backward induction algorithm with precise evaluation function will be significantly better (we will see such examples in the experimental evaluation). Therefore, we also use sampling algorithms combined with an evaluation function. The integration is done via replacing the random rollout
-by directly using the value of the evaluation function in the current state for MCTS or OOS algorithms; \ie Rollout($s$) in
+Secondly, even though the sampling algorithms do not require the use of domain-specific knowledge for online search, they often incorporate this type of knowledge to better guide the sampling and thus to evaluate more relevant parts of the state space~\cite{Gelly07Combining,Lorentz08Amazons,Winands10MCTS-LOA,Lorentz13Breakthrough,Lanctot14Implicit}. When directly comparing approximative sampling algorithms with the backward induction algorithms that are clearly dependent on the evaluation function, the outcome of such a comparison strictly depends on the quality of the evaluation function. In a very large game, a backward induction algorithm with precise evaluation function will be significantly better %(we will see such examples in the experimental evaluation).
+Therefore, we also use sampling algorithms combined with an evaluation function. The integration is done via replacing the random rollout
+by directly using the value of the evaluation function in the current state for MCTS and OOS algorithms; \ie Rollout($s$) in
 line~\ref{alg:smmcts:rollout} of Algorithm~\ref{alg:smmcts} or line~\ref{alg:oos:rollout} of Algorithm~\ref{alg:oos} is replaced by $eval(s)$.
 This has been commonly used in several previous works in Monte Carlo search~\cite{Lorentz08Amazons,Lorentz13Breakthrough,Lanctot14Implicit,RamanujanS11,Lanctot13MCMS}.
 
-Again, such a modification does not generally affect theoretical properties of the algorithms -- the proofs of the convergence (\eg \cite{lisy2013-nips}) assume that a whole game tree is eventually built and any statistics in the nodes collected before (either by random play-outs or evaluation functions) can eventually be over-weighted. For MCTS algorithms there is no reason to believe that a good evaluation function would give worse estimate of the quality of a sub-tree as a random play-out. The only complication can, again, be with the probabilities in OOS. The weight of the sample in equation~\ref{eq:scv} is lowered by the probability of reaching the sampled leaf from the updated information set. When using $\epsilon$-on-policy sampling, this ``tail'' probability is mostly cancelled by the probability of reaching the sampled leaf form the root in the denominator. If the sample is terminated earlier, it does not have a substantial effect on the scale of the regret updates.
+Again, such a modification does not generally affect theoretical properties of the algorithms -- the proofs of the convergence (\eg \cite{lisy2013-nips}) assume that a whole game tree is eventually built and any statistics in the nodes collected before (either by random play-outs or evaluation functions) can eventually be over-weighted. For MCTS algorithms, there is no reason to believe that a good evaluation function would give worse estimate of the quality of a sub-tree as a random play-out. The only complication can, again, be with the probabilities in OOS. The weight of the sample in equation~\ref{eq:scv} is lowered by the probability of reaching the sampled leaf from the updated information set. When using $\epsilon$-on-policy sampling, this ``tail'' probability is mostly cancelled by the probability of reaching the sampled leaf form the root in the denominator of $W$ in Algorithm~\ref{alg:oos}. 
+If the sample is terminated earlier, it does not have a substantial effect on the scale of the regret updates.
 
 %\reviewchange{
 %\subsection{Theoretical Properties and Convergence}
