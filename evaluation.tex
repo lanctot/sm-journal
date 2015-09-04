@@ -329,7 +329,7 @@ eval(s) = \tanh\left(\frac{\textrm{owned}_1 - \textrm{owned}_2}{5}\right).
 We first revisit the counter-example given in \cite{Shafiei09} showing that
 UCT does not converge to an equilibrium strategy in Biased Rock, Paper, Scissors
 when using a mixed strategy by normalizing the visit counts.
-We expand on this result, showing the effect of synchronization ocurring when the UCT selection mechanism is fully deterministic (see Subsection~\ref{sec:duct}).
+We expand on this result, showing the effect of synchronization occurring when the UCT selection mechanism is fully deterministic (see Subsection~\ref{sec:duct}).
 
 We run MCTS with UCT, Exp3, and Regret Matching selection functions on Biased Rock, Paper, Scissors
 for 100 million ($10^8$) iterations, measuring the exploitability of the strategy recommended by
@@ -632,7 +632,7 @@ OOS is again the fastest and converges to error $0.45$ within the time limit, RM
 In the first variant of the randomly generated games we used games with utility values randomly drawn from a uniform distribution $[0,1]$.
 Such games represent an extreme case, where neither alpha-beta search nor double-oracle algorithm can save much computation time, since each action can lead to arbitrarily good or bad terminal state.
 In these games, \textsc{BI} algorithm is typically the fastest.
-Even though both $\biab$ and $\doab$ evaluate marginally fewer nodes ($\approx90\%$), the overhead of the algorithms (repeated calculation of alpha-beta algorithm, repeatedly solving linear programs, etc.) causes slower runtime performance in this case.
+Even though both $\biab$ and $\doab$ evaluate marginally fewer nodes ($\approx90\%$), the overhead of the algorithms (repeated calculation of alpha-beta algorithm, repeatedly solving linear programs, etc.) causes slower run time performance in this case.
 
 However, completely random games are rarely instances that need to be solved in practice.
 The situation changes, when we use the intuition of good and bad moves and thus add correlation to the utility values.
@@ -710,19 +710,19 @@ Moreover, $\doab$ has significantly lower memory requirements since it is a dept
 
 \subsection{Online Search}
 
-We now compare the performance of the algorithms in head-to-head matches in the same games as we used in the offline equilibrium computation experiments, but we use a much larger instances of these games. \reviewchange{Each algorithm has a strictly limited computation time per move set to 1 second.} After this time, the algorithm outputs an action to be played in the current game state, receives information about the action selected by its opponent, and the game proceeds to the next state. As described in Section~\ref{sec:online}, all algorithms keep results of previous computations and do not start form scratch in the next state. \reviewchange{We have also performed a large set of experiments with 5 seconds of computation time per move, however, the results are very similar to the results with 1 second per move. Therefore, we presents the results with 1 second in details and only comment on the 5 seconds results where additional time leads to an interesting difference.}
+We now compare the performance of the algorithms in head-to-head matches in the same games as in the offline equilibrium computation experiments, but we use a much larger instances of these games. \reviewchange{Each algorithm has a strictly limited computation time per move set to 1 second.} After this time, the algorithm outputs an action to be played in the current game state, receives information about the action selected by its opponent, and the game proceeds to the next state. As described in Section~\ref{sec:online}, all algorithms keep results of previous computations and do not start form scratch in the next state. \reviewchange{We have also performed a large set of experiments with 5 seconds of computation time per move, however, the results are very similar to the results with 1 second per move. Therefore, we presents the results with 1 second in detail and only comment on the 5 seconds results where additional time leads to an interesting difference.}
 
 We compare all of the approximative sampling algorithms and $\doab$ as a representative of backward induction algorithms, because it was clearly the fastest algorithm in all of the considered games.
 Finally, we also included random player (denoted RAND) into the tournament to confirm that the algorithms choose better strategies than the simple random game play.
 %In the following experiments, we aim to identify the algorithms that are most suitable in the online search setting and study the relation of the performance in approximating the equilibrium in the offline setting and actual game playing performance in the matches.
-We report expected rewards and win rates of the algorithms, in which a tie is counted as half win.
+We report expected rewards and win rates of the algorithms, in which a tie is counts as half of a win.
 \reviewchange{The parameters of the algorithms are tuned for each domain separately.
 We first present the comparison of different algorithms and we discuss the influence of the parameters in Subsection~\ref{sec:eval:online:tuning}.}
 
 \reviewchange{In this subsection, we show cross tables of each algorithm (on the row) matched up against each competitor algorithm (on the column).}
-Each entry represents a mean of at least $1000$ matches with the half of the width of the $95\%$ confidence interval in brackets, \eg $52.9(0.3)$ refers to $52.9\% \pm 0.3\%$.
+Each entry represents a mean over at least $1000$ matches with the half of the width of the $95\%$ confidence interval in brackets, \eg $52.9(0.3)$ refers to $52.9\% \pm 0.3\%$.
 \reviewchange{The result shown is the win rate for the row player, so as an example in the standard game of Goofspiel (top of Table~\ref{fig:matches:goof}) $\doab$ wins $67.2 \% \pm 1.4 \%$ of games against the random player.
-All evaluated games, besides the pursuit evasion game, are symmetric from the position of the first and the second player. We made even the random games symmetric by always playing matches on the same game instance in pairs with alternating players' positions. However, for easier comparison of the algorithms, we mirror the same results to both fields corresponding to a pair of players in the cross tables.
+All evaluated games except the pursuit-evasion game are symmetric from the position of the first and the second player. We made even the random games symmetric by always playing matches on the same game instance in pairs with alternating players' positions. However, for easier comparison of the algorithms, we mirror the same results to both fields corresponding to a pair of players in the cross tables.
 }
 
 \subsubsection{Goofspiel}
@@ -770,7 +770,7 @@ RAND&-6.67(0.99)&-14.42(0.96)&-13.30(1.00)&-14.79(0.97)&-14.20(0.98)&$\bullet$\\
 \caption{Results of head-to-head matches in Goofspiel variants with exploration parameter settings indicated in the table headers.}\label{fig:matches:goof}
 \end{table}
 
-\reviewchange{In head-to-head comparison, our focus is primarily on the standard Goofspiel with 13 cards and chance nodes. Additionally, for the sake of consistency with the offline results, we also evaluate the variant with a fixed known sequence of cards. The full game has more than $2.4\times 10^{29}$ leaf nodes and the variant with fixed sequence has still more than $3.8\times 10^{19}$ leaf nodes. The results are presented in Table~\ref{fig:matches:goof}, where the top table shows the win rates of the algorithms in the full game and the other two tables the win rates and expected number of points gained by the algorithms in the game with a fixed point card sequence. The results for the know card sequence are the mean of $10$ fixed random sequences. For each table, the algorithms were set up to optimize the presented measure (\ie win rate or points) and the exploration parameters were tuned to the values presented in the header of the table.
+\reviewchange{In head-to-head comparison, our focus is primarily on the standard Goofspiel with 13 cards and chance nodes. Additionally, for the sake of consistency with the offline results, we also evaluate the variant with a fixed known sequence of cards. The full game has more than $2.4\times 10^{29}$ terminal states and the variant with fixed sequence has still more than $3.8\times 10^{19}$ terminal states. The results are presented in Table~\ref{fig:matches:goof}, where the top table shows the win rates of the algorithms in the full game and the other two tables the win rates and expected number of points gained by the algorithms in the game with a fixed point card sequence. The results for the fixed card sequence are the mean over $10$ fixed random sequences. For each table, the algorithms were set up to optimize the presented measure (\ie win rate or points) and the exploration parameters were tuned to the values presented in the header of the table.
 
 First, we can see that finding a good strategy in Goofspiel is difficult for all the algorithms.
 This is noticeable thanks to the results of RAND player, that performs reasonably well
@@ -778,11 +778,11 @@ This is noticeable thanks to the results of RAND player, that performs reasonabl
 Next, we analyze the results of the $\doab$ algorithms compared to the sampling algorithms.
 The results show that even though $\doab$ uses a domain-specific heuristic evaluation function, it does not win significantly against any of the sampling algorithms that does not use any domain knowledge.
 The difference is always statistically significant with a large margin.
-When optimizing win percentage, $\doab$ loses the least against UCT while in optimizing the expected reward, UCT performs significantly the best.
+When optimizing win percentage, $\doab$ loses the least against UCT while in optimizing the expected reward, UCT performs significantly best.
 The performance of the other sampling algorithms is very similar against $\doab$, with Exp3 winning the least in reward optimization.
 
 We compare the sampling algorithms in the game variants in the order of the presented tables.
-The differences in the performance of the sampling algorithms are relatively small among each other.
+The differences in the performance of the sampling algorithms are relatively small between each other.
 They are more noticeable mainly against the weaker players, which are outperformed by all sampling algorithms.
 In the game with stochastic point card sequence, OOS, UCT and RM make approximately $10 \times 10^3$ iterations in the 1 second time limit in the root of the game. Exp3 is slightly slower with $8 \times 10^3$ iterations.
 The best algorithm in this game variant is RM, which wins against all other sampling algorithms and wins most often against $\doab$ and Exp3.
@@ -797,12 +797,12 @@ RM is still winning against all opponents, but it is not able to win more often 
 UCT loses only against RM in this variant and it significantly outperforms OOS and Exp3.
 This indicates that UCT was able to better focus on the relevant part of the smaller game, which is supported also by larger number of simulations, which can be caused by smaller random simulations after leaving the part of the search tree stored in memory.
 
-When players optimize the expected reward, the differences between the algorithms are larger. 
+When players optimize the expected point difference, the differences between the algorithms are larger. 
 We can see that RM and OOS perform significantly better than UCT and Exp3.
 OOS wins against all opponents and RM loses only against OOS.
 An important reason behind the decrease of the performance of Exp3 is that after normalizing the reward to unit interval, the important differences in values for reasonably good strategies become much smaller, which slows down the learning of the algorithm.
 UCT compensates the range of the rewards by the choice of the exploration parameter, but different nodes would benefit from different exploration parameters, which causes more inefficiencies with more variable rewards.
-An important advantage of OOS and RM is that their behavior is practically independent form the range of payoffs.
+An important advantage of OOS and RM is that their behavior is practically independent of the utility range.
 
 In summary, RM is the only algorithm that did not lose significantly against any other sampling algorithm in any other game variant and often wins significantly.
 Exp3 is overall the weakest algorithm, losing to all other algorithm in all Goofspiel variants.
@@ -860,10 +860,10 @@ The size of the game is large with strictly more than $10^{15}$ leaves (number o
 
 %In this game, the evaluation function used by $\doab$ is much stronger than in Goofspiel and all the sampling algorithms without domain specific knowledge perform poorly against this algorithm (see first two tables in Table~\ref{fig:matches:oz}). The loss is even higher with 5 seconds per move. UCT and OOS perform better against $\doab$ than RM and Exp3.
 
-In the offline experiment (Figure~\ref{fig:off:conv:oz}), none of the sampling algorithms was able to converge anywhere close to the equilibrium in short time. Moreover, the game used in the offline experiments was orders of magnitude smaller (there were only $10$ coins for each player).
+In the offline experiment (Figure~\ref{fig:off:conv:oz}), none of the sampling algorithms were able to converge anywhere close to the equilibrium in short time. Moreover, the game used in the offline experiments was orders of magnitude smaller (there were only $10$ coins for each player).
 In spite of the negative results in the offline experiments, all sampling algorithms are able to find reasonably good strategy.
 UCT is clearly the strongest sampling algorithm in all variants.
-In the win rate setting, the strongest opponent of UCT among the sampling algorithms is RM (UCT wins 70.3\% of games), following by OOS performing only slightly worse (UCT wins 72.3\% of games).
+In the win rate setting, the strongest opponent of UCT among the sampling algorithms is RM (UCT wins 70.3\% of games), followed by OOS performing only slightly worse (UCT wins 72.3\% of games).
 Finally, Exp3 is clearly the weakest of all sampling algorithms.
 A possible reason may be that Exp3 manages to perform around $2.5 \times 10^3$ iterations per second in the root, while the other algorithms perform ten times more. 
 This is caused by the quadratic dependence of its computational complexity on the number of actions, which is relatively high in this game.
@@ -877,7 +877,7 @@ $\doab$ is the second best and still winning over the remaining sampling algorit
 Exp3 benefits from the evaluation function more than OOS and RM, which are relatively weaker with the evaluation function.
 
 The reason UCT performs well in this game is that the game mostly requires pure strategies, rather then precise mixing between multiple strategies (see Subsection~\ref{sec:eval:domains}). UCT is able to quickly disregard other actions, if a single action is optimal.
-\vlisy{evaluation function generally helps significantly to all algorithms, but can make significant changes in ranking of the algorithms} 
+So, the evaluation function generally helps every algorithm, but can make significant changes in ranking of the algorithms. 
 
 \subsubsection{Random Games}
 
@@ -901,13 +901,13 @@ RAND&11.2(1.8)&15.0(2.4)&4.1(1.2)&4.0(1.1)&6.9(1.5)&$\bullet$\\
 \end{table}
 
 
-The next set of matches was played on 10 different random games with each player having 5 actions in each stage and depth 15. Hence, the game has more than $9.3\times 10^{20}$ leaf nodes. In order to compute the win-rates as in other games, we use signum of the utility value defined in Subsection~\ref{sec:eval:domains}. The results are presented in Table~\ref{fig:matches:rand}.
+The next set of matches was played on 10 different random games with each player having 5 actions in each stage and depth 15. Hence, the game has more than $9.3\times 10^{20}$ leaf nodes. In order to compute the win-rates as in other games, we use sign of the utility value defined in Subsection~\ref{sec:eval:domains}. The results are presented in Table~\ref{fig:matches:rand}.
 
 The clearly best performing algorithm in this domain is UCT, which significantly outperforms the other sampling algorithms, and ties with $\doab$ that uses a rather strong evaluation function.
 This is true even though UCT performs around $11 \times 10^3$ iterations per second, which is the least form all sampling algorithms.
 $\doab$ wins over all other sampling algorithms.
 OOS has the weakest performance in spite of good convergence results in the offline settings (see~Figure~\ref{fig:off:conv:rg}).
-\reviewchange{The reason is the quickly growing variance and decreasing number of samples in longer games, which we discuss in more details in Subsection~\ref{sec:oos_vs_rm}. OOS performs $20 \times 10^3$ iterations per second and only around $3 \times 10^3$ of them actually update the regrets in the root. All the other iterations return with zero tail probability ($x_i$) in the root.}
+\reviewchange{The reason is the quickly growing variance and decreasing number of samples in longer games, which we discuss in more details in Subsection~\ref{sec:oos_vs_rm}. OOS performs $20 \times 10^3$ iterations per second and only around $3 \times 10^3$ of them actually update the regrets in the root. All the other iterations return with zero tail probability ($x_i$) in the root, which leads to no change in the regret values.}
 
 %We also performed an experiment with larger branching factor (15) and smaller depth (5), but the results were very similar to this setting.\vlisy{I assume the new OOS would perform much better there!}
 
@@ -946,14 +946,15 @@ RAND&1.2(0.4)&2.1(0.4)&1.2(0.3)&1.8(0.4)&1.5(0.4)&$\bullet$\\
 The large variant of Tron in our evaluation was played on en empty $13\times 13$ board. The branching factor of this game is up to 4 for each player and its depth is up to 83 moves. This variant of Tron has more than $10^{21}$ leaves in the game tree\footnote{The number only estimates the number of possible paths when both players stay on their half of the board.}.
 The results are shown in Table~\ref{fig:matches:tron}.
 
-The evaluation function in Tron quite well approximates the actual situation in the game; hence, $\doab$ strongly outperforms all other algorithms when they do not use the evaluation function (top). Its win-rates are even higher with more time per move.
+The evaluation function in Tron quite approximates the situation in the game fairly well; hence, $\doab$ strongly outperforms all other algorithms when they do not use the evaluation function (top). Its win-rates are even higher with more time per move.
 \reviewchange{UCT is the strongest opponent for $\doab$ -- UCT loses 53.8\% matches and wins over all other sampling algorithms in mutual matches. 
 This is again because of the low need for mixed strategies in this game (see Subsection~\ref{sec:eval:domains}).
 Again, OOS performs the worst despite its clearly fastest convergence on the smaller game variant in the offline setting due to the great depth of the game tree in this setting. 
 It won only 21.8\% matches against $\doab$ and 29.4\% matches against UCT.
 In this game, the variance is likely not the key factor, since it is between 20 and 40.
-However, only 1,000 out of only 12,000 iterations per second update regrets in the root.
-}
+However, only 1,000 out of only 12,000 iterations per second update regrets in the root.}
+
+\reviewchange{The good performance of $\doab$ is consistent with previous analysis in Tron where the best-performing algorithms, including the winner of the 2011 Google AI Challenge, were based on depth-limited minimax searches~\cite{DenTeuling12Tron,Perick12Comparison}.}
 
 As in the case of Oshi Zumo, we also run the matches with the evaluation function to replace the random rollout simulation in the sampling algorithms.
 We present the results in the second table of Table~\ref{fig:matches:tron}.
@@ -964,8 +965,6 @@ Interestingly, while UCT performs quite well against $\doab$ and wins 57.3\% of 
 Even Exp3 which loses against all other algorithms manages to slightly outperform it.
 OOS practically ties with $\doab$, but it wins significantly against all sampling algorithms.
 RM loses to OOS, but wins significantly against all other algorithms.
-
-\reviewchange{The good performance of $\doab$ is consistent with previous analysis in Tron where the best-performing algorithms, including the winner of the 2011 Google AI Challenge, were based on depth-limited minimax searches~\cite{DenTeuling12Tron,Perick12Comparison}.}
 
 \subsubsection{Pursuit-Evasion Game}
 
@@ -997,9 +996,9 @@ The results in Table~\ref{fig:matches:peg} show that the game is strongly biased
 \reviewchange{We first look at the differences in the performance of the algorithms on the side of the pursuer, which are more consistent. We need to compare the different columns, in which the pursuer tries to minimize the values.
 The clear winner is UCT, which generally captured the evaders in approximately 40\% of the matches.
 The second best pursuer is $\doab$ and the weakest is OOS, which captured the non-random opponents in less than 10\% of the cases.
-\vlisy{An interesting observation is that all algorithms required less exploration for the evader, but UCT more. No idea why.}
+%\vlisy{An interesting observation is that all algorithms required less exploration for the evader, but UCT more. No idea why.}
 
-The situation is less clear for the evader. Different algorithms performed best agains different opponents.
+The situation is less clear for the evader. Different algorithms performed best against different opponents.
 UCT was best against OOS and RM, but $\doab$ was the best against UCT and Exp3.
 Exp3 is the weakest evader.}
 
@@ -1067,8 +1066,8 @@ RM&0.05&36.4(3.0)&59.6(3.5)&29.7(3.3)&59.3(3.5)&51.1(3.6)&47.22\\
 
 \reviewchange{
 The exploration parameters can have significant influence on the performance of the algorithm.
-We choose the parameters individually for each domain by running mutual matches with a preselected fixed pool of opponents.
-In includes $\doab$ and each of the sampling algorithms with one setting of the parameter selected based on the results of the offline experiments.
+We choose the parameters individually for each domain by running mutual matches with a pre-selected fixed pool of opponents.
+This pool includes $\doab$ and each of the sampling algorithms with one setting of the parameter selected based on the results of the offline experiments.
 These values are 0.6 for OOS, 2 for UCT, 0.2 for Exp3 and 0.1 for RM.
 For each domain, we created a table such as the two examples in Table~\ref{fig:tuning}.
 We then picked the parameter for the final cross tables presented above as the parameter with the best mean performance against all the fixed opponents.
@@ -1076,21 +1075,21 @@ We then picked the parameter for the final cross tables presented above as the p
 In the presented variant of Goofspiel, the choice of the exploration parameter has a rather large influence on the performance against $\doab$. This is often the case for weaker players.
 The selection of the exploration parameter for OOS has little effect on the mean performance, with a noticeable drop in performance for 0.1.
 In UCT, smaller exploration in generally better, but the sudden drop of performance against Exp3 causes the optimum to be at 0.6.
-In Exp3, the optimal exploration parameter against $\doab$ would be even more than 0.5, while the optimum against OOS would be 0.2. This kind of inconsistencies as common with the Exp3 algorithm. In mean over all opponents, the optimum is 0.3.
+In Exp3, the optimal exploration parameter against $\doab$ would be even more than 0.5, while the optimum against OOS would be 0.2. These kind of inconsistencies are common with the Exp3 algorithm. In the mean over all opponents, the optimum is 0.3.
 With RM, the optimal exploration parameter against individual opponents stays around 0.1 and it is clearly the best value in the mean.
 
 The parameter selection generally makes more difference against weaker players.
 The differences are more noticeable in matches against other algorithms, but since the optimal parameters are often different for different opponents, the mean performance presented in the last column does not vary a lot. OOS is consistently least sensitive to parameter setting, while the change of performance of the other algorithms with changing exploration strongly depends on the specific domains.
 
-The differences between various parameter settings are larger in smaller games and mainly if the evaluation function is used.
-Consider the  results for Oshi Zumo in Table~\ref{fig:tuning}.
+The differences between various parameter settings are larger in smaller games and mainly if an evaluation function is used.
+Consider the results for Oshi Zumo in Table~\ref{fig:tuning}.
 For OOS, the exploration parameter of $0.3$ is consistently the best against all opponents, with the exception of Exp3, which loses slightly more to OOS with exploration 0.4.
 However, the difference is far from significant even after 1000 matches.
 The differences in performance of UCT with different parameters are more often statistically significant.
 Overall, the best parameter is 0.8, even though the performance is significantly better against $\doab$ with smaller exploration and against UCT(2) with higher exploration.
 The best performance for Exp3 was surprisingly achieved with very high exploration. The best of the tested values was 0.8, which means that 80\% of time, the next action to sample is selected randomly regardless of the collected statistics about move qualities.
 The higher values were consistently better for all opponents.
-RM seems to be quite sensitive to the parameter choice in this domain and the results for specific opponents are more inconclusive that for other algorithms.
+RM seems to be quite sensitive to the parameter choice in this domain and the results for specific opponents are more inconclusive than for other algorithms.
 When playing $\doab$, RM wins 7\% more  matches with parameter $0.3$ than with the overall optimal $0.1$.
 On the other hand, when playing OOS, even smaller parameter value would be preferable.
 
@@ -1119,14 +1118,14 @@ The range of optimal parameters is much smaller for OOS and RM, which were alway
 
 \reviewchange{
 Several conclusions can be made from the head-to-head comparison of the algorithms in larger games.
-First, the fast convergence and low exploitability of OOS in the smaller variants of the games is not a very good predictor of its performance in the online setting. OOS was often not the best algorithm in the online setting in Random games and Tron without evaluation function, it was the worst performing algorithm. We discuss the possible reasons in detail in Subsection~\ref{sec:oos_vs_rm}.
+First, the fast convergence and low exploitability of OOS in the smaller variants of the games is not a very good predictor of its performance in the online setting. OOS was often not the best algorithm in the online setting in random games and Tron without evaluation function, it was the worst performing algorithm. We discuss the possible reasons in detail in Subsection~\ref{sec:oos_vs_rm}.
 
 Second, $\doab$ with a good evaluation function often wins over the sampling algorithms without domain specific knowledge.
 This is not the case with a weaker evaluation function, as we can see in Goofspiel.
 Moreover, when the sampling algorithms are allowed to use the evaluation functions, $\doab$ is outperformed by UCT in both domains tested with evaluation function and either RM in Tron.
 Using a good evaluation function instead of random simulations helps all sampling algorithms, but the amount of improvement is different for individual algorithms in different domains.
 
-Third, the novel RM and OOS algorithms has proven efficient in a wider range of domains. Besides Goofspiel used for evaluating earlier versions of the algorithms in \cite{Lanctot13Goofspiel}, RM showed strong performance in random games and both RM and OOS were the best performing algorithms in Tron with evaluation function. These algorithms did not exploit the weaker opponents the most but often won against all other competitors. A notable advantage of these algorithms is a lower sensitivity for parameter tuning, since they perform well in a wide range of domains with similar exploration parameters.
+Third, the novel RM and OOS algorithms has proven efficient in a wider range of domains. Besides Goofspiel used for evaluating earlier versions of the algorithms in \cite{Lanctot13Goofspiel}, RM showed strong performance in random games and both RM and OOS were the best performing algorithms in Tron with the evaluation function. These algorithms did not exploit the weaker opponents the most but often won against all other competitors. A notable advantage of these algorithms is a lower sensitivity for parameter tuning, since they perform well in a wide range of domains with similar exploration parameters.
 
 Fourth, when the algorithms have more time for finding the move to play, the differences between win-rates of the sampling algorithms are getting smaller. Longer thinking time has also the same effect in the parameter tuning and it also significantly improves the performance of the sampling algorithms against backward induction. This is expected, since the difference is too small for the $\doab$ algorithm to reach greater depth, while it is sufficient for the sampling algorithms to execute $5$ times more iterations that improves their strategy.
 
@@ -1149,11 +1148,12 @@ In this subsection, we investigate this phenomenon and present the results of ad
 
 To understand, we need to look at the convergence properties of OOS, which is essentially an application of outcome sampling MCCFR.
 The bound on convergence of outcome sampling MCCFR presented in \cite{Gibson12probing} says that after $T$ iterations, the strategy produced by the algorithm is an $\epsilon$-Nash equilibrium with probability $1-p$ and
-\[ \epsilon \le O\left( \frac{|\cS|}{\sqrt{T}} + \sqrt{\frac{\bVar}{pT} + \frac{\bCov}{p}} \right), \]  
-where  $\bVar$ and $\bCov$ are the maximal variance and covariance of the difference between the exact value of a regret of an action and its estimate computed based on the selected sample ($r^t(s,a) - \tilde{r}^t(s,a)$) over all states, actions, and time steps. 
+\[ \epsilon \le O\left( \frac{\tilde{\Delta}_i |\cS|}{\sqrt{T}} + \sqrt{\frac{\bVar}{pT} + \frac{\bCov}{p}} \right), \]  
+where $\tilde{\Delta}_i$ is determined by the structure of the game, 
+and $\bVar$ and $\bCov$ are the maximal variance and covariance of the difference between the exact value of a regret of an action and its estimate computed based on the selected sample ($r^t(s,a) - \tilde{r}^t(s,a)$) over all states, actions, and time steps. 
 Computing these quantities exactly is prohibitively expensive, and since the scale of exact regrets is bounded by a relatively small range of utilities, we can estimate the variance by of the difference by variance of the sampled regrets, which often have very large range due to the importance sampling correction.
 We measure the estimate
-$\widehat{\bVar} = \text{Var}[\max_{a \in \cA(s)} \tilde{r}^t(s, a)]$ in the root of the games, singe they have the largest range of possible values of $\tilde{r}^t(s, a)$.
+$\widehat{\bVar} = \text{Var}[\max_{a \in \cA(s)} \tilde{r}^t(s, a)]$ in the root of the games, since they have the largest range of possible values of $\tilde{r}^t(s, a)$.
  Regret matching
 also computes a quantity similar to $\tilde{r}^t(s,a)$. 
 The only difference is that they are not counterfactual, \ie they take into account only the value of the current sample and not the expected value of the whole strategies in the game. We show these variances for
@@ -1181,13 +1181,15 @@ Tron(13,13)	& $3$	& $13,000$	& $22.23$ & $10,075$ & $0.75$ \\
 \hline
 \end{tabular}
 \end{footnotesize}
-\caption{Measure of variances of estimater regret quantities in OOS and Regret Matching at the root of each game.\label{tab:oos_vs_rm}}
+\caption{Measure of variances of estimated regret quantities in OOS and Regret Matching at the root of each game.
+$T$ is the number of iterations each algorithm runs for, and Run marks the run number (instance). \label{tab:oos_vs_rm}}
 \end{table}
 
 The results show that the variance of OOS is significantly higher than in case of RM. As such, even though RM may be introducing
-some kind of bias by bootstrapping from its own estimates of the subgames, when there are so few samples this trade-off may be worthwhile
-to avoid the uncertainty introduced by the variance. This problem is not apparent in the smaller games, because the higher probability of sampling individual leaves causes smaller variance and OOS performs enough samples  to make the regret estimates sufficiently exact. For example, in Goofspiel(5) used for offline convergence experiments, OOS performs approximately $2 \times 10^5$ iterations per second and the variance is only around 350. 
-\bbosansky{TODO Marc, can you please also explain $T$ and ``Run'' from Table~\ref{tab:oos_vs_rm}?}
+some kind of bias by bootstrapping from its own subgame value estimates, when there are so few samples this trade-off may be worthwhile
+to avoid the uncertainty introduced by the variance. This problem is not apparent in the smaller games, because the higher probability of sampling individual terminal histories causes smaller variance and OOS performs enough samples  to make the regret estimates sufficiently exact. For example, in Goofspiel(5) used for offline convergence experiments, OOS performs approximately $2 \times 10^5$ iterations per second and the variance is only around 350. 
+
+%\bbosansky{TODO Marc, can you please also explain $T$ and ``Run'' from Table~\ref{tab:oos_vs_rm}?}
 
 %\mlanctot{Will present Viliam's variance argument and results from Aug 10th email here. Will write this section Wednesday+Thursday evening. }
 
