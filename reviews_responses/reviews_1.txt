@@ -1,9 +1,4 @@
 
-> ** Please do not edit this document. I have included reviews_1.txt that we can modify.
->
-
-[...]
-
 > Daer Authors!
 >
 > The two reviewers started being quite interested in the submission, but found too many technical issues that
@@ -96,7 +91,7 @@ We believe that a full real-world case study requires a significant investigatio
 >
 > NO. At least one of the authors's English. It is possible to tell apart paragraphs by different authors by just observing whether the language is correct. The paragraphs not written by that particular author are fine. In the problematic paragraphs, the problem is mostly grammar (not vocabulary): definite and indefinite articles are incorrectly used and omitted, sometimes singular and plural are incorrectly used, plus some other minor mistakes. Fortunately, this only interferes with the reading flow but does not prevent understanding. Still, someone should re-read and correct the affected paragraphs.
 
-Several full passes of the paper has been done by the native speaker and all of these problems have been fixed.
+We have addressed this by doing a full pass of the final version by a native speaker.
 
 > *****************************
 > * Part B: DETAILED COMMENTS *

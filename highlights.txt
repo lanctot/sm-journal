@@ -1,7 +1,7 @@
 Highlights:
 We analyze the algorithms for computing strategies for simultaneous move games.
-We provide an extensive survey on the existing algorithms.
-We describe in details our recent novel exact and approximative algorithms.
+We describe both novel and existing algorithms that compute strategies for this class of games.
+The algorithms include both exact algorithms as well as Monte Carlo sampling algorithms.
 Novel exact algorithm dominates in the offline equilibrium strategy computation.
-Novel use of regret-matching in MCTS dominates in the online game play.
+Results among sampling algorithms provide unique insights into their performance and identify favorable settings and domains for different sampling algorithms.
 
