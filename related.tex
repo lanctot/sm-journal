@@ -27,10 +27,12 @@ In two-player zero-sum Markov games, an optimal policy corresponds to a Nash equ
 the highest worst-case expected payoff. Initial results provided conditions under which approximate dynamic 
 programming could be used to guarantee convergence to the optimal value function and 
 policies~\cite{Littman96ageneralized}. Later, in \cite{Lagoudakis02}, Lagoudakis and Parr provided stronger bounds 
-and convergence guarantees for least squares temporal different learning using linear function approximation. 
+and convergence guarantees for least squares temporal difference learning using linear function approximation. 
+Bounds for approximation error are presented for sampling techniques in discounted Markov games in \cite{Savagaonkar02}, 
+and new bounds have also been recently presented~\cite{Perolat15Approximate}.
 
-At around this same time period, gradient ascent methods were introduced for playing 
-repeated games~\cite{Singh20Nash,Bowling01WoLF}. These algorithms update strategies in a direction of the strategy space 
+In early 2000s, gradient ascent methods were introduced for playing 
+repeated games~\cite{Singh02Nash,Bowling01WoLF}. These algorithms update strategies in a direction of the strategy space 
 that increases expected payoff with respect to the opponent's strategy. These were then generalized and combined, and 
 shown to minimize regret over time~\cite{Zinkevich03Online,Bowling05Convergence}, leading to strong convergence 
 guarantees in multiagent learning. More no-regret algorithms followed and were applied to an imperfect information 
