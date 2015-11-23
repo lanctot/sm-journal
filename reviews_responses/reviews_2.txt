@@ -1,0 +1,433 @@
+** Second round of reviews, received November 2015.
+** Please do not edit this document. I have included reviews_2.txt that we can modify.
+
+
+Dear Authors,
+
+the reviewers are now positive about the paper, but based on a long list of comments require 
+additional work in form of minor revision. Essentially, you will need another round to get through. The resulting reviewing cycle, however, is supposed to be much shorter. 
+
+Be careful! In the background there have been some questions being raised, whether the material presented has 
+the potential for giving theoretical insights, i.e., in form of results on correctness and convergence.
+This would be very much wellcome, but as this is a major revision these aspects remain optional to you. 
+I would nonetheless urge you to think about this aspect to make you contribution even stronger. If not,
+at least you should address, why this is not done.
+
+All the best, looking forward to your response
+
+Reviewer #1: **********
+* Part A *
+**********
+
+CONTENT
+=======
+
+Is the paper technically sound?
+-------------------------------
+
+YES. With few minor exceptions, mathematics and algorithmic descriptions are
+correct.
+
+Is the work described original?
+-------------------------------
+
+YES. The article summarizes previous conference contributions by the same
+authors and adds some new experimental results and theoretical discussions on
+top. The section on (algorithmic) preliminaries is relatively long, which gives
+the first half of the article a certain survey flavor.
+
+Does it show sufficient applicability to AI?
+--------------------------------------------
+
+YES. The material is clearly relevant to AI.
+
+Does it place new results in appropriate context with earlier work?
+-------------------------------------------------------------------
+
+YES. The algorithms presented in the article are extensions or improvements of
+previously existing algorithms. Those foundations are discussed and referenced
+in detail.
+
+Is the paper sufficiently novel?
+--------------------------------
+
+YES. Most of the results it describes were previously published by the same
+authors at conferences and workshops, but not by other authors and not in any
+archival journal.
+
+Is the paper complete?
+----------------------
+
+YES. The article is very much focused on particular algorithms and on an
+experimental evaluation comparing them. Since an earlier submission, the authors
+added some theoretical discussions, but in my opinion this does not change the
+focus much. Like in an earlier version of the article, I still miss some more
+formal depth. In summary, the experimental data is complete, and so is the
+discussion of connections with the existing literature. Besides more theoretical
+results, also a better discussion of the motivations and implications of the
+presented work would be nice.
+
+However, I agree with the editor that insights into the theory, e.g., on
+correctness issues or running time should be increased.
+
+Does anything need to be added or deleted?
+------------------------------------------
+
+NO. Well, see above: More theory and a better discussion of the motivations and
+implications of the presented work would be nice.
+
+Is the result important enough to warrant publication?
+------------------------------------------------------
+
+YES. At least barely. In both settings that are discussed (online and offline),
+we see an advancement in the state of the art. So, algorithmically, the work is
+significant. Theoretically, in my opinion, it is not.
+
+Accessibility
+=============
+
+Is the paper accessible to the broad readers of AIJ?
+----------------------------------------------------
+
+YES. With limitations. The high-level structure of the article makes sense.
+Also, the introduction of the preliminaries including the different settings
+(online and offline) that the authors discuss is excellent. The descriptions of
+the algorithms themselves are also mostly very good and readable. The chapter on
+experiments starts out with a discussion of all the benchmark domains, and for
+each individual experiment, the methodology is clearly described. On the
+negative side, highlights (theorems) etc. could be pointed out more clearly.
+Currently, the paper is a long wall of text that might benefit from some
+low-level structuring into definitions, examples, (lemmas, theorems) etc. as one
+would expect from a text in mathematics or CS.
+
+
+FORM
+====
+
+Does the abstract adequately reflect the contents?
+--------------------------------------------------
+
+YES.
+
+Does it contain adequate references to previous work?
+-----------------------------------------------------
+
+YES.
+
+Does it explain clearly what was done that is new?
+--------------------------------------------------
+
+YES.
+
+Does it clearly indicate why this work is important?
+----------------------------------------------------
+
+NO. The authors mention application areas of their work, but it is not clear if
+the progress made by the new algorithms is really relevant in these areas.
+
+I believe that the presented material is only of limited interest to the general
+AI community. It is rather technical, low-level and detailed experimental stuff
+that provides little high-level insight. Maybe related to that, most of the
+results are rather unsurprising. To the game-playing/-solving community it is of
+some interest, though.
+
+Generally, this is solid work, but I'm not sure if it really is AIJ material.
+
+Is the English satisfactory?
+----------------------------
+
+NO. Since an earlier version of the article, the English has *significantly*
+improved, but it is still marginally below what I would expect as AIJ standard.
+And still, the problems are the same: incorrect use (and, more often, omission)
+of definite and indefinite articles, inconsistencies of singular and plural.
+I'll try to give some concrete examples below, but they are only from the first
+20 pages or so, and I probably also missed some mistakes there.
+
+Is the presentation otherwise satisfactory?
+-------------------------------------------
+
+YES.
+
+Are there an appropriate number of figures?
+-------------------------------------------
+
+YES.
+
+Do the figures help clarify the concepts in the paper?
+------------------------------------------------------
+
+YES.
+
+
+**********
+* Part B *
+**********
+
+DETAILED COMMENTS
+=========================
+
+Summary of the paper (as in first review):
+
+"The authors present several algorithms for the computation of strategies for
+two-player zero-sum simultaneous move extensive games, in particular backward
+induction (BI), BI\alpha\beta, Double Oracle (DO), DO\alpha\beta, and different
+variants of MCTS: decoupled UCT, Exp3, Regret Matching, CFR, and Online Outcome
+Sampling (OOS). After introduction, preliminaries, and discussion of related
+work, each of the algorithms is described in detail (including pseudocode).
+
+After a brief discussion of offline vs. online search, the authors move to the
+experiments. They use six very different benchmark domains: Biased
+Rock-Paper-Scissors, Goofspiel, Oshi-Zumo, Pursuit-Evasion Games, Randomly
+generated games, and Tron. For each of the domains, the domain itself and the
+instance generation procedure are described, the importance of mixed (as opposed
+to pure) strategies in different stages of the game is explained, and a
+hand-tuned state evaluation function is provided as a heuristic function for
+some of the algorithms.
+
+The first main part of the experiments is concerned with offline equilibrium
+computation. For each domain and each of the optimal algorithms (BI,
+BI\alpha\beta, DO, DO\alpha\beta), solving times for increasing-size instances
+are given, and for each domain and each of the sampling-based algorithms
+(MCTS-variants, OOS), figures showing convergence are provided. Typically,
+DO\alpha\beta and OOS perform best.
+
+The second main part of the experiments is concerned with online search. Here,
+the authors provide head-to-head comparisons of their algorithms (plus UCT and a
+random player) on all domains for different time limits per move and with and
+without allowing the sampling-based algorithms to use the evaluation functions
+described before. Results are mixed, but among the optimal algorithms, typically
+DO\alpha\beta performs best, and with the evaluation function enabled, mostly
+Regret Matching is the best-performing sampling-based approach. The mismatch of
+winners between the two main experiments (OOS vs. Random Matching) is briefly
+discussed. Finally, the authors give a short, moderately convincing account of
+their choice of parameter values of OOS, UCT, Exp3 and RM, then summarize and
+conclude."
+
+About how well the suggestions from the first round of reviews were addressed:
+
+* OOS behavior in offline vs. online setting: okay.
+
+* Pointing out contribution: okay.
+
+* Indication of significance: Still not sufficiently addressed.
+
+* Language: Much better, but still problematic.
+
+* Minor mathematical and technical mistakes: Much better, but still not quite perfect.
+
+* Lack of theory: A bit better now, bit still very little theory.
+
+* Minor comments: addressed well
+
+
+Minor comments
+==============
+
+* p. 3, col 50/51: "... algorithms that compute stategies for two-player
+ simultaneous move class of games." -> Grammar!
+
+* Next sentence: "... in some way ...": too vague/imprecise. Such formulations
+  do not belong in a scientific paper.
+
+* p. 4, first item: "... analysis of a well-known approximative algorithm UCT ...": huh?
+
+* p. 4, last item: "An equivalent ..." -> "The definition of an equivalent ..."
+
+* Those items: Very technical. Do not quite convey the significance of the contribution.
+
+* Section 2, first sentence: "A finite game ..." -> "A finite 2-player game ..."
+
+* Next line: "(N, S = D cup C cup Z, A, T, ...)" -> "(N, S, A, T, ...),
+  where S = D cup C cup Z ...". Otherwise, it's mathematically very sloppy.
+
+* Next page: "We denote A_i(s) ..." -> "We denote by A_i(s) ..."
+
+* Next line: "... and denote the number of actions |A_i(s)| ...". Again, ungrammatical.
+
+* Transitions function: Total or partial? Partial, probably!
+
+* "The utility functions ... gives ..." -> "The utility functions ... give ..."
+
+* Next page, line 24: Usual symbol for n-ary Cartesian product would be "\prod", not "\times".
+
+* Last sentence before Def. 2.1: unclear.
+
+* Def 2.1: Wrong! An action a_i is strictly dominated if *there* *exists* another
+  action a'_i that strictly dominates it, i.e., such that for all a_-i: u(a_i, a_-i) < u(a'_i, a_-i).
+
+* Generally, the mathematical part of the preliminaries hasn't really improved
+  since the last version of the paper.
+
+* First sentence of Section 3: "that which" -> "that" or "which".
+
+* p. 10, line 14/15: "... every stage game ..." -> "... every stage of the game ..."
+
+* p. 10, line 28: "... description of which ..." -> "... a description of which ..."
+
+* p. 10, line 35: "... running classic alpha-beta algorithm." ->
+  "... running the classic alpha-beta algorithm."
+
+* Next page: "The success of MCTS algorithm ..." ->
+  "The success of the MCTS algorithm ..." or "The success of MCTS ...".
+
+* Section names: Structure might become clearer if Section 4 was named
+  "Offline Search" instead of "Strategy Computation", contrasting Section 5, "Online Search".
+
+* Sec. 4.2, second line: "value" -> "values"
+
+* Below: "... applying wide range ..." -> "... applying a wide range ..."
+
+* Next page, line 35: "greater or equal than" -> "greater than or equal to"
+
+* Same sentence, now regarding content: Isn't that trivial?
+
+* Below: *The* upper/lower bound: Should be *a* lower bound / *an* upper bound,
+  since there is no unique lower and upper bound.
+
+* Next-to-last paragraph of Sec. 4.2: unclear
+
+* Last sentence of Sec. 4.2 (and a couple of times later): You often say that
+  something holds "in practice". I think this is very vague and not quite
+  convincing. What does "in practice" even mean? In certain standard benchmarks?
+  In your favorite benchmarks? In real-world applications? In particular case
+  studies?
+
+* Sec. 4.3.2.: New sentence (blue): "verifies" -> "tests"; "cannot" -> "can"
+
+* Below: "... is same as ..." -> ".. is the same as ..."
+
+* Two pages further: "... against current strategy ..." -> "... against the current strategy ..."
+
+* Starting about here (Alg. 4 ff) it gets a bit hard to comprehend, and slightly
+  confused. Maybe instead of these long textual descriptions, some derivations
+  of the algorithms, or at least correctness proofs wouls be nice. Also, these
+  length prose descriptions of the algorithms convey fewer insights than one
+  could convey with a more structured presentation.
+
+* Generally, Section 4 contains a lengthy list of techniques, but without a
+  decent guiding thread and little interconnection. This could be improved.
+
+* Sec 5.1: "... contains depth d-1 solutions ..." -> "... contains d-1 solutions ..."
+
+* "... begin with already ..." -> "... begin already ..."
+
+* "... based on the backward induction ..." -> "... based on backward induction ..."
+
+* "... after given time limit ..." -> "... after a given time limit ..."
+
+* Experiments, general remark: You still mostly write *what* you find, but not
+  *why* this is the case and *what* *implications* your findings have. The
+  interpretation of the experimental results could be more to the point.
+  Positive note: The experiments are very meticulous and detailed, which is nice
+  for the expert reader.
+
+* Sec. 6.5.6, parameter tuning. I don't quite understand what to take home from this section.
+
+* Authors' vitae:
+  - BB: "Aritificial Intelligence" -> "Artificial Intelligence"
+  - BB: "... at Faculty of ... at Czech TU ..." -> "... at *the* Faculty of ... at *the* Czech TU ..."
+  - VL: "... holds master's degree ... and master's degree ..." -> "... *a* master's degree ..." (2x)
+  - ML: "... was post-doctoral research fellow ..." ->  "... was *a* post-doctoral research fellow ..."
+
+
+
+
+Reviewer #3: Part A
+> ------
+>
+> Please answer the following questions "yes/no" and provide appropriate justification as appropriate.
+>  
+>
+> CONTENT
+>
+> Is the paper technically sound?
+>
+> yes
+>  
+> Does it show sufficient applicability to AI?
+>
+> yes
+>  
+> Does it place new results in appropriate context with earlier work?
+>
+> yes
+>
+> Is the paper sufficiently novel? (A paper is novel if the results it describes 
+>
+> were not previously published by other authors, and were not previously published 
+>
+> by the same authors in any archival journal.)
+>
+> yes 
+>
+> Is the paper complete? (Generally, a paper is complete if it includes all relevant proofs 
+>
+> and/or experimental data, a thorough  discussion of connections with the existing literature, 
+>
+> and a convincing discussion of the motivations and implications of the presented work.)
+>
+> yes
+>
+> Does anything need to be added or deleted?
+>
+> no
+>
+> Is the result important enough to warrant publication?
+>
+> yes
+>
+> FORM
+>
+> Does the abstract adequately reflect the contents?
+>
+> yes
+>
+> Are the summary and conclusions adequate?
+>
+> yes 
+>
+> Does it contain adequate references to previous work?
+>
+> yes
+>
+> Does it explain clearly what was done that is new?
+>
+> yes
+>
+> Does it clearly indicate why this work is important?
+>
+> yes
+>
+> Is the English satisfactory?
+>
+> yes 
+>
+> Is the presentation otherwise satisfactory?
+>
+> yes
+>
+> Are there an appropriate number of figures?
+>
+> yes
+>
+> Do the figures help clarify the concepts in the paper?
+>
+> yes, there are figures that clarify concepts in games and different algorithms, and show the empirical results.
+>
+> Part B: DETAILED COMMENTS
+>
+> -------------------------
+>
+> On first glance, the paper seems to be a survey article on algorithms for offline solving and online play of two-player simultaneous move games. However, the level of detail of this survey and the detailed analysis of the algorithms make this paper a very worthwhile read. Apart from very detailed descriptions of both backward induction and simulation-based search algorithms for this interesting subclass of two-player games, the contributions of the paper include detailed analysis of convergence of well known simulation based algorithms, such as UCT, both theoretically and empirically, an analysis of the double oracle algorithm for matrix games embedded in backward induction, and detailed empirical analysis of both backward induction and simulation based algorithms for the online and offline setting. The latter analysis shows interesting differences between convergence of the algorithms in the offline setting and performance under time constraints in the online setting in
+> different domains.
+>
+> The paper is very well written and the results are sound. Both theoretical and empirical results are well explained. The novelty of the paper is not so much in the design of a new algorithm, but in the sound and thorough analysis of the available algorithms both theoretically and empirically in both the online and offline setting. The paper seems very relevant for the AIJ.
+> Apart from minor changes (see below), I recommend acceptance of the paper.
+>
+> remarks:
+> - The abstract and introduction don't make it sufficiently clear that the simultaneous moves are the only source of imperfect information in the games that are considered. In my opinion, it would make sense to mention this distinction towards general imperfect information games earlier.
+> - Introduction: "many of video and board games" -> remove "of"
+> - "in the previous work" -> "in previous work"
+> - Section 2: In the definition of matrix games, you say "at every state there is a joint action set A_1(s) x A_2(s)" What about the chance states?
+> - In 4.4.x I always asked myself whether the algorithms would converge to an NE or not. Which was finally answered in 4.6. Maybe there is way to answer the question earlier without repeating yourself too often.
+> - In 6.6: "variance by of the difference"
