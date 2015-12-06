@@ -684,16 +684,45 @@ There are no guarantees on the quality of the strategy computed by the exact alg
 and the only NE might correspond to the single last path enumerated.
 
 The concept of completeness is less clear for the sampling algorithms due to randomization, so we instead discuss a form of probabilistic completeness. 
-When using RM or Exp3 and using the means of all samples that used a particular action to update the selection function, then an eventual convergence can be guaranteed by
-induction~\cite{lisy2013-nips, Kovarik2015Analysis};
-however, updating the selector by the sampled value (as done on line~\ref{alg:smmcts:return} of Algorithm~\ref{alg:smmcts}) works better in practice.
-Since there is no known finite-time bound, there is no known guarantee for the quality of the solution if Algorithm~\ref{alg:smmcts} is terminated early.
-Furthermore, these algorithms use a fixed exploration parameter $\gamma$ that imposes a lower bound on how close Algorithm~\ref{alg:smmcts} can get to the Nash equilibrium. % in the worst case.
-There is an example game presented in \cite{Kovarik2015Analysis}, in which it is impossible for SM-MCTS with any regret minimizing selection function with fixed exploration to converge to an $\epsilon$-Nash equilibrium for any $\epsilon < \gamma D$, where $D$ is the depth of the game.
-Among the algorithms presented above, the only one with a finite-time probabilistic convergence guarantee is OOS, which is inherited from its base
-algorithm MCCFR. By~\cite[Theorem 5]{Lanctot09Sampling}, when OOS is run from the root, with probability $1-p$ an $\epsilon$-NE is reached after
-$O(\frac{(|\cA||\cS|^2}{p \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest
-probability of sampling any single $z \in \cZ$. 
+We first focus on the variants of the SM-MCTS algorithm.
+Unfortunately, none of the variants of this algorithm introduced above has been proven to eventually converge to a Nash equilibrium. If the algorithm is instantiated by UCT, Shafiei at al. \cite{Shafiei09} have shown that the algorithm converges to a stable strategy, which is not close to a Nash equilibrium. We replicate the experiment below and note that this is the case only for the deterministic version of UCT. A randomized version of UCT with a well selected exploration parameter empirically converges close to the equilibrium strategy, but then in some games oscillates and does not converge further.
+
+The only know result about SM-MCTS directly applicable for the algorithms in this paper is negative and it has been proven in \cite{Kovarik2015Analysis}.
+
+\begin{theorem}
+There are games, in which SM-MCTS instantiated by any regret minimizing selection function with a constant exploration $\gamma$ cannon converge to a strategy that would be an $\epsilon$-Nash equilibrium for an $\epsilon < \gamma D$, where $D$ is the depth of the game tree.
+\end{theorem}
+
+The proof is by defining a specific class of games, in which the exploration in lower levels of the game causes bias in values observed in the higher levels of the tree that leads to a wrong decision in the root.
+
+In order to obtain positive formal results about the convergence of SM-MCTS algorithm, the authors in \cite{Kovarik2015Analysis} either add an additional averaging step to the algorithm and consistently make it  slower in practice, or assume additional non-trivial technical properties about the selection function, which are not know to hold for any of the selection functions above. %Since there is no known finite-time bound, there is no known guarantee for the quality of the solution if SM-MCTS is terminated early.
+
+%A positive result is know about a slight modification of SM-MCTS, which is consistently performing worse in practice. SM-MCTS-A is an algorithm identical to SM-MCTS with a single modification. 
+%For each state $s$ in the MCTS tree, the algorithm stores the mean of values of all samples that visited the node ($m_s$).
+%On line~\ref{alg:smmcts:return} of Algorithm~\ref{alg:smmcts:up}, the statistics are not updated by the current sample value $v_{s'}$, but the mean of all sample values $m_{s'}$.
+%SM-MCTS-A has been proven to converge to approximate NE with wide range of selection function, including Exp3. However, the empirical evaluation presented in \cite{Kovarik2015Analysis} shows that in all evaluated games, SM-MCTS-A converges substantially slower than SM-MCTS.
+
+Among the sampling algorithms presented above, the only one with a finite-time probabilistic convergence guarantee is SM-OOS. Since SM-OOS is designed to update each node of the game the same way as if it was the root of the game, we present the following theorem from the perspective of the root of the whole game. It holds also for starting the algorithm in non-root nodes, but the values of $|S|$ and $\delta$ can be adapted to the subgame.
+
+\begin{theorem}
+When SM-OOS is run from the root of the game, with probability $(1-p)$ an $\epsilon$-NE is reached after
+$O(\frac{(|\cA||\cS|^2}{p \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest probability of sampling any single leaf in the subtree of the root node. 
+\end{theorem}
+
+\begin{proof}
+The proof is composed of two observations. 
+First, the whole game tree is eventually built by the algorithm.
+ A direct consequence of Lemma 43 in \cite{Kovarik2015Analysis} is that the tree of depth $D$ is built with probability $(1-p_1)$ in less then $$16 D \left(\frac{|\cA|}{\gamma}\right)^{2D} \max(D,4 \log p_1^{-1} + 4)$$ iterations by an algorithm with a fixed exploration $\gamma$.
+This is the number of iterations needed for each leaf in the game to be visited at least $D$ times.
+
+Second, during these and the following iterations, the algorithm performs exactly the same updates in the nodes contained in memory, as the Outcome Sampling (OS) variant of the Monte Carlo Counterfactual Regret Minimization  \cite{Lanctot09Sampling}. 
+If some nodes below a state were not added to the tree yet, a uniform strategy is assumed in these states for the regret updates.
+Since CFR minimizes the counterfactual regret in an individual information set regardless of the strategies in other information sets, the samples acquired during the tree building cannot have a negative impact on the rate of counterfactual regret minimization in individual states.
+Therefore, we can use Theorem 4 form \cite{Lanctot09Sampling} that bounds the number of iterations needed for OS as an offline solver with the complete game in memory, starting after the tree has been built with high probability.
+It states that with probability $(1-p_2)$ an $\epsilon$-NE is reached after $O(\frac{(|\cA||\cS|^2}{p_2 \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest probability of sampling any leaf. 
+
+We can see that the OOS bound dominates the time required to build the tree, because $\frac{1}{\delta^2}=(\frac{|\cA|}{\gamma})^{2D}$ for a leaf visited only because of exploration, $D^2 < |\cA|^{2D} \in O(|\cS|)$ for any $\cA$, and we can set $p_1=p_2=p/2$. Then the probability that both the tree will be built and the convergence will be achieved can be bounded by $(1-p_1)(1-p_2) \geq (1-p)$. \qed
+\end{proof}
 
 %We will see in Subsection~\ref{sec:eval:offline} that this bound is often loose in practice. \vlisy{I believe this is true, but it is a little too bold statement with all the modification we did to MCCFR. We should give it more thought before the final version.}
 % Agreed. Removed.
