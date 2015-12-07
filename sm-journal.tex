@@ -248,7 +248,7 @@ For the sampling algorithms, the results provide unique insights into their perf
 
 \begin{keyword}
 %% keywords here, in the form: keyword \sep keyword
-simultaneous move games \sep Markov games \sep backward induction \sep Monte Carlo Tree Search \sep alpha-beta pruning \sep double-oracle algorithm \sep regret matching \sep game playing \sep Nash equilibrium
+simultaneous move games \sep Markov games \sep backward induction \sep Monte Carlo Tree Search \sep alpha-beta pruning \sep double-oracle algorithm \sep regret matching \sep counterfactual regret minimization \sep game playing \sep Nash equilibrium
 
 %% MSC codes here, in the form: \MSC code \sep code
 %% or \MSC[2008] code \sep code (2000 is the default)
@@ -293,17 +293,17 @@ preferences.
 
 Much research has been devoted to developing algorithms that reason about or learn in sequential (or multi-step)
 interactions. As an example, adversarial search has been a central topic of artificial intelligence
-since the inception of the field itself, leading to very strong rational behavior in
+since the inception of the field itself, leading to very strong rational behaviors in
 Chess~\cite{Campbell02deepblue} and Checkers~\cite{Schaeffer96chinook}. Advances in machine learning for multi-step interactions
 (\eg reinforcement learning) have led to self-play learning of evaluation functions achieving master level play
 in Backgammon~\cite{Tesauro95TDGammon} and super-human level in Atari~\cite{mnih-dqn-2015}.
 
 The most common model for these multistage environments is one with strictly {\it sequential}
 interactions. That is, each player chooses an action when it is their turn to act, the environment then
-generates a new state, with the next player's turn to act, and so on. This model is sufficient in many
+generates a new state with the next player's turn to act, and so on. This model is sufficient in many
 settings~\cite{AIbook}, such as in the examples used above.
 \reviewchange{On the other hand, it is not a good representation of the environment when agents are allowed to act simultaneously.
-These situations occur in many real-world scenarios like auctions~(\eg~\cite{Keuter1997}), autonomous driving, and many of video
+These situations occur in many real-world scenarios like auctions~(\eg~\cite{Keuter1997}) or autonomous driving, and many of video
 and board games in the expanding gaming industry are of this nature~(\eg~\cite{Beard12Using,Teytaud11Upper} and games we use for our experiments).
 In all of these scenarios, the simultaneity of the decision-making is crucial and we have to include it directly into the model when computing strategies to play.}
 One of the fundamental differences of simultaneous move games and strictly sequential
@@ -318,31 +318,31 @@ This means that agents may need to randomize over several actions in some situat
 abundant and strategies are computed and stored, and the online case, where computation time is limited and
 agents must search for a strategy. We are concerned both with the quality of strategies based on
 their worst-case performance in theory and their observed performance in practice. We compare and
-contrast the algorithms and choices in the offline and online cases, and thoroughly evaluate each
-algorithm on a suite of games. Our collection covers Biased Rock, Paper Scissors, Goofspiel, Oshi-Zumo,
+contrast the algorithms and parameter choices in the offline and online cases, and thoroughly evaluate each
+algorithm on a suite of games. Our collection covers Biased Rock-Paper-Scissors, Goofspiel, Oshi-Zumo,
 Pursuit Evasion Games, and Tron, all of which have been used for benchmark purposes
 in the previous work. We also perform experiments on randomly generated games. These games differ
-in number of possible actions, number of moves before the game ends, variance of the utility values,
+in the number of possible actions, the number of moves before the game ends, the variance of the utility values,
 and whether and when the agents need to use mixed strategies in order to play optimally.
 
-Our experimental comparison shows different performance of the algorithms in both cases.
-\reviewchange{Exact algorithms based on backward induction are significantly better in the offline setting,
+Our experimental comparison shows a different performance of the algorithms in both cases.
+\reviewchange{The exact algorithms based on backward induction are significantly better in the offline setting,
 where they are able to find the optimal strategy very quickly compared to the sampling algorithms.}
-In some cases, our novel algorithm ($\doab$) solves the game in less than 2\% of time required by the standard backward induction algorithm.
+In some cases, our novel algorithm ($\doab$) solves the game in less than 2\% of the time required by the standard backward induction algorithm.
 However, the exact algorithms are less competitive in the online setting.
-In contrast, approximative sampling algorithms can perform very well in the online setting and
+In contrast, the approximative sampling algorithms can perform very well in the online setting and
 find good strategies to play within a few seconds, however, they are not well suited for offline solving of games.
 % mlanctot: OOS will, right? Are you referring to Biased RPS? This is not really new..
 %As we will show, even for a small game they may not converge to an exact solution in a reasonable time.
 
 The paper is structured as follows. \reviewchange{First, we make explicit the contributions of the paper in Subsection~\ref{sec:contrib}.}
-In Section~\ref{sec:smg}, we present a formal introduction of simultaneous move games that we will use throughout the paper.
+In Section~\ref{sec:smg}, we present a formal introduction of the simultaneous move games that we will use throughout the paper.
 Section~\ref{sec:relwork} follows with a list and discussion of the existing algorithms in the related work. In
 Section~\ref{sec:offline}, we describe in detail selected exact and approximative algorithms.
 We first describe the algorithms in the offline setting, followed by the necessary modifications used in the online
 case described in Section~\ref{sec:online}.
 %\reviewchange{In Section~\ref{sec:theory}, we discuss the theoretical guarantees and limitations of the algorithms.}
-In Section~\ref{sec:eval}, we turn to the experimental evaluation and present our results of comparing of the algorithms.
+In Section~\ref{sec:eval}, we turn to the experimental evaluation and present our results of comparing the algorithms.
 Finally, we conclude in Section~\ref{sec:conc}.
 
 \reviewchange{
@@ -352,18 +352,18 @@ Finally, we conclude in Section~\ref{sec:conc}.
 % mlanctot: added this one
 % bbosansky: I have reworded mentioning UCT, since we have not discussed MCTS, nor UCB/UCT here
 % mlanctot: I added it back in (Mark mentioned it)-- it's very popular, I don't think it will be a problem
-This paper presents detailed descriptions of recent exact~\cite{Bosansky13Using} and approximative
-algorithms~\cite{Lanctot13Goofspiel,lisy2013-nips} that compute strategies for two-player simultaneous move class of games.
+This paper presents detailed descriptions of the recent exact~\cite{Bosansky13Using} and approximative
+algorithms~\cite{Lanctot13Goofspiel,lisy2013-nips} that compute strategies for the class of two-player simultaneous move games.
 While the paper does act in some way as a survey of existing work in this area and as a means to present this previous work under a single unified framework, we also make several new contributions that have not been previously published, including:
 
 \begin{itemize}
 % Just don't have time for these
 %\item A new algorithm, $\epsilon$-minimax, a variant of Littman's Minimax-Q~\cite{Littman94markovgames} adapted for online search. (**Marc is considering implementing it.. is it too much?
 %\item A new variant of Exp3 based on recent work (Exp3++ \cite{2014}). (**Marc is considering implementing it.. is it too much?)
-\item A detailed analysis of the original convergence analysis of a well-known approximative search algorithm UCT from \cite{Shafiei09}, showing also its sensitivity and a significant detrimental effect caused by deterministic exploration.
-\item A first analysis of backward induction and double-oracle algorithms with serialized bounds in the online search setting using heuristic evaluation functions.
-\item An analysis and evaluation of these algorithms in two different computational contexts: offline computation and online search, in five different games as well as random games.
-\item An equivalent and simplified version of Online Outcome Sampling~\cite{15aamas-iioos} and its analysis for the first time in two-player simultaneous move games.
+\item A detailed analysis of the original negative convergence result for UCT \cite{Shafiei09}, a well-known approximative search algorithm, showing also its sensitivity and a significant detrimental effect caused by deterministic exploration.
+\item A first adaptation of backward induction and double-oracle algorithms with serialized bounds to the online search setting in simultaneous move games using heuristic evaluation functions.
+\item A simplified version of Online Outcome Sampling~\cite{15aamas-iioos} and its analysis for the first time in two-player simultaneous move games.
+\item A wide experimental analysis and comparison of these and other algorithms in two different computational contexts: offline computation and online search, in five different games as well as random games.
 \end{itemize}
 
 }
