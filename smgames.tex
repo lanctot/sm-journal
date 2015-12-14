@@ -1,3 +1,5 @@
+%!TEX root = sm-journal.tex
+
 \begin{figure}[t!]
 \centering
 \begin{subfigure}{12cm}
@@ -17,14 +19,14 @@ The player set $\cN = \{ 1, 2, \star \}$ contains player labels, where
 $\star$ denotes the chance player, and by convention a player is denoted $i \in \cN$.
 $\cS$ is a set of states, with $\cZ$ denoting the terminal states, $\cD$ the states where players make decisions,
 and $\cC$ the possibly empty set of states where chance events occur. $\cA = \cA_1 \times \cA_2$ is the set of
-joint actions of individual players. We denote $\cA_i(s)$ the actions available to player $i$ in state $s \in \cS$ \reviewchange{and denote the number of actions $|\cA_i(s)|$ as the \emph{branching factor for player $i$}. When the player is not specified, we mean the joint branching factor $|\cA|$.}
+joint actions of individual players. We denote $\cA_i(s)$ the actions available to player $i$ in state $s \in \cS$ \reviewchange{and denote the number of actions $|\cA_i(s)|$ as the \emph{branching factor for player $i$}. When the player is not specified, we mean the joint branching factor $|\cA(s)|$.}
 The transition function $\cT : \cS \times \cA_1 \times \cA_2 \mapsto \cS$ defines the successor state given a current
 state and actions for both players. $\Delta_\star:\cC \mapsto \Delta(\cS)$ describes a probability distribution over
 possible successor states of the chance event.
 \reviewchange{Induced by $\Delta_\star$, we also define
 $\cP_\star(s, r, c, s')$ as the probability of transitioning to $s'$ after choosing joint action $(r,c)$ from $s$, or
 simply $1$ when $\cT(s, r, c) \not\in \cC$.}
-The utility functions $u_i : \cZ \mapsto [v_{\min}, v_{\max}] \subseteq \mathbb{R}$ gives the utility of player $i$, with
+The utility function $u_i : \cZ \mapsto [v_{\min}, v_{\max}] \subseteq \mathbb{R}$ gives the utility of player $i$, with
 $v_{min}$ and $v_{\max}$ denoting the minimum and maximum possible utility respectively. We assume zero-sum
 games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$.
 The game begins in an initial state $s_0$ \reviewchange{and a subset of a game that starts in some node $s$ is called a \emph{subgame}}.
@@ -67,7 +69,7 @@ Payoffs to the row player are shown. \label{fig:egMatrixGames}}
 
 A {\it behavioral strategy} for player $i$ is a mapping from states $s \in \cS$
 to a probability distribution over the actions $\cA_i(s)$, denoted $\sigma_i(s)$.
-\reviewchange{We denote $\sigma_i(s,a)$ as the probability that strategy $\sigma$ assigns to $a$ in $s$.
+\reviewchange{We denote by $\sigma_i(s,a)$ the probability that strategy $\sigma$ assigns to $a$ in $s$.
 These strategies are often called {\it randomized}, or {\it mixed} because they represent a mixture over {\it pure} strategies, each of
 which is a point in the Cartesian product space $\times_{s \in \cS} \cA_i(s)$.\footnote{\reviewchange{Notice that a pure strategy is also a mixed strategy that assigns probability 1 to a single pure strategy and probability 0 to every other pure strategy. However, as is common in the literature, we sometimes refer to a mixed strategy
 to specifically mean not a pure strategy. This is mostly clear from the context, but we clarify where necessary.}}}
@@ -84,13 +86,13 @@ Finally, define $\Sigma_i$ to be the set of all behavioral strategies for player
 %\mlanctot{@Brano: All of the previous literature on CFR (+ OOS) includes chance in $-i$, because it kind of makes more sense when defining the reach probabilities. But I think this change is still OK. None of the pseudocode for the sampling algorithms (except OOS) actually uses $-i$. So then we only include chance in the definition of $\pi_{-i}$, in section \ref{sec:algs:cfros}.}
 
 There are three important concepts used in the paper that deserve explicit definition. These concepts are used to define
-optimal behavior for this class of games, to define metrics for evaluation, and within the algorithms as well.
+an optimal behavior for this class of games, to define metrics for evaluation, and parts of the algorithms.
 
 \begin{definition}[Strictly Dominated Action]
-In a matrix game, an action $a_i \in \cA_i$ is strictly dominated if $\forall a_{-i} \in \cA_{-i}, \forall a_i' \in \Sigma_i \setminus \{ a_i \}: u(a_i, a_{-i}) < u(a_i', a_{-i})$.
+In a matrix game, an action $a_i \in \cA_i$ is strictly dominated if $\forall a_{-i} \in \cA_{-i}, \forall a_i' \in \Sigma_i \setminus \{ a_i \}: u_i(a_i, a_{-i}) < u_i(a_i', a_{-i})$.
 \end{definition}
 
-No rational player would want to play a strictly dominated action, because there is always a better one to play instead, for any action used by the opponent. The concept also extends naturally to behavioral strategies.
+No rational player would want to play a strictly dominated action, because there is always a better action to play instead, for any action used by the opponent. The concept also extends naturally to behavioral strategies.
 For example, in the game on the right of Figure~\ref{fig:egMatrixGames}, both $b$ and $B$ are strictly dominated.
 In this paper we refer to the dominance always in this strict meaning.
 
@@ -107,18 +109,18 @@ A strategy profile $(\sigma_i, \sigma_{-i})$ is a Nash equilibrium profile if an
 and $\sigma_{-i} \in BR_{-i}(\sigma_i)$.
 \end{definition}
 
-In other words, in a Nash equilibrium profile each strategy is a best response to the opponents' strategies. In two-player, zero-sum
+In other words, in a Nash equilibrium profile each strategy is a best response to the opponent's strategy. In two-player zero-sum
 games the set of Nash equilibria corresponds to the set of minimax-optimal strategies. That is,} a Nash equilibrium profile is
-also pair of behavioral strategies optimizing
+also a pair of behavioral strategies optimizing
 \begin{equation}\label{eq:ne}
 V = \max_{\sigma_1 \in \Sigma_1} \min_{\sigma_2 \in \Sigma_2} \bE_{z \sim \sigma}[u_1(z)]
   = \max_{\sigma_1 \in \Sigma_1} \min_{\sigma_2 \in \Sigma_2} \sum_{z \in \cZ} \pi^\sigma(z) u_1(z).
 \end{equation}
 None of the players can improve their utility by deviating unilaterally.
 For example, the game of Rock, Paper, Scissors (depicted in Figure~\ref{fig:rps-equiv}) modeled as a matrix game has a single state and the only equilibrium strategy is to mix equally between
-all actions, \ie both players play with a mixed strategy $\sigma_i = \sigma_{-i} = (1/3, 1/3, 1/3)$ giving an expected payoff of
+all actions, \ie both players play with a mixed strategy $\sigma_i = \sigma_{-i} = (1/3, 1/3, 1/3)$ giving the expected payoff of
 $V = 0$.
-Note that using a mixed strategy is necessary in this game to achieve a guaranteed payoff of $V$.
+Note that using a mixed strategy is necessary in this game to achieve the guaranteed payoff of $V$.
 Any pure strategy of one player can be exploited by the opponent; \reviewchange{so while a pure best response to a fixed strategy always
 exists, it is not always possible to find a Nash equilibrium for which both strategies are pure.}
 For the same reason, randomized strategies are often necessary also in the multi-step simultaneous move games.
@@ -140,7 +142,7 @@ to a choice, writing it on a face-down piece of paper, and then second player re
 transformation, which can generally be applied to every state in a simultaneous move game.
 %by placing the root of subgame following both players' decisions, or a successor chance node outcome.
 Therefore, algorithms intended for two-player zero-sum imperfect information games may also be applied to the
-simultaneous move game's equivalent extensive form.
+simultaneous move game using this equivalent form.
 
 \begin{figure}
 \begin{center}
