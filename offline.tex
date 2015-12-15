@@ -674,7 +674,45 @@ Another question is how long it can take to find an optimal solution, and yet an
 current approximation be? Finally, what is the time and space complexities of the algorithms?
 
 The backward induction algorithms always return an optimal solution. The correctness of BI follows by induction, the Markov property, and the uniqueness of
-each subgame's $V$ value from Equation~\ref{eq:ne}. As discussed in Subsections~\ref{sec:algs:biab}-\ref{sec:algs:doab}, the time taken by $\biab$ and $\doab$
+each subgame's $V$ value from Equation~\ref{eq:ne}. The correctness of $\biab$ follows from inductively applying the following lemma:
+\begin{lemma}\label{lem:minmax}
+Let $A$ be a single step simultaneous move game for state $s$ with the expected value $v_s$ for player $i$. Let $v_s^i$ be the value of the serialized game created form game $A$ by letting player $-i$ move first and player $i$ move second with the knowledge of the move played by the first player. Then
+\[ v_s \le v_s^i\]
+\end{lemma}
+\begin{proof}
+\begin{flalign*}\label{eq:minmax}
+v_s = & \min_{\sigma_{-i}\in \Sigma_{-i}} \max_{\sigma_i \in \Sigma_{i}} \sum_{a_i\in\cA_i(s)}\sum_{a_{-i}\in\cA_{-i}(s)} \sigma_i(s,a_i)\sigma_{-i}(s,a_{-i})A_{a_ia_{-i}}\\
+= & \min_{a_{-i} \in \cA_{-i}(s)} \max_{\sigma_i \in \Sigma_{i}} \sum_{a\in\cA_i(s)} \sigma_i(s, a_i)A_{a_ia_{-i}} \\
+\leq & \min_{a_{-i} \in \cA_{-i}(s)} \max_{a_i\in\cA_i(s)} A_{a_ia_{-i}} = v_s^i
+\end{flalign*}
+The first equality is the definition of the value of a zero-sum game, the second is the fact that a best response can always be found in pure strategies: if there was a mixed strategy best response with expected utility $v_s$ and some of the actions form its support would have lower expected utility, removing the action from the support would increase the value of the best response, which is a contradiction. The inequality is due to the fact that a maximization over each action of player $-i$ can only improve the value. $\square$
+\end{proof}
+\begin{lemma}\label{lem:alphabeta}
+Serialized alpha-beta$(s,i)$ algorithm called for player $i$ computes the upper bound on the value of the simultaneous moves subgame defined by stage $s$.
+\end{lemma}
+\begin{proof}
+Since it is known that the standard alpha-beta algorithm returns the same result as the standard minimax algorithm without pruning (i.e., backward induction on perfect information games), we disregard the pruning in this proof. We use Lemma~\ref{lem:minmax} inductively. Let $s$ be the current stage of the game and let $A$ be the exact matrix game corresponding to $s$. By induction we assume the algorithm computes for stage $s$ some $A'$ so that each value in matrix $A'$ is greater or equal than $A$: $\forall a_i \in \cA_i(s) \forall a_{-i} \in \cA_{-i} \; A'_{a_ia_{-i}} \geq A_{a_ia_{-i}}$. 
+Therefore, for the value of matrix game $v_{A'} \geq v_A$. 
+Finally, the serialization used in alpha-beta$(s, i)$ assumes that player $-i$ moves first; hence, by Lemma~\ref{lem:minmax} the algorithm returns value $v^i_{A'} \geq v_{A'} \geq v_{A}$. $\square$
+\end{proof}
+\begin{theorem}
+The algorithm $\biab(s,i)$ computes the value of the subgame from state $s$ for player $i$.
+\end{theorem}
+\begin{proof}
+The correctness of the algorithm follows immediately from the correctness of the standard BI algorithm and the correctness of using the values computed by serialized alpha-beta (Lemma~\ref{lem:alphabeta}), value of which is used only if the upper bound equals the lower bound on the value of the game. $\square$
+\end{proof}
+\begin{theorem}
+The algorithm $\doab(s,i)$ computes the value of the subgame from state $s$ for player $i$.
+\end{theorem}
+\begin{proof}
+The correctness of the algorithm follows mainly from the correctness of the standard BI algorithm, Lemma~\ref{lem:alphabeta}, and the correctness of the double-oracle algorithm for matrix games~\cite{McMahan03Planning}. 
+We only need to show that the best-response algorithm with serialized bounds cannot return \textbf{null} action due to setting the bounds incorrectly. 
+Without loss of generality, consider a lower bound $\alpha_s$ for state $s$.
+Value $\alpha_s$ correspond either to a value calculated by serialized alpha-beta and propagated via bounds when calling $\doab(s,i,\alpha_s,\beta_s)$, or it was updated during the iterations of double-oracle algorithm for state $s$. 
+In either case there exists a pure best response strategy corresponding to this value; hence, the best response has to find the strategy that achieves this value and cannot return \textbf{null}. $\square$
+\end{proof}
+
+As discussed in Subsections~\ref{sec:algs:biab}-\ref{sec:algs:doab}, the time taken by $\biab$ and $\doab$
 are inherently determined by the number of dominated actions in each subgame, the specific serializations, and/or order used to expand the
 strategies. However, the worst case of all these algorithms is one where every matrix game has no dominated actions, and therefore needs to be expanded fully.
 An example of such a game would be finitely-repeated Rock, Paper, Scissors, or any biased variant that has no dominated actions, \eg the one
@@ -684,7 +722,7 @@ and the only NE might correspond to the single last path enumerated.
 
 The concept of completeness is less clear for the sampling algorithms due to randomization, so we instead discuss a form of probabilistic completeness. 
 We first focus on the variants of the SM-MCTS algorithm.
-Unfortunately, none of the variants of this algorithm introduced above has been proven to eventually converge to a Nash equilibrium. If the algorithm is instantiated by UCT, Shafiei at al. \cite{Shafiei09} have shown that the algorithm converges to a stable strategy, which is not close to a Nash equilibrium. We replicate the experiment below and note that this is the case only for the deterministic version of UCT. A randomized version of UCT with a well selected exploration parameter empirically converges close to the equilibrium strategy, but then in some games oscillates and does not converge further.
+Unfortunately, none of the variants of this algorithm introduced above has been proven to eventually converge to a Nash equilibrium. If the algorithm is instantiated by UCT, Shafiei et al. \cite{Shafiei09} have shown that the algorithm converges to a stable strategy, which is not close to a Nash equilibrium. We replicate the experiment below and note that this is the case only for the deterministic version of UCT. A randomized version of UCT with a well selected exploration parameter empirically converges close to the equilibrium strategy, but then in some games oscillates and does not converge further.
 
 The only know result about SM-MCTS directly applicable for the algorithms in this paper is negative and it has been proven in \cite{Kovarik2015Analysis}.
 
