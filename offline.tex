@@ -708,7 +708,7 @@ The algorithm $\doab(s,i)$ computes the value of the subgame from state $s$ for 
 The correctness of the algorithm follows mainly from the correctness of the standard BI algorithm, Lemma~\ref{lem:alphabeta}, and the correctness of the double-oracle algorithm for matrix games~\cite{McMahan03Planning}. 
 We only need to show that the best-response algorithm with serialized bounds cannot return \textbf{null} action due to setting the bounds incorrectly. 
 Without loss of generality, consider a lower bound $\alpha_s$ for state $s$.
-Value $\alpha_s$ correspond either to a value calculated by serialized alpha-beta and propagated via bounds when calling $\doab(s,i,\alpha_s,\beta_s)$, or it was updated during the iterations of double-oracle algorithm for state $s$. 
+Value $\alpha_s$ corresponds either to a value calculated by serialized alpha-beta and propagated via bounds when calling $\doab(s,i,\alpha_s,\beta_s)$, or it was updated during the iterations of double-oracle algorithm for state $s$. 
 In either case there exists a pure best response strategy corresponding to this value; hence, the best response has to find the strategy that achieves this value and cannot return \textbf{null}. $\square$
 \end{proof}
 
