@@ -673,10 +673,12 @@ their minimax value (Equation~\ref{eq:ne}). Therefore, one desirable property of
 Another question is how long it can take to find an optimal solution, and yet another is if the algorithm is terminated early, how accurate would the
 current approximation be? Finally, what is the time and space complexities of the algorithms?
 
+\subsubsection{Backward Induction Algorithms}
+
 The backward induction algorithms always return an optimal solution. The correctness of BI follows by induction, the Markov property, and the uniqueness of
 each subgame's $V$ value from Equation~\ref{eq:ne}. The correctness of $\biab$ follows from inductively applying the following lemma:
 \begin{lemma}\label{lem:minmax}
-Let $A$ be a single step simultaneous move game for state $s$ with the expected value $v_s$ for player $i$. Let $v_s^i$ be the value of the serialized game created form game $A$ by letting player $-i$ move first and player $i$ move second with the knowledge of the move played by the first player. Then
+Let $A$ be a single step simultaneous move game for state $s$ with value $v_s$ for player $i$. Let $v_s^i$ be the value of the serialized game created form game $A$ by letting player $-i$ move first and player $i$ move second with the knowledge of the move played by the first player. Then
 \[ v_s \le v_s^i\]
 \end{lemma}
 \begin{proof}
@@ -688,10 +690,10 @@ v_s = & \min_{\sigma_{-i}\in \Sigma_{-i}} \max_{\sigma_i \in \Sigma_{i}} \sum_{a
 The first equality is the definition of the value of a zero-sum game, the second is the fact that a best response can always be found in pure strategies: if there was a mixed strategy best response with expected utility $v_s$ and some of the actions form its support would have lower expected utility, removing the action from the support would increase the value of the best response, which is a contradiction. The inequality is due to the fact that a maximization over each action of player $-i$ can only improve the value. $\square$
 \end{proof}
 \begin{lemma}\label{lem:alphabeta}
-Serialized alpha-beta$(s,i)$ algorithm called for player $i$ computes the upper bound on the value of the simultaneous moves subgame defined by stage $s$.
+Serialized alpha-beta$(s,i)$ algorithm called for player $i$ computes the upper bound on the value of the simultaneous moves subgame defined by state $s$.
 \end{lemma}
 \begin{proof}
-Since it is known that the standard alpha-beta algorithm returns the same result as the standard minimax algorithm without pruning (i.e., backward induction on perfect information games), we disregard the pruning in this proof. We use Lemma~\ref{lem:minmax} inductively. Let $s$ be the current stage of the game and let $A$ be the exact matrix game corresponding to $s$. By induction we assume the algorithm computes for stage $s$ some $A'$ so that each value in matrix $A'$ is greater or equal than $A$: $\forall a_i \in \cA_i(s) \forall a_{-i} \in \cA_{-i} \; A'_{a_ia_{-i}} \geq A_{a_ia_{-i}}$. 
+Since it is known that the standard alpha-beta algorithm returns the same result as the standard minimax algorithm without pruning (i.e., backward induction on perfect information games), we disregard the pruning in this proof. We use Lemma~\ref{lem:minmax} inductively. Let $s$ be the current state of the game and let $A$ be the exact matrix game corresponding to $s$. By induction we assume the algorithm computes for state $s$ some $A'$ so that each value in matrix $A'$ is greater or equal than $A$: $\forall a_i \in \cA_i(s) \forall a_{-i} \in \cA_{-i}(s) \; A'_{a_ia_{-i}} \geq A_{a_ia_{-i}}$. 
 Therefore, for the value of matrix game $v_{A'} \geq v_A$. 
 Finally, the serialization used in alpha-beta$(s, i)$ assumes that player $-i$ moves first; hence, by Lemma~\ref{lem:minmax} the algorithm returns value $v^i_{A'} \geq v_{A'} \geq v_{A}$. $\square$
 \end{proof}
@@ -720,11 +722,13 @@ in Subsection~\ref{sec:eval:domains}.
 There are no guarantees on the quality of the strategy computed by the exact algorithms if terminated early because the states are enumerated in a depth-first manner
 and the only NE might correspond to the single last path enumerated.
 
+\subsubsection{Sampling Algorithms}
+
 The concept of completeness is less clear for the sampling algorithms due to randomization, so we instead discuss a form of probabilistic completeness. 
 We first focus on the variants of the SM-MCTS algorithm.
 Unfortunately, none of the variants of this algorithm introduced above has been proven to eventually converge to a Nash equilibrium. If the algorithm is instantiated by UCT, Shafiei et al. \cite{Shafiei09} have shown that the algorithm converges to a stable strategy, which is not close to a Nash equilibrium. We replicate the experiment below and note that this is the case only for the deterministic version of UCT. A randomized version of UCT with a well selected exploration parameter empirically converges close to the equilibrium strategy, but then in some games oscillates and does not converge further.
 
-The only know result about SM-MCTS directly applicable for the algorithms in this paper is negative and it has been proven in \cite{Kovarik2015Analysis}.
+The only know theoretic result about SM-MCTS directly applicable for the algorithms in this paper is negative and it has been proven in \cite{Kovarik2015Analysis}.
 
 \begin{theorem}
 There are games, in which SM-MCTS instantiated by any regret minimizing selection function with a constant exploration $\gamma$ cannon converge to a strategy that would be an $\epsilon$-Nash equilibrium for an $\epsilon < \gamma D$, where $D$ is the depth of the game tree.
@@ -732,14 +736,14 @@ There are games, in which SM-MCTS instantiated by any regret minimizing selectio
 
 The proof is by defining a specific class of games, in which the exploration in lower levels of the game causes bias in values observed in the higher levels of the tree that leads to a wrong decision in the root.
 
-In order to obtain positive formal results about the convergence of SM-MCTS algorithm, the authors in \cite{Kovarik2015Analysis} either add an additional averaging step to the algorithm and consistently make it  slower in practice, or assume additional non-trivial technical properties about the selection function, which are not know to hold for any of the selection functions above. %Since there is no known finite-time bound, there is no known guarantee for the quality of the solution if SM-MCTS is terminated early.
+In order to obtain positive formal results about the convergence of SM-MCTS-like algorithms, the authors in \cite{Kovarik2015Analysis} either add an additional averaging step to the algorithm and consistently make it  slower in practice, or assume additional non-trivial technical properties about the selection function, which are not know to hold for any of the selection functions above. %Since there is no known finite-time bound, there is no known guarantee for the quality of the solution if SM-MCTS is terminated early.
 
 %A positive result is know about a slight modification of SM-MCTS, which is consistently performing worse in practice. SM-MCTS-A is an algorithm identical to SM-MCTS with a single modification. 
 %For each state $s$ in the MCTS tree, the algorithm stores the mean of values of all samples that visited the node ($m_s$).
 %On line~\ref{alg:smmcts:return} of Algorithm~\ref{alg:smmcts:up}, the statistics are not updated by the current sample value $v_{s'}$, but the mean of all sample values $m_{s'}$.
 %SM-MCTS-A has been proven to converge to approximate NE with wide range of selection function, including Exp3. However, the empirical evaluation presented in \cite{Kovarik2015Analysis} shows that in all evaluated games, SM-MCTS-A converges substantially slower than SM-MCTS.
 
-Among the sampling algorithms presented above, the only one with a finite-time probabilistic convergence guarantee is SM-OOS. Since SM-OOS is designed to update each node of the game the same way as if it was the root of the game, we present the following theorem from the perspective of the root of the whole game. It holds also for starting the algorithm in non-root nodes, but the values of $|S|$ and $\delta$ can be adapted to the subgame.
+Among the sampling algorithms presented above, the only one with a finite-time probabilistic convergence guarantee is SM-OOS. Since SM-OOS is designed to update each node of the game the same way as if it was the root of the game, we present the following theorem from the perspective of the root of the whole game. It holds also for starting the algorithm in non-root nodes, but the values of $|S|$ and $\delta$ can be adapted to represent the subgame.
 
 \begin{theorem}
 When SM-OOS is run from the root of the game, with probability $(1-p)$ an $\epsilon$-NE is reached after
