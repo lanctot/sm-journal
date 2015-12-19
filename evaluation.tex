@@ -2,7 +2,7 @@
 
 We now turn to thorough experimental evaluation of the described algorithms.
 We analyze both offline and online case on a collection of games inspired by previous work, and randomly generated games.
-After describing the rules of the games, we present the results for the offline strategy computation case and we follow with the online game playing.
+After describing the rules and properties of the games, we present the results for the offline strategy computation and we follow with the online game playing.
 
 \subsection{Experimental Settings}
 
@@ -13,15 +13,15 @@ We reproduce this experiment and show the differences in performance of the samp
 Then, we compare the offline performance of the algorithms on other domains.
 For each domain, we first analyze the exact algorithms and measure the computation time taken to solve a particular instance of the game.
 Afterward, we analyze the convergence of the approximative algorithms.
-At the specified time step the algorithm produces strategies $(\sigma_1,\sigma_2)$, and using best responses we compute
+At a specified time step the algorithm produces strategies $(\sigma_1,\sigma_2)$. Using best responses we compute
 $\textrm{error}(\sigma_1,\sigma_2) = \max_{\sigma_1' \in \Sigma_1} \bE_{z \sim (\sigma_1',\sigma_2)}[u_1(z)]
                                    + \max_{\sigma_2' \in \Sigma_2} \bE_{z \sim (\sigma_1,\sigma_2')}[u_2(z)]$,
 which is equal to $0$ at a Nash equilibrium.
 In each offline convergence setting, the reported values are means over at least $20$ runs of each sampling algorithm on a single instance of the game.
 We compared at least $3$ different settings for the exploration parameter and present the result only for the best exploration parameter.
 For OOS, Exp3, and RM the best values for the parameters were almost always $0.6$, $0.1$, and $0.1$, respectively.
-\reviewchange{The only exception was Goofspiel with chance nodes, where both Exp3 and RM converge more quickly with parameter set to $0.3$.}
-For UCT, however, the performance was quite different and we give the values for UCT for each domain.
+\reviewchange{The only exception was Goofspiel with chance nodes, where both Exp3 and RM converge more quickly with the parameter set to $0.3$.}
+For UCT, however, the performance differed more with the exploration parameter and we give its values for each domain later.
 % mlanctot: please check the definition of error
 %\vlisy{is the 20 runs enough?}\bbosansky{this is the lowest number, some games (\eg, Goofspiel) had more samples (40)}
 
@@ -32,7 +32,7 @@ We used larger instances of games and compare the algorithms based on the actual
 %The first one is more common in previous works focused on online comparison of the algorithms~\cite{XXX}\bbosansky{Reference missing -- ideally several works with different authors that use this settings.}, second one allows us to see the difference if the algorithms have more computation time.
 As indicated before, the algorithms based on the backward induction need to use domain-specific evaluation function in the online settings.
 This may give these algorithms an advantage if the evaluation function is accurate.
-Therefore, we also run sampling-based algorithms with the evaluation function for selected domains to compare the algorithms in a more fair settings.
+Therefore, we also run the sampling-based algorithms with the evaluation function for selected domains to compare the algorithms in a more fair settings.
 \reviewchange{Moreover, we have also tuned parameters for the sampling algorithms specifically for each domain.}
 Reported results are means over at least $1,000$ matches for each pair of algorithms.
 %Where necessary, we run additional experiments to obtain statistically significant results.
@@ -45,8 +45,8 @@ Therefore, with the exception of the evaluation function used in selected online
 \subsection{Domains}\label{sec:eval:domains}
 
 In this subsection, we describe the six domains used in our experiments.
-The games in our collection differ in characteristics, such as the number of available actions for each player (\ie the branching factor), maximal depth, and number of possible utility values.
-Moreover, the games also differ in the \emph{randomization factor} -- \ie how often it is necessary to use mixed strategies and whether this randomization occurs at the beginning of the game, near the end of the game, or it is spread throughout the whole course of the game.
+The games in our collection differ in characteristics, such as the number of available actions for each player (\ie the branching factor), the maximal depth, and the number of possible utility values.
+Moreover, the games also differ in the \emph{randomization factor} -- \ie how often it is necessary to use mixed strategies and whether this randomization occurs at the beginning of the game, near the end of the game, or is spread throughout the whole course of the game.
 
 For each domain we also describe the evaluation function used in the online experiments.
 Note that we are not seeking the best-performing algorithm for a particular game; hence, we have not aimed for the most accurate evaluation functions for each game.
@@ -56,7 +56,7 @@ We intentionally use evaluation functions of different quality that allow us to 
 
 BRPS is a payoff-skewed version of the one-shot game Rock, Paper, Scissors shown in
 Figure~\ref{fig:brps}. This game was introduced in \cite{Shafiei09}, and it was shown that the visit count
-distribution of UCT does converge to a fixed balanced situation, but not one that
+distribution of UCT converges to a fixed balanced situation, but not one that
 corresponds to the optimal mixed strategy of $(\frac{1}{16},\frac{10}{16},\frac{5}{16})$.
 % mlanctot: should be done for the whole section
 %\vlisy{unify the use of UCT/DUCT}
@@ -81,9 +81,10 @@ S & -50 &  5 &  0\\\cline{2-4}
 \end{figure}
 
 \paragraph{\textbf{Goofspiel}}
-Goofspiel is a card game that appear as a common example of a simultaneous move game (\eg \cite{Ross71Goofspiel,Rhoads12Computer,Saffidine12SMAB,Lanctot13Goofspiel}).
+Goofspiel is a card game that appears as a common example of a simultaneous move game (\eg \cite{Ross71Goofspiel,Rhoads12Computer,Saffidine12SMAB,Lanctot13Goofspiel}).
 There are $3$ identical decks of $d$ cards with values $\{0,\dots, (d-1)\}$, one for chance and one for each player, 
-where $d$ is a parameter of the game. Standard Goofspiel is played with $13$ cards.
+where $d$ is a parameter of the game. \vlisy{did we not use 1-based game at the end?}
+Standard Goofspiel is played with $13$ cards.
 The game is played in rounds: at the beginning of each round, chance reveals one card from its deck and both players bid for the card by simultaneously selecting (and removing) a card from their hands.
 A player that selects a higher card wins the round and receives a number of points equal to the value of the chance's card.
 In case both players select the card with the same value, the chance's card is discarded.
@@ -93,13 +94,13 @@ When there are no more cards to be played, the winner of the game is chosen base
 There are two parameters of the game that can be altered to create four different variants of Goofspiel.
 The first parameter determines whether or not the chance player is included.
 We can use an assumption made in the previous work that used Goofspiel as a benchmark for evaluation of the exact offline algorithms~\cite{Saffidine12SMAB},
-where the sequence of the cards are randomly chosen at the beginning of the game and it is known to both players.
+where the sequence of the cards is randomly chosen at the beginning of the game and it is known to both players.
 We refer to this setting as with the \emph{fixed sequence} of cards.
-Alternatively, we can treat chance in a standard way, where chance nodes determine the card that gets drawn. We refer to this settings as with the
+Alternatively, we can treat chance in the standard way, where chance nodes determine the card that gets drawn. We refer to this settings as with the
 \emph{stochastic sequence}.
 The games are fairly similar in terms of performance of the algorithms, however, the second variant induces a considerably larger game tree.
 The second parameter relates to the utility functions.
-Either we treat the game as a win-tie-lose game (\ie the players receive utility from set $\lbrace -1, 0, 1 \rbrace$), or the utility values for the players are equal to the points they gain during the game.}
+Either we treat the game as a win-tie-lose game (\ie the players receive utility from $\lbrace -1, 0, 1 \rbrace$), or the utility values for the players are equal to the points they gain during the game.}
 
 Goofspiel forms game trees with interesting properties.
 First unique feature is that the number of actions for each player is uniformly decreasing by~$1$ with the depth.
@@ -128,7 +129,7 @@ In the last round, each player has only a single card; hence, there cannot be an
 \reviewchange{
 Our hand-tuned evaluation function used in Goofspiel takes into consideration the remaining cards in the deck weighted by a chance of winning these cards depending on the remaining cards on hand for each player.
 Moreover, if the position is clearly winning for one of the players (there is not enough cards to change the current score), the evaluation function is set to maximal (or minimal) value.
-The formal definition follows ($c_i$ are the sum of values the remaining cards of player $i$):
+The formal definition follows ($c_i$ are the sum of values of the remaining cards of player $i$):
 
 \[
 eval(s) = \left\{ \begin{array}{ll}
