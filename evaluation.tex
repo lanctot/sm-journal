@@ -712,17 +712,17 @@ Moreover, $\doab$ has significantly lower memory requirements since it is a dept
 
 \subsection{Online Search}
 
-We now compare the performance of the algorithms in head-to-head matches in the same games as in the offline equilibrium computation experiments, but we use a much larger instances of these games. \reviewchange{Each algorithm has a strictly limited computation time per move set to 1 second.} After this time, the algorithm outputs an action to be played in the current game state, receives information about the action selected by its opponent, and the game proceeds to the next state. As described in Section~\ref{sec:online}, all algorithms keep results of previous computations and do not start form scratch in the next state. \reviewchange{We have also performed a large set of experiments with 5 seconds of computation time per move, however, the results are very similar to the results with 1 second per move. Therefore, we presents the results with 1 second in detail and only comment on the 5 seconds results where additional time leads to an interesting difference.}
+We now compare the performance of the algorithms in head-to-head matches in the same games as in the offline equilibrium computation experiments, but we use much larger instances of these games. \reviewchange{Each algorithm has a strictly limited computation time per move set to 1 second.} After this time, the algorithm outputs an action to be played in the current game state, receives information about the action selected by its opponent, and the game proceeds to the next state. As described in Section~\ref{sec:online}, all algorithms keep results of previous computations and do not start form scratch in the next state. \reviewchange{We have also performed a large set of experiments with 5 seconds of computation time per move, however, the results are very similar to the results with 1 second per move. Therefore, we presents the results with 1 second in detail and only comment on the 5 seconds results where additional time leads to an interesting difference.}
 
 We compare all of the approximative sampling algorithms and $\doab$ as a representative of backward induction algorithms, because it was clearly the fastest algorithm in all of the considered games.
-Finally, we also included random player (denoted RAND) into the tournament to confirm that the algorithms choose better strategies than the simple random game play.
+Finally, we also include random player (denoted RAND) into the tournament to confirm that the algorithms choose much better strategies than the simple random game play.
 %In the following experiments, we aim to identify the algorithms that are most suitable in the online search setting and study the relation of the performance in approximating the equilibrium in the offline setting and actual game playing performance in the matches.
-We report expected rewards and win rates of the algorithms, in which a tie is counts as half of a win.
+We report expected rewards and win rates of the algorithms, in which a tie counts as half of a win.
 \reviewchange{The parameters of the algorithms are tuned for each domain separately.
 We first present the comparison of different algorithms and we discuss the influence of the parameters in Subsection~\ref{sec:eval:online:tuning}.}
 
 \reviewchange{In this subsection, we show cross tables of each algorithm (on the row) matched up against each competitor algorithm (on the column).}
-Each entry represents a mean over at least $1,000$ matches with the half of the width of the $95\%$ confidence interval in brackets, \eg $52.9(0.3)$ refers to $52.9\% \pm 0.3\%$.
+Each entry represents a mean of at least $1,000$ matches with the half of the width of the $95\%$ confidence interval in brackets, \eg $52.9(0.3)$ refers to $52.9\% \pm 0.3\%$.
 \reviewchange{The result shown is the win rate for the row player, so as an example in the standard game of Goofspiel (top of Table~\ref{fig:matches:goof}) $\doab$ wins $67.2 \% \pm 1.4 \%$ of games against the random player.
 All evaluated games except the pursuit-evasion game are symmetric from the position of the first and the second player. We made even the random games symmetric by always playing matches on the same game instance in pairs with alternating players' positions. However, for easier comparison of the algorithms, we mirror the same results to both fields corresponding to a pair of players in the cross tables.
 }
@@ -772,13 +772,13 @@ RAND&-6.67(0.99)&-14.42(0.96)&-13.30(1.00)&-14.79(0.97)&-14.20(0.98)&$\bullet$\\
 \caption{Results of head-to-head matches in Goofspiel variants with exploration parameter settings indicated in the table headers.}\label{fig:matches:goof}
 \end{table}
 
-\reviewchange{In head-to-head comparison, our focus is primarily on the standard Goofspiel with 13 cards and chance nodes. Additionally, for the sake of consistency with the offline results, we also evaluate the variant with a fixed known sequence of cards. The full game has more than $2.4\times 10^{29}$ terminal states and the variant with fixed sequence has still more than $3.8\times 10^{19}$ terminal states. The results are presented in Table~\ref{fig:matches:goof}, where the top table shows the win rates of the algorithms in the full game and the other two tables the win rates and expected number of points gained by the algorithms in the game with a fixed point card sequence. The results for the fixed card sequence are the mean over $10$ fixed random sequences. For each table, the algorithms were set up to optimize the presented measure (\ie win rate or points) and the exploration parameters were tuned to the values presented in the header of the table.
+\reviewchange{In head-to-head comparison, our focus is primarily on the standard Goofspiel with 13 cards and chance nodes. Additionally, for the sake of consistency with the offline results, we also evaluate the variant with a fixed known sequence of cards. The full game has more than $2.4\times 10^{29}$ terminal states and the variant with a fixed sequence has still more than $3.8\times 10^{19}$ terminal states. The results are presented in Table~\ref{fig:matches:goof}, where the top table shows the win rates of the algorithms in the full game and the other two tables the win rates and expected number of points gained by the algorithms in the game with a fixed point card sequence. The results for the fixed card sequence are means over $10$ fixed random sequences. For each table, the algorithms were set up to optimize the presented measure (\ie win rate or points) and the exploration parameters were tuned to the values presented in the header of the table.
 
 First, we can see that finding a good strategy in Goofspiel is difficult for all the algorithms.
-This is noticeable thanks to the results of RAND player, that performs reasonably well
+This is noticeable thanks to the results of the RAND player, that performs reasonably well
 (RAND typically loses almost every match in all the remaining game domains).
-Next, we analyze the results of the $\doab$ algorithms compared to the sampling algorithms.
-The results show that even though $\doab$ uses a domain-specific heuristic evaluation function, it does not win significantly against any of the sampling algorithms that does not use any domain knowledge.
+Next, we analyze the results of the $\doab$ algorithm compared to the sampling algorithms.
+The results show that even though $\doab$ uses a domain-specific heuristic evaluation function, it does not win significantly against any of the sampling algorithms that do not use any domain knowledge.
 The difference is always statistically significant with a large margin.
 When optimizing win percentage, $\doab$ loses the least against UCT while in optimizing the expected reward, UCT performs significantly best.
 The performance of the other sampling algorithms is very similar against $\doab$, with Exp3 winning the least in reward optimization.
@@ -797,7 +797,7 @@ The exploration parameters were tuned to slightly larger numbers, which indicate
 The results are similar to the previous game variant.
 RM is still winning against all opponents, but it is not able to win more often against weaker players, which is consistent with playing close to a Nash equilibrium.
 UCT loses only against RM in this variant and it significantly outperforms OOS and Exp3.
-This indicates that UCT was able to better focus on the relevant part of the smaller game, which is supported also by larger number of simulations, which can be caused by smaller random simulations after leaving the part of the search tree stored in memory.
+This indicates that UCT was able to better focus on the relevant part of the smaller game, which is supported also by larger number of simulations, which can be caused by shorter random simulations after leaving the part of the search tree stored in memory.
 
 When players optimize the expected point difference, the differences between the algorithms are larger. 
 We can see that RM and OOS perform significantly better than UCT and Exp3.
@@ -806,8 +806,8 @@ An important reason behind the decrease of the performance of Exp3 is that after
 UCT compensates the range of the rewards by the choice of the exploration parameter, but different nodes would benefit from different exploration parameters, which causes more inefficiencies with more variable rewards.
 An important advantage of OOS and RM is that their behavior is practically independent of the utility range.
 
-In summary, RM is the only algorithm that did not lose significantly against any other sampling algorithm in any other game variant and often wins significantly.
-Exp3 is overall the weakest algorithm, losing to all other algorithm in all Goofspiel variants.
+In summary, RM is the only algorithm that did not lose significantly against any other sampling algorithm in any of the game variants and it often wins significantly.
+Exp3 is overall the weakest algorithm, losing to all other algorithms in all Goofspiel variants.
 Interestingly, Exp3 always performs the best against the random player, which indicates slower convergence to more sophisticated strategies.}
 
 \subsubsection{Oshi-Zumo}
