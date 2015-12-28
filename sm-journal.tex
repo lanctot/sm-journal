@@ -110,9 +110,9 @@
 \newcommand{\bbosansky}[1]{{\small \color{orange} $\blacktriangle$ \refstepcounter{bbNoteCounter}\textsf{[BB]$_{\arabic{bbNoteCounter}}$:{#1}}}}
 \newcommand{\jcermak}[1]{{\small \color{violet} $\blacktriangle$ \refstepcounter{jcNoteCounter}\textsf{[JC]$_{\arabic{jcNoteCounter}}$:{#1}}}}
 \renewcommand{\mwinands}[1]{}
-\renewcommand{\mlanctot}[1]{}
+%\renewcommand{\mlanctot}[1]{}
 %\renewcommand{\vlisy}[1]{}
-\renewcommand{\bbosansky}[1]{}
+%\renewcommand{\bbosansky}[1]{}
 \renewcommand{\jcermak}[1]{}
 
 
@@ -221,7 +221,7 @@ Simultaneous move games model discrete, multistage interactions where at each st
 \reviewchange{
 This formalism has been used to express games in general game playing and can also model many discrete approximations of real-world scenarios.
 In this paper, we describe both novel and existing algorithms that compute strategies for the class of two-player zero-sum simultaneous move games.}
-The algorithms include both backward induction methods with efficient pruning, as well as Monte Carlo sampling algorithms.
+The algorithms include exact backward induction methods with efficient pruning, as well as Monte Carlo sampling algorithms.
 We evaluate the algorithms in two different settings: the offline case, where computational
 resources are abundant and closely approximating the optimal strategy is a priority, and
 the online search case, where computational resources are limited and acting quickly is necessary.
@@ -288,7 +288,7 @@ Strategic decision-making in multiagent environments is an important problem in 
 With the growing number of agents interacting with humans and with each other, the need to
 understand these strategic interactions at a fundamental level is becoming increasingly important.
 Today, agent interactions occur in many diverse situations, such as e-commerce, social networking, and
-general-purpose robotics, each of which create complex problems that arise from conflicting agent
+general-purpose robotics, each of which creates complex problems that arise from conflicting agent
 preferences.
 
 Much research has been devoted to developing algorithms that reason about or learn in sequential (or multi-step)
@@ -314,11 +314,12 @@ This means that agents may need to randomize over several actions in some situat
 %Unless some information is hidden, this does not occur in strictly sequential games, where optimal
 %solution always exists in deterministic (or \textit{pure}) strategies.
 
-\reviewchange{We therefore focus specifically on simultaneous move games and} we cover both the offline case, where computation time is
-abundant and strategies are computed and stored, and the online case, where computation time is limited and
-agents must search for a strategy. We are concerned both with the quality of strategies based on
-their worst-case performance in theory and their observed performance in practice. We compare and
-contrast the algorithms and parameter choices in the offline and online cases, and thoroughly evaluate each
+\reviewchange{We therefore focus specifically on simultaneous move games.} 
+We cover the offline case, where the computation time is abundant and the optimal strategies are computed and stored, 
+as well as the online case, where the computation time is limited and agents must quickly find a move to perform.
+We are concerned both with the quality of strategies based on
+their worst-case expected performance in theory and their observed performance in practice. 
+We compare and contrast the algorithms and parameter choices in the offline and the online cases, and thoroughly evaluate each
 algorithm on a suite of games. Our collection covers Biased Rock-Paper-Scissors, Goofspiel, Oshi-Zumo,
 Pursuit Evasion Games, and Tron, all of which have been used for benchmark purposes
 in the previous work. We also perform experiments on randomly generated games. These games differ
@@ -326,7 +327,7 @@ in the number of possible actions, the number of moves before the game ends, the
 and whether and when the agents need to use mixed strategies in order to play optimally.
 
 Our experimental comparison shows a different performance of the algorithms in both cases.
-\reviewchange{The exact algorithms based on backward induction are significantly better in the offline setting,
+\reviewchange{The exact algorithms based on the backward induction are significantly better in the offline setting,
 where they are able to find the optimal strategy very quickly compared to the sampling algorithms.}
 In some cases, our novel algorithm ($\doab$) solves the game in less than 2\% of the time required by the standard backward induction algorithm.
 However, the exact algorithms are less competitive in the online setting.
@@ -354,16 +355,16 @@ Finally, we conclude in Section~\ref{sec:conc}.
 % mlanctot: I added it back in (Mark mentioned it)-- it's very popular, I don't think it will be a problem
 This paper presents detailed descriptions of the recent exact~\cite{Bosansky13Using} and approximative
 algorithms~\cite{Lanctot13Goofspiel,lisy2013-nips} that compute strategies for the class of two-player simultaneous move games.
-While the paper does act in some way as a survey of existing work in this area and as a means to present this previous work under a single unified framework, we also make several new contributions that have not been previously published, including:
+The paper presents the existing work under a single unified framework and makes several new contributions that have not been previously published, including:
 
 \begin{itemize}
 % Just don't have time for these
 %\item A new algorithm, $\epsilon$-minimax, a variant of Littman's Minimax-Q~\cite{Littman94markovgames} adapted for online search. (**Marc is considering implementing it.. is it too much?
 %\item A new variant of Exp3 based on recent work (Exp3++ \cite{2014}). (**Marc is considering implementing it.. is it too much?)
-\item A detailed analysis of the original negative convergence result for UCT \cite{Shafiei09}, a well-known approximative search algorithm, showing also its sensitivity and a significant detrimental effect caused by deterministic exploration.
-\item A first adaptation of backward induction and double-oracle algorithms with serialized bounds to the online search setting in simultaneous move games using heuristic evaluation functions.
+\item A detailed analysis of the original negative convergence result for UCT~\cite{Shafiei09}, a well-known approximative search algorithm, showing also its sensitivity and a significant detrimental effect caused by a deterministic exploration.
+\item A\bbosansky{The?} first adaptation of the backward induction and the double-oracle algorithm with serialized bounds~\cite{Bosansky13Using} to the online search setting in simultaneous move games using heuristic evaluation functions.
 \item A simplified version of Online Outcome Sampling~\cite{15aamas-iioos} and its analysis for the first time in two-player simultaneous move games.
-\item A wide experimental analysis and comparison of these and other algorithms in two different computational contexts: offline computation and online search, in five different games as well as random games.
+\item A wide experimental analysis and a comparison of these and other algorithms in two different computational contexts (the offline computation and the online search) and on five different games as well as random games.
 \end{itemize}
 
 }

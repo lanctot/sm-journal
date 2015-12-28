@@ -7,19 +7,24 @@
 \includegraphics[width=8.0cm]{figures/tree}\\
 %\includegraphics[width=10.0cm]{figures/goof3}\\
 \end{subfigure}%\\
-\caption{An example of a two-player simultaneous game. % which has Matching Pennies as a subgame. %, and a portion of 3-card Goofspiel including chance nodes (bottom).
-The dark squares are terminal states. The values shown in the matrices correspond to the values of subgames that can be obtained by backward induction.\\
+\caption{An example of a two-player simultaneous move game. % which has Matching Pennies as a subgame. %, and a portion of 3-card Goofspiel including chance nodes (bottom).
+Each white matrix corresponds to a state where both players act simultaneously.
+The dark squares are terminal states. 
+The values shown in the matrices correspond to the values of subgames that can be obtained by the backward induction.\\
 %bbosansky: if that's ok, I have removed the goofspiel figure since I do not think it is specifically referenced anywhere and we do not need to figures. Plus, since we do not specifically experiment with games with chance nodes, it is better not to include the figure :)
 \label{fig:example}}
 \end{figure}
 
-A finite game with simultaneous moves and chance events (also called \emph{Markov games}, or \emph{stacked matrix games}) can be described
-by a tuple $(\cN, \cS = \cD\cup\cC\cup\cZ, \cA, \cT, \Delta_\star, u_i, s_0)$.
+A finite two-player game with simultaneous moves and chance events (also called \emph{Markov games}, or \emph{stacked matrix games}) can be described
+by a tuple $(\cN, \cS, \cA, \cT, \Delta_\star, u_i, s_0)$, where $\cS = \cD\cup\cC\cup\cZ$.
 The player set $\cN = \{ 1, 2, \star \}$ contains player labels, where
 $\star$ denotes the chance player, and by convention a player is denoted $i \in \cN$.
 $\cS$ is a set of states, with $\cZ$ denoting the terminal states, $\cD$ the states where players make decisions,
 and $\cC$ the possibly empty set of states where chance events occur. $\cA = \cA_1 \times \cA_2$ is the set of
-joint actions of individual players. We denote $\cA_i(s)$ the actions available to player $i$ in state $s \in \cS$ \reviewchange{and denote the number of actions $|\cA_i(s)|$ as the \emph{branching factor for player $i$}. When the player is not specified, we mean the joint branching factor $|\cA(s)|$.}
+joint actions of individual players. 
+We denote by $\cA_i(s)$ the actions available to player $i$ in state $s \in \cS$. 
+The number of actions available to player~$i$, $|\cA_i(s)|$, is called the \emph{branching factor for player $i$}. 
+When the player is not specified, we mean the joint branching factor $|\cA(s)|$.
 The transition function $\cT : \cS \times \cA_1 \times \cA_2 \mapsto \cS$ defines the successor state given a current
 state and actions for both players. $\Delta_\star:\cC \mapsto \Delta(\cS)$ describes a probability distribution over
 possible successor states of the chance event.
@@ -30,13 +35,13 @@ The utility function $u_i : \cZ \mapsto [v_{\min}, v_{\max}] \subseteq \mathbb{R
 $v_{min}$ and $v_{\max}$ denoting the minimum and maximum possible utility respectively. We assume zero-sum
 games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$.
 The game begins in an initial state $s_0$ \reviewchange{and a subset of a game that starts in some node $s$ is called a \emph{subgame}}.
-An example of such game is depicted in Figure~\ref{fig:example}. More examples can be found in \cite[Chapter 5]{Saffidine2013thesis}.
+An example of such a game is depicted in Figure~\ref{fig:example}, more examples can be found in \cite[Chapter 5]{Saffidine2013thesis}.
 
-In two-player zero-sum games a (subgame perfect) Nash equilibrium strategy is often considered to be optimal (formal definition follows).
-It guarantees an expected payoff of at least $V$ against any opponent. Any non-equilibrium strategy has its nemesis, which makes it win less
+In two-player zero-sum games a (subgame perfect) Nash equilibrium strategy is often considered to be optimal (the formal definition follows).
+It guarantees an expected payoff of at least $V$ against any opponent. Any non-equilibrium strategy has its nemesis, which makes it gain less
 than $V$ in expectation. Moreover, a subgame perfect Nash equilibrium strategy can earn more than $V$ against weak opponents. After the
 opponent makes a sub-optimal move, the strategy will never allow it to gain the loss back.
-The value $V$ is known as the \emph{value of the game} and is the same for every equilibrium profile by von Neumann's minimax theorem~\cite{VonNeumann1928}.
+The value $V$ is known as the \emph{value of the game} and it is the same for every equilibrium strategy profile by von Neumann's minimax theorem~\cite{VonNeumann1928}.
 
 A {\it matrix game} is a single step simultaneous move game with action sets $\cA_1$ and $\cA_2$ (see Figure~\ref{fig:egMatrixGames}).
 Each entry in the matrix $A_{rc}$ where $(r,c) \in \cA_1 \times \cA_2$ corresponds to a utility value reached if row $r$ is chosen by player 1 and column $c$ by player 2.
@@ -63,21 +68,21 @@ a &  0  &  1\\\cline{2-3}
 b & -1  &  0\\\cline{2-3}
 \end{tabular}
 \caption{Matrix games of Matching Pennies (left), and one with a pure Nash equilibrium (right).
-Payoffs to the row player are shown. \label{fig:egMatrixGames}}
+Payoffs for the row player are shown. \label{fig:egMatrixGames}}
 \end{figure}
 
 
 A {\it behavioral strategy} for player $i$ is a mapping from states $s \in \cS$
 to a probability distribution over the actions $\cA_i(s)$, denoted $\sigma_i(s)$.
-\reviewchange{We denote by $\sigma_i(s,a)$ the probability that strategy $\sigma$ assigns to $a$ in $s$.
+\reviewchange{We denote by $\sigma_i(s,a)$ the probability that strategy $\sigma_i$ assigns to $a$ in $s$.
 These strategies are often called {\it randomized}, or {\it mixed} because they represent a mixture over {\it pure} strategies, each of
-which is a point in the Cartesian product space $\times_{s \in \cS} \cA_i(s)$.\footnote{\reviewchange{Notice that a pure strategy is also a mixed strategy that assigns probability 1 to a single pure strategy and probability 0 to every other pure strategy. However, as is common in the literature, we sometimes refer to a mixed strategy
+which is a point in the Cartesian product space $\prod_{s \in \cS} \cA_i(s)$.\footnote{\reviewchange{Notice that a pure strategy is also a mixed strategy that assigns probability 1 to a single pure strategy and probability 0 to every other pure strategy. However, as it is common in the literature, we sometimes refer to a mixed strategy
 to specifically mean not a pure strategy. This is mostly clear from the context, but we clarify where necessary.}}}
 \reviewchange{Let $\cH$ be a global set of histories (sequences of actions from the start of the game).}
-Given a strategy profile $\sigma = (\sigma_1, \sigma_2)$, define the probability of reaching a history $h$ under $\sigma$ as
+Given a strategy profile $\sigma = (\sigma_1, \sigma_2)$, we define the probability of reaching a history $h$ under $\sigma$ as
 $\pi^\sigma(h) = \pi^\sigma_1(h) \pi^\sigma_2(h) \pi^\sigma_\star(h)$, where each $\pi^\sigma_i(h)$ is a product of probabilities of the actions taken
 by player $i$ along the path to $h$ ($\pi_\star$ being chance's probabilities).
-Finally, define $\Sigma_i$ to be the set of all behavioral strategies for player $i$.
+Finally, we define $\Sigma_i$ to be the set of all behavioral strategies for player $i$.
 \reviewchange{We adopt a standard convention that the index $-i$ refers to the opponent of player $i$.
 %In a game with chance events, then the $-i$ also includes the chance player, so \eg if $i = 1$ then $\pi^\sigma_{-i}(h) = \pi^\sigma_2(h) \pi^\sigma_\star(h)$.
 %Whereas, in the case of a matrix game, $\cA_{-i} = \cA_{3-i}$.
@@ -89,20 +94,20 @@ There are three important concepts used in the paper that deserve explicit defin
 an optimal behavior for this class of games, to define metrics for evaluation, and parts of the algorithms.
 
 \begin{definition}[Strictly Dominated Action]
-In a matrix game, an action $a_i \in \cA_i$ is strictly dominated if $\forall a_{-i} \in \cA_{-i}, \forall a_i' \in \Sigma_i \setminus \{ a_i \}: u_i(a_i, a_{-i}) < u_i(a_i', a_{-i})$.
+In a matrix game, an action $a_i \in \cA_i$ is strictly dominated if $\forall a_{-i} \in \cA_{-i}, \exists a_i' \in \cA_i \setminus \{ a_i \}: u_i(a_i, a_{-i}) < u_i(a_i', a_{-i})$.
 \end{definition}
 
-No rational player would want to play a strictly dominated action, because there is always a better action to play instead, for any action used by the opponent. The concept also extends naturally to behavioral strategies.
+No rational player would want to play a strictly dominated action, because there is always a better action to play instead regardless which action the opponent is playing. The concept also extends naturally to behavioral strategies.
 For example, in the game on the right of Figure~\ref{fig:egMatrixGames}, both $b$ and $B$ are strictly dominated.
 In this paper we refer to the dominance always in this strict meaning.
 
 \begin{definition}[Best Response]
-Suppose $\sigma_{-i} \in \Sigma_{-i}$ is a fixed opponent strategy. Define the set of best response strategies
-$BR_i(\sigma_{-i}) = \{ \sigma_i~|~u_i(\sigma_i, \sigma_{-i}) = \max_{\sigma_i' \in \Sigma_i} u_i(\sigma_i', \sigma_{-i})) \}$.
+Suppose $\sigma_{-i} \in \Sigma_{-i}$ is a fixed strategy of player $-i$. Define the set of best response strategies
+$BR_i(\sigma_{-i}) = \{ \sigma_i~|~u_i(\sigma_i, \sigma_{-i}) = \max_{\sigma_i' \in \Sigma_i} u_i(\sigma_i', \sigma_{-i}) \}$.
 A single strategy in this set, \eg $\sigma_i \in BR_i(\sigma_{-i})$, is called a best response strategy to $\sigma_{-i}$.
 \end{definition}
 
-Note that a best response can be a mixed strategy, but a pure best response always exists and is often easier to compute.
+Note that a best response can be a mixed strategy, but a pure best response always exists~\cite{Gintis09} and it is often easier to compute.
 
 \begin{definition}[Nash Equilibrium]
 A strategy profile $(\sigma_i, \sigma_{-i})$ is a Nash equilibrium profile if and only if $\sigma_i \in BR_i(\sigma_{-i})$
@@ -124,7 +129,7 @@ Note that using a mixed strategy is necessary in this game to achieve the guaran
 Any pure strategy of one player can be exploited by the opponent; \reviewchange{so while a pure best response to a fixed strategy always
 exists, it is not always possible to find a Nash equilibrium for which both strategies are pure.}
 For the same reason, randomized strategies are often necessary also in the multi-step simultaneous move games.
-If the strategies also optimize Equation \ref{eq:ne} in each subgame starting in an arbitrary state, the equilibrium strategy
+If the strategies also optimize Equation (\ref{eq:ne}) in each subgame starting in an arbitrary state, the equilibrium strategy
 is termed {\it subgame perfect.}
 
 Finally, a two-player simultaneous move game is a specific type of two-player imperfect information extensive-form game.
@@ -135,10 +140,10 @@ In imperfect information
 %{\it imcomplete information} games in which players may also not know (or be fully certain of) the utility functions of their opponents
 %or precisely how nature affects the game.}
 games, states are grouped into {\it information sets}: two states $s, s'$ are grouped in information set $I$ if the player
-to act at $I$ cannot distinguish which of these states the game is currently in. Any simultaneous move game can be modeled
+to act at $I$ cannot distinguish in which of these states she is. Any simultaneous move game can be modeled
 using information sets to represent a half-completed transition, \ie $\cT(s, a_1, ?)$ or $\cT(s, ?, a_2)$.
 The matrix game of Rock, Paper, Scissors can also be thought of as a two-step process where the first player commits
-to a choice, writing it on a face-down piece of paper, and then second player responds. Figure~\ref{fig:rps-equiv} shows this
+to a choice, writing it on a face-down piece of paper, and then the second player responds. Figure~\ref{fig:rps-equiv} shows this
 transformation, which can generally be applied to every state in a simultaneous move game.
 %by placing the root of subgame following both players' decisions, or a successor chance node outcome.
 Therefore, algorithms intended for two-player zero-sum imperfect information games may also be applied to the
