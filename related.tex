@@ -24,21 +24,21 @@ the joint action determines how the state changes. Littman introduced Markov gam
 as well as a variant of Q-learning called Minimax-Q to compute strategies~\cite{Littman94markovgames,Littman01Value}.
 Minimax-Q modifies the learning rule so that the value of the next state (the subgame) is obtained by solving
 a linear program using the estimated values of that subgame's root.
-As is common in these settings, the goal of each agent is to maximize their expected utility. 
+As it is common in these settings, the goal of each agent is to maximize their expected utility. 
 In two-player zero-sum Markov games, an optimal policy corresponds to a Nash equilibrium strategy, which assures the agent 
 the highest worst-case expected payoff. Initial results provided conditions under which approximate dynamic 
 programming could be used to guarantee convergence to the optimal value function and 
 policies~\cite{Littman96ageneralized}. Later, in \cite{Lagoudakis02}, Lagoudakis and Parr provided stronger bounds 
 and convergence guarantees for least squares temporal difference learning using linear function approximation. 
-Bounds on approximation error for sampling techniques in discounted Markov games are presented in \cite{Savagaonkar02}, 
+Bounds on the approximation error for sampling techniques in discounted Markov games are presented in \cite{Savagaonkar02}, 
 and new bounds for approximate dynamic programming have also been recently shown~\cite{Perolat15Approximate}.
 
 In early 2000s, gradient ascent methods were introduced for playing 
 repeated games~\cite{Singh02Nash,Bowling01WoLF}. These algorithms update strategies in a direction of the strategy space 
-that increases expected payoff with respect to the opponent's strategy. These were then generalized and combined, and 
+that increases the expected payoff with respect to the opponent's strategy. These were then generalized and combined, and 
 shown to minimize regret over time~\cite{Zinkevich03Online,Bowling05Convergence}, leading to strong convergence 
 guarantees in multiagent learning. More no-regret algorithms followed and were applied to imperfect information 
-games in sequence-form (One-Card Poker)~\cite{Gordon06No}. Soon later, counterfactual regret (CFR) minimization was 
+games in sequence-form (One-Card Poker)~\cite{Gordon06No}. Later, counterfactual regret (CFR) minimization was 
 introduced for large imperfect information games~\cite{CFR}. CFR has gained much attention due to its success in 
 computing Poker AI strategies, and recently an application of CFR has solved Heads Up Limit Texas Hold'em Poker~\cite{Bowling15science}.
 In this paper we analyze the effectiveness of a specific form of Monte Carlo CFR for the first time in simultaneous move games. 
@@ -61,9 +61,9 @@ it solves the normal-form game corresponding to $s$ (\ie computes a NE of the ma
 Backward induction then outputs a subgame perfect NE. 
 
 There are two notable algorithms that improve the standard backward induction in simultaneous move games. 
-First is an algorithm by Saffidine et al.~\cite{Saffidine12SMAB} termed simultaneous move alpha-beta algorithm (SMAB). 
+First is an algorithm by Saffidine~et al.~\cite{Saffidine12SMAB} termed simultaneous move alpha-beta algorithm (SMAB). 
 The main idea of the algorithm is to reduce the number of the recursive calls of the backward induction
-algorithm by removing dominated actions in every stage game. The algorithm keeps bounds on the utility value for each successor in a game state. 
+algorithm by removing dominated actions in every state of the game. The algorithm keeps bounds on the utility value for each successor in a game state. 
 The lower and upper bounds represent the threshold values, for which neither of the actions of the player is dominated by any other action in the current matrix game. These bounds are calculated by linear programs in the state given existing exact values (or appropriate bounds) of the utility values of all the other successors of the state. If they form an empty interval (the lower bound is higher than the upper bound), pruning takes place and the dominated action is no longer considered in this state afterward. 
 
 % SMAB outperforms classic backward induction, however, the computational speed-up is only marginal. 
@@ -77,7 +77,7 @@ The lower and upper bounds represent the threshold values, for which neither of 
 %The reason is that computing dominated actions is a costly operation that does not prune many actions; hence, much of the game tree is still fully evaluated. The authors propose further enhancements in their work~\cite{Saffidine12SMAB}, however, these improvements are domain-specific heuristics and do not significantly change the overall performance of the algorithm. Since other exact algorithms achieve computation speed-up in several orders of magnitude compared to backward induction (as we show in Section~\ref{sec:eval}), we do not explicitly use SMAB in our experiments.
 % bbosansky: Ok, I agree.
 
-While SMAB outperforms the classic backward induction, the speed-up is less significant in comparison to the second exact algorithm introduced in~\cite{Bosansky13Using}, description of which is given in detail in Subsection~\ref{sec:doab}.
+While SMAB outperforms the classic backward induction, the speed-up is less significant in comparison to the second exact algorithm introduced in~\cite{Bosansky13Using}, a description of which is given in detail in Subsection~\ref{sec:doab}.
 %The second exact algorithm that is significantly faster than classic backward induction was introduced in~\cite{Bosansky13Using}.
 %This algorithm is described in detail in Subsection~\ref{sec:doab}. 
 The main idea is to integrate two key components: (1) instead of evaluating all successors in each state of the game and solving a normal-form game, the algorithm exploits the iterative framework known in game theory as double-oracle algorithm~\cite{McMahan03Planning}; (2) the algorithm computes bounds on the utility values of the successors by serializing the subgames and running the classic alpha-beta algorithm. 
@@ -98,14 +98,14 @@ compared to tailored algorithms.
 
 Monte Carlo Tree Search (MCTS) is a simulation-based state space search technique often used in extensive-form games \cite{Coulom06,UCT}. 
 Having first seen practical success in computer Go \cite{Gelly2011,Gelly12}, MCTS has since been applied successfully to simultaneous move games and imperfect information games as well~\cite{Ciancarini10Kriegspiel,Cowling12ISMCTS,15aamas-iioos}. 
-Most of the successful applications use the Upper Confidence Bounds (UCB) formula~\cite{UCB} as a selection strategy. These variants of MCTS are also known as UCT (UCB applied to trees). The first application of MCTS to simultaneous move games was in general game playing (GGP)~\cite{GGP} programs: \textsc{Cadiaplayer}~\cite{Cadiaplayer,Finnsson12} uses UCB selection strategy for each player in a single game tree. The success of MCTS algorithm was demonstrated by the success of \textsc{Cadiaplayer} which was the top-ranked player of the GGP competition between 2007 and 2009, and also in 2012.
+Most of the successful applications use the Upper Confidence Bounds (UCB) formula~\cite{UCB} as a selection strategy. These variants of MCTS are also known as UCT (UCB applied to trees). The first application of MCTS to simultaneous move games was in general game playing (GGP)~\cite{GGP} programs: \textsc{Cadiaplayer}~\cite{Cadiaplayer,Finnsson12} uses UCB selection strategy for each player in a single game tree. The success of MCTS was demonstrated by the success of \textsc{Cadiaplayer} which was the top-ranked player of the GGP competition between 2007 and 2009, and also in 2012.
 
 Despite this success, Shafiei et al. in~\cite{Shafiei09} provide a counter-example showing that this straightforward application of UCT does not
 converge to NE even in the simplest simultaneous move games and that a player playing a NE can exploit this strategy. Another variant of UCT, which has been applied to  Tron~\cite{Samothrakis10Tron}, builds the tree as if the players were moving sequentially giving one of the players an informational advantage. This approach also cannot converge to NE in general. For this reason, other variants of MCTS were considered for simultaneous move games. Teytaud and Flory describe a search algorithm for games with short-term imperfect information~\cite{Teytaud11Upper}, which are a generalization of simultaneous move games. Their algorithm uses a different selection strategy, called Exp3~\cite{Auer2003Exp3},
 and was shown to work well in the Internet card game Urban Rivals. We provide details of these two main existing selection functions in Subsections~\ref{sec:duct} and~\ref{sec:exp3}.
 A more thorough experimental investigation of different selection policies including UCB, UCB1-Tuned, UCB1-greedy, Exp3, and more is reported in the game of Tron \cite{Perick12Comparison}. The work by Lanctot et al.~\cite{Lanctot13Goofspiel} compares some of these variants and proposes Online Outcome Sampling, a search version of Monte Carlo CFR~\cite{Lanctot09Sampling}, which computes an approximate equilibrium strategy with high probability. \reviewchange{We describe a new formulation of this algorithm in Subsection~\ref{sec:oos}.}
 Finally, \cite{lisy2013-nips, Kovarik2015Analysis} present variants of MCTS that provably converge to Nash equilibria in simultaneous move games, 
-using any regret-minimizing algorithm at each stage. We elaborate on these results in Subsection~\ref{sec:theory_discuss}.
+using any regret-minimizing algorithm at each stage. We elaborate on these results in Subsection~\ref{sec:theory_discuss}.\bbosansky{Fix this after moving the theory directly to the algorithms.}
 
 There have been two recent studies that examine the head-to-head performance of these variants in practice. 
 The first~\cite{Lanctot13Tron} builds on previous work in Tron by varying the shape of the initial board, 
@@ -123,31 +123,31 @@ Results indicate that parameter-tuning landscapes do not seem as smooth as in th
 
 %\mlanctot{Brief overview of relevant work in RTS/video games}
 
-Real-time games are not turn-based and represent a realistic physical situations where agents can move freely in space. 
+Real-time games are not turn-based and represent realistic physical situations where agents can move freely in space. 
 The state of the game is a continuous function of time and the effect of some actions may only be realized some time 
 after the decision is made. These games are often appropriately modeled as a simultaneous move game with very short 
 delays (\eg 40 milliseconds) between frames. 
 
 MCTS has enjoyed some success in these types of games, in the single-agent 
-setting~\cite{Pepels14Monte,Perez14PTSP} and multiagent setting~\cite{Balla09UCT}, much of this work inspired by video 
+setting~\cite{Pepels14Monte,Perez14PTSP} and multiagent setting~\cite{Balla09UCT}. Much of this work is inspired by video 
 games~\cite{Cowling13Video,BellemareNVB13,Ontanon13RTSSurvey}. Few of these works have considered MCTS
 in the simultaneous move game directly. 
-In one of the first papers on real-time strategy games, the authors used randomized serialization 
-of the game~\cite{kovarsky2005heuristic}, or strategy simulation
+In one of the first papers on real-time strategy games, the authors used a randomized serialization 
+of the game~\cite{kovarsky2005heuristic}, or a strategy simulation
 from scripts was used to build a single matrix of values from which an equilibrium strategy was 
-computed using linear programming~\cite{Sailor07adversarial}.  
-This search can be extended to multiple nodes where internal nodes would correspond to scripts being interrupted to replan, similarly to \cite{lisy2009gbgts}.
-MCTS-style multistage replanning was also applied to a real-time battle scenario which was also accurately
-represented as a discrete simultaneous move game~\cite{Beard12Using}. Results of this work show that multistage
-forward replanning can improve upon single-stage forward planning, and can produce approximate Nash equilibrium strategies
-when mixed strategies are computed at each stage during search.
-Around the same time, a serialized (sequential) version of alpha-beta was proposed for simultaneous move games 
+computed using \bbosansky{the?}linear programming~\cite{Sailor07adversarial}.  
+This method can be extended to multiple nodes where internal nodes would correspond to scripts being interrupted to replan, similarly to \cite{lisy2009gbgts}.
+\bbosansky{The/A?}MCTS-style multistage replanning was also applied to a real-time battle scenario which was also accurately
+represented as a discrete simultaneous move game~\cite{Beard12Using}. Results of this work show that the multistage
+forward replanning can improve upon the single-stage forward planning, and can produce approximate Nash equilibrium strategies
+when mixed strategies are computed at each stage during the search.
+Around the same time, a serialized (sequential) version of the alpha-beta algorithm was proposed for simultaneous move games 
 and run on combat scenarios~\cite{Churchill2012Fast}. This algorithm is described in greater detail in
-Subsection~\ref{sec:algs:biab} as it forms the basis of the follow-up enhanced by
+Subsection~\ref{sec:algs:biab} as it forms the basis of the follow-up algorithm enhanced by
 double-oracle, presented in Subsection~\ref{sec:algs:doab}.
 
 In this paper, we focus on the analysis of different algorithms for two-player simultaneous move games. Therefore, 
-problems arising from discrete modeling of continuous time and space remain outside the scope of this paper.
+the problems arising from discrete modeling of continuous time and space remain outside the scope of this paper.
 
 %The benefit of serializing the game is that bounds
 %on the correct minimax value can be obtained for the underlying simultaneous move game. These bounds can be used to cut out

@@ -301,30 +301,60 @@ Fixed
 >   since the last version of the paper.
 > 
 > * First sentence of Section 3: "that which" -> "that" or "which".
+
+Fixed
+
 > 
 > * p. 10, line 14/15: "... every stage game ..." -> "... every stage of the game ..."
+
+Fixed
+
 > 
 > * p. 10, line 28: "... description of which ..." -> "... a description of which ..."
+
+Fixed
+
 > 
 > * p. 10, line 35: "... running classic alpha-beta algorithm." ->
 >   "... running the classic alpha-beta algorithm."
+
+Fixed
+
 > 
 > * Next page: "The success of MCTS algorithm ..." ->
 >   "The success of the MCTS algorithm ..." or "The success of MCTS ...".
+
+Fixed
+
 > 
 > * Section names: Structure might become clearer if Section 4 was named
 >   "Offline Search" instead of "Strategy Computation", contrasting Section 5, "Online Search".
+
+Fixed
+
 > 
 > * Sec. 4.2, second line: "value" -> "values"
+
+
+
 > 
 > * Below: "... applying wide range ..." -> "... applying a wide range ..."
 > 
 > * Next page, line 35: "greater or equal than" -> "greater than or equal to"
+
+Fixed
+
 > 
 > * Same sentence, now regarding content: Isn't that trivial?
+
+For the sake of completeness of the paper we state this fact.
+
 > 
 > * Below: *The* upper/lower bound: Should be *a* lower bound / *an* upper bound,
 >   since there is no unique lower and upper bound.
+
+TODO
+
 > 
 > * Next-to-last paragraph of Sec. 4.2: unclear
 > 
@@ -333,21 +363,40 @@ Fixed
 >   convincing. What does "in practice" even mean? In certain standard benchmarks?
 >   In your favorite benchmarks? In real-world applications? In particular case
 >   studies?
+
+In typical games that are used for benchmarks. We have corrected this in the text.
+
 > 
 > * Sec. 4.3.2.: New sentence (blue): "verifies" -> "tests"; "cannot" -> "can"
 > 
+
+Fixed
+
+
 > * Below: "... is same as ..." -> ".. is the same as ..."
+
+Fixed
+
 > 
 > * Two pages further: "... against current strategy ..." -> "... against the current strategy ..."
+
+Fixed
+
 > 
 > * Starting about here (Alg. 4 ff) it gets a bit hard to comprehend, and slightly
 >   confused. Maybe instead of these long textual descriptions, some derivations
 >   of the algorithms, or at least correctness proofs wouls be nice. Also, these
 >   length prose descriptions of the algorithms convey fewer insights than one
 >   could convey with a more structured presentation.
+
+TODO
+
 > 
 > * Generally, Section 4 contains a lengthy list of techniques, but without a
 >   decent guiding thread and little interconnection. This could be improved.
+
+TODO
+
 > 
 > * Sec 5.1: "... contains depth d-1 solutions ..." -> "... contains d-1 solutions ..."
 > 
