@@ -52,15 +52,44 @@ game with sequential moves and by using some of the algorithms developed for thi
 Consider a matrix game representing a single joint action of both players.
 This matrix can be serialized by discarding the notion of information sets; hence, letting one player play first, followed by the second player.
 The difference between a serialized and a simultaneous move matrix game is that the second player to move has an advantage of knowing what action the first player has chosen.
-\reviewchange{
+
 Given this advantage, the value of a serialized game consisting of a single simultaneous move where player $i$ is second to move
-is greater than or equal to the value of the original simultaneous move game from the perspective of player~$i$.
-Furthermore, we can generalize this argument using induction to game trees with multiple simultaneous moves: when solving a serialized game with $(d+1)$ steps,
-we know that solving each subgame with $d$ steps achieves an upper bound on the value of that subgame from the perspective of player $i$. 
-Therefore, entries in the matrix $A$ of the root state are upper bounds on the actual values of the subgames.
-By serializing and solving this additional step, we can again get a value that is only greater or equal than the value of the original simultaneous move game with $(d+1)$ steps~\cite{Bosansky13Using}.
+is greater than or equal to the value of the original simultaneous move game from the perspective of player~$i$, formally shown by the following lemma.
+\reviewchangeT{
+\begin{lemma}\label{lem:minmax}
+Let $A$ be a single step simultaneous move game for state $s$ with value $v_s$ for player $i$. Let $v_s^i$ be the value of the serialized game created form game $A$ by letting player $-i$ move first and player $i$ move second with the knowledge of the move played by the first player. Then
+\[ v_s \le v_s^i\]
+\end{lemma}
+\begin{proof}
+\begin{flalign*}\label{eq:minmax}
+v_s = & \min_{\sigma_{-i}\in \Sigma_{-i}} \max_{\sigma_i \in \Sigma_{i}} \sum_{a_i\in\cA_i(s)}\sum_{a_{-i}\in\cA_{-i}(s)} \sigma_i(s,a_i)\sigma_{-i}(s,a_{-i})A_{a_ia_{-i}}\\
+= & \min_{a_{-i} \in \cA_{-i}(s)} \max_{\sigma_i \in \Sigma_{i}} \sum_{a_i\in\cA_i(s)} \sigma_i(s, a_i)A_{a_ia_{-i}} \\
+\leq & \min_{a_{-i} \in \cA_{-i}(s)} \max_{a_i\in\cA_i(s)} A_{a_ia_{-i}} = v_s^i
+\end{flalign*}
+The first equality is the definition of the value of a zero-sum game, the second is the fact that a best response can always be found in pure strategies: if there was a mixed strategy best response with expected utility $v_s$ and some of the actions form its support would have lower expected utility, removing the action from the support would increase the value of the best response, which is a contradiction. The inequality is due to the fact that a maximization over each action of player $-i$ can only increase the value. $\square$
+\end{proof}
 }
-\bbosansky{Add the theory here.}
+
+We can now generalize this lemma to games trees with multiple simultaneous moves.
+%We can generalize this lemma using induction to game trees with multiple simultaneous moves: when solving a serialized game with $(d+1)$ steps,
+%we know that solving each subgame with $d$ steps achieves an upper bound on the value of that subgame from the perspective of player $i$. 
+%Therefore, entries in the matrix $A$ of the root state are upper bounds on the actual values of the subgames.
+%By serializing and solving this additional step, we can again get a value that is only greater or equal than the value of the original simultaneous move game with $(d+1)$ steps.
+\reviewchangeT{
+\begin{lemma}\label{lem:alphabeta}
+Consider a simultaneous move subgame defined by state $s$ and a serialized variant of this subgame, where in each state player $i$ is second to move. 
+The value of the serialized game is an upper bound on the value of the simultaneous moves subgame for player $i$.
+\end{lemma}
+\begin{proof}
+%Since it is known that the standard alpha-beta algorithm returns the same result as the standard minimax algorithm without pruning (i.e., backward induction on perfect information games), we disregard the pruning in this proof. 
+We use Lemma~\ref{lem:minmax} inductively. Let $s$ be the current state of the game and let $A$ be the exact matrix game corresponding to $s$ with utilities of player~$i$. 
+By induction we assume the algorithm computes for state $s$ some $A'$ so that each value in matrix $A'$ is greater or equal than $A$: 
+$$\forall a_i \in \cA_i(s) \forall a_{-i} \in \cA_{-i}(s) \; A'_{a_ia_{-i}} \geq A_{a_ia_{-i}}.$$
+Therefore, for the value of matrix game $v_{A'} \geq v_A$. 
+Finally, by Lemma~\ref{lem:minmax} the algorithm returns value $v^i_{A'} \geq v_{A'} \geq v_{A}$. $\square$
+\end{proof}
+}
+
 \begin{figure}
 \centering
 %\begin{tabular}{|l|c|c|}
@@ -139,14 +168,21 @@ $\left\langle v_s, \sigma_i \right\rangle \leftarrow$ solve matrix game $A$\;
 \caption{Backward Induction with Serialized Bounds $(\biab)$.}\label{alg:backwardinduction-ab}
 \end{algorithm2e}
 
-\reviewchange{
+\reviewchangeT{
+\begin{theorem}
+The algorithm $\biab(s,i)$ computes the value of the subgame from state $s$ for player $i$.
+\end{theorem}
+\begin{proof}
+The correctness of the algorithm follows immediately from the correctness of the standard BI algorithm and the correctness of using the values computed by serialized alpha-beta (Lemma~\ref{lem:alphabeta}), value of which is used only if the upper bound equals the lower bound on the value of the game. $\square$
+\end{proof}
+}
 The performance of $\biab$ depends on the existence of a pure NE in the simultaneous move game.
 In the best case (\ie there exists a pure NE), the algorithm finds the solution by solving each serialization exactly once starting from the root state.
 In the worst case, all NE require mixed strategies in every state of the game.
 In this case, the algorithm not only solves the LP in each state similarly to BI, but also repeatedly attempts to solve serialized subgames by calling
 the alpha-beta algorithm.
-In practical games used for benchmark purposes, or in real-world applications, however, this is rarely the case.
-}
+In practical games used as a benchmark, or in real-world applications, however, this is rarely the case.
+
 
 \subsection{Backward Induction with Double Oracle and Serialized Bounds}\label{sec:algs:doab}
 
@@ -297,16 +333,27 @@ If the currently evaluated action $a_i$ can still be the best response, the valu
 
 When extracting strategies from $\doab$, we proceed exactly as in the case of $\biab$: either a double-oracle is initialized and solved for a certain matrix game and we keep the equilibrium strategies from the final restricted game, or the strategy is extracted from the serialized alpha-beta algorithms as before.
 
-\reviewchange{
-Similarly to $\biab$, the performance of $\doab$ also depends on the existence of pure NE in the simultaneous move game.
-The best case is identical to $\biab$ and the algorithm finds the solution by solving each serialization exactly once starting from the root state.
-In the worst case, none of the serialized games yield useful bounds and the algorithm needs to call the double-oracle algorithm in every state.
-Moreover, the worst case for the double-oracle algorithm occurs when all actions in this state must be added and action for only a single player is added in each iteration causing the largest number of iterations repeatedly resolving the linear program.
-Again in practical games used for benchmark purposes, or in real-world applications, however, this is rarely the case.
-Moreover, the computational overhead from repeatedly solving a LP is relatively small in practice. % because algorithms can reuse the previous interval values help solve a similar LP. 
-This is due to the size of each LP that is determined by the number of actions in each state (number of constraints and variables is bounded by the number of actions in each state).
-Therefore, the size of each LP is small compared to the number of states $\doab$ can prune out, especially if the pruning occurs close to the root of the game tree.
+\reviewchangeT{
+\begin{theorem}
+The $\doab(s,i)$ algorithm computes the value of the subgame defined by state $s$ for player $i$.
+\end{theorem}
+\begin{proof}
+The correctness of the algorithm follows from the correctness of the standard BI algorithm, Lemma~\ref{lem:alphabeta}, and the correctness of the double-oracle algorithm for matrix games~\cite{McMahan03Planning}. 
+We only need to show that the best-response algorithm with serialized bounds cannot return \textbf{null} action due to setting the bounds incorrectly. 
+Without loss of generality, consider a lower bound $\alpha_s$ for state $s$.
+Value $\alpha_s$ corresponds either to a value calculated by serialized alpha-beta and propagated via bounds when calling $\doab(s,i,\alpha_s,\beta_s)$, or it was updated during the iterations of the double-oracle algorithm for state $s$. 
+In either case there exists a pure best response strategy corresponding to this value; hence, the best response has to find the strategy that achieves this value and cannot return \textbf{null}. $\square$
+\end{proof}
 }
+Similarly to $\biab$, the performance of $\doab$ also depends on the existence of a pure NE in the simultaneous move game.
+The best case is identical to $\biab$ and the algorithm finds the solution by solving each serialization exactly once starting from the root state.
+In the worst case, neither of the serialized games yield useful bounds and the algorithm needs to call the double-oracle algorithm in every state.
+Moreover, the worst case for the double-oracle algorithm occurs when all actions in this state must be added and an action for only a single player is added in each iteration causing the largest number of iterations repeatedly resolving the linear program.
+Again in practical games used for benchmark purposes, or in real-world applications this is rarely the case.
+Moreover, the computational overhead from repeatedly solving a LP is relatively small. 
+This is due to the size of each LP that is determined by the number of actions in each state (the number of constraints and variables is bounded by the number of actions in each state).
+Therefore, the size of each LP is small compared to the number of states $\doab$ can prune out, especially if the pruning occurs close to the root of the game tree.
+
 
 \subsection{Simultaneous Move Monte Carlo Tree Search (SM-MCTS)} \label{sec:algs:smmcts}
 
@@ -315,9 +362,10 @@ Therefore, the size of each LP is small compared to the number of states $\doab$
 
 In the following subsections we move to the approximative algorithms.
 Monte Carlo Tree Search (MCTS) is a simulation-based state space search algorithm often used
-in game trees. The nodes in the tree represent game states. The main idea is to iteratively run
-simulations to a terminal state, incrementally growing a tree rooted at the initial state of the current subgame. In
-its simplest form, the tree is initially empty and a single leaf is added each iteration. Each iteration
+in game trees. 
+%The nodes in the tree represent game states. The main idea is to iteratively run simulations to a terminal state, incrementally growing a tree rooted at the initial state of the current subgame. 
+%[bb] commented out -- the tree is still the same as in the previous sections
+In its simplest form, the tree is initially empty and a single leaf is added each iteration. Each iteration
 starts by visiting nodes in the tree, selecting which actions to take based on a \emph{selection function} and
 information maintained in the node. Consequently, the algorithm transitions to a successor state. When a
 node is visited whose immediate children are not all in the tree, the node is expanded by adding a
@@ -384,7 +432,7 @@ At chance nodes, the algorithm samples one of the possible next states based on 
 If the current state has a node in the current MCTS tree, the statistics in the node are used to select an action for each player (line~\ref{alg:smmcts:select}).
 These actions are executed (line 8) and the algorithm is called recursively on the resulting state (line 9).
 The result of this call is used to update the statistics maintained for state $s$ (line~\ref{alg:smmcts:up}).
-If the current state is not stored in tree, it is added to the tree (line 13) and its value is estimated using the rollout policy (line 14).
+If the current state is not stored in the tree, it is added to the tree (line 13) and its value is estimated using the rollout policy (line 14).
 
 Several different algorithms (\eg UCB~\cite{UCB}, Exp3~\cite{Auer2003Exp3}, and regret matching~\cite{Hart00}) can be used as the selection function.
 We now present the variants of SM-MCTS that were consistently the most successful in the previous works,
@@ -393,8 +441,8 @@ though more variants can be found in~\cite{Perick12Comparison,Lanctot13Tron,Tak1
 \subsubsection{Decoupled Upper-confidence Bound applied to Trees}\label{sec:duct}
 
 The most common selection function for SM-MCTS is the decoupled Upper-Confidence Bound applied to Trees (UCT).
-For selection and updates, it executes the well-known UCT \cite{UCT} algorithm independently for each of the players in each nodes.
-The statistics stored in search nodes are independently computed for each action of each player. For player $i\in \cN$ and
+For the selection and updates, it executes the well-known UCT \cite{UCT} algorithm independently for each of the players in each nodes.
+The statistics stored in the tree nodes are independently computed for each action of each player. For player $i\in \cN$ and
 action $a_i \in \cA_i(s)$ the reward sums $X_{a_i}$ and the number of times the action was used $n_{a_i}$ are maintained.
 When a joint action needs to be selected by the \textsc{Select} function, an action that maximizes the UCB value over
 their utility estimates is selected for each player independently (therefore it is called decoupled):
@@ -407,7 +455,7 @@ and $n_{a_i} \leftarrow n_{a_i} + 1$.
 
 Consider again the example shown in Figure~\ref{fig:smmcts-example}. Decoupled UCT now groups together all the payoffs obtained
 for an action. Therefore, at the root Max has $\bar{X}_t = 5/2 = 2.5, \bar{X}_b = 1/2 = 0.5$ and the exploration term for both is
-$C_i \sqrt{(\log 4) / 2}$, and so top is selected. For Min, $\bar{X}_l = 3/2 = 1.5 = \bar{X}_r$, so both actions have the same value.
+$C_i \sqrt{(\log 4) / 2}$, and so top action is selected. For Min, $\bar{X}_l = 3/2 = 1.5 = \bar{X}_r$, so both actions have the same value.
 \reviewchange{Therefore, Min must use a tie-breaking rule in this situation to decide which action to take.
 As we discuss later, the specific tie-breaking rule used here can lead to a significant effect on the quality
 of the strategy that UCT produces.}
@@ -454,7 +502,7 @@ The probability of selecting action $a_i$ is proportional to the exponential of 
   \mbox{ where } \eta = \frac{\gamma}{|\cA_i(s)|}.
 \end{equation}
 
-This standard formulation of Exp3 is suitable for deriving its properties, but a straightforward implementation of this formula leads to problems with numerical stability. Both the numerator and denominator of the fraction can quickly become too large. For this reason, other formulations have been suggested, \eg in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS} that are more numerically stable. We use the following equivalent formulation from \cite{Cowling12ISMCTS}:
+This standard formulation of Exp3 is suitable for deriving its properties, but a straightforward implementation of this formula leads to problems with a numerical stability. Both the numerator and the denominator of the fraction can quickly become too large. For this reason, other formulations have been suggested, \eg in \cite{Lanctot13Goofspiel} and \cite{Cowling12ISMCTS} that are more numerically stable. We use the following equivalent formulation from \cite{Cowling12ISMCTS}:
 \begin{equation} \label{eq:exp3:stable}
 \sigma_i(a_i) = \frac{(1-\gamma)}{\sum_{b_i \in A_i(s)}\exp(\eta(\hat{X}_{b_i}-\hat{X}_{a_i}))} + \frac{\gamma}{|\cA_i(s)|}.
 \end{equation}
@@ -492,16 +540,16 @@ Furthermore, the algorithm for each player $i$ maintains a cumulative regret $r^
 
 On iteration $t$, function \textsc{Select} first builds
 each player's current strategies from the cumulative regrets. Define $x^+ = \max(x,0)$,
+%\label{eq:rm}
 \begin{equation}
-\label{eq:rm}
 \sigma_i(a_i) = \frac{r^{i+}_{a_i}}{R^+_{sum}} \mbox{ if } R^+_{sum} > 0
 \mbox{ oth. } \frac{1}{|\cA_i(s)|}, \mbox{ where } R^+_{sum} = \sum_{b_i \in \cA_i(s)}{r^{i+}_{b_i}}.
 \end{equation}
-The main idea is to adjust the strategy by assigning probability to actions proportionally to the regret of having not taken them over the long-term.
+The main idea is to adjust the strategy by assigning the probability to actions proportionally to the regret of having not taken them over the long-term.
 To ensure exploration, a sampling procedure similar to Equation~\ref{eq:exp3select} is used to select action $a_i$ with probability
 $\gamma/|\cA_i(s)| + (1-\gamma) \sigma_i(a_i)$.
 
-\textsc{Update} adds regret accumulated at the iteration to
+\textsc{Update} adds the regret accumulated at the iteration to
 the regret tables $r^i$. Suppose joint action $(a_1,a_2)$ is
 sampled from the selection policy and utility $u_1$ is returned from the recursive call on line~\ref{alg:smmcts:reccall}.
 Label $reward(b_1,b_2) = \frac{X_{b_1b_2}}{n_{b_1b_2}}$ if
@@ -512,7 +560,28 @@ $(b_1,b_2) \not= (a_1,a_2)$, or $u_1$ otherwise. The updates to the regret are:
 \end{eqnarray}
 %\noindent and average strategy updates for each player, $\bar{\sigma}^i_s[a] \leftarrow \bar{\sigma}^i_s[a] + \sigma^t_i(s,a).$
 
-After all simulations, the strategy to play in state $s$ is defined by the mean strategy used in the corresponding node as in case of Exp3.
+After all simulations, the strategy to play in state $s$ is defined by the mean strategy used in the corresponding node similarly to Exp3.
+
+\reviewchangeT{
+\subsubsection{Theoretical Properties}\label{sec:algs:mcts:theory}
+While the completeness of the exact algorithms is based on the Markov property and backward induction, the concept of the completeness is less clear for the sampling algorithms due to the randomization.
+Instead, we discuss a form of a probabilistic completeness. 
+Unfortunately, none of the variants of this algorithm introduced above has been proven to eventually converge to a Nash equilibrium. If the algorithm is instantiated by UCT, Shafiei et al. \cite{Shafiei09} have shown that the algorithm converges to a stable strategy, which is not close to a Nash equilibrium. We replicate the experiment below and note that this is the case only for the deterministic version of UCT. A randomized version of UCT with a well selected exploration parameter empirically converges close to the equilibrium strategy, but then in some games oscillates and does not converge further.
+
+The only know theoretic result about SM-MCTS directly applicable for the algorithms in this paper is negative and it has been proven in \cite{Kovarik2015Analysis}.
+
+\begin{theorem}
+There are games, in which SM-MCTS instantiated by any regret minimizing selection function with a constant exploration $\gamma$ cannot converge to a strategy that would be an $\epsilon$-Nash equilibrium for an $\epsilon < \gamma D$, where $D$ is the depth of the game tree.
+\end{theorem}
+
+The main idea of the proof is to define a specific class of games (see Example~2 in \cite{Kovarik2015Analysis}), in which the exploration in a greater depth of the game tree causes a bias in the values observed in the higher levels of the tree, consequently leading to a wrong decision in the root.
+
+In order to obtain positive formal results about the convergence of SM-MCTS-like algorithms, the authors in \cite{Kovarik2015Analysis} either add an additional averaging step to the algorithm (that makes it significantly slower in practical games used in benchmarks), or assume additional non-trivial technical properties about the selection function, which are not know to hold for any of the selection functions above. %Since there is no known finite-time bound, there is no known guarantee for the quality of the solution if SM-MCTS is terminated early.
+
+As for computational complexity, the time cost per node is linear in $|\cA_i|$ in UCT and RM. The time cost per node is quadratic in the case of Exp3 due to the numerically stable update rule (Equation~\ref{eq:exp3:stable}.) 
+The memory required per node is linear in UCT and Exp3, and quadratic in RM due to storing estimates of each child subgame.
+
+}
 
 \subsection{Counterfactual Regret Minimization and Outcome Sampling} \label{sec:algs:cfros}
 
@@ -538,8 +607,8 @@ Player $i$'s counterfactual regret of not taking $a \in \cA(I)$ at time $t$ is $
 The CFR algorithm maintains the cumulative regret $R_i^T(I,a) = \sum_{t=1}^T r_i^t(I,a)$, for every action at every information set.
 Then, the distribution at each information set for the next iteration $\sigma^{T+1}(I)$ is obtained individually using
 regret-matching~\cite{Hart00}. The distribution is proportional to the positive portion of the individual actions' regret:
+%\label{eq:rm}
 \begin{equation*}
-\label{eq:rm}
 \sigma^{T+1}(I,a) = \left\{
 \begin{array}{ll}
 R_i^{T,+}(I,a) / R^{T,+}_{i,sum}(I) & \mbox{if } R^{T,+}_{i,sum}(I) > 0 \\
@@ -598,7 +667,7 @@ a simpler OOS specifically intended for simultaneous move games.
 Online Outcome Sampling resembles MCTS in that it builds its tree incrementally. However, the algorithm is based on MCCFR, from
 Subsection~\ref{sec:algs:cfros}, rather than on stochastic and adversarial bandit algorithms, such as UCB and Exp3.
 A previous version of this algorithm for simultaneous move games was presented by Lanctot et al.~\cite{Lanctot13Goofspiel}. The version presented
-here is simpler for implementation and it further reduces variance of the regret estimates, which leads to faster convergence and better game play.
+here is simpler for implementation and it further reduces the variance of the regret estimates, which leads to a faster convergence and a better game play.
 The main novelty in this version is that in any state $s$, it defines the counterfactual values as if the game actually started in $s$. This is
 possible in simultaneous move games, because the optimal strategy in any state depends only on the part of the game below the state.
 
@@ -639,7 +708,7 @@ possible in simultaneous move games, because the optimal strategy in any state d
 \end{algorithm2e}
 
 The pseudo-code is given in Algorithm~\ref{alg:oos}. The game tree is incrementally built, starting only with one node for the root game state.
-Each node stores for each player: $R_i(s,a)$ the cumulative regret (denoted $R_i^T(I,a)$ above) for information set $I$ of player $i$ in state $s$ and action $a$,
+Each node stores for each player: $R_i(s,a)$ the cumulative regret (denoted $R_i^T(I,a)$ above) of player $i$ in state $s$ and action $a$,
 and average strategy table $S_i(s)$, which stores the cumulative average strategy contribution for each action.
 Normalizing $S_i$ gives the resulting strategy of the algorithm for player $i$.
 
@@ -648,104 +717,29 @@ which recursively descends down the tree. In the root of the game, the function 
 each iteration. If the function reaches a terminal history of the game (line~\ref{alg:oos:terminal}), it returns the utility of the terminal node
 for player $i$, and $1$ for both the tail and sample probability contribution of $i$. If it reaches a chance node, it recursively continues after
 a randomly selected chance outcome (lines~\ref{alg:oos:chance1}-\ref{alg:oos:chance2}). If none of the first two conditions holds, the algorithm
-reaches a state where players make decisions. If this state is already included in the incrementally built tree (line~\ref{alg:oos:tree}), the
+reaches a state where the players make decisions. If this state is already included in the incrementally built tree (line~\ref{alg:oos:tree}), the
 following state is selected based on the cumulative regrets stored in the tree by regret matching with $\epsilon$-on-policy sampling strategy for
 player $i$ (lines~\ref{alg:oos:rm1}-\ref{alg:oos:rm2}) and the exact regret matching strategy for player $-i$ (lines~\ref{alg:oos:opprm1}-\ref{alg:oos:opprm2}).
 The recursive call on line~11 then continues the iteration until the end of the game tree. If the reached node is not in the tree,
 it is added (line~\ref{alg:oos:addtree}) and an action for each player is selected based on the uniform distribution
-(lines~\ref{alg:oos:uniform1}-\ref{alg:oos:uniform2}). Afterwards, random rollout of the game until a terminal node is initiated on line~\ref{alg:oos:rollout}.
-The rollout is similar to the MCTS case, but in addition, it has to compute the tail probability $x_i$ and sampling probability $q_i$
+(lines~\ref{alg:oos:uniform1}-\ref{alg:oos:uniform2}). Afterwards, a random rollout of the game until a terminal node is initiated on line~\ref{alg:oos:rollout}.
+The rollout is similar to the MCTS case, but in addition, it has to compute the tail probability $x_i$ and the sampling probability $q_i$
 required to compute the sampled counterfactual value.
 For example, if in the rollout player $i$ acts $n_i$ times, and each time samples uniformly from exactly $b$ actions, then $x_i = \frac{1}{b^{n_i}}$.
 Regardless of whether the current node was in the tree, the algorithm updates the regret table of player $i$ based on the simplified definition of sampled counterfactual regret for simultaneous move games (lines~\ref{alg:oos:update1}-\ref{alg:oos:update2}) and the mean strategy of player $-i$ (line~\ref{alg:oos:update3}).
 Finally, the function returns the updated probabilities to the upper level of the tree.
 
 OOS appears similar to SM-MCTS using the RM selection mechanism (Subsection~\ref{sec:rm}). However, there are a number of differences:
-OOS uses importance sampling of a sequence of probabilities to keep its estimate unbiased, but will suffer higher variance than RM which uses only a one-step correction.
-RM does not distinguish whether its utility comes from exploration or otherwise, whereas OOS separates the two into tail probabilities of the strategy for the sequence
-sampled ($x_i$) and the sampling probability of the sequence ($q_i$); when $\sigma_i(s,a) = 0$, due to exploration, then $x_i = 0$ and value of the update increments
+OOS uses importance sampling of a sequence of probabilities to keep its estimate unbiased, but will suffer a higher variance than RM which uses only a one-step correction.
+RM does not distinguish whether its utility comes from exploration or otherwise, whereas OOS separates the two into the tail probabilities of the strategy for the sequence
+sampled ($x_i$) and the sampling probability of the sequence ($q_i$); when $\sigma_i(s,a) = 0$, due to exploration, then $x_i = 0$ and the value of the update increments
 are also $0$. RM uses coupled dynamics, whereas OOS is uncoupled, not requiring information about what action the opponent chose; RM uses the means from the subgames
 as estimates of utility for those subgames, which could introduce some bias in the estimators. We further discuss the comparison in Subsection~\ref{sec:oos_vs_rm}.}
 
-\reviewchange{
-\subsection{Theoretical Properties, Guarantees, and Limitations} \label{sec:theory_discuss}
-
-Firstly, recall that optimal strategies exist for simultaneous move games as a result of von Neumann's minimax theorem, which guarantees each player 
-their minimax value (Equation~\ref{eq:ne}). Therefore, one desirable property of these algorithms is completeness: will an optimal solution be found if one exists?
-Another question is how long it can take to find an optimal solution, and yet another is if the algorithm is terminated early, how accurate would the
-current approximation be? Finally, what is the time and space complexities of the algorithms?
-
-\subsubsection{Backward Induction Algorithms}
-
-The backward induction algorithms always return an optimal solution. The correctness of BI follows by induction, the Markov property, and the uniqueness of
-each subgame's $V$ value from Equation~\ref{eq:ne}. The correctness of $\biab$ follows from inductively applying the following lemma:
-\begin{lemma}\label{lem:minmax}
-Let $A$ be a single step simultaneous move game for state $s$ with value $v_s$ for player $i$. Let $v_s^i$ be the value of the serialized game created form game $A$ by letting player $-i$ move first and player $i$ move second with the knowledge of the move played by the first player. Then
-\[ v_s \le v_s^i\]
-\end{lemma}
-\begin{proof}
-\begin{flalign*}\label{eq:minmax}
-v_s = & \min_{\sigma_{-i}\in \Sigma_{-i}} \max_{\sigma_i \in \Sigma_{i}} \sum_{a_i\in\cA_i(s)}\sum_{a_{-i}\in\cA_{-i}(s)} \sigma_i(s,a_i)\sigma_{-i}(s,a_{-i})A_{a_ia_{-i}}\\
-= & \min_{a_{-i} \in \cA_{-i}(s)} \max_{\sigma_i \in \Sigma_{i}} \sum_{a\in\cA_i(s)} \sigma_i(s, a_i)A_{a_ia_{-i}} \\
-\leq & \min_{a_{-i} \in \cA_{-i}(s)} \max_{a_i\in\cA_i(s)} A_{a_ia_{-i}} = v_s^i
-\end{flalign*}
-The first equality is the definition of the value of a zero-sum game, the second is the fact that a best response can always be found in pure strategies: if there was a mixed strategy best response with expected utility $v_s$ and some of the actions form its support would have lower expected utility, removing the action from the support would increase the value of the best response, which is a contradiction. The inequality is due to the fact that a maximization over each action of player $-i$ can only improve the value. $\square$
-\end{proof}
-\begin{lemma}\label{lem:alphabeta}
-Serialized alpha-beta$(s,i)$ algorithm called for player $i$ computes the upper bound on the value of the simultaneous moves subgame defined by state $s$.
-\end{lemma}
-\begin{proof}
-Since it is known that the standard alpha-beta algorithm returns the same result as the standard minimax algorithm without pruning (i.e., backward induction on perfect information games), we disregard the pruning in this proof. We use Lemma~\ref{lem:minmax} inductively. Let $s$ be the current state of the game and let $A$ be the exact matrix game corresponding to $s$. By induction we assume the algorithm computes for state $s$ some $A'$ so that each value in matrix $A'$ is greater or equal than $A$: $\forall a_i \in \cA_i(s) \forall a_{-i} \in \cA_{-i}(s) \; A'_{a_ia_{-i}} \geq A_{a_ia_{-i}}$. 
-Therefore, for the value of matrix game $v_{A'} \geq v_A$. 
-Finally, the serialization used in alpha-beta$(s, i)$ assumes that player $-i$ moves first; hence, by Lemma~\ref{lem:minmax} the algorithm returns value $v^i_{A'} \geq v_{A'} \geq v_{A}$. $\square$
-\end{proof}
-\begin{theorem}
-The algorithm $\biab(s,i)$ computes the value of the subgame from state $s$ for player $i$.
-\end{theorem}
-\begin{proof}
-The correctness of the algorithm follows immediately from the correctness of the standard BI algorithm and the correctness of using the values computed by serialized alpha-beta (Lemma~\ref{lem:alphabeta}), value of which is used only if the upper bound equals the lower bound on the value of the game. $\square$
-\end{proof}
-\begin{theorem}
-The algorithm $\doab(s,i)$ computes the value of the subgame from state $s$ for player $i$.
-\end{theorem}
-\begin{proof}
-The correctness of the algorithm follows mainly from the correctness of the standard BI algorithm, Lemma~\ref{lem:alphabeta}, and the correctness of the double-oracle algorithm for matrix games~\cite{McMahan03Planning}. 
-We only need to show that the best-response algorithm with serialized bounds cannot return \textbf{null} action due to setting the bounds incorrectly. 
-Without loss of generality, consider a lower bound $\alpha_s$ for state $s$.
-Value $\alpha_s$ corresponds either to a value calculated by serialized alpha-beta and propagated via bounds when calling $\doab(s,i,\alpha_s,\beta_s)$, or it was updated during the iterations of double-oracle algorithm for state $s$. 
-In either case there exists a pure best response strategy corresponding to this value; hence, the best response has to find the strategy that achieves this value and cannot return \textbf{null}. $\square$
-\end{proof}
-
-As discussed in Subsections~\ref{sec:algs:biab}-\ref{sec:algs:doab}, the time taken by $\biab$ and $\doab$
-are inherently determined by the number of dominated actions in each subgame, the specific serializations, and/or order used to expand the
-strategies. However, the worst case of all these algorithms is one where every matrix game has no dominated actions, and therefore needs to be expanded fully.
-An example of such a game would be finitely-repeated Rock, Paper, Scissors, or any biased variant that has no dominated actions, \eg the one
-in Subsection~\ref{sec:eval:domains}.
-There are no guarantees on the quality of the strategy computed by the exact algorithms if terminated early because the states are enumerated in a depth-first manner
-and the only NE might correspond to the single last path enumerated.
-
-\subsubsection{Sampling Algorithms}
-
-The concept of completeness is less clear for the sampling algorithms due to randomization, so we instead discuss a form of probabilistic completeness. 
-We first focus on the variants of the SM-MCTS algorithm.
-Unfortunately, none of the variants of this algorithm introduced above has been proven to eventually converge to a Nash equilibrium. If the algorithm is instantiated by UCT, Shafiei et al. \cite{Shafiei09} have shown that the algorithm converges to a stable strategy, which is not close to a Nash equilibrium. We replicate the experiment below and note that this is the case only for the deterministic version of UCT. A randomized version of UCT with a well selected exploration parameter empirically converges close to the equilibrium strategy, but then in some games oscillates and does not converge further.
-
-The only know theoretic result about SM-MCTS directly applicable for the algorithms in this paper is negative and it has been proven in \cite{Kovarik2015Analysis}.
-
-\begin{theorem}
-There are games, in which SM-MCTS instantiated by any regret minimizing selection function with a constant exploration $\gamma$ cannon converge to a strategy that would be an $\epsilon$-Nash equilibrium for an $\epsilon < \gamma D$, where $D$ is the depth of the game tree.
-\end{theorem}
-
-The proof is by defining a specific class of games, in which the exploration in lower levels of the game causes bias in values observed in the higher levels of the tree that leads to a wrong decision in the root.
-
-In order to obtain positive formal results about the convergence of SM-MCTS-like algorithms, the authors in \cite{Kovarik2015Analysis} either add an additional averaging step to the algorithm and consistently make it  slower in practice, or assume additional non-trivial technical properties about the selection function, which are not know to hold for any of the selection functions above. %Since there is no known finite-time bound, there is no known guarantee for the quality of the solution if SM-MCTS is terminated early.
-
-%A positive result is know about a slight modification of SM-MCTS, which is consistently performing worse in practice. SM-MCTS-A is an algorithm identical to SM-MCTS with a single modification. 
-%For each state $s$ in the MCTS tree, the algorithm stores the mean of values of all samples that visited the node ($m_s$).
-%On line~\ref{alg:smmcts:return} of Algorithm~\ref{alg:smmcts:up}, the statistics are not updated by the current sample value $v_{s'}$, but the mean of all sample values $m_{s'}$.
-%SM-MCTS-A has been proven to converge to approximate NE with wide range of selection function, including Exp3. However, the empirical evaluation presented in \cite{Kovarik2015Analysis} shows that in all evaluated games, SM-MCTS-A converges substantially slower than SM-MCTS.
-
-Among the sampling algorithms presented above, the only one with a finite-time probabilistic convergence guarantee is SM-OOS. Since SM-OOS is designed to update each node of the game the same way as if it was the root of the game, we present the following theorem from the perspective of the root of the whole game. It holds also for starting the algorithm in non-root nodes, but the values of $|S|$ and $\delta$ can be adapted to represent the subgame.
+\reviewchangeT{
+\subsubsection{Theoretical Properties}
+SM-OOS, contrary to the MCTS-based algorithms, has finite-time probabilistic convergence guarantees. 
+Since SM-OOS is designed to update each node of the game the same way as if it was the root of the game, we present the following theorem from the perspective of the root of the whole game. It holds also for starting the algorithm in non-root nodes, but the values of $|S|$ and $\delta$ can be adapted to represent the subgame.
 
 \begin{theorem}
 When SM-OOS is run from the root of the game, with probability $(1-p)$ an $\epsilon$-NE is reached after
@@ -755,24 +749,88 @@ $O(\frac{(|\cA||\cS|^2}{p \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max
 \begin{proof}
 The proof is composed of two observations. 
 First, the whole game tree is eventually built by the algorithm.
- A direct consequence of Lemma 43 in \cite{Kovarik2015Analysis} is that the tree of depth $D$ is built with probability $(1-p_1)$ in less then $$16 D \left(\frac{|\cA|}{\gamma}\right)^{2D} \max(D,4 \log p_1^{-1} + 4)$$ iterations by an algorithm with a fixed exploration $\gamma$.
+ A direct consequence of Lemma 43 in \cite{Kovarik2015Analysis} is that the tree of depth $D$ is built with probability $(1-p_1)$ in less than $$16 D \left(\frac{|\cA|}{\gamma}\right)^{2D} \max(D,4 \log p_1^{-1} + 4)$$ iterations by an algorithm with a fixed exploration $\gamma$.
 This is the number of iterations needed for each leaf in the game to be visited at least $D$ times.
 
 Second, during these and the following iterations, the algorithm performs exactly the same updates in the nodes contained in memory, as the Outcome Sampling (OS) variant of the Monte Carlo Counterfactual Regret Minimization  \cite{Lanctot09Sampling}. 
 If some nodes below a state were not added to the tree yet, a uniform strategy is assumed in these states for the regret updates.
 Since CFR minimizes the counterfactual regret in an individual information set regardless of the strategies in other information sets, the samples acquired during the tree building cannot have a negative impact on the rate of counterfactual regret minimization in individual states.
-Therefore, we can use Theorem 4 form \cite{Lanctot09Sampling} that bounds the number of iterations needed for OS as an offline solver with the complete game in memory, starting after the tree has been built with high probability.
+Therefore, we can use Theorem 4 form \cite{Lanctot09Sampling} that bounds the number of iterations needed for OS as an offline solver with the complete game in the memory, starting after the tree has been built with a high probability.
 It states that with probability $(1-p_2)$ an $\epsilon$-NE is reached after $O(\frac{(|\cA||\cS|^2}{p_2 \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest probability of sampling any leaf. 
 
-We can see that the OOS bound dominates the time required to build the tree, because $\frac{1}{\delta^2}=(\frac{|\cA|}{\gamma})^{2D}$ for a leaf visited only because of exploration, $D^2 < |\cA|^{2D} \in O(|\cS|)$ for any $\cA$, and we can set $p_1=p_2=p/2$. Then the probability that both the tree will be built and the convergence will be achieved can be bounded by $(1-p_1)(1-p_2) \geq (1-p)$. \qed
+We can see that the OOS bound dominates the time required to build the tree, because $\frac{1}{\delta^2}=(\frac{|\cA|}{\gamma})^{2D}$ for a leaf visited only because of the exploration, $D^2 < |\cA|^{2D} \in O(|\cS|)$ for any $\cA$, and we can set $p_1=p_2=p/2$. Then the probability that both the tree will be built and the convergence will be achieved can be bounded by $(1-p_1)(1-p_2) \geq (1-p)$. \qed
 \end{proof}
+As for computational complexity, the time cost as well as the memory required per node is linear in $|\cA_i|$ in OOS.
 
-%We will see in Subsection~\ref{sec:eval:offline} that this bound is often loose in practice. \vlisy{I believe this is true, but it is a little too bold statement with all the modification we did to MCCFR. We should give it more thought before the final version.}
-% Agreed. Removed.
-
-As for computational complexity, the time cost per node is linear in $|\cA_i|$ in OOS, UCT, and RM. The time cost per node
-is quadratic in the case
-of Exp3 due to the numerically stable update rule (Equation~\ref{eq:exp3:stable}.) 
-The memory required per node is linear in OOS, UCT, and Exp3, and quadratic in RM due to storing estimates of each child subgame.
 }
+
+%\reviewchange{
+%\subsection{Theoretical Properties, Guarantees, and Limitations} \label{sec:theory_discuss}
+%
+%Firstly, recall that optimal strategies exist for simultaneous move games as a result of von Neumann's minimax theorem, which guarantees each player 
+%their minimax value (Equation~\ref{eq:ne}). Therefore, one desirable property of these algorithms is completeness: will an optimal solution be found if one exists?
+%Another question is how long it can take to find an optimal solution, and yet another is if the algorithm is terminated early, how accurate would the
+%current approximation be? Finally, what is the time and space complexities of the algorithms?
+%
+%\subsubsection{Backward Induction Algorithms}
+
+%The backward induction algorithms always return an optimal solution. The correctness of BI follows by induction, the Markov property, and the uniqueness of
+%each subgame's $V$ value from Equation~\ref{eq:ne}. 
+%
+%
+%As discussed in Subsections~\ref{sec:algs:biab}-\ref{sec:algs:doab}, the time taken by $\biab$ and $\doab$
+%are inherently determined by the number of dominated actions in each subgame, the specific serializations, and/or order used to expand the
+%strategies. However, the worst case of all these algorithms is one where every matrix game has no dominated actions, and therefore needs to be expanded fully.
+%An example of such a game would be finitely-repeated Rock, Paper, Scissors, or any biased variant that has no dominated actions, \eg the one
+%in Subsection~\ref{sec:eval:domains}.
+%There are no guarantees on the quality of the strategy computed by the exact algorithms if terminated early because the states are enumerated in a depth-first manner
+%and the only NE might correspond to the single last path enumerated.
+%
+%\subsubsection{Sampling Algorithms}
+%
+%The concept of completeness is less clear for the sampling algorithms due to randomization, so we instead discuss a form of probabilistic completeness. 
+%We first focus on the variants of the SM-MCTS algorithm.
+%Unfortunately, none of the variants of this algorithm introduced above has been proven to eventually converge to a Nash equilibrium. If the algorithm is instantiated by UCT, Shafiei et al. \cite{Shafiei09} have shown that the algorithm converges to a stable strategy, which is not close to a Nash equilibrium. We replicate the experiment below and note that this is the case only for the deterministic version of UCT. A randomized version of UCT with a well selected exploration parameter empirically converges close to the equilibrium strategy, but then in some games oscillates and does not converge further.
+%
+%The only know theoretic result about SM-MCTS directly applicable for the algorithms in this paper is negative and it has been proven in \cite{Kovarik2015Analysis}.
+%
+%\begin{theorem}
+%There are games, in which SM-MCTS instantiated by any regret minimizing selection function with a constant exploration $\gamma$ cannon converge to a strategy that would be an $\epsilon$-Nash equilibrium for an $\epsilon < \gamma D$, where $D$ is the depth of the game tree.
+%\end{theorem}
+%
+%The proof is by defining a specific class of games, in which the exploration in lower levels of the game causes bias in values observed in the higher levels of the tree that leads to a wrong decision in the root.
+%
+%In order to obtain positive formal results about the convergence of SM-MCTS-like algorithms, the authors in \cite{Kovarik2015Analysis} either add an additional averaging step to the algorithm and consistently make it  slower in practice, or assume additional non-trivial technical properties about the selection function, which are not know to hold for any of the selection functions above. %Since there is no known finite-time bound, there is no known guarantee for the quality of the solution if SM-MCTS is terminated early.
+
+%A positive result is know about a slight modification of SM-MCTS, which is consistently performing worse in practice. SM-MCTS-A is an algorithm identical to SM-MCTS with a single modification. 
+%For each state $s$ in the MCTS tree, the algorithm stores the mean of values of all samples that visited the node ($m_s$).
+%On line~\ref{alg:smmcts:return} of Algorithm~\ref{alg:smmcts:up}, the statistics are not updated by the current sample value $v_{s'}$, but the mean of all sample values $m_{s'}$.
+%SM-MCTS-A has been proven to converge to approximate NE with wide range of selection function, including Exp3. However, the empirical evaluation presented in \cite{Kovarik2015Analysis} shows that in all evaluated games, SM-MCTS-A converges substantially slower than SM-MCTS.
+
+%Among the sampling algorithms presented above, the only one with a finite-time probabilistic convergence guarantee is SM-OOS. Since SM-OOS is designed to update each node of the game the same way as if it was the root of the game, we present the following theorem from the perspective of the root of the whole game. It holds also for starting the algorithm in non-root nodes, but the values of $|S|$ and $\delta$ can be adapted to represent the subgame.
+%
+%\begin{theorem}
+%When SM-OOS is run from the root of the game, with probability $(1-p)$ an $\epsilon$-NE is reached after
+%$O(\frac{(|\cA||\cS|^2}{p \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest probability of sampling any single leaf in the subtree of the root node. 
+%\end{theorem}
+%
+%\begin{proof}
+%The proof is composed of two observations. 
+%First, the whole game tree is eventually built by the algorithm.
+% A direct consequence of Lemma 43 in \cite{Kovarik2015Analysis} is that the tree of depth $D$ is built with probability $(1-p_1)$ in less then $$16 D \left(\frac{|\cA|}{\gamma}\right)^{2D} \max(D,4 \log p_1^{-1} + 4)$$ iterations by an algorithm with a fixed exploration $\gamma$.
+%This is the number of iterations needed for each leaf in the game to be visited at least $D$ times.
+%
+%Second, during these and the following iterations, the algorithm performs exactly the same updates in the nodes contained in memory, as the Outcome Sampling (OS) variant of the Monte Carlo Counterfactual Regret Minimization  \cite{Lanctot09Sampling}. 
+%If some nodes below a state were not added to the tree yet, a uniform strategy is assumed in these states for the regret updates.
+%Since CFR minimizes the counterfactual regret in an individual information set regardless of the strategies in other information sets, the samples acquired during the tree building cannot have a negative impact on the rate of counterfactual regret minimization in individual states.
+%Therefore, we can use Theorem 4 form \cite{Lanctot09Sampling} that bounds the number of iterations needed for OS as an offline solver with the complete game in memory, starting after the tree has been built with high probability.
+%It states that with probability $(1-p_2)$ an $\epsilon$-NE is reached after $O(\frac{(|\cA||\cS|^2}{p_2 \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest probability of sampling any leaf. 
+%
+%We can see that the OOS bound dominates the time required to build the tree, because $\frac{1}{\delta^2}=(\frac{|\cA|}{\gamma})^{2D}$ for a leaf visited only because of exploration, $D^2 < |\cA|^{2D} \in O(|\cS|)$ for any $\cA$, and we can set $p_1=p_2=p/2$. Then the probability that both the tree will be built and the convergence will be achieved can be bounded by $(1-p_1)(1-p_2) \geq (1-p)$. \qed
+%\end{proof}
+%
+%%We will see in Subsection~\ref{sec:eval:offline} that this bound is often loose in practice. \vlisy{I believe this is true, but it is a little too bold statement with all the modification we did to MCCFR. We should give it more thought before the final version.}
+%% Agreed. Removed.
+
+%}
 

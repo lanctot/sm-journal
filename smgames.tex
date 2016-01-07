@@ -8,9 +8,9 @@
 %\includegraphics[width=10.0cm]{figures/goof3}\\
 \end{subfigure}%\\
 \caption{An example of a two-player simultaneous move game. % which has Matching Pennies as a subgame. %, and a portion of 3-card Goofspiel including chance nodes (bottom).
-Each white matrix corresponds to a state where both players act simultaneously.
+Each white matrix corresponds to a state of the game where both players (a maximizing player with actions in rows and a minimizing player with actions in columns) act simultaneously.
 The dark squares are terminal states. 
-The values shown in the matrices correspond to the values of subgames that can be obtained by the backward induction.\\
+The values shown in the matrices correspond to the values of subgames (e.g., calculated by backward induction).\\
 %bbosansky: if that's ok, I have removed the goofspiel figure since I do not think it is specifically referenced anywhere and we do not need to figures. Plus, since we do not specifically experiment with games with chance nodes, it is better not to include the figure :)
 \label{fig:example}}
 \end{figure}
@@ -33,7 +33,7 @@ $\cP_\star(s, r, c, s')$ as the probability of transitioning to $s'$ after choos
 simply $1$ when $\cT(s, r, c) \not\in \cC$.}
 The utility function $u_i : \cZ \mapsto [v_{\min}, v_{\max}] \subseteq \mathbb{R}$ gives the utility of player $i$, with
 $v_{min}$ and $v_{\max}$ denoting the minimum and maximum possible utility respectively. We assume zero-sum
-games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$.
+games: $\forall z \in \cZ, u_1(z) = - u_2(z)$. %[bb] I have removed 'k' from here, because we do not need it.
 The game begins in an initial state $s_0$ \reviewchange{and a subset of a game that starts in some node $s$ is called a \emph{subgame}}.
 An example of such a game is depicted in Figure~\ref{fig:example}, more examples can be found in \cite[Chapter 5]{Saffidine2013thesis}.
 

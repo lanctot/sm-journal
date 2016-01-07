@@ -105,7 +105,7 @@ converge to NE even in the simplest simultaneous move games and that a player pl
 and was shown to work well in the Internet card game Urban Rivals. We provide details of these two main existing selection functions in Subsections~\ref{sec:duct} and~\ref{sec:exp3}.
 A more thorough experimental investigation of different selection policies including UCB, UCB1-Tuned, UCB1-greedy, Exp3, and more is reported in the game of Tron \cite{Perick12Comparison}. The work by Lanctot et al.~\cite{Lanctot13Goofspiel} compares some of these variants and proposes Online Outcome Sampling, a search version of Monte Carlo CFR~\cite{Lanctot09Sampling}, which computes an approximate equilibrium strategy with high probability. \reviewchange{We describe a new formulation of this algorithm in Subsection~\ref{sec:oos}.}
 Finally, \cite{lisy2013-nips, Kovarik2015Analysis} present variants of MCTS that provably converge to Nash equilibria in simultaneous move games, 
-using any regret-minimizing algorithm at each stage. We elaborate on these results in Subsection~\ref{sec:theory_discuss}.\bbosansky{Fix this after moving the theory directly to the algorithms.}
+using any regret-minimizing algorithm at each stage. We elaborate on these results in Subsection~\ref{sec:algs:mcts:theory}.
 
 There have been two recent studies that examine the head-to-head performance of these variants in practice. 
 The first~\cite{Lanctot13Tron} builds on previous work in Tron by varying the shape of the initial board, 

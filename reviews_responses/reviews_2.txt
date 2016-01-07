@@ -13,6 +13,11 @@
 > I would nonetheless urge you to think about this aspect to make you contribution even stronger. If not,
 > at least you should address, why this is not done.
 > 
+
+We thank all of the reviewers for their valuable feedback. Please find enclosed our resubmission. For ease of re-review, we have also submitted a version with highlighted significantly added/changed text.
+TODO summary
+
+
 > All the best, looking forward to your response
 > 
 > Reviewer #1: **********
@@ -69,6 +74,12 @@
 > 
 > However, I agree with the editor that insights into the theory, e.g., on
 > correctness issues or running time should be increased.
+
+TODO (check the following)
+We have added an additional level of detail regarding the theoretical results and provided Lemmas and Theorems for both the exact and the approximate algorithms. 
+However, the focus of the paper should remain on the description of the algorithms and the experimental evaluation, since: (1) the theoretical conclusions are straightforward for the exact algorithms, and (2) the analysis of the theoretical concepts in full for the approximate SM-MCTS algorithms requires a lot of additional theoretical background, further extending this submission and dissolving the focus on the equilibrium computation and the online game-playing aspect. We cover most of the theoretical aspects of the convergence of SM-MCTS in an additional submission in full detail [59] (one of the co-authors, V. Lisy, is a co-author of [59]).
+
+
 > 
 > Does anything need to be added or deleted?
 > ------------------------------------------
@@ -134,7 +145,7 @@
 > Generally, this is solid work, but I'm not sure if it really is AIJ material.
 > 
 
-TODO: We should add motivation and explain why new algorithms are relevant for specific games.
+We have further clarified our contributions in the first section of the submission. Our exact algorithm (DOab) improves the scalability of the offline strategy computation and thus allows solving larger games. Secondly, our OOS algorithm provides convergence guarantees while still performing comparably to other sampling-based algorithms and it is less sensitive to parameters setting, which is a valuable characteristic. Our focus on domain-independent algorithms then allows these algorithms to be further tailored to specific domains (be it auctions, computer or video games, or puzzles) and improve the performance of the computer opponent.
 
 > Is the English satisfactory?
 > ----------------------------
@@ -145,6 +156,9 @@ TODO: We should add motivation and explain why new algorithms are relevant for s
 > of definite and indefinite articles, inconsistencies of singular and plural.
 > I'll try to give some concrete examples below, but they are only from the first
 > 20 pages or so, and I probably also missed some mistakes there.
+
+We thank for all the minor edits listed below that we have incroporated into the text and we have performed additional passes to improve the grammar.
+
 > 
 > Is the presentation otherwise satisfactory?
 > -------------------------------------------
@@ -247,7 +261,7 @@ Fixed
 > 
 > * Those items: Very technical. Do not quite convey the significance of the contribution.
 
-TODO
+We have improved the list of contributions 
 
 > 
 > * Section 2, first sentence: "A finite game ..." -> "A finite 2-player game ..."
@@ -399,26 +413,47 @@ TODO
 
 > 
 > * Sec 5.1: "... contains depth d-1 solutions ..." -> "... contains d-1 solutions ..."
+
+Fixed
+
 > 
 > * "... begin with already ..." -> "... begin already ..."
+
+Fixed
+
 > 
 > * "... based on the backward induction ..." -> "... based on backward induction ..."
+
+Fixed
+
 > 
 > * "... after given time limit ..." -> "... after a given time limit ..."
+
+Fixed
+
 > 
 > * Experiments, general remark: You still mostly write *what* you find, but not
 >   *why* this is the case and *what* *implications* your findings have. The
 >   interpretation of the experimental results could be more to the point.
 >   Positive note: The experiments are very meticulous and detailed, which is nice
 >   for the expert reader.
+
+TODO
+
 > 
 > * Sec. 6.5.6, parameter tuning. I don't quite understand what to take home from this section.
+
+TODO
+
 > 
 > * Authors' vitae:
 >   - BB: "Aritificial Intelligence" -> "Artificial Intelligence"
 >   - BB: "... at Faculty of ... at Czech TU ..." -> "... at *the* Faculty of ... at *the* Czech TU ..."
 >   - VL: "... holds master's degree ... and master's degree ..." -> "... *a* master's degree ..." (2x)
 >   - ML: "... was post-doctoral research fellow ..." ->  "... was *a* post-doctoral research fellow ..."
+
+TODO
+
 > 
 > 
 > 
@@ -517,8 +552,25 @@ TODO
 > >
 > > remarks:
 > > - The abstract and introduction don't make it sufficiently clear that the simultaneous moves are the only source of imperfect information in the games that are considered. In my opinion, it would make sense to mention this distinction towards general imperfect information games earlier.
+
+TODO
+
 > > - Introduction: "many of video and board games" -> remove "of"
+
+Fixed
+
 > > - "in the previous work" -> "in previous work"
+
+Fixed 
+
 > > - Section 2: In the definition of matrix games, you say "at every state there is a joint action set A_1(s) x A_2(s)" What about the chance states?
+
+TODO Check: Chance states are handled separately by function \Delta_{\star}.
+
 > > - In 4.4.x I always asked myself whether the algorithms would converge to an NE or not. Which was finally answered in 4.6. Maybe there is way to answer the question earlier without repeating yourself too often.
+
+We agree and we have moved the theoretical discussion directly after the description of the algorithms.
+
 > > - In 6.6: "variance by of the difference"
+
+Fixed

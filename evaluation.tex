@@ -1,8 +1,8 @@
 %!TEX root = sm-journal.tex
 
-We now turn to thorough experimental evaluation of the described algorithms.
-We analyze both offline and online case on a collection of games inspired by previous work, and randomly generated games.
-After describing the rules and properties of the games, we present the results for the offline strategy computation and we follow with the online game playing.
+We now turn to the thorough experimental evaluation of the described algorithms.
+We analyze both the offline and the online case on a collection of games inspired by previous works, and randomly generated games.
+After describing rules and properties of the games, we present the results for the offline strategy computation and we follow with the online game playing.
 
 \subsection{Experimental Settings}
 
@@ -1153,7 +1153,7 @@ The bound on convergence of outcome sampling MCCFR presented in \cite{Gibson12pr
 \[ \epsilon \le O\left( \frac{\tilde{\Delta}_i |\cS|}{\sqrt{T}} + \sqrt{\frac{\bVar}{pT} + \frac{\bCov}{p}} \right), \]  
 where $\tilde{\Delta}_i$ is determined by the structure of the game, 
 and $\bVar$ and $\bCov$ are the maximal variance and covariance of the difference between the exact value of a regret of an action and its estimate computed based on the selected sample ($r^t(s,a) - \tilde{r}^t(s,a)$) over all states, actions, and time steps. 
-Computing these quantities exactly is prohibitively expensive, and since the scale of exact regrets is bounded by a relatively small range of utilities, we can estimate the variance by of the difference by variance of the sampled regrets, which often have very large range due to the importance sampling correction.
+Computing these quantities exactly is prohibitively expensive, and since the scale of exact regrets is bounded by a relatively small range of utilities, we can estimate the variance of the difference by the variance of the sampled regrets, which has often a very large range due to the importance sampling correction.
 We measure the estimate
 $\widehat{\bVar} = \text{Var}[\max_{a \in \cA(s)} \tilde{r}^t(s, a)]$ in the root of the games, since they have the largest range of possible values of $\tilde{r}^t(s, a)$.
  Regret matching
