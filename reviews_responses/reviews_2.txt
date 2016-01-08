@@ -401,13 +401,13 @@ Fixed
 >   length prose descriptions of the algorithms convey fewer insights than one
 >   could convey with a more structured presentation.
 
-TODO
+We have added the correctness proof for all the exact algorithms.
 
 >
 > * Generally, Section 4 contains a lengthy list of techniques, but without a
 >   decent guiding thread and little interconnection. This could be improved.
 
-TODO
+TODO (say something here, let's not make any changes in the text)
 
 >
 > * Sec 5.1: "... contains depth d-1 solutions ..." -> "... contains d-1 solutions ..."
@@ -436,12 +436,12 @@ Fixed
 >   Positive note: The experiments are very meticulous and detailed, which is nice
 >   for the expert reader.
 
-TODO
+TODO (say something here, let's not make any changes in the text)
 
 >
 > * Sec. 6.5.6, parameter tuning. I don't quite understand what to take home from this section.
 
-TODO
+TODO (say something here, let's not make any significant changes in the text)
 
 >
 > * Authors' vitae:
