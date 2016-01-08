@@ -1,68 +1,68 @@
 ** Second round of reviews, received November 2015.
 ** Please do not edit this document. I have included reviews_2.txt that we can modify.
-> 
-> 
+>
+>
 > Dear Authors,
-> 
-> the reviewers are now positive about the paper, but based on a long list of comments require 
-> additional work in form of minor revision. Essentially, you will need another round to get through. The resulting reviewing cycle, however, is supposed to be much shorter. 
-> 
-> Be careful! In the background there have been some questions being raised, whether the material presented has 
+>
+> the reviewers are now positive about the paper, but based on a long list of comments require
+> additional work in form of minor revision. Essentially, you will need another round to get through. The resulting reviewing cycle, however, is supposed to be much shorter.
+>
+> Be careful! In the background there have been some questions being raised, whether the material presented has
 > the potential for giving theoretical insights, i.e., in form of results on correctness and convergence.
-> This would be very much wellcome, but as this is a major revision these aspects remain optional to you. 
+> This would be very much wellcome, but as this is a major revision these aspects remain optional to you.
 > I would nonetheless urge you to think about this aspect to make you contribution even stronger. If not,
 > at least you should address, why this is not done.
-> 
+>
 
 We thank all of the reviewers for their valuable feedback. Please find enclosed our resubmission. For ease of re-review, we have also submitted a version with highlighted significantly added/changed text.
 TODO summary
 
 
 > All the best, looking forward to your response
-> 
+>
 > Reviewer #1: **********
 > * Part A *
 > **********
-> 
+>
 > CONTENT
 > =======
-> 
+>
 > Is the paper technically sound?
 > -------------------------------
-> 
+>
 > YES. With few minor exceptions, mathematics and algorithmic descriptions are
 > correct.
-> 
+>
 > Is the work described original?
 > -------------------------------
-> 
+>
 > YES. The article summarizes previous conference contributions by the same
 > authors and adds some new experimental results and theoretical discussions on
 > top. The section on (algorithmic) preliminaries is relatively long, which gives
 > the first half of the article a certain survey flavor.
-> 
+>
 > Does it show sufficient applicability to AI?
 > --------------------------------------------
-> 
+>
 > YES. The material is clearly relevant to AI.
-> 
+>
 > Does it place new results in appropriate context with earlier work?
 > -------------------------------------------------------------------
-> 
+>
 > YES. The algorithms presented in the article are extensions or improvements of
 > previously existing algorithms. Those foundations are discussed and referenced
 > in detail.
-> 
+>
 > Is the paper sufficiently novel?
 > --------------------------------
-> 
+>
 > YES. Most of the results it describes were previously published by the same
 > authors at conferences and workshops, but not by other authors and not in any
 > archival journal.
-> 
+>
 > Is the paper complete?
 > ----------------------
-> 
+>
 > YES. The article is very much focused on particular algorithms and on an
 > experimental evaluation comparing them. Since an earlier submission, the authors
 > added some theoretical discussions, but in my opinion this does not change the
@@ -71,35 +71,35 @@ TODO summary
 > discussion of connections with the existing literature. Besides more theoretical
 > results, also a better discussion of the motivations and implications of the
 > presented work would be nice.
-> 
+>
 > However, I agree with the editor that insights into the theory, e.g., on
 > correctness issues or running time should be increased.
 
 TODO (check the following)
-We have added an additional level of detail regarding the theoretical results and provided Lemmas and Theorems for both the exact and the approximate algorithms. 
+We have added an additional level of detail regarding the theoretical results and provided Lemmas and Theorems for both the exact and the approximate algorithms.
 However, the focus of the paper should remain on the description of the algorithms and the experimental evaluation, since: (1) the theoretical conclusions are straightforward for the exact algorithms, and (2) the analysis of the theoretical concepts in full for the approximate SM-MCTS algorithms requires a lot of additional theoretical background, further extending this submission and dissolving the focus on the equilibrium computation and the online game-playing aspect. We cover most of the theoretical aspects of the convergence of SM-MCTS in an additional submission in full detail [59] (one of the co-authors, V. Lisy, is a co-author of [59]).
 
 
-> 
+>
 > Does anything need to be added or deleted?
 > ------------------------------------------
-> 
+>
 > NO. Well, see above: More theory and a better discussion of the motivations and
 > implications of the presented work would be nice.
-> 
+>
 > Is the result important enough to warrant publication?
 > ------------------------------------------------------
-> 
+>
 > YES. At least barely. In both settings that are discussed (online and offline),
 > we see an advancement in the state of the art. So, algorithmically, the work is
 > significant. Theoretically, in my opinion, it is not.
-> 
+>
 > Accessibility
 > =============
-> 
+>
 > Is the paper accessible to the broad readers of AIJ?
 > ----------------------------------------------------
-> 
+>
 > YES. With limitations. The high-level structure of the article makes sense.
 > Also, the introduction of the preliminaries including the different settings
 > (online and offline) that the authors discuss is excellent. The descriptions of
@@ -110,46 +110,46 @@ However, the focus of the paper should remain on the description of the algorith
 > Currently, the paper is a long wall of text that might benefit from some
 > low-level structuring into definitions, examples, (lemmas, theorems) etc. as one
 > would expect from a text in mathematics or CS.
-> 
-> 
+>
+>
 > FORM
 > ====
-> 
+>
 > Does the abstract adequately reflect the contents?
 > --------------------------------------------------
-> 
+>
 > YES.
-> 
+>
 > Does it contain adequate references to previous work?
 > -----------------------------------------------------
-> 
+>
 > YES.
-> 
+>
 > Does it explain clearly what was done that is new?
 > --------------------------------------------------
-> 
+>
 > YES.
-> 
+>
 > Does it clearly indicate why this work is important?
 > ----------------------------------------------------
-> 
+>
 > NO. The authors mention application areas of their work, but it is not clear if
 > the progress made by the new algorithms is really relevant in these areas.
-> 
+>
 > I believe that the presented material is only of limited interest to the general
 > AI community. It is rather technical, low-level and detailed experimental stuff
 > that provides little high-level insight. Maybe related to that, most of the
 > results are rather unsurprising. To the game-playing/-solving community it is of
 > some interest, though.
-> 
+>
 > Generally, this is solid work, but I'm not sure if it really is AIJ material.
-> 
+>
 
 We have further clarified our contributions in the first section of the submission. Our exact algorithm (DOab) improves the scalability of the offline strategy computation and thus allows solving larger games. Secondly, our OOS algorithm provides convergence guarantees while still performing comparably to other sampling-based algorithms and it is less sensitive to parameters setting, which is a valuable characteristic. Our focus on domain-independent algorithms then allows these algorithms to be further tailored to specific domains (be it auctions, computer or video games, or puzzles) and improve the performance of the computer opponent.
 
 > Is the English satisfactory?
 > ----------------------------
-> 
+>
 > NO. Since an earlier version of the article, the English has *significantly*
 > improved, but it is still marginally below what I would expect as AIJ standard.
 > And still, the problems are the same: incorrect use (and, more often, omission)
@@ -159,39 +159,39 @@ We have further clarified our contributions in the first section of the submissi
 
 We thank for all the minor edits listed below that we have incroporated into the text and we have performed additional passes to improve the grammar.
 
-> 
+>
 > Is the presentation otherwise satisfactory?
 > -------------------------------------------
-> 
+>
 > YES.
-> 
+>
 > Are there an appropriate number of figures?
 > -------------------------------------------
-> 
+>
 > YES.
-> 
+>
 > Do the figures help clarify the concepts in the paper?
 > ------------------------------------------------------
-> 
+>
 > YES.
-> 
-> 
+>
+>
 > **********
 > * Part B *
 > **********
-> 
+>
 > DETAILED COMMENTS
 > =========================
-> 
+>
 > Summary of the paper (as in first review):
-> 
+>
 > "The authors present several algorithms for the computation of strategies for
 > two-player zero-sum simultaneous move extensive games, in particular backward
 > induction (BI), BI\alpha\beta, Double Oracle (DO), DO\alpha\beta, and different
 > variants of MCTS: decoupled UCT, Exp3, Regret Matching, CFR, and Online Outcome
 > Sampling (OOS). After introduction, preliminaries, and discussion of related
 > work, each of the algorithms is described in detail (including pseudocode).
-> 
+>
 > After a brief discussion of offline vs. online search, the authors move to the
 > experiments. They use six very different benchmark domains: Biased
 > Rock-Paper-Scissors, Goofspiel, Oshi-Zumo, Pursuit-Evasion Games, Randomly
@@ -200,14 +200,14 @@ We thank for all the minor edits listed below that we have incroporated into the
 > to pure) strategies in different stages of the game is explained, and a
 > hand-tuned state evaluation function is provided as a heuristic function for
 > some of the algorithms.
-> 
+>
 > The first main part of the experiments is concerned with offline equilibrium
 > computation. For each domain and each of the optimal algorithms (BI,
 > BI\alpha\beta, DO, DO\alpha\beta), solving times for increasing-size instances
 > are given, and for each domain and each of the sampling-based algorithms
 > (MCTS-variants, OOS), figures showing convergence are provided. Typically,
 > DO\alpha\beta and OOS perform best.
-> 
+>
 > The second main part of the experiments is concerned with online search. Here,
 > the authors provide head-to-head comparisons of their algorithms (plus UCT and a
 > random player) on all domains for different time limits per move and with and
@@ -219,53 +219,53 @@ We thank for all the minor edits listed below that we have incroporated into the
 > discussed. Finally, the authors give a short, moderately convincing account of
 > their choice of parameter values of OOS, UCT, Exp3 and RM, then summarize and
 > conclude."
-> 
+>
 > About how well the suggestions from the first round of reviews were addressed:
-> 
+>
 > * OOS behavior in offline vs. online setting: okay.
-> 
+>
 > * Pointing out contribution: okay.
-> 
+>
 > * Indication of significance: Still not sufficiently addressed.
-> 
+>
 > * Language: Much better, but still problematic.
-> 
+>
 > * Minor mathematical and technical mistakes: Much better, but still not quite perfect.
-> 
+>
 > * Lack of theory: A bit better now, bit still very little theory.
-> 
+>
 > * Minor comments: addressed well
-> 
-> 
+>
+>
 > Minor comments
 > ==============
-> 
+>
 > * p. 3, col 50/51: "... algorithms that compute stategies for two-player
 >  simultaneous move class of games." -> Grammar!
 
 Fixed
 
-> 
+>
 > * Next sentence: "... in some way ...": too vague/imprecise. Such formulations
 >   do not belong in a scientific paper.
 
 Fixed
 
-> 
+>
 > * p. 4, first item: "... analysis of a well-known approximative algorithm UCT ...": huh?
 
 Fixed
 
-> 
+>
 > * p. 4, last item: "An equivalent ..." -> "The definition of an equivalent ..."
-> 
+>
 > * Those items: Very technical. Do not quite convey the significance of the contribution.
 
-We have improved the list of contributions 
+We have improved the list of contributions
 
-> 
+>
 > * Section 2, first sentence: "A finite game ..." -> "A finite 2-player game ..."
-> 
+>
 
 Fixed
 
@@ -274,104 +274,104 @@ Fixed
 
 Fixed
 
-> 
+>
 > * Next page: "We denote A_i(s) ..." -> "We denote by A_i(s) ..."
 
 Fixed
 
-> 
+>
 > * Next line: "... and denote the number of actions |A_i(s)| ...". Again, ungrammatical.
 
 Fixed
 
-> 
+>
 > * Transitions function: Total or partial? Partial, probably!
 
 TODO
 
-> 
+>
 > * "The utility functions ... gives ..." -> "The utility functions ... give ..."
 
 Fixed
 
-> 
+>
 > * Next page, line 24: Usual symbol for n-ary Cartesian product would be "\prod", not "\times".
 
 Fixed
 
-> 
+>
 > * Last sentence before Def. 2.1: unclear.
 
 TODO
 
-> 
+>
 > * Def 2.1: Wrong! An action a_i is strictly dominated if *there* *exists* another
 >   action a'_i that strictly dominates it, i.e., such that for all a_-i: u(a_i, a_-i) < u(a'_i, a_-i).
-> 
+>
 
 Fixed
 
 > * Generally, the mathematical part of the preliminaries hasn't really improved
 >   since the last version of the paper.
-> 
+>
 > * First sentence of Section 3: "that which" -> "that" or "which".
 
 Fixed
 
-> 
+>
 > * p. 10, line 14/15: "... every stage game ..." -> "... every stage of the game ..."
 
 Fixed
 
-> 
+>
 > * p. 10, line 28: "... description of which ..." -> "... a description of which ..."
 
 Fixed
 
-> 
+>
 > * p. 10, line 35: "... running classic alpha-beta algorithm." ->
 >   "... running the classic alpha-beta algorithm."
 
 Fixed
 
-> 
+>
 > * Next page: "The success of MCTS algorithm ..." ->
 >   "The success of the MCTS algorithm ..." or "The success of MCTS ...".
 
 Fixed
 
-> 
+>
 > * Section names: Structure might become clearer if Section 4 was named
 >   "Offline Search" instead of "Strategy Computation", contrasting Section 5, "Online Search".
 
 Fixed
 
-> 
+>
 > * Sec. 4.2, second line: "value" -> "values"
 
 
 
-> 
+>
 > * Below: "... applying wide range ..." -> "... applying a wide range ..."
-> 
+>
 > * Next page, line 35: "greater or equal than" -> "greater than or equal to"
 
 Fixed
 
-> 
+>
 > * Same sentence, now regarding content: Isn't that trivial?
 
 For the sake of completeness of the paper we state this fact.
 
-> 
+>
 > * Below: *The* upper/lower bound: Should be *a* lower bound / *an* upper bound,
 >   since there is no unique lower and upper bound.
 
 TODO
 
-> 
+>
 > * Next-to-last paragraph of Sec. 4.2: unclear
-> 
+>
 > * Last sentence of Sec. 4.2 (and a couple of times later): You often say that
 >   something holds "in practice". I think this is very vague and not quite
 >   convincing. What does "in practice" even mean? In certain standard benchmarks?
@@ -380,9 +380,9 @@ TODO
 
 In typical games that are used for benchmarks. We have corrected this in the text.
 
-> 
+>
 > * Sec. 4.3.2.: New sentence (blue): "verifies" -> "tests"; "cannot" -> "can"
-> 
+>
 
 Fixed
 
@@ -391,12 +391,12 @@ Fixed
 
 Fixed
 
-> 
+>
 > * Two pages further: "... against current strategy ..." -> "... against the current strategy ..."
 
 Fixed
 
-> 
+>
 > * Starting about here (Alg. 4 ff) it gets a bit hard to comprehend, and slightly
 >   confused. Maybe instead of these long textual descriptions, some derivations
 >   of the algorithms, or at least correctness proofs wouls be nice. Also, these
@@ -405,33 +405,33 @@ Fixed
 
 TODO
 
-> 
+>
 > * Generally, Section 4 contains a lengthy list of techniques, but without a
 >   decent guiding thread and little interconnection. This could be improved.
 
 TODO
 
-> 
+>
 > * Sec 5.1: "... contains depth d-1 solutions ..." -> "... contains d-1 solutions ..."
 
 Fixed
 
-> 
+>
 > * "... begin with already ..." -> "... begin already ..."
 
 Fixed
 
-> 
+>
 > * "... based on the backward induction ..." -> "... based on backward induction ..."
 
 Fixed
 
-> 
+>
 > * "... after given time limit ..." -> "... after a given time limit ..."
 
 Fixed
 
-> 
+>
 > * Experiments, general remark: You still mostly write *what* you find, but not
 >   *why* this is the case and *what* *implications* your findings have. The
 >   interpretation of the experimental results could be more to the point.
@@ -440,12 +440,12 @@ Fixed
 
 TODO
 
-> 
+>
 > * Sec. 6.5.6, parameter tuning. I don't quite understand what to take home from this section.
 
 TODO
 
-> 
+>
 > * Authors' vitae:
 >   - BB: "Aritificial Intelligence" -> "Artificial Intelligence"
 >   - BB: "... at Faculty of ... at Czech TU ..." -> "... at *the* Faculty of ... at *the* Czech TU ..."
@@ -454,41 +454,41 @@ TODO
 
 TODO
 
-> 
-> 
-> 
-> 
+>
+>
+>
+>
 > Reviewer #3: Part A
 > > ------
 > >
 > > Please answer the following questions "yes/no" and provide appropriate justification as appropriate.
-> >  
+> >
 > >
 > > CONTENT
 > >
 > > Is the paper technically sound?
 > >
 > > yes
-> >  
+> >
 > > Does it show sufficient applicability to AI?
 > >
 > > yes
-> >  
+> >
 > > Does it place new results in appropriate context with earlier work?
 > >
 > > yes
 > >
-> > Is the paper sufficiently novel? (A paper is novel if the results it describes 
+> > Is the paper sufficiently novel? (A paper is novel if the results it describes
 > >
-> > were not previously published by other authors, and were not previously published 
+> > were not previously published by other authors, and were not previously published
 > >
 > > by the same authors in any archival journal.)
 > >
-> > yes 
+> > yes
 > >
-> > Is the paper complete? (Generally, a paper is complete if it includes all relevant proofs 
+> > Is the paper complete? (Generally, a paper is complete if it includes all relevant proofs
 > >
-> > and/or experimental data, a thorough  discussion of connections with the existing literature, 
+> > and/or experimental data, a thorough  discussion of connections with the existing literature,
 > >
 > > and a convincing discussion of the motivations and implications of the presented work.)
 > >
@@ -510,7 +510,7 @@ TODO
 > >
 > > Are the summary and conclusions adequate?
 > >
-> > yes 
+> > yes
 > >
 > > Does it contain adequate references to previous work?
 > >
@@ -526,7 +526,7 @@ TODO
 > >
 > > Is the English satisfactory?
 > >
-> > yes 
+> > yes
 > >
 > > Is the presentation otherwise satisfactory?
 > >
@@ -561,7 +561,7 @@ Fixed
 
 > > - "in the previous work" -> "in previous work"
 
-Fixed 
+Fixed
 
 > > - Section 2: In the definition of matrix games, you say "at every state there is a joint action set A_1(s) x A_2(s)" What about the chance states?
 
