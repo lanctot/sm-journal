@@ -818,7 +818,7 @@ Interestingly, Exp3 always performs the best against the random player, which in
 \centering
 \begin{scriptsize}
 
-Oshi Zumo: 50 coins, $K=3$, win rate
+Oshi-Zumo: 50 coins, $K=3$, win rate
 \begin{tabular}{|r|cccccc|}\hline
 &$\doab$&OOS(0.2)&UCT(0.4)&EXP3(0.8)&RM(0.1)&RAND\\\hline
 $\doab$&$\bullet$&\textbf{79.2(2.5)}&\textbf{77.6(2.6)}&\textbf{84.8(2.2)}&\textbf{84.0(2.3)}&98.8(0.5)\\
@@ -830,7 +830,7 @@ RAND&1.2(0.5)&1.1(0.4)&0.1(0.2)&1.5(0.5)&1.0(0.4)&$\bullet$\\
 \hline
 \end{tabular}
 
-Oshi Zumo: 50 coins, $K=3$, point utilities
+Oshi-Zumo: 50 coins, $K=3$, point utilities
 \begin{tabular}{|r|cccccc|}\hline
 &$\doab$&OOS(0.2)&UCT(0.4)&EXP3(0.8)&RM(0.1)&RAND\\\hline
 $\doab$&$\bullet$&\textbf{2.33(0.19)}&\textbf{2.27(0.20)}&3.62(0.10)&\textbf{2.85(0.17)}&3.65(0.09)\\
@@ -842,7 +842,7 @@ RAND&-3.65(0.09)&-3.87(0.05)&-3.93(0.02)&-1.31(0.17)&-3.87(0.04)&$\bullet$\\
 \hline
 \end{tabular}
 
-Oshi Zumo: 50 coins, $K=3$, win rate, evaluation function
+Oshi-Zumo: 50 coins, $K=3$, win rate, evaluation function
 \begin{tabular}{|r|cccccc|}\hline
 &$\doab$&OOS(0.3)&UCT(0.8)&EXP3(0.8)&RM(0.1)&RAND\\\hline
 $\doab$&$\bullet$&63.0(2.1)&11.8(1.3)&52.9(2.2)&61.7(2.1)&98.6(0.5)\\
@@ -960,7 +960,7 @@ However, only $1 \times 10^3$ out of $12 \times 10^3$ iterations per second upda
 
 \reviewchange{The good performance of $\doab$ is consistent with the previous analysis in Tron where the best-performing algorithms, including the winner of the 2011 Google AI Challenge, were based on depth-limited minimax searches~\cite{DenTeuling12Tron,Perick12Comparison}.}
 
-As in the case of Oshi Zumo, we also run the matches with the evaluation function in place of the random rollout simulation in the sampling algorithms.
+As in the case of Oshi-Zumo, we also run the matches with the evaluation function in place of the random rollout simulation in the sampling algorithms.
 We present the results in the second table of Table~\ref{fig:matches:tron}.
 Using the evaluation function improves the performance of all sampling algorithms against $\doab$ and it makes the differences between their performance smaller.
 The difference is most notable for OOS, since using the evaluation function strongly reduces the length of the game.
@@ -1038,7 +1038,7 @@ RM&0.05&74.5(2.7)&51.6(3.0)&60.1(2.9)&59.0(3.0)&49.0(3.1)&58.84\\
 \hline
 \end{tabular}
 
-Oshi Zumo: 50 coins, $K=3$, win rate, evaluation function
+Oshi-Zumo: 50 coins, $K=3$, win rate, evaluation function
 \begin{tabular}{|lr|ccccc|c|}\hline
 &&$\doab$&OOS(0.6)&UCT(2)&EXP3(0.2)&RM(0.1)&Mean\\\hline
 OOS&0.5&35.3(2.9)&50.9(3.6)&28.5(3.3)&54.9(3.6)&43.7(3.5)&42.66\\
@@ -1065,7 +1065,7 @@ RM&0.05&36.4(3.0)&59.6(3.5)&29.7(3.3)&59.3(3.5)&51.1(3.6)&47.22\\
 \end{tabular}
 
 \end{scriptsize}
-\caption{Sample parameter tuning tables for Goofspiel with stochastic point cards sequence and Oshi Zumo.}\label{fig:tuning}
+\caption{Sample parameter tuning tables for Goofspiel with stochastic point cards sequence and Oshi-Zumo.}\label{fig:tuning}
 \end{table}
 
 \reviewchange{
@@ -1086,7 +1086,7 @@ The parameter selection generally makes more difference against weaker players.
 The differences are more noticeable in matches against other algorithms, but since the optimal parameters are often different for different opponents, the mean performance presented in the last column does not vary a lot. OOS is consistently the least sensitive to parameter setting, while the change of performance of the other algorithms with changing exploration strongly depends on the specific domains.
 
 The differences between various parameter settings are larger in smaller games and mainly if an evaluation function is used.
-Consider the results for Oshi Zumo in Table~\ref{fig:tuning}.
+Consider the results for Oshi-Zumo in Table~\ref{fig:tuning}.
 For OOS, the exploration parameter of $0.3$ is consistently the best against all opponents, with the exception of Exp3, which loses slightly more to OOS with exploration 0.4.
 However, the difference is far from significant even after $1,000$ matches.
 The differences in performance of UCT with different parameters are more often statistically significant.
@@ -1098,7 +1098,7 @@ When playing $\doab$, RM wins 7\% more  matches with parameter $0.3$ than with t
 On the other hand, when playing OOS, an even smaller parameter value would be preferable.
 
 The presented parameter tuning tables are representative of the behavior of the algorithms with different parameters. The choices of the optimal parameters generally depend much more on the domain than the selected opponent, but in some cases the optimal choice for one opponent is far from the optimum for another opponent.  Especially with Exp3 and UCT, very different parameters are optimal for different domains.
-While in the presented results in Oshi Zumo with evaluation function, 0.8 is best for Exp3, in Tron with evaluation function, the optimal parameter for Exp3 is 0.1.
+While in the presented results in Oshi-Zumo with evaluation function, 0.8 is best for Exp3, in Tron with evaluation function, the optimal parameter for Exp3 is 0.1.
 The range of optimal parameters is much smaller for OOS and RM, which were always between 0.1 and 0.3. This can be a notable advantage for playing previously unknown games without sufficient time to tune the parameters for the specific domain.
 }
 

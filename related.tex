@@ -98,7 +98,7 @@ compared to tailored algorithms.
 
 Monte Carlo Tree Search (MCTS) is a simulation-based state space search technique often used in extensive-form games \cite{Coulom06,UCT}. 
 Having first seen practical success in computer Go \cite{Gelly2011,Gelly12}, MCTS has since been applied successfully to simultaneous move games and imperfect information games as well~\cite{Ciancarini10Kriegspiel,Cowling12ISMCTS,15aamas-iioos}. 
-Most of the successful applications use the Upper Confidence Bounds (UCB) formula~\cite{UCB} as a selection strategy. These variants of MCTS are also known as UCT (UCB applied to trees). The first application of MCTS to simultaneous move games was in general game playing (GGP)~\cite{GGP} programs: \textsc{Cadiaplayer}~\cite{Cadiaplayer,Finnsson12} uses UCB selection strategy for each player in a single game tree. The success of MCTS was demonstrated by the success of \textsc{Cadiaplayer} which was the top-ranked player of the GGP competition between 2007 and 2009, and also in 2012.
+Most of the successful applications use the Upper Confidence Bounds (UCB) formula~\cite{UCB} as a selection strategy. These variants of MCTS are also known as UCT (UCB applied to trees). The first application of MCTS to simultaneous move games was in general game playing (GGP)~\cite{GGP} programs: \textsc{CadiaPlayer}~\cite{Cadiaplayer,Finnsson12} uses UCB selection strategy for each player in a single game tree. The success of MCTS was demonstrated by the success of \textsc{CadiaPlayer} which was the top-ranked player of the GGP competition between 2007 and 2009, and also in 2012.
 
 Despite this success, Shafiei et al. in~\cite{Shafiei09} provide a counter-example showing that this straightforward application of UCT does not
 converge to NE even in the simplest simultaneous move games and that a player playing a NE can exploit this strategy. Another variant of UCT, which has been applied to  Tron~\cite{Samothrakis10Tron}, builds the tree as if the players were moving sequentially giving one of the players an informational advantage. This approach also cannot converge to NE in general. For this reason, other variants of MCTS were considered for simultaneous move games. Teytaud and Flory describe a search algorithm for games with short-term imperfect information~\cite{Teytaud11Upper}, which are a generalization of simultaneous move games. Their algorithm uses a different selection strategy, called Exp3~\cite{Auer2003Exp3},
@@ -116,7 +116,7 @@ work, the chosen games were ones inspired by previous work in general game playi
 Results indicate that parameter-tuning landscapes do not seem as smooth as in the purely sequential case. 
 
 % mlanctot: said enough about this paper already...
-%Generally, head-to-head performance of UCB variants perform well, despite their theoretical shortcomings, with Oshi Zumo and 
+%Generally, head-to-head performance of UCB variants perform well, despite their theoretical shortcomings, with Oshi-Zumo and 
 %Goofspiel being notable exceptions where MCTS using a regret matching selection policy performs particularly well.
 
 \subsubsection{Simulation-based Search in Real-time Games}

@@ -472,7 +472,7 @@ Using the first method certainly makes the algorithm not converge to a Nash equi
 Therefore, unless stated otherwise, we only use the mixed form in Equation~\ref{eq:ductmix}, which was called DUCT(mix) in 
 \cite{Lanctot13Goofspiel,Tak14smmcts}. % from now on and refer to this algorithm simply as UCT.
 
-Note, that it was shown that this latter variant also might not converge to a Nash equilibrium (a well known counter-example in Rock, Paper, Scissors with biased payoffs~\cite{Shafiei09}).
+Note, that it was shown that this latter variant also might not converge to a Nash equilibrium (a well-known counter-example in Rock, Paper, Scissors with biased payoffs~\cite{Shafiei09}).
 However, one of the issues when using UCT in game trees is an unspecified behavior in case there are multiple actions with identical value in the maximization described in the UCT formula in Equation~\ref{eq:uct}.
 %Note that UCT does not define what happens which action is selected if multiple actions have identical value in the maximization.
 This may have a significant impact on the performance of the UCT in simultaneous move games.
