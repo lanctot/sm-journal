@@ -450,7 +450,7 @@ TODO
 >   - VL: "... holds master's degree ... and master's degree ..." -> "... *a* master's degree ..." (2x)
 >   - ML: "... was post-doctoral research fellow ..." ->  "... was *a* post-doctoral research fellow ..."
 
-TODO
+Fixed
 
 >
 >
