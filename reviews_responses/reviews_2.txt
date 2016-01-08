@@ -349,7 +349,7 @@ Fixed
 >
 > * Sec. 4.2, second line: "value" -> "values"
 
-
+Fixed.
 
 >
 > * Below: "... applying wide range ..." -> "... applying a wide range ..."
