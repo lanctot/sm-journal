@@ -257,10 +257,12 @@ Fixed
 
 >
 > * p. 4, last item: "An equivalent ..." -> "The definition of an equivalent ..."
->
+
+Removed.
+
 > * Those items: Very technical. Do not quite convey the significance of the contribution.
 
-We have improved the list of contributions
+We have improved the list of contributions.
 
 >
 > * Section 2, first sentence: "A finite game ..." -> "A finite 2-player game ..."
