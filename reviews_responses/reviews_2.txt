@@ -79,8 +79,6 @@ TODO (check the following)
 We have added an additional level of detail regarding the theoretical results and provided Lemmas and Theorems for both the exact and the approximate algorithms.
 However, the focus of the paper should remain on the description of the algorithms and the experimental evaluation, since: (1) the theoretical conclusions are straightforward for the exact algorithms, and (2) the analysis of the theoretical concepts in full for the approximate SM-MCTS algorithms requires a lot of additional theoretical background, further extending this submission and dissolving the focus on the equilibrium computation and the online game-playing aspect. We cover most of the theoretical aspects of the convergence of SM-MCTS in an additional submission in full detail [59] (one of the co-authors, V. Lisy, is a co-author of [59]).
 
-
->
 > Does anything need to be added or deleted?
 > ------------------------------------------
 >

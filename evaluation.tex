@@ -714,7 +714,7 @@ Moreover, $\doab$ has significantly lower memory requirements since it is a dept
 
 \subsection{Online Search}
 
-We now compare the performance of the algorithms in head-to-head matches in the same games as in the offline equilibrium computation experiments, but we use much larger instances of these games. \reviewchange{Each algorithm has a strictly limited computation time per move set to 1 second.} After this time, the algorithm outputs an action to be played in the current game state, receives information about the action selected by its opponent, and the game proceeds to the next state. As described in Section~\ref{sec:online}, all algorithms keep results of previous computations and do not start form scratch in the next state. \reviewchange{We have also performed a large set of experiments with 5 seconds of computation time per move, however, the results are very similar to the results with 1 second per move. Therefore, we presents the results with 1 second in detail and only comment on the 5 seconds results where additional time leads to an interesting difference.}
+We now compare the performance of the algorithms in head-to-head matches in the same games as in the offline equilibrium computation experiments, but we use much larger instances of these games. \reviewchange{Each algorithm has a strictly limited computation time per move set to 1 second.} After this time, the algorithm outputs an action to be played in the current game state, receives information about the action selected by its opponent, and the game proceeds to the next state. As described in Section~\ref{sec:online}, all algorithms keep results of previous computations and do not start from scratch in the next state. \reviewchange{We have also performed a large set of experiments with 5 seconds of computation time per move, however, the results are very similar to the results with 1 second per move. Therefore, we presents the results with 1 second in detail and only comment on the 5 seconds results where additional time leads to an interesting difference.}
 
 We compare all of the approximative sampling algorithms and $\doab$ as a representative of backward induction algorithms, because it was clearly the fastest algorithm in all of the considered games.
 Finally, we also include random player (denoted RAND) into the tournament to confirm that the algorithms choose much better strategies than the simple random game play.
@@ -794,7 +794,7 @@ The second best algorithm is OOS, which loses only against RM and Exp3 is the we
 
 The sampling algorithms in the second game variant (without chance) perform 
 the same number of samples as in the first variant, with the exception of UCT, which performs $12 \times 10^3$ iterations per second.
-However, they build a considerably deeper search trees, since the game tree is less wide.
+However, they each build a considerably deeper search tree, since the game tree is less wide.
 The exploration parameters were tuned to slightly larger numbers, which indicate that more exploration is beneficial in smaller games.
 The results are similar to the previous game variant.
 RM is still winning against all opponents, but it is not able to win more often against weaker players, which is consistent with playing close to a Nash equilibrium.
@@ -880,7 +880,7 @@ With this modification, UCT already significantly outperforms all algorithms inc
 $\doab$ is the second best and still winning over the remaining sampling algorithms.
 Exp3 benefits from the evaluation function more than OOS and RM, which are relatively weaker with the evaluation function.
 
-The reason why UCT performs well in this game is that the game mostly requires pure strategies, rather then precise mixing between multiple strategies (see Subsection~\ref{sec:eval:domains}). UCT is able to quickly disregard other actions, if a single action is optimal.
+The reason why UCT performs well in this game is that the game mostly requires pure strategies, rather than precise mixing between multiple strategies (see Subsection~\ref{sec:eval:domains}). UCT is able to quickly disregard other actions, if a single action is optimal.
 So, the evaluation function generally helps every algorithm, but can make significant changes in ranking of the algorithms. 
 
 \subsubsection{Random Games}
@@ -962,7 +962,7 @@ However, only $1 \times 10^3$ out of $12 \times 10^3$ iterations per second upda
 
 As in the case of Oshi-Zumo, we also run the matches with the evaluation function in place of the random rollout simulation in the sampling algorithms.
 We present the results in the second table of Table~\ref{fig:matches:tron}.
-Using the evaluation function improves the performance of all sampling algorithms against $\doab$ and it makes the differences between their performance smaller.
+Using the evaluation function improves the performance of all sampling algorithms against $\doab$ and it decreases the differences in performance between each algorithm.
 The difference is most notable for OOS, since using the evaluation function strongly reduces the length of the game.
 In this setting, both RM and UCT outperform $\doab$. 
 Interestingly, while UCT performs quite well against $\doab$ and wins 57.3\% of matches, it is not winning against any other sampling algorithm. 
@@ -1079,7 +1079,8 @@ We then picked the parameter for the final cross tables presented above as the p
 In the presented variant of Goofspiel, the choice of the exploration parameter has a rather large influence on the performance against $\doab$. This is often the case for weaker players.
 The selection of the exploration parameter for OOS has little effect on the mean performance, with a noticeable drop in performance for 0.1.
 In UCT, smaller exploration is generally better, but the sudden drop of performance against Exp3 causes the optimum to be at 0.6.
-In Exp3, the optimal exploration parameter against $\doab$ would be even more than 0.5, while the optimum against OOS would be 0.2. These kind of inconsistencies are common with the Exp3 algorithm. In the mean over all opponents, the optimum is 0.3.
+In Exp3, the optimal exploration parameter against $\doab$ would be even more than 0.5, while the optimum against OOS would be 0.2.
+These kinds of inconsistencies are common with the Exp3 algorithm. In the mean over all opponents, the optimum is 0.3.
 With RM, the optimal exploration parameter against individual opponents stays around 0.1 and it is clearly the best value in the mean.
 
 The parameter selection generally makes more difference against weaker players.
