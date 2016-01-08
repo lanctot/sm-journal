@@ -15,6 +15,7 @@
 >
 
 We thank all of the reviewers for their valuable feedback. Please find enclosed our resubmission. For ease of re-review, we have also submitted a version with highlighted significantly added/changed text.
+Most of the changes, however, were grammatical improvements and minor reformulations.
 TODO summary
 
 
@@ -285,7 +286,8 @@ Fixed
 >
 > * Transitions function: Total or partial? Partial, probably!
 
-TODO
+TODO (check the following)
+Yes, it is a partial function. We have added this to the definition.
 
 >
 > * "The utility functions ... gives ..." -> "The utility functions ... give ..."
@@ -300,7 +302,8 @@ Fixed
 >
 > * Last sentence before Def. 2.1: unclear.
 
-TODO
+TODO (check the following)
+We have reworded the paragraph to state that in order to define an optimal behavior, we need to define basic concepts describing the quality of strategies. 
 
 >
 > * Def 2.1: Wrong! An action a_i is strictly dominated if *there* *exists* another
@@ -436,7 +439,8 @@ Fixed
 >   Positive note: The experiments are very meticulous and detailed, which is nice
 >   for the expert reader.
 
-TODO (say something here, let's not make any changes in the text)
+TODO (check the following)
+In each experiment we are trying to provide the interpretation based on the measured results and we feel that it would be less precise and less understandable if we omit the actual data. 
 
 >
 > * Sec. 6.5.6, parameter tuning. I don't quite understand what to take home from this section.
