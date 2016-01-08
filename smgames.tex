@@ -25,7 +25,7 @@ joint actions of individual players.
 We denote by $\cA_i(s)$ the actions available to player $i$ in state $s \in \cS$. 
 The number of actions available to player~$i$, $|\cA_i(s)|$, is called the \emph{branching factor for player $i$}. 
 When the player is not specified, we mean the joint branching factor $|\cA(s)|$.
-The transition function $\cT : \cS \times \cA_1 \times \cA_2 \mapsto \cS$ defines the successor state given a current
+The transition function $\cT : \cS \times \cA_1 \times \cA_2 \mapsto \cS$ is a partial function that defines the successor state given a current
 state and actions for both players. $\Delta_\star:\cC \mapsto \Delta(\cS)$ describes a probability distribution over
 possible successor states of the chance event.
 \reviewchange{Induced by $\Delta_\star$, we also define
@@ -90,8 +90,9 @@ Finally, we define $\Sigma_i$ to be the set of all behavioral strategies for pla
 %\bbosansky{@Marc I have changed this: $-i$ is used to denote the opponent excluding the chance (chance is handled separately). How is it in sampling algorithms? I think, that it is the same there as well, no? If not, it would be easier to make a fix there than throughout all exact algorithms.}
 %\mlanctot{@Brano: All of the previous literature on CFR (+ OOS) includes chance in $-i$, because it kind of makes more sense when defining the reach probabilities. But I think this change is still OK. None of the pseudocode for the sampling algorithms (except OOS) actually uses $-i$. So then we only include chance in the definition of $\pi_{-i}$, in section \ref{sec:algs:cfros}.}
 
-There are three important concepts used in the paper that deserve explicit definition. These concepts are used to define
-an optimal behavior for this class of games, to define metrics for evaluation, and parts of the algorithms.
+In order to define an optimal behavior for this class of games, we have to formally define basic concepts about the quality of strategies.
+%There are three important concepts used in the paper that deserve explicit definition. These concepts are used to define
+%an optimal behavior for this class of games, to define metrics for evaluation, and parts of the algorithms.
 
 \begin{definition}[Strictly Dominated Action]
 In a matrix game, an action $a_i \in \cA_i$ is strictly dominated if $\forall a_{-i} \in \cA_{-i}, \exists a_i' \in \cA_i \setminus \{ a_i \}: u_i(a_i, a_{-i}) < u_i(a_i', a_{-i})$.
