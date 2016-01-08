@@ -606,16 +606,16 @@ As expected, the case with point utilities is more challenging and the algorithm
 	\begin{subfigure}{0.85\textwidth}
 		\includegraphics[width=1\textwidth]{figures/convergence-oz-bf.pdf}
 	\end{subfigure}
-\caption{Convergence of the sampling algorithms on Oshi-Zumo game, with $10$ coins, $K=3$, and $M=1$. The vertical lines correspond to the computation times for the exact algorithms.
+\caption{Convergence of the sampling algorithms on Oshi-Zumo game with $10$ coins, $K=3$, and $M=1$. The vertical lines correspond to the computation times for the exact algorithms.
 (Top) Oshi-Zumo with win-tie-lose utility values;
 (Bottom) Oshi-Zumo with point utilities.} \label{fig:off:conv:oz}
 \end{figure}
 
 Turning to the sampling algorithms reveals that the game is difficult to approximate even in the win-tie-lose setting.
-Figure~\ref{fig:off:conv:oz} depicts results for convergence of the sampling algorithms for the game with $10$ coins, $K$ set to $3$ and minimum bid set to $1$. This is an easy game for $\doab$ and $\biab$ with pure strategy and both of these algorithms are able to solve the game in less than a second ($0.73$). However, due to large branching factor for both players ($10$ actions at the root node for each player) all sampling algorithms converge extremely slowly. The performance of the algorithms in terms of iterations per second is similar to the previous games, however, OOS is slightly better in this case with $1.9\times10^5$ iterations per second compared to the RM with $1.6\times10^5$ iterations per second.
+Figure~\ref{fig:off:conv:oz} depicts the results for \bbosansky{the? ... this is a general question and maybe we should have `the' in each caption of the figures}convergence of the sampling algorithms for the game with $10$ coins, $K$ set to $3$ and the minimum bid set to $1$. This is an easy game for $\doab$ and $\biab$ with a pure NE and both of these algorithms are able to solve the game in less than a second ($0.73$). However, due to a large branching factor for both players ($10$ actions at the root node for each player) all sampling algorithms converge extremely slowly. The performance of the algorithms in terms of iterations per second is similar to the previous games, however, OOS is slightly better in this case with $1.9\times10^5$ iterations per second compared to the RM with $1.6\times10^5$ iterations per second.
 
 As before, OOS is the best converging algorithm, however, in a given time limit ($500$ seconds) the reached error was only slightly below $0.3$ ($0.29$). On the other hand, all of the other sampling algorithms perform significantly worse -- RM ends with error slightly over $1$, UCT ($C=2$) with $1.50$, and Exp3 with $1.88$.
-This confirms our findings from the previous experiment that increasing branching factor slows down the convergence rate.
+This confirms our findings from the previous experiment that increasing the branching factor slows down the convergence rate.
 Secondly, since there is a pure Nash equilibrium in this particular game configuration, the convergence of the algorithms is also slower since they essentially mix the strategy during the iterations in order to explore the unvisited parts of the game tree. Since none of the sampling algorithms can directly exploit this fact, their performance in offline solving of games like Oshi-Zumo is not compelling. On the other hand, the existence of pure NE explains the better performance of UCT compared to Exp3 that is forced to explore more broadly.
 \reviewchange{Moreover, the convergence takes even more time in the point utility case, since the range of the utility values is larger.
 OOS is again the fastest and converges to error $0.45$ within the time limit, RM to $1.41$, UCT ($C=4$) to $3.1$, and Exp3 to $3.7$.}
@@ -630,40 +630,40 @@ OOS is again the fastest and converges to error $0.45$ within the time limit, RM
 	\begin{subfigure}{0.49\textwidth}
 		\includegraphics[width=1\textwidth]{figures/RG-BF5-BIN-FALSE.pdf}\caption{}\label{fig:off:res:rgbf5}
 	\end{subfigure}
-\caption{Running times of exact algorithms on randomly generated games with increasing depth: subfigure (a) depicts the results with branching factor set to $4$ actions for each player, (b) depicts the results with branching factor $5$.} \label{fig:off:res:rg}
+\caption{Running times of the exact algorithms on randomly generated games with increasing depth: subfigure (a) depicts the results with branching factor set to $4$ actions for each player, (b) depicts the results with branching factor $5$.} \label{fig:off:res:rg}
 \end{figure}
 
 In the first variant of the randomly generated games we used games with utility values randomly drawn from a uniform distribution on $[0,1]$.
-Such games represent an extreme case, where neither alpha-beta search nor double-oracle algorithm can save much computation time, since each action can lead to arbitrarily good or bad terminal states.
+Such games represent an extreme case, where neither alpha-beta nor the double-oracle algorithm can save much computation time, since each action can lead to arbitrarily good or bad terminal states.
 In these games, \textsc{BI} algorithm is typically the fastest.
-Even though both $\biab$ and $\doab$ evaluate marginally fewer nodes ($\approx90\%$), the overhead of the algorithms (repeated calculation of alpha-beta algorithm, repeatedly solving linear programs, etc.) causes slower run time performance in this case.
+Even though both $\biab$ and $\doab$ evaluate marginally fewer nodes (less than $90\%$), the overhead of the algorithms (repeated calculations of the serialized alpha-beta algorithm, repeatedly solving linear programs, etc.) causes a slower run time performance in this case.
 
 However, completely random games are rarely instances that need to be solved in practice.
 The situation changes, when we use the intuition of good and bad moves and thus add correlation to the utility values.
 Figure~\ref{fig:off:res:rg} depicts the results for two different branching factors $4$ and $5$ for each player and increasing depth.
 The results show that $\doab$ outperforms all remaining algorithms, although the difference is rather small (still statistically significant).
 On the other hand, \textsc{DO} without serialized alpha-beta is not able to outperform \textsc{BI}.
-This is most likely caused by a larger number of undominated actions in mixed subgame equilibria that cause enumerating most of the actions by the double-oracle algorithm.
+This is most likely caused by a larger number of undominated actions that forces the double-oracle algorithm to enumerate most of the actions in each state.
 Moreover, this is also demonstrated by the performance of $\biab$ that is only slightly better compared to \textsc{BI}.
 
 The fact that serialized alpha-beta is less successful in randomly generated games is noticeable also when comparing the number of evaluated nodes.
-For case with branching factor set to $4$ for both players, and depth $7$, \textsc{BI} evaluates almost $1.8\times10^7$ nodes in almost $3.5$ hours, while $\biab$ evaluates more than $\approx1\times10^7$ nodes in almost $3$ hours.
-\textsc{DO} evaluates even more nodes compared to $\biab$ ($\approx1.2\times10^7$) and it is slower compared to both \textsc{BI} and $\biab$.
-Finally, $\doab$ evaluates $\approx2\times10^6$ nodes on average and it takes the algorithm slightly over $80$ minutes. \vlisy{Why did $\approx$ suddenly start to appear? It is not used before.}
+For the case with branching factor set to $4$ for both players and depth $7$, \textsc{BI} evaluates almost $1.8\times10^7$ nodes in almost $3.5$ hours, while $\biab$ evaluates more than $1\times10^7$ nodes in almost $3$ hours.
+\textsc{DO} evaluates even more nodes compared to $\biab$ ($1.2\times10^7$) and it is slower compared to both \textsc{BI} and $\biab$.
+Finally, $\doab$ evaluates $2\times10^6$ nodes on average and it takes the algorithm slightly over $80$ minutes. 
 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/convergence-rg.pdf}
-\caption{Convergence of the sampling algorithms on random game with branching factor $4$ and depth $5$. The vertical lines correspond to the computation times for the exact algorithms.} \label{fig:off:conv:rg}
+\caption{Convergence of the sampling algorithms on a random game with branching factor $4$ and depth $5$. The vertical lines correspond to the computation times for the exact algorithms.} \label{fig:off:conv:rg}
 \end{figure}
 
-Figure~\ref{fig:off:conv:rg} depicts the results for convergence of the sampling algorithms for the random game with correlated utility values, branching factor set to $4$ and depth $5$.
-The number of iterations per second is similar to the situation in Goofspiel, with Exp3 being the exception able to achieve more than $6.5\times10^4$ iterations per second, which is still significantly the lowest number of iterations.
+Figure~\ref{fig:off:conv:rg} depicts the results for convergence of the sampling algorithms for a random game with correlated utility values, branching factor set to $4$ and depth $5$.
+The number of iterations per second is similar to the situation in Goofspiel, with Exp3 being the exception able to achieve more than $6.5\times10^4$ iterations per second, which is still the lowest number of iterations.
 Interestingly, there is a much less difference between the performance of the sampling algorithms in these games.
-Since these games are generally more mixed (\ie NE require to use mixed strategies in many states of the game), they are much more suitable for the sampling algorithms.
-OOS can be considered a winner in this setting, however, the performance of RM is very similar.
+Since these games are generally more mixed (\ie NE require to use mixed strategies in many states of the games), they are much more suitable for the sampling algorithms.
+OOS can be considered the winner in this setting, however, the performance of RM is very similar.
 Again, since the game is more mixed, Exp3 outperforms UCT in the longer run.
-The exploration constant for UCT was set to 12 due to the larger utility variance in this setting.
+The exploration constant for UCT was set to 12 due to a larger utility variance in this setting.
 
 \subsubsection{Tron}
 
@@ -675,14 +675,14 @@ The exploration constant for UCT was set to 12 due to the larger utility varianc
 	\begin{subfigure}{0.49\textwidth}
 		\includegraphics[width=1\textwidth]{figures/Tron-2.pdf}\caption{}\label{fig:off:res:tron2}
 	\end{subfigure}
-\caption{Running times of exact algorithms on Tron with increasing $width$ of the graph: subfigure (a) depicts the results with $height$ of the graph set to $width - 1$, (b) depicts the results with $height = width$.} \label{fig:off:res:tron}
+\caption{Running times of the exact algorithms on Tron with increasing $width$ of the grid graph: subfigure (a) depicts the results with $height$ of the graph set to $width - 1$, (b) depicts the results with $height = width$.} \label{fig:off:res:tron}
 \end{figure}
 
-Performance of exact algorithms in Tron is affected by the fact that pure NE exist in all smaller instances \reviewchange{
+Performance of the exact algorithms in Tron is affected by the fact that pure NE exist in all smaller instances \reviewchange{
 (the results are depicted for two different ratios of dimensions of the grid in Figure~\ref{fig:off:res:tron})}.
 Therefore, $\biab$ and $\doab$ are essentially the same since serialized alpha-beta is able to solve the game.
-Moreover, since the size of the game increases dramatically with increasing size of the grid (the longest branch of the game tree has $\left(0.5\cdot w\cdot l - 1\right)$ joint actions, where $w$ and $l$ are dimensions of the grid), the performance of standard BI is very poor.
-While BI is able to solve the grid $5\times6$ in $96$ seconds, it takes around $30$ minutes to solve $6\times6$ grid.
+Moreover, since the size of the game increases dramatically with the increasing size of the grid (the longest branch of the game tree has $\left(0.5\cdot w\cdot l - 1\right)$ joint actions, where $w$ and $l$ are the dimensions of the grid), the performance of standard BI is very poor.
+While BI is able to solve the grid $5\times6$ in $96$ seconds, it takes around $30$ minutes to solve the $6\times6$ grid.
 By comparison, DO solves the $6\times6$ instance in $235$ seconds, and both $\biab$ and $\doab$ in $0.6$ seconds.
 \reviewchange{
 $\biab$ and $\doab$ scale much better and the largest graph these algorithms solved had size $9\times9$ taking almost $2$ days to solve.
@@ -694,19 +694,19 @@ $\biab$ and $\doab$ scale much better and the largest graph these algorithms sol
 \caption{Convergence comparison of different sampling algorithms on Tron on grid $5\times6$. The vertical lines correspond to the computation times for the exact algorithms.} \label{fig:off:conv:tron}
 \end{figure}
 
-The size of the game tree in Tron also causes slow convergence for sampling algorithms.
+The size of the game tree in Tron also causes a slow convergence for the sampling algorithms.
 This is apparent also in the number of iterations that is lower than before.
 OOS is the fastest performing $1.3\times 10^5$ iterations per second, RM achieves $1.2\times 10^5$, UCT only $8\times10^4$, and Exp3 is again the slowest with $7.8\times10^4$ iterations per second.
 Figure~\ref{fig:off:conv:tron} depicts the results for the grid $5\times6$.
-Consistent with the previous results, OOS performs the best and it is able to converge very close to an exact solution in $300$ seconds.
+Consistently with the previous results, OOS performs the best and it is able to converge very close to an exact solution in $300$ seconds.
 Similarly, both RM and Exp3 are again eventually able to converge to a very small error, however, it takes them more time and in the time limit they achieve error $0.05$, or $0.02$ respectively.
 Finally, UCT ($C=5$) performs reasonably well during the first $10$ seconds, where the exploitability is better than both RM and Exp3.
-This is most likely due to existence of pure NE, however, the length of the game tree prohibits UCT from converging and the best error the algorithm was able to achieve in the time limit was equal to $0.68$.
+This is most likely due to the existence of pure NE, however, the length of the game tree prohibits UCT from converging and the best error the algorithm was able to achieve in the time limit was equal to $0.68$.
 
 \subsubsection{Summary of Offline Equilibrium Computation Experiments}
 
 The offline comparison of the algorithms offer several conclusions.
-Among the exact algorithms, $\doab$ is clearly the best algorithm, since it typically outperforms all other algorithms (especially in pursuit-evasion games and random games). Although for smaller games (\eg Goofspiel with $5$ cards)  $\biab$ can be slightly faster, this difference is not significant and $\doab$ is never significantly slower compared to $\biab$. \vlisy{Do we mean significant in the statistical sense here?}
+Among the exact algorithms, $\doab$ is clearly the best algorithm, since it typically outperforms all other algorithms (especially in pursuit-evasion games and random games). Although for smaller games (\eg Goofspiel with $5$ cards)  $\biab$ can be slightly faster, this difference is not significant and $\doab$ is never significantly slower compared to $\biab$. %\vlisy{Do we mean significant in the statistical sense here?}
 
 Among the sampling algorithms, OOS is the clear winner since it is often able to quickly converge to a very small error and significantly outperforms all variants of MCTS.
 On the other hand, comparing OOS and $\doab$, the exact $\doab$ algorithm is always faster and it is able to find an exact solution much faster compared to OOS.
