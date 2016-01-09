@@ -569,7 +569,7 @@ While the completeness of the exact algorithms is based on the Markov property a
 Instead, we discuss a form of a probabilistic completeness. 
 Unfortunately, none of the variants of this algorithm introduced above has been proven to eventually converge to a Nash equilibrium. If the algorithm is instantiated by UCT, Shafiei et al. \cite{Shafiei09} have shown that the algorithm converges to a stable strategy, which is not close to a Nash equilibrium. We replicate the experiment below and note that this is the case only for the deterministic version of UCT. A randomized version of UCT with a well selected exploration parameter empirically converges close to the equilibrium strategy, but then in some games oscillates and does not converge further.
 
-The only know theoretic result about SM-MCTS directly applicable for the algorithms in this paper is negative and it has been proven in \cite{Kovarik2015Analysis}.
+The only known theoretical result about SM-MCTS directly applicable to the algorithms in this paper is negative, and it has been proven in \cite{Kovarik2015Analysis}.
 
 \begin{theorem}
 There are games, in which SM-MCTS instantiated by any regret minimizing selection function with a constant exploration $\gamma$ cannot converge to a strategy that would be an $\epsilon$-Nash equilibrium for an $\epsilon < \gamma D$, where $D$ is the depth of the game tree.
