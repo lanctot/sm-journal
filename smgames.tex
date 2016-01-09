@@ -49,8 +49,9 @@ Each entry in the matrix $A_{rc}$ where $(r,c) \in \cA_1 \times \cA_2$ correspon
 For example, in Matching Pennies in the left side of Figure~\ref{fig:egMatrixGames}, each player has two actions (heads or tails).
 The row player receives a payoff of 1
 if both players choose the same action and 0 if they do not match.
-In simultaneous move games, at every state $s$ there is a joint action set $\cA_1(s) \times \cA_2(s)$.
+In simultaneous move games, at every decision state $s \in \cD$ there is a joint action set $\cA_1(s) \times \cA_2(s)$.
 Each joint action $(r,c)$ leads to another state $\cT(s,r,c)$ that is either a terminal state or a subgame which is itself another simultaneous move game.
+A chance event is a state $s \in \cC$ with a fixed set of outcomes, each of which leads to a possible successor state.
 In simultaneous move games, $A_{rc}$ refers to the value of the subgame rooted in state $\cT(s,r,c)$.
 %In the matrix game on the right of Figure~\ref{fig:egMatrixGames}, $(a,A)$ is a pure and only Nash equilibrium (NE) strategy.
 
@@ -90,7 +91,8 @@ Finally, we define $\Sigma_i$ to be the set of all behavioral strategies for pla
 %\bbosansky{@Marc I have changed this: $-i$ is used to denote the opponent excluding the chance (chance is handled separately). How is it in sampling algorithms? I think, that it is the same there as well, no? If not, it would be easier to make a fix there than throughout all exact algorithms.}
 %\mlanctot{@Brano: All of the previous literature on CFR (+ OOS) includes chance in $-i$, because it kind of makes more sense when defining the reach probabilities. But I think this change is still OK. None of the pseudocode for the sampling algorithms (except OOS) actually uses $-i$. So then we only include chance in the definition of $\pi_{-i}$, in section \ref{sec:algs:cfros}.}
 
-In order to define an optimal behavior for this class of games, we have to formally define basic concepts about the quality of strategies.
+In order to define optimal behavior for this class of games, we now provide definitions of some fundamental concepts. %now define three fundamental concepts.
+%about the quality of strategies.
 %There are three important concepts used in the paper that deserve explicit definition. These concepts are used to define
 %an optimal behavior for this class of games, to define metrics for evaluation, and parts of the algorithms.
 

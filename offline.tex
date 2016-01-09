@@ -118,25 +118,25 @@ algorithms such as alpha-beta or negascout~\cite{Negascout}.
 If the values of both serialized games are equal, then this value is also equal to the value of the original simultaneous move game.
 This situation occurs in our example in Figure~\ref{fig:serialization}, where both serialized games have value $V = 3$.
 
-We can speed-up the backward induction algorithm with bounds calculated using the alpha-beta algorithm (denoted $\biab$).
+We can speed up the backward induction algorithm using bounds that are computed by the alpha-beta algorithm (denoted $\biab$).
 Algorithm~\ref{alg:backwardinduction-ab} depicts the pseudocode.
 \reviewchange{
-The algorithm first serializes and solves the whole game using the standard alpha-beta algorithm 
-and returns directly the value from the serialized games if the bounds are equal (line~\ref{alg:biab:stop15}).
-The second player to move in the serialization is the player in the argument of the method.}
+The $\biab$ algorithm first serializes the game and solves the serialized games using the standard alpha-beta algorithm; 
+if the bounds are equal then this value is returned directly (line~\ref{alg:biab:stop15}).
+Note that in Algorithm~\ref{alg:backwardinduction-ab} the call alpha-beta($s$,$i$), $i$ is the second player to move in the serialized game rooted at $s$.}
 If the bounds are not equal, the algorithm starts evaluating successors of the current state.
-First, the algorithm calculates upper and lower bounds using alpha-beta algorithm on serialized variants of the subgame rooted in the
-successor $s'$ (lines~\ref{alg:biab:ab1}-\ref{alg:biab:ab2}).
-As before, the algorithm uses the value directly if the bounds are equal (line~\ref{alg:biab:saving}), or performs a recursive call
-otherwise~(line~\ref{alg:biab:recursive}).
+As before, the algorithm computes upper and lower bounds using the alpha-beta algorithm on serialized variants of the
+subgame rooted at the successor $s'$ (lines~\ref{alg:biab:ab1}-\ref{alg:biab:ab2}).
+Then, the algorithm uses the value directly if the bounds are equal (line~\ref{alg:biab:saving}), or performs a
+recursive call otherwise~(line~\ref{alg:biab:recursive}).
 
-We distinguish two cases when extracting the equilibrium strategies from the $\biab$ algorithm. %backward induction with alpha-beta search.
-In case that a state was fully evaluated by the algorithm (\ie an LP was built and solved for this state), we proceed as before and
-keep the pair of equilibrium strategies in this state.
-However, in the other case, the algorithms prunes certain branches and does not create an LP for all states.
-The algorithm then keeps the strategy calculated by the serialized alpha-beta algorithm.
+We distinguish two cases when extracting equilibrium strategies from the $\biab$ algorithm. %backward induction with alpha-beta search.
+In the first case, when a state is fully evaluated by the algorithm (\ie an LP was built and solved for this state),
+we proceed as before and keep the pair of equilibrium strategies in this state.
+However, in the other case, the algorithms prunes certain branches and does not create an LP in some of the subgames.
+The algorithm then keeps the strategy calculated by the serialized alpha-beta algorithm in those subgames.
 More precisely, for player~$i$ the algorithm keeps the pure strategy computed by alpha-beta($s$, $-i$), where the opponent has an advantage of knowing the moves of player $i$.
-Such a strategy provides guarantees for player~$i$ that is not exploitable and due to the cut-off we know that there is no better strategy for player~$i$ with a higher expected utility.
+Such a strategy provides guarantees for player~$i$ that is not exploitable and due to the alpha-beta cut-offs we know that there is no better strategy for player~$i$ with a higher expected utility.
 %When such a cut-off occurs, one needs to extract the strategy from alpha-beta.
 %Since the alpha-beta operates on a serialized version of the game, the actions played by the player with the additional information caused by observing the choice of his opponent cannot be used.
 %This player is not forced to play according to the Nash equilibrium of the original non-serialized game, because the serialized game permits him to choose different action for every choice of the first player.
@@ -179,9 +179,9 @@ The correctness of the algorithm follows immediately from the correctness of the
 The performance of $\biab$ depends on the existence of a pure NE in the simultaneous move game.
 In the best case (\ie there exists a pure NE), the algorithm finds the solution by solving each serialization exactly once starting from the root state.
 In the worst case, all NE require mixed strategies in every state of the game.
-In this case, the algorithm not only solves the LP in each state similarly to BI, but also repeatedly attempts to solve serialized subgames by calling
-the alpha-beta algorithm.
-In practical games used as a benchmark, or in real-world applications, however, this is rarely the case.
+In this case, the algorithm not only solves the LP in each state similarly to BI, but also repeatedly attempts to solve serialized subgames by calling the alpha-beta algorithm.
+However, this case was very rarely encountered during our experiments.
+%In typical games used as benchmarks, or in real-world applications, however, this is rarely the case.
 
 
 \subsection{Backward Induction with Double Oracle and Serialized Bounds}\label{sec:algs:doab}

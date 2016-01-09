@@ -288,7 +288,6 @@ Fixed
 >
 > * Transitions function: Total or partial? Partial, probably!
 
-TODO (check the following)
 Yes, it is a partial function. We have added this to the definition.
 
 >
@@ -304,8 +303,7 @@ Fixed
 >
 > * Last sentence before Def. 2.1: unclear.
 
-TODO (check the following)
-We have reworded the paragraph to state that in order to define an optimal behavior, we need to define basic concepts describing the quality of strategies. 
+We have simplified the wording.
 
 >
 > * Def 2.1: Wrong! An action a_i is strictly dominated if *there* *exists* another
@@ -371,10 +369,14 @@ For the sake of completeness of the paper we state this fact.
 >   since there is no unique lower and upper bound.
 
 TODO
+(I can't find this anymore... is it still TODO, or has it been removed?)
 
 >
 > * Next-to-last paragraph of Sec. 4.2: unclear
->
+
+We have rephrased some of the sentences for added clarity.
+TODO: @Brano please double-check that it's correct. I changed two paragrapghs, starting with "We can speed up...")
+
 > * Last sentence of Sec. 4.2 (and a couple of times later): You often say that
 >   something holds "in practice". I think this is very vague and not quite
 >   convincing. What does "in practice" even mean? In certain standard benchmarks?
@@ -382,6 +384,7 @@ TODO
 >   studies?
 
 In typical games that are used for benchmarks. We have corrected this in the text.
+TODO: @Brano, I reworded this, please check.
 
 >
 > * Sec. 4.3.2.: New sentence (blue): "verifies" -> "tests"; "cannot" -> "can"
@@ -412,7 +415,13 @@ We have added the correctness proof for all the exact algorithms.
 > * Generally, Section 4 contains a lengthy list of techniques, but without a
 >   decent guiding thread and little interconnection. This could be improved.
 
-TODO (say something here, let's not make any changes in the text)
+In the first part of Section 4 (Sections 4.1-4.3) the algorithms build on each
+other, so each subsection depends on the previous one. In the Monte Carlo case, there
+is a general algorithm and several instantiations which mostly only change the
+selection and update functions. We believe that one of the contributions of the paper
+is to collect these algorithms, that were independently developed and presented in
+separate papers into one place under a consistent notation. We have related the
+techniques where possible (e.g. OOS is based on regret matching.)
 
 >
 > * Sec 5.1: "... contains depth d-1 solutions ..." -> "... contains d-1 solutions ..."
@@ -441,13 +450,12 @@ Fixed
 >   Positive note: The experiments are very meticulous and detailed, which is nice
 >   for the expert reader.
 
-TODO (check the following)
-In each experiment we are trying to provide the interpretation based on the measured results and we feel that it would be less precise and less understandable if we omit the actual data. 
+In each experiment we are trying to provide the interpretation based on the measured results and we feel that it would be less precise and less understandable if we omit the actual data. The main point is the comparison of the relative performances, so in the text we point out the best-performing algorithm on each task, drawing general conclusions in the summary sections 6.4.6, 6.5.7, and a section dedicated to comparing RM and OOS in 6.6.
 
 >
 > * Sec. 6.5.6, parameter tuning. I don't quite understand what to take home from this section.
 
-TODO (say something here, let's not make any significant changes in the text)
+This section is provided to show the empirical robustness (or sensitivity) of each algorithm to its experimental context, and to justify our choice of parameters for the experiments. It is also useful to inform practitioners who intend to implement these algorithms.
 
 >
 > * Authors' vitae:
@@ -557,7 +565,7 @@ Fixed
 > > remarks:
 > > - The abstract and introduction don't make it sufficiently clear that the simultaneous moves are the only source of imperfect information in the games that are considered. In my opinion, it would make sense to mention this distinction towards general imperfect information games earlier.
 
-TODO
+We have added a sentence to the abstract (the second one) and intro (end of paragraph 3) to clarify.
 
 > > - Introduction: "many of video and board games" -> remove "of"
 
@@ -569,7 +577,7 @@ Fixed
 
 > > - Section 2: In the definition of matrix games, you say "at every state there is a joint action set A_1(s) x A_2(s)" What about the chance states?
 
-TODO Check: Chance states are handled separately by function \Delta_{\star}.
+We have added text to clarify that this is only true for decision states. We have added a line following this to clarify the role and form of chance states.
 
 > > - In 4.4.x I always asked myself whether the algorithms would converge to an NE or not. Which was finally answered in 4.6. Maybe there is way to answer the question earlier without repeating yourself too often.
 

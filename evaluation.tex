@@ -1084,8 +1084,8 @@ In Exp3, the optimal exploration parameter against $\doab$ would be even more th
 These kinds of inconsistencies are common with the Exp3 algorithm. In the mean over all opponents, the optimum is 0.3.
 With RM, the optimal exploration parameter against individual opponents stays around 0.1 and it is clearly the best value in the mean.
 
-The parameter selection generally makes more difference against weaker players.
-The differences are more noticeable in matches against other algorithms, but since the optimal parameters are often different for different opponents, the mean performance presented in the last column does not vary a lot. OOS is consistently the least sensitive to parameter setting, while the change of performance of the other algorithms with changing exploration strongly depends on the specific domains.
+The parameter selection is generally more important when facing weaker players.
+The differences are more noticeable in matches against other algorithms, but since the optimal parameters vary depending on the different opponents, the mean performance presented in the last column does not vary much. OOS is consistently the least sensitive to parameter setting, while the change of performance of the other algorithms with changing exploration strongly depends on the specific domains.
 
 The differences between various parameter settings are larger in smaller games and mainly if an evaluation function is used.
 Consider the results for Oshi-Zumo in Table~\ref{fig:tuning}.
@@ -1154,7 +1154,7 @@ Given the similar nature of OOS and RM, one might wonder why RM performs in onli
 In this subsection, we investigate this phenomenon and present the results of additional experiments.
 
 To understand, we need to look at the convergence properties of OOS, which is essentially an application of outcome sampling MCCFR.
-The bound on convergence of outcome sampling MCCFR presented in \cite{Gibson12probing} says that after $T$ iterations, the strategy produced by the algorithm is an $\epsilon$-Nash equilibrium with probability $1-p$ and
+From the convergence bound of outcome sampling MCCFR presented in \cite{Gibson12probing}, after $T$ iterations the strategy produced by the algorithm is an $\epsilon$-Nash equilibrium with probability $1-p$ and
 \[ \epsilon \le O\left( \frac{\tilde{\Delta}_i |\cS|}{\sqrt{T}} + \sqrt{\frac{\bVar}{pT} + \frac{\bCov}{p}} \right), \]  
 where $\tilde{\Delta}_i$ is determined by the structure of the game, 
 and $\bVar$ and $\bCov$ are the maximal variance and covariance of the difference between the exact value of a regret of an action and its estimate computed based on the selected sample ($r^t(s,a) - \tilde{r}^t(s,a)$) over all states, actions, and time steps. 
