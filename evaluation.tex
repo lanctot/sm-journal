@@ -781,7 +781,7 @@ RAND&-6.67(0.99)&-14.42(0.96)&-13.30(1.00)&-14.79(0.97)&-14.20(0.98)&$\bullet$\\
 \reviewchange{In the head-to-head comparisons, our focus is primarily on the standard Goofspiel with 13 cards and chance nodes. Additionally, for the sake of consistency with the offline results, we also evaluate the variant with a fixed known sequence of cards. The full game has more than $2.4\times 10^{29}$ terminal states and the variant with a fixed sequence has still more than $3.8\times 10^{19}$ terminal states. The results are presented in Table~\ref{fig:matches:goof}, where the top table shows the win rates of the algorithms in the full game and the other two tables show the win rates and the expected number of points gained by the algorithms in the game with a fixed point card sequence. The results for the fixed card sequence are means over $10$ fixed random sequences. For each table, the algorithms were set up to optimize the presented measure (\ie win rate or points) and the exploration parameters were tuned to the values presented in the header of the table.
 
 First, we can see that finding a good strategy in Goofspiel is difficult for all the algorithms.
-This is noticeable from to the results of the RAND player, that performs reasonably well
+This is noticeable from the results of the RAND player, that performs reasonably well
 (RAND typically loses almost every match in all the remaining game domains).
 Next, we analyze the results of the $\doab$ algorithm compared to the sampling algorithms.
 The results show that even though $\doab$ uses a domain-specific heuristic evaluation function, it does not win significantly against any of the sampling algorithms that do not use any domain knowledge.
