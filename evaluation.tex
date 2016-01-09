@@ -1134,7 +1134,7 @@ Using a good evaluation function instead of random simulations helps all samplin
 
 Third, the novel RM and OOS algorithms has proven efficient in a wider range of domains. Besides Goofspiel used for evaluating earlier versions of the algorithms in \cite{Lanctot13Goofspiel}, RM showed strong performance in random games and both RM and OOS were the best performing algorithms in Tron with the evaluation function. These algorithms did not exploit the weaker opponents the most but often won against all other competitors. A notable advantage of these algorithms is a lower sensitivity for the parameter tuning, since they perform well in a wide range of domains with similar exploration parameters.
 
-Fourth, when the algorithms have more time for finding the move to play, the differences between win-rates of the sampling algorithms are getting smaller. \bbosansky{A?}Longer thinking time has also the same effect in the parameter tuning and it also significantly improves the performance of the sampling algorithms against backward induction. This is expected, since the difference is too small for the $\doab$ algorithm to reach a greater depth, while it is sufficient for the sampling algorithms to execute $5$ times more iterations improving their strategy.
+Fourth, when the algorithms have five times more time for finding a move to play, the differences between win-rates of the sampling algorithms are getting smaller. \bbosansky{A?}Longer thinking time has also the same effect in the parameter tuning and it also significantly improves the performance of the sampling algorithms against backward induction. This is expected, since the difference is often too small for the $\doab$ algorithm to reach a greater depth, while it is sufficient for the sampling algorithms to execute five times more iterations improving their strategy.
 
 Finally, the performance of Exp3 is the weakest in general. Its main problems are its larger computational complexity and problematic normalization for wider ranges of payoffs. Exp3 was significantly worse than other algorithms in both domains where we evaluated the point difference optimization and it performs an order of magnitude fewer iterations in Oshi-Zumo, compared to all other sampling algorithms.
 }
@@ -1150,7 +1150,7 @@ Finally, the performance of Exp3 is the weakest in general. Its main problems ar
 \reviewchange{
 \subsection{Online Outcome Sampling versus Regret Matching} \label{sec:oos_vs_rm}
 
-Given the similar nature of OOS and RM, one might wonder why RM performs in online search typically better than OOS, despite OOS being the only algorithm with provable convergence properties and the fastest converging algorithm in the offline setting. 
+Given the similar nature of OOS and RM, one might wonder why RM typically performs better than OOS in online search, despite OOS being the only algorithm with provable convergence properties and the fastest converging algorithm in the offline setting. 
 In this subsection, we investigate this phenomenon and present the results of additional experiments.
 
 To understand, we need to look at the convergence properties of OOS, which is essentially an application of outcome sampling MCCFR.
@@ -1158,7 +1158,7 @@ From the convergence bound of outcome sampling MCCFR presented in \cite{Gibson12
 \[ \epsilon \le O\left( \frac{\tilde{\Delta}_i |\cS|}{\sqrt{T}} + \sqrt{\frac{\bVar}{pT} + \frac{\bCov}{p}} \right), \]  
 where $\tilde{\Delta}_i$ is determined by the structure of the game, 
 and $\bVar$ and $\bCov$ are the maximal variance and covariance of the difference between the exact value of a regret of an action and its estimate computed based on the selected sample ($r^t(s,a) - \tilde{r}^t(s,a)$) over all states, actions, and time steps. 
-Computing these quantities exactly is prohibitively expensive, and since the scale of exact regrets is bounded by a relatively small range of utilities, we can estimate the variance of the difference by the variance of the sampled regrets, which has often a very large range due to the importance sampling correction.
+Computing these quantities exactly is prohibitively expensive, and since the scale of the exact regrets is bounded by a relatively small range of utilities, we can estimate the variance of the difference by the variance of the sampled regrets, which has often a very large range due to the importance sampling correction (see Section~\ref{sec:algs:cfros}).
 We measure the estimate
 $\widehat{\bVar} = \text{Var}[\max_{a \in \cA(s)} \tilde{r}^t(s, a)]$ in the root of the games, since they have the largest range of possible values of $\tilde{r}^t(s, a)$.
  Regret matching
