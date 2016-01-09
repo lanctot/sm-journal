@@ -416,7 +416,7 @@ other, so each subsection depends on the previous one. In the Monte Carlo case, 
 is a general algorithm and several instantiations which mostly only change the
 selection and update functions. We believe that one of the contributions of the paper
 is to collect these algorithms, that were independently developed and presented in
-separate papers into one place under a consistent notation. We have related the
+separate papers, into one place under a consistent notation. We have related the
 techniques where possible (e.g., OOS is based on regret matching.)
 
 >
