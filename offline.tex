@@ -173,7 +173,7 @@ Such a strategy provides a guarantees for player~$i$ (it is not exploitable) and
 The algorithm $\biab(s,i)$ computes the value of the subgame from state $s$ for player $i$.
 \end{theorem}
 \begin{proof}
-The correctness of the algorithm follows immediately from the correctness of the standard BI algorithm and the correctness of using the values computed by serialized alpha-beta (Lemma~\ref{lem:alphabeta}). Moreover, values computed by the serialized alpha-beta algorithm are used only if an upper bound equals a lower bound for some subgame. $\square$
+The correctness of the algorithm follows immediately from the correctness of the standard BI algorithm and the correctness of using the values computed by serialized alpha-beta (Lemma~\ref{lem:alphabeta}). Moreover, values computed by the serialized alpha-beta algorithm are used only if the upper bound equals the lower bound. $\square$
 \end{proof}
 }
 The performance of $\biab$ depends on the existence of a pure NE in the simultaneous move game.
