@@ -590,7 +590,7 @@ The memory required per node is linear for UCT and Exp3, and quadratic in $|\cA_
 
 \subsection{Counterfactual Regret Minimization and Outcome Sampling} \label{sec:algs:cfros}
 
-Finally, we describe algorithms based on Counterfactual Regret (CFR; a notion of regret at the information set level),
+Finally, we describe algorithms based on Counterfactual Regret (CFR, a notion of regret at the information set level),
 first designed for extensive-form games with imperfect information~\cite{CFR}.
 
 \reviewchange{Recall from Section~\ref{sec:smg} the set of histories $\cH$. Here we also use $\cZ$ defined previously as the set of terminal states,
@@ -672,7 +672,7 @@ a simpler OOS specifically intended for simultaneous move games.
 Online Outcome Sampling resembles MCTS in that it builds its tree incrementally. However, the algorithm is based on MCCFR, from
 Subsection~\ref{sec:algs:cfros}, rather than on stochastic and adversarial bandit algorithms, such as UCB and Exp3.
 A previous version of this algorithm for simultaneous move games was presented by Lanctot et al.~\cite{Lanctot13Goofspiel}. The version presented
-here is simpler for implementation and it further reduces the variance of the regret estimates, which leads to a faster convergence and a better game play.
+here is simpler for implementation and it further reduces the variance of the regret estimates, which leads to a faster convergence and better game play.
 The main novelty in this version is that in any state $s$, it defines the counterfactual values as if the game actually started in $s$. This is
 possible in simultaneous move games, because the optimal strategy in any state depends only on the part of the game below the state.
 
