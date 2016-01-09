@@ -299,7 +299,7 @@ $a_i^{BR} \leftarrow \textbf{null}$ \;
 			$v_{a_i} \leftarrow v_{a_i} + \sigma'_{-i}(a_{-i})\cdot v_{a_i,a_{-i}}$\;
 		}
 	}
-	\If{$v_{a_i} > v_i^{BR}$}{\label{alg:br:max}
+	\If{$v_{a_i} \geq v_i^{BR}$}{\label{alg:br:max}
 		$v_i^{BR} \leftarrow v_{a_i}$\;
 		$a_i^{BR} \leftarrow a_i$\label{alg:br:save}
 	}
@@ -335,14 +335,14 @@ When extracting strategies from $\doab$, we proceed exactly as in the case of $\
 
 \reviewchangeT{
 \begin{theorem}
-The $\doab(s,i)$ algorithm computes the value of the subgame defined by state $s$ for player $i$.
+The $\doab(s,i,\alpha_s,\beta_s)$ algorithm computes the value of the subgame defined by state $s$ for player $i$.
 \end{theorem}
 \begin{proof}
 The correctness of the algorithm follows from the correctness of the standard BI algorithm, Lemma~\ref{lem:alphabeta}, and the correctness of the double-oracle algorithm for matrix games~\cite{McMahan03Planning}. 
 We use them inductively for state $s$ and assume $\doab$ for all the children of $s$ returned correct values when called. 
 Since we are using the classical double-oracle on a matrix game corresponding to state $s$ with correct values, we only need to show that the best-response algorithm with serialized bounds cannot return \textbf{null} action due to setting the bounds incorrectly. 
-Without loss of generality, consider a lower bound $\alpha_s$ for state $s$.
-Value $\alpha_s$ corresponds either to a value calculated by serialized alpha-beta and propagated via bounds when calling $\doab(s,i,\alpha_s,\beta_s)$, or it was updated during the iterations of the double-oracle algorithm for state~$s$. 
+Without loss of generality, consider a lower bound $-\alpha_s$ for state $s$ to be $\lambda$ in the best response algorithm.
+Value $\lambda$ thus corresponds either to a value calculated by serialized alpha-beta and propagated via bounds when calling $\doab(s,i,\alpha_s,\beta_s)$, or it was updated during the iterations of the double-oracle algorithm for state~$s$ (line~\ref{alg:doab:bounds}). 
 In either case there exists a pure best response strategy corresponding to this value; hence, the best response has to find the strategy that achieves this value and cannot return \textbf{null}. $\square$
 \end{proof}
 }

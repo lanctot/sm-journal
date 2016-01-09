@@ -375,7 +375,6 @@ TODO
 > * Next-to-last paragraph of Sec. 4.2: unclear
 
 We have rephrased some of the sentences for added clarity.
-TODO: @Brano please double-check that it's correct. I changed two paragrapghs, starting with "We can speed up...")
 
 > * Last sentence of Sec. 4.2 (and a couple of times later): You often say that
 >   something holds "in practice". I think this is very vague and not quite
@@ -384,7 +383,6 @@ TODO: @Brano please double-check that it's correct. I changed two paragrapghs, s
 >   studies?
 
 In typical games that are used for benchmarks. We have corrected this in the text.
-TODO: @Brano, I reworded this, please check.
 
 >
 > * Sec. 4.3.2.: New sentence (blue): "verifies" -> "tests"; "cannot" -> "can"
