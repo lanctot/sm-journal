@@ -27,7 +27,7 @@ We give the optimal value for UCT constant $C$ in each setting.
 %\vlisy{is the 20 runs enough?}\bbosansky{this is the lowest number, some games (\eg, Goofspiel) had more samples (40)}
 
 Finally, we turn to the comparison of the algorithms in the online setting and we present results from head-to-head tournaments in each domain.
-We used larger instances of \bbosansky{the?}games and compare the algorithms based on the actual game play with a limited time for each move. 
+Here, we use larger instances of each game and compare the algorithms based on actual game play with a limited time for each move. 
 %We use two different restrictions to computation time per move: 1 second and 5 seconds.\bbosansky{TODO @Vilo, remove the "5 seconds" when you finish with rewriting the online experiments.}
 % mlanctot: we do not have to justify this choice
 %The first one is more common in previous works focused on online comparison of the algorithms~\cite{XXX}\bbosansky{Reference missing -- ideally several works with different authors that use this settings.}, second one allows us to see the difference if the algorithms have more computation time.
@@ -612,7 +612,10 @@ As expected, the case with point utilities is more challenging and the algorithm
 \end{figure}
 
 Turning to the sampling algorithms reveals that the game is difficult to approximate even in the win-tie-lose setting.
-Figure~\ref{fig:off:conv:oz} depicts the results for \bbosansky{the? ... this is a general question and maybe we should have `the' in each caption of the figures}convergence of the sampling algorithms for the game with $10$ coins, $K$ set to $3$ and the minimum bid set to $1$. This is an easy game for $\doab$ and $\biab$ with a pure NE and both of these algorithms are able to solve the game in less than a second ($0.73$). However, due to a large branching factor for both players ($10$ actions at the root node for each player) all sampling algorithms converge extremely slowly. The performance of the algorithms in terms of iterations per second is similar to the previous games, however, OOS is slightly better in this case with $1.9\times10^5$ iterations per second compared to the RM with $1.6\times10^5$ iterations per second.
+Figure~\ref{fig:off:conv:oz} depicts the results for the observed 
+%\bbosansky{the? ... this is a general question and maybe we should have `the' in each caption of the figures}
+% This is ok. And definitely not in the captions
+convergence rates of the sampling algorithms for the game with $10$ coins, $K$ set to $3$ and the minimum bid set to $1$. This is an easy game for $\doab$ and $\biab$ with a pure NE and both of these algorithms are able to solve the game in less than a second ($0.73$). However, due to a large branching factor for both players ($10$ actions at the root node for each player) all sampling algorithms converge extremely slowly. The performance of the algorithms in terms of iterations per second is similar to the previous games, however, OOS is slightly better in this case with $1.9\times10^5$ iterations per second compared to the RM with $1.6\times10^5$ iterations per second.
 
 As before, OOS is the best converging algorithm, however, in a given time limit ($500$ seconds) the reached error was only slightly below $0.3$ ($0.29$). On the other hand, all of the other sampling algorithms perform significantly worse -- RM ends with error slightly over $1$, UCT ($C=2$) with $1.50$, and Exp3 with $1.88$.
 This confirms our findings from the previous experiment that increasing the branching factor slows down the convergence rate.
@@ -703,8 +706,8 @@ Similarly, both RM and Exp3 are again eventually able to converge to a very smal
 Finally, UCT ($C=5$) performs reasonably well during the first $10$ seconds, where the exploitability is better than both RM and Exp3.
 This is most likely due to the existence of pure NE, however, the length of the game tree prohibits UCT from converging and the best error the algorithm was able to achieve in the time limit was equal to $0.68$.
 
-\subsubsection{Summary of Offline Equilibrium Computation Experiments}
-\bbosansky{Summary of \textbf{the?} Offline Equilibrium Computation Experiments}
+\subsubsection{Summary of the Offline Equilibrium Computation Experiments}
+%\bbosansky{Summary of \textbf{the?} Offline Equilibrium Computation Experiments}
 
 The offline comparison of the algorithms offer several conclusions.
 Among the exact algorithms, $\doab$ is clearly the best algorithm, since it typically outperforms all other algorithms (especially in pursuit-evasion games and random games). Although for smaller games (\eg Goofspiel with $5$ cards)  $\biab$ can be slightly faster, this difference is not significant and $\doab$ is never significantly slower compared to $\biab$. %\vlisy{Do we mean significant in the statistical sense here?}
@@ -715,7 +718,7 @@ Moreover, $\doab$ has significantly lower memory requirements since it is a dept
 
 \subsection{Online Search}
 
-We now compare the performance of the algorithms in head-to-head matches in the same games as in the offline equilibrium computation experiments, but we use much larger instances of these games. \reviewchange{Each algorithm has a strictly limited computation time per move set to 1 second.} After this time, the algorithm outputs an action to be played in the current game state, receives \bbosansky{a/the?}information about the action selected by its opponent, and the game proceeds to the next state. As described in Section~\ref{sec:online}, all algorithms keep results of previous computations and do not start from scratch in the next state. \reviewchange{We have also performed a large set of experiments with 5 seconds of computation time per move, however, the results are very similar to the results with 1 second per move. Therefore, we presents the results with 1 second in detail and only comment on the 5 seconds results where \bbosansky{the?}additional time leads to an interesting difference.}
+We now compare the performance of the algorithms in head-to-head matches in the same games as in the offline equilibrium computation experiments, but we use much larger instances of these games. \reviewchange{Each algorithm has a strictly limited computation time per move set to 1 second.} After this time, the algorithm outputs an action to be played in the current game state, receives information about the action selected by its opponent, and the game proceeds to the next state. As described in Section~\ref{sec:online}, each algorithm keeps results of previous computations and does not start from scratch in the next state. \reviewchange{We have also performed a large set of experiments with 5 seconds of computation time per move, however, the results are very similar to the results with 1 second per move. Therefore, we presents the results with 1 second in detail and only comment on the 5-second results where the additional time leads to an interesting difference.}
 
 We compare all of the approximative sampling algorithms and $\doab$ as a representative of backward induction algorithms, because it was clearly the fastest algorithm in all of the considered games.
 Finally, we also include a random player (denoted RAND) into the tournament to confirm that the algorithms choose much better strategies than the simple random game play.
@@ -724,8 +727,8 @@ We report expected rewards and win rates of the algorithms, in which a tie count
 \reviewchange{The parameters of the algorithms are tuned for each domain separately.
 We first present the comparison of different algorithms and we discuss the influence of the parameters in Subsection~\ref{sec:eval:online:tuning}.}
 
-\reviewchange{In this subsection, we show cross tables of each algorithm (on\bbosansky{in?} the row) matched up against each competitor algorithm (on\bbosansky{in?} the column).}
-Each entry represents a mean of at least $1,000$ matches with the half of the width of the $95\%$ confidence interval in \bbosansky{the?}brackets, \eg $52.9(0.3)$ refers to $52.9\% \pm 0.3\%$.
+\reviewchange{In this subsection, we show cross tables of each algorithm (in each row) matched up against each competitor algorithm (in each column).}
+Each entry represents a mean of at least $1000$ matches with the half of the width of the $95\%$ confidence interval show in parentheses, \eg $52.9(0.3)$ refers to $52.9\% \pm 0.3\%$.
 \reviewchange{The result shown is the win rate for the row player, so as an example in the standard game of Goofspiel (top of Table~\ref{fig:matches:goof}) $\doab$ wins $67.2 \% \pm 1.4 \%$ of games against the random player.
 All evaluated games except the pursuit-evasion game are symmetric from the perspective of the first and the second player. We made even the random games symmetric by always playing matches on the same game instance in pairs with alternating players' positions. However, for easier comparison of the algorithms, we mirror the same results to both fields corresponding to a pair of players in the cross tables.
 }
@@ -775,7 +778,7 @@ RAND&-6.67(0.99)&-14.42(0.96)&-13.30(1.00)&-14.79(0.97)&-14.20(0.98)&$\bullet$\\
 \caption{Results of head-to-head matches in Goofspiel variants with exploration parameter settings indicated in the table headers.}\label{fig:matches:goof}
 \end{table}
 
-\reviewchange{In \bbosansky{the?}head-to-head comparison, our focus is primarily on the standard Goofspiel with 13 cards and chance nodes. Additionally, for the sake of consistency with the offline results, we also evaluate the variant with a fixed known sequence of cards. The full game has more than $2.4\times 10^{29}$ terminal states and the variant with a fixed sequence has still more than $3.8\times 10^{19}$ terminal states. The results are presented in Table~\ref{fig:matches:goof}, where the top table shows the win rates of the algorithms in the full game and the other two tables the win rates and \bbosansky{the?}expected number of points gained by the algorithms in the game with a fixed point card sequence. The results for the fixed card sequence are means over $10$ fixed random sequences. For each table, the algorithms were set up to optimize the presented measure (\ie win rate or points) and the exploration parameters were tuned to the values presented in the header of the table.
+\reviewchange{In the head-to-head comparisons, our focus is primarily on the standard Goofspiel with 13 cards and chance nodes. Additionally, for the sake of consistency with the offline results, we also evaluate the variant with a fixed known sequence of cards. The full game has more than $2.4\times 10^{29}$ terminal states and the variant with a fixed sequence has still more than $3.8\times 10^{19}$ terminal states. The results are presented in Table~\ref{fig:matches:goof}, where the top table shows the win rates of the algorithms in the full game and the other two tables show the win rates and the expected number of points gained by the algorithms in the game with a fixed point card sequence. The results for the fixed card sequence are means over $10$ fixed random sequences. For each table, the algorithms were set up to optimize the presented measure (\ie win rate or points) and the exploration parameters were tuned to the values presented in the header of the table.
 
 First, we can see that finding a good strategy in Goofspiel is difficult for all the algorithms.
 This is noticeable thanks to the results of the RAND player, that performs reasonably well
@@ -872,7 +875,7 @@ In the win rate setting, the strongest opponent of UCT among the sampling algori
 Finally, Exp3 is clearly the weakest of all sampling algorithms.
 A possible reason may be that Exp3 manages to perform around $2.5 \times 10^3$ iterations per second in the root, while the other algorithms perform ten times more. 
 This is caused by the quadratic dependence of its computational complexity on the number of actions, which is relatively high in this game.
-\reviewchange{The situation remains similar when the algorithms optimize \bbosansky{the?}point utilities.}
+\reviewchange{The situation remains similar when the algorithms optimize the point utilities.}
 
 % Because of high quality of the evaluation function in this game, we performed experiments where the rollout simulation was replaced with the evaluation function. 
 We now turn to the experiments with the evaluation function, results of which are presented in the third table of Table~\ref{fig:matches:oz}.
@@ -1105,7 +1108,7 @@ The range of optimal parameters is much smaller for OOS and RM, which were alway
 }
 
 \subsubsection{Summary of the Online Search Experiments}
-\bbosansky{Summary of \textbf{the?} Online Search Experiments}
+%\bbosansky{Summary of \textbf{the?} Online Search Experiments}
 
 %\begin{table}
 %\centering
@@ -1134,7 +1137,7 @@ Using a good evaluation function instead of random simulations helps all samplin
 
 Third, the novel RM and OOS algorithms has proven efficient in a wider range of domains. Besides Goofspiel used for evaluating earlier versions of the algorithms in \cite{Lanctot13Goofspiel}, RM showed strong performance in random games and both RM and OOS were the best performing algorithms in Tron with the evaluation function. These algorithms did not exploit the weaker opponents the most but often won against all other competitors. A notable advantage of these algorithms is a lower sensitivity for the parameter tuning, since they perform well in a wide range of domains with similar exploration parameters.
 
-Fourth, when the algorithms have five times more time for finding a move to play, the differences between win-rates of the sampling algorithms are getting smaller. \bbosansky{A?}Longer thinking time has also the same effect in the parameter tuning and it also significantly improves the performance of the sampling algorithms against backward induction. This is expected, since the difference is often too small for the $\doab$ algorithm to reach a greater depth, while it is sufficient for the sampling algorithms to execute five times more iterations improving their strategy.
+Fourth, when the algorithms have five times more time for finding a move to play, the differences between win rates of the sampling algorithms get smaller. Longer thinking time also has the same effect on parameter tuning and it also significantly improves the performance of the sampling algorithms against backward induction. This is expected, since the difference is too small for the $\doab$ algorithm to reach a greater depth, while it is sufficient for the sampling algorithms to execute five times more iterations improving their strategy.
 
 Finally, the performance of Exp3 is the weakest in general. Its main problems are its larger computational complexity and problematic normalization for wider ranges of payoffs. Exp3 was significantly worse than other algorithms in both domains where we evaluated the point difference optimization and it performs an order of magnitude fewer iterations in Oshi-Zumo, compared to all other sampling algorithms.
 }
