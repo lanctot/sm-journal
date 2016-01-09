@@ -46,8 +46,10 @@ by directly using the value of the evaluation function in the current state for 
 line~\ref{alg:smmcts:rollout} of Algorithm~\ref{alg:smmcts} or line~\ref{alg:oos:rollout} of Algorithm~\ref{alg:oos} is replaced by $eval(s)$.
 This has been commonly used in several previous works in Monte Carlo search~\cite{Lorentz08Amazons,Lorentz13Breakthrough,Lanctot14Implicit,RamanujanS11,Lanctot13MCMS}.
 
-Again, such a modification does not generally affect theoretical properties of the algorithms -- the proofs of the convergence assume that a whole game tree is eventually built and any statistics in the nodes collected before (either by random play-outs or evaluation functions) can eventually be over-weighted. For MCTS algorithms, there is no reason to believe that a good evaluation function would give worse estimate of the quality of a sub-tree as a random play-out. \bbosansky{I do not understand the OOS part that follows.}The only complication could be with the probabilities in OOS. The weight of the sample in Equation~\ref{eq:scv} is decreased by the probability of reaching the sampled leaf from the updated information set. However, this ``tail'' probability is canceled by the probability of reaching the sampled leaf form the root. 
-If the sample is terminated earlier, it does not have a substantial effect on the scale of the regret updates.
+Again, such a modification does not generally affect theoretical properties of the algorithms -- the proofs of the convergence assume that a whole game tree is eventually built and any statistics in the nodes collected before (either by random play-outs or evaluation functions) can eventually be over-weighted. For MCTS algorithms, there is no reason to believe that a good evaluation function would give worse estimate of the quality of a sub-tree using random play-outs.
+%\bbosansky{I do not understand the OOS part that follows.}
+% Ok, I rephrased.
+The only complication could be with the way the probabilities are computed in OOS. The weight of the sample in Equation~\ref{eq:scv} is multiplied by the probability of reaching the terminal state $z$ from some history $h$, $\pi^\sigma(h,z)$. However, the ``tail'' probability is canceled because the rollout policy is fixed and so its contribution to $q(z)$ is identical to its contribution to $\pi^\sigma(h,z)$. Therefore, if the sample is terminates earlier, it does not have a substantial effect on the scale of the regret updates.
 
 %\reviewchange{
 %\subsection{Theoretical Properties and Convergence}
