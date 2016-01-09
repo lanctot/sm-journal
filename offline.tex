@@ -579,8 +579,8 @@ The main idea of the proof is to define a specific class of games (see Example~2
 
 In order to obtain positive formal results about the convergence of SM-MCTS-like algorithms, the authors in \cite{Kovarik2015Analysis} either add an additional averaging step to the algorithm (that makes it significantly slower in practical games used in benchmarks), or assume additional non-trivial technical properties about the selection function, which are not know to hold for any of the selection functions above. %Since there is no known finite-time bound, there is no known guarantee for the quality of the solution if SM-MCTS is terminated early.
 
-As for computational complexity, the time cost per node is linear in $|\cA_i|$ in UCT and RM. The time cost per node is quadratic in the case of Exp3 due to the numerically stable update rule (Equation~\ref{eq:exp3:stable}.) 
-The memory required per node is linear in UCT and Exp3, and quadratic in RM due to storing estimates of each child subgame.
+As for computational complexity, the time cost per node is linear in $|\cA_i|$ for UCT and RM. The time cost per node is quadratic in the case of Exp3 due to the numerically stable update rule (Equation~\ref{eq:exp3:stable}). 
+The memory required per node is linear for UCT and Exp3, and quadratic in $|\cA_i|$ for RM due to storing estimates of each child subgame. This can be easily avoided by storing the mean estimates directly in the children.
 
 }
 
@@ -659,8 +659,8 @@ The required number of iterations for convergence is much larger, but each itera
 
 \subsubsection{Online Outcome Sampling} \label{sec:oos}
 \reviewchange{
-We now present Online Outcome Sampling (OOS) for simultaneous move games. Note, importantly, that OOS is different from the general SM-MCTS
-algorithms presented in Subsection~\ref{sec:algs:smmcts}. OOS is an adaptation of a more general
+We now present Online Outcome Sampling for simultaneous move games (SM-OOS). Note, importantly, that SM-OOS is different from the general SM-MCTS
+algorithms presented in Subsection~\ref{sec:algs:smmcts}. SM-OOS is an adaptation of a more general
 algorithm which has been proposed for search in imperfect information games~\cite{15aamas-iioos}. However, since simultaneous move games are
 decomposable into subgames, the typical problems encountered in the fully imperfect information search setting are not present here. Hence, we present
 a simpler OOS specifically intended for simultaneous move games.
@@ -730,11 +730,11 @@ For example, if in the rollout player $i$ acts $n_i$ times, and each time sample
 Regardless of whether the current node was in the tree, the algorithm updates the regret table of player $i$ based on the simplified definition of sampled counterfactual regret for simultaneous move games (lines~\ref{alg:oos:update1}-\ref{alg:oos:update2}) and the mean strategy of player $-i$ (line~\ref{alg:oos:update3}).
 Finally, the function returns the updated probabilities to the upper level of the tree.
 
-OOS appears similar to SM-MCTS using the RM selection mechanism (Subsection~\ref{sec:rm}). However, there are a number of differences:
-OOS uses importance sampling of a sequence of probabilities to keep its estimate unbiased, but will suffer a higher variance than RM which uses only a one-step correction.
-RM does not distinguish whether its utility comes from exploration or otherwise, whereas OOS separates the two into the tail probabilities of the strategy for the sequence
+SM-OOS appears similar to SM-MCTS using the RM selection mechanism (Subsection~\ref{sec:rm}). However, there are a number of differences:
+SM-OOS uses importance sampling of a sequence of probabilities to keep its estimate unbiased, but will suffer a higher variance than RM which uses only a one-step correction.
+RM does not distinguish whether its utility comes from exploration or otherwise, whereas SM-OOS separates the two into the tail probabilities of the strategy for the sequence
 sampled ($x_i$) and the sampling probability of the sequence ($q_i$); when $\sigma_i(s,a) = 0$, due to exploration, then $x_i = 0$ and the value of the update increments
-are also $0$. RM uses coupled dynamics, whereas OOS is uncoupled, not requiring information about what action the opponent chose; RM uses the means from the subgames
+are also $0$. RM uses the means from the subgames
 as estimates of utility for those subgames, which could introduce some bias in the estimators. We further discuss the comparison in Subsection~\ref{sec:oos_vs_rm}.}
 
 \reviewchangeT{
@@ -750,7 +750,11 @@ $O(\frac{(|\cA||\cS|^2}{p \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max
 \begin{proof}
 The proof is composed of two observations. 
 First, the whole game tree is eventually built by the algorithm.
- A direct consequence of Lemma 43 in \cite{Kovarik2015Analysis} is that the tree of depth $D$ is built with probability $(1-p_1)$ in less than $$16 D \left(\frac{|\cA|}{\gamma}\right)^{2D} \max(D,4 \log p_1^{-1} + 4)$$ iterations by an algorithm with a fixed exploration $\gamma$.
+ A direct consequence of Lemma 43 in \cite{Kovarik2015Analysis} is that the tree of depth $D$ is built with probability $(1-p_1)$ in less than
+ \begin{equation}
+ 16 D \left(\frac{|\cA|}{\gamma}\right)^{2D} \max(D,4 \log p_1^{-1} + 4)
+ \end{equation}
+ iterations by an algorithm with a fixed exploration $\gamma$.
 This is the number of iterations needed for each leaf in the game to be visited at least $D$ times.
 
 Second, during these and the following iterations, the algorithm performs exactly the same updates in the nodes contained in memory, as the Outcome Sampling (OS) variant of the Monte Carlo Counterfactual Regret Minimization  \cite{Lanctot09Sampling}. 
@@ -759,9 +763,9 @@ Since CFR minimizes the counterfactual regret in an individual information set r
 Therefore, we can use Theorem 4 form \cite{Lanctot09Sampling} that bounds the number of iterations needed for OS as an offline solver with the complete game in the memory, starting after the tree has been built with a high probability.
 It states that with probability $(1-p_2)$ an $\epsilon$-NE is reached after $O(\frac{(|\cA||\cS|^2}{p_2 \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest probability of sampling any leaf. 
 
-We can see that the OOS bound dominates the time required to build the tree, because $\frac{1}{\delta^2}=(\frac{|\cA|}{\gamma})^{2D}$ for a leaf visited only because of the exploration, $D^2 < |\cA|^{2D} \in O(|\cS|)$ for any $\cA$, and we can set $p_1=p_2=p/2$. Then the probability that both the tree will be built and the convergence will be achieved can be bounded by $(1-p_1)(1-p_2) \geq (1-p)$. \qed
+We can see that the OS bound dominates the time required to build the tree, because $\frac{1}{\delta^2}=(\frac{|\cA|}{\gamma})^{2D}$ for a leaf visited only because of the exploration, $D^2 < |\cA|^{2D} \in O(|\cS|)$ for any $\cA$, and we can set $p_1=p_2=p/2$. Then the probability that both the tree will be built and the convergence will be achieved can be bounded by $(1-p_1)(1-p_2) \geq (1-p)$. \qed
 \end{proof}
-As for computational complexity, the time cost as well as the memory required per node is linear in $|\cA_i|$ in OOS.
+As for computational complexity, the time cost as well as the memory required per node is linear in $|\cA_i|$ in SM-OOS.
 
 }
 
