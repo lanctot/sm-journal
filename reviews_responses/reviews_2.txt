@@ -15,8 +15,8 @@
 >
 
 We thank all of the reviewers for their valuable feedback. Please find enclosed our resubmission. For ease of re-review, we have also submitted a version with highlighted significantly added/changed text.
-Most of the changes, however, were grammatical improvements and minor reformulations.
-TODO summary
+We have added an additional level of detail regarding the theoretical results and provided Lemmas and Theorems about the correctness and convergence for both the exact and the approximate algorithms.
+However, we believe that the focus of the paper should remain on the description of the algorithms and the experimental evaluation. The complete analysis of the theoretical concepts of the approximate SM-MCTS algorithms require additional theoretical background that would further extend this submission and dissolve the contributions. We cover most of the theoretical aspects of the convergence of SM-MCTS in an additional submission in full detail [59] (one of the co-authors, V. Lisy, is a co-author of [59]).
 
 
 > All the best, looking forward to your response
@@ -76,9 +76,8 @@ TODO summary
 > However, I agree with the editor that insights into the theory, e.g., on
 > correctness issues or running time should be increased.
 
-TODO (check the following)
-We have added an additional level of detail regarding the theoretical results and provided Lemmas and Theorems for both the exact and the approximate algorithms.
-However, the focus of the paper should remain on the description of the algorithms and the experimental evaluation, since: (1) the theoretical conclusions are straightforward for the exact algorithms, and (2) the analysis of the theoretical concepts in full for the approximate SM-MCTS algorithms requires a lot of additional theoretical background, further extending this submission and dissolving the focus on the equilibrium computation and the online game-playing aspect. We cover most of the theoretical aspects of the convergence of SM-MCTS in an additional submission in full detail [59] (one of the co-authors, V. Lisy, is a co-author of [59]).
+We have added an additional level of detail regarding the theoretical results and provided Lemmas and Theorems about the correctness and convergence for both the exact and the approximate algorithms.
+However, we believe that the focus of the paper should remain on the description of the algorithms and the experimental evaluation. The complete analysis of the theoretical concepts of the approximate SM-MCTS algorithms require additional theoretical background that would further extend this submission and dissolve the contributions. We cover most of the theoretical aspects of the convergence of SM-MCTS in an additional submission in full detail [59] (one of the co-authors, V. Lisy, is a co-author of [59]).
 
 > Does anything need to be added or deleted?
 > ------------------------------------------
@@ -144,7 +143,7 @@ However, the focus of the paper should remain on the description of the algorith
 > Generally, this is solid work, but I'm not sure if it really is AIJ material.
 >
 
-We have further clarified our contributions in the first section of the submission. Our exact algorithm (DOab) improves the scalability of the offline strategy computation and thus allows solving larger games. Secondly, our OOS algorithm provides convergence guarantees while still performing comparably to other sampling-based algorithms and it is less sensitive to parameters setting, which is a valuable characteristic. Our focus on domain-independent algorithms then allows these algorithms to be further tailored to specific domains (be it auctions, computer or video games, or puzzles) and improve the performance of the computer opponent.
+We have further clarified our contributions in the first section of the submission. Our exact algorithm (DOab) improves the scalability of the offline strategy computation and thus allows solving larger games. In online game-playing, our algorithms are less sensitive to chosen parameters (SM-MCTS-RM) or guarantee to closely approximate the optimal strategies given enough time (SM-OOS). Since we describe each algorithm in a domain independent manner, they can be further tailored to a specific domain and additional improvements in the scalability and/or the game-playing performance can be achieved.
 
 > Is the English satisfactory?
 > ----------------------------
@@ -156,7 +155,7 @@ We have further clarified our contributions in the first section of the submissi
 > I'll try to give some concrete examples below, but they are only from the first
 > 20 pages or so, and I probably also missed some mistakes there.
 
-We thank for all the minor edits listed below that we have incroporated into the text and we have performed additional passes to improve the grammar.
+We thank for all the minor edits listed below that we have incorporated into the text and we have performed additional passes to improve the grammar.
 
 >
 > Is the presentation otherwise satisfactory?
@@ -362,14 +361,13 @@ Fixed
 >
 > * Same sentence, now regarding content: Isn't that trivial?
 
-For the sake of completeness of the paper we state this fact.
+We state this fact for the sake of completeness of the paper.
 
 >
 > * Below: *The* upper/lower bound: Should be *a* lower bound / *an* upper bound,
 >   since there is no unique lower and upper bound.
 
-TODO
-(I can't find this anymore... is it still TODO, or has it been removed?)
+Fixed
 
 >
 > * Next-to-last paragraph of Sec. 4.2: unclear
@@ -419,7 +417,7 @@ is a general algorithm and several instantiations which mostly only change the
 selection and update functions. We believe that one of the contributions of the paper
 is to collect these algorithms, that were independently developed and presented in
 separate papers into one place under a consistent notation. We have related the
-techniques where possible (e.g. OOS is based on regret matching.)
+techniques where possible (e.g., OOS is based on regret matching.)
 
 >
 > * Sec 5.1: "... contains depth d-1 solutions ..." -> "... contains d-1 solutions ..."
