@@ -45,8 +45,8 @@ The following algorithms try to prune some of the branches of the game tree in o
 
 \subsection{Backward Induction with Serialized Alpha-Beta Bounds}\label{sec:algs:biab}
 
-Solving the computationally expensive linear programs in backward induction is necessary in game states that require mixed strategies. However, many realistic games include subgames that can be solved using only pure strategies. These subgames can be found efficiently by transforming the simultaneous move game into a perfect information extensive-form 
-game with sequential moves and subsequently using some of the algorithms developed for this more standard setting.
+\reviewchangeT{Solving computationally expensive linear programs in the backward induction algorithm is necessary in game states that require mixed strategies. However, many realistic games include subgames where it is sufficient to use only pure strategies. These subgames can be found efficiently by transforming the simultaneous move game into a perfect information extensive-form 
+game with sequential moves and subsequently using some of the algorithms developed for this more standard setting.}
 \reviewchange{We call this purely alternating form a {\it serialization} of the original simultaneous move game.}
 Consider a matrix game representing a single joint action of both players.
 This matrix can be serialized by discarding the notion of information sets; hence, letting one player play first, followed by the second player.
@@ -173,7 +173,7 @@ Such a strategy provides a guarantees for player~$i$ (it is not exploitable) and
 The algorithm $\biab(s,i)$ computes the value of the subgame from state $s$ for player $i$.
 \end{theorem}
 \begin{proof}
-The correctness of the algorithm follows immediately from the correctness of the standard BI algorithm and the correctness of using the values computed by serialized alpha-beta (Lemma~\ref{lem:alphabeta}), value of which is used only if the upper bound equals the lower bound on the value of the game. $\square$
+The correctness of the algorithm follows immediately from the correctness of the standard BI algorithm and the correctness of using the values computed by serialized alpha-beta (Lemma~\ref{lem:alphabeta}). Moreover, values computed by the serialized alpha-beta algorithm are used only if the upper bound equals the lower bound. $\square$
 \end{proof}
 }
 The performance of $\biab$ depends on the existence of a pure NE in the simultaneous move game.
@@ -184,12 +184,12 @@ However, this case was very rarely encountered during our experiments.
 %In typical games used as benchmarks, or in real-world applications, however, this is rarely the case.
 
 
-\subsection{Backward Induction with Double Oracle and Serialized Bounds}\label{sec:algs:doab}
+\subsection{Backward Induction with Double-Oracle and Serialized Bounds}\label{sec:algs:doab}
 
-The computational complexity of solving a matrix game by linear programming can be reduced by their incremental construction using the iterative double-oracle algorithm~\cite{McMahan03Planning}. The following algorithm incorporates this idea to $\biab$, which leads to additional pruning of the search tree.
+\reviewchangeT{The computational complexity of solving a matrix game by linear programming can be reduced by their incremental construction using the iterative double-oracle algorithm~\cite{McMahan03Planning}. The following algorithm incorporates this idea to $\biab$, which leads to additional pruning of the game tree.}
 First of all, we describe the main principles of the double-oracle algorithm for matrix games, followed by the description of the integration of the double-oracle algorithm in simultaneous move games~\cite{Bosansky13Using} (denoted $\doab$).
 
-\subsubsection{Double-oracle Algorithm for Matrix Games}\label{sec:doab}
+\subsubsection{Double-Oracle Algorithm for Matrix Games}\label{sec:doab}
 
 The goal of the double-oracle algorithm is to find a solution of a matrix game without necessarily constructing the complete LP that solves the game.
 The main idea is to create a restricted game where the players can choose only from a limited set of actions.
@@ -268,7 +268,7 @@ initialize $\cA'_i$, $\cA'_{-i}$ with arbitrary actions from $\cA_i, \cA_{-i}$\;
 	$\cA'_{-i} \leftarrow \cA'_{-i} \cup \lbrace a^{BR}_{-i} \rbrace$ \label{alg:doab:expand}
 }
 \Return $v_s$ \label{alg:doab:stop2}
-\caption{Double Oracle with Serialized Bounds ($\doab$).} \label{alg:doab}
+\caption{Double-Oracle with Serialized Bounds ($\doab$).} \label{alg:doab}
 \end{algorithm2e}
 
 
@@ -441,7 +441,7 @@ Several different algorithms (\eg UCB~\cite{UCB}, Exp3~\cite{Auer2003Exp3}, and 
 We now present the variants of SM-MCTS that were consistently the most successful in the previous works,
 though more variants can be found in~\cite{Perick12Comparison,Lanctot13Tron,Tak14smmcts}.
 
-\subsubsection{Decoupled Upper-confidence Bound applied to Trees}\label{sec:duct}
+\subsubsection{Decoupled Upper-Confidence Bound Applied to Trees}\label{sec:duct}
 
 The most common selection function for SM-MCTS is the decoupled Upper-Confidence Bound applied to Trees (UCT).
 For the selection and updates, it executes the well-known UCT \cite{UCT} algorithm independently for each of the players in each nodes.
@@ -492,9 +492,9 @@ and in Tron~\cite{Perick12Comparison}.
 %Note that UCT described in this section is different than UCT run on a game that is transformed to perfect information by serialization of the simultaneous moves, because in the latter case one player has the advantage of knowing what the other player chose at every stage.
 %\vlisy{Possibly mention convergence in games with pure strategies.}\bbosansky{I'd remove this last sentence of this para.}
 
-\subsubsection{Exponential-weight algorithm for Exploration and Exploitation}\label{sec:exp3}
+\subsubsection{Exponential-Weight Algorithm for Exploration and Exploitation}\label{sec:exp3}
 
-Another common choice of a selection function is to use the Exponential-weight algorithm for Exploration and Exploitation (Exp3)~\cite{Auer2003Exp3} independently for each of the players. Unlike with UCT, two players using Exp3 in a single stage matrix game are guaranteed to converge to a Nash equilibrium; hence, we can expect a good performance of this selection function even in multi-stage games.
+Another common choice of a selection function is to use the Exponential-weight algorithm for Exploration and Exploitation (Exp3)~\cite{Auer2003Exp3} independently for each of the players. \reviewchangeT{Unlike with UCT, two players using Exp3 in a single stage matrix game are guaranteed to converge to a Nash equilibrium~\cite{Auer2003Exp3}; hence, we can expect a good performance of this selection function even in multi-stage games.}
 In Exp3, each player maintains an estimate of the sum of rewards for each action, denoted $\hat{X}_{a_i}$.
 The joint action produced by \textsc{Select} is composed of an action independently selected for each player.
 An action is selected by sampling from a probability distribution over actions.
@@ -539,8 +539,8 @@ normalized to sum to one.
 
 \subsubsection{Regret Matching} \label{sec:rm}
 
-The last selection function we propose is inspired by regret matching \cite{Hart00}, which forms the bases of the successful algorithms for solving imperfect information games \cite{CFR}.
-This variant applies regret matching to the current estimated matrix game at each stage and was first used in~\cite{Lanctot13Goofspiel}. The statistics stored by this algorithm in each node are the visit count of each joint action ($n_{a_1a_2}$) and the sum of rewards for each joint action ($X_{a_1a_2}$).\footnote{Note that $n_{a_1a_2}$ and $X_{a_1a_2}$ correspond to $n_{s'}$ and $X_{s'}$ from Figure~\ref{fig:smmcts-example}.}
+\reviewchangeT{The last selection function we propose is inspired by regret matching \cite{Hart00}, which forms the bases of the successful algorithms for solving imperfect information games \cite{CFR}.
+This variant applies regret matching to the current estimated matrix game at each stage and was first used in~\cite{Lanctot13Goofspiel}.} The statistics stored by this algorithm in each node are the visit count of each joint action ($n_{a_1a_2}$) and the sum of rewards for each joint action ($X_{a_1a_2}$).\footnote{Note that $n_{a_1a_2}$ and $X_{a_1a_2}$ correspond to $n_{s'}$ and $X_{s'}$ from Figure~\ref{fig:smmcts-example}.}
 Furthermore, the algorithm for each player $i$ maintains a cumulative regret $r^i_{a_i}$ for having played $\sigma_i^t$ instead of $a_i \in \cA_i(s)$ on iteration $t$, initially set to 0. The regret values $r^i_{a_i}$ are maintained separately by each player. However, the updates use a value that is a function of the joint action space.
 
 On iteration $t$, function \textsc{Select} first builds
