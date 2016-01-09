@@ -388,7 +388,7 @@ through the cell, while $n_{s'}$ represents the number of simulations that have 
 
 Consider again the game depicted in Figure~\ref{fig:example}. We demonstrate how Monte Carlo Tree Search
 could progress in this game using the example shown in Figure~\ref{fig:smmcts-example}. This game has a root state,
-two subgames that are simple matrix games and two arbitrarily large subgames. In the root state, player 1 (Max) has two
+two subgames that are simple matrix games, and two arbitrarily large subgames. In the root state, player 1 (Max) has two
 actions: top ($t$) and bottom ($b$), and player 2 also has two actions: left ($l$) and right ($r$). The tree is initialized
 with a single empty state, $s$. On the first iteration, the first child corresponding to $(t,l)$ is added to the tree,
 giving a payoff $u_1 = 3$ at the terminal state which is backpropagated to each state visited on the simulation.
@@ -464,7 +464,7 @@ $C_i \sqrt{(\log 4) / 2}$, and so top action is selected. For Min, $\bar{X}_l = 
 As we discuss later, the specific tie-breaking rule used here can lead to a significant effect on the quality
 of the strategy that UCT produces.}
 
-After all the simulations are done, there are two options how to determine the resulting action to play.
+After all the simulations are done, there are two options for how to determine the resulting action to play.
 The more standard option is to choose for each state the action $a_i$ that maximizes $n_{a_i}$ for each player $i$.
 This is suitable mainly for games, in which using mixed strategy is not necessary.
 Alternatively, the action to play in each state can be determined based on the mixed strategy obtained by normalizing the visit counts of each action
@@ -481,12 +481,12 @@ However, one of the issues when using UCT in game trees is an unspecified behavi
 %Note that UCT does not define what happens which action is selected if multiple actions have identical value in the maximization.
 This may have a significant impact on the performance of the UCT in simultaneous move games.
 Consider the matrix game at the right of Figure~\ref{fig:egMatrixGames}.
-This game has only one NE: $(a,A)$. However, if UCT selects the first or the last action among the options with the same value, it will always get only the rewards 0 and the bias term will cause the players to round-robin over the diagonal indefinitely. This is clearly not optimal, as each player can than improve by playing first action with probability 1. However, if we choose the action to play randomly among the tied actions (where ``tied'' could be defined as being within a small tolerance gap), UCT will quickly converge to the optimal solution in this game.
-We experimentally analyze the impact of this randomization on the example used in~\cite{Shafiei09} and show that if a randomized variant of UCT is used, the algorithm still does not converge to a NE but does converges to a strategy that is much closer to a NE than without randomization (see Subsection~\ref{sec:exp:brps}).
+This game has only one NE: $(a,A)$. However, if UCT selects the first or the last action among the options with the same value, it will always get only the utility 0 and the bias term will cause the players to round-robin over the diagonal indefinitely. This is clearly not optimal, as each player can than improve by playing first action with probability 1. However, if we choose the action to play randomly among the tied actions (where ``tied'' could be defined as being within a small tolerance gap), UCT will quickly converge to the optimal solution in this game.
+We experimentally analyze the impact of this randomization on the example used in~\cite{Shafiei09} and show that if a randomized variant of UCT is used, the algorithm still does not converge to a NE but does converge to a strategy that is much closer to a NE than without randomization (see Subsection~\ref{sec:exp:brps}).
 Therefore, unless stated otherwise, we use the randomized variant in our implementation.
 
 Even though UCT is not guaranteed to converge to the optimal solution, it is often very successful in practice.
-It has been used in and general game playing~\cite{Finnsson12}, in the card game Urban Rivals~\cite{Teytaud11Upper},
+It has been used in general game playing~\cite{Finnsson12}, in the card game Urban Rivals~\cite{Teytaud11Upper},
 and in Tron~\cite{Perick12Comparison}.
 
 % mlanctot: removed, was confusing.
@@ -526,6 +526,7 @@ As the final strategy, after all iterations are executed, the algorithm computes
 \reviewchange{Let $\sigma^t_i$ be the strategy used at time $t$.} After $T$ iterations in a particular node, the average strategy is
 \begin{equation}
 \bar{\sigma}^T_i(a_i) = \frac{1}{T}\sum_{t=1}^T \sigma^t_i(a_i).
+\label{eq:avg_strat}
 \end{equation}
 In our implementation, we maintain the cumulative sum and normalize it to obtain the average strategy.
 
@@ -564,7 +565,7 @@ $(b_1,b_2) \not= (a_1,a_2)$, or $u_1$ otherwise. The updates to the regret are:
 \end{eqnarray}
 %\noindent and average strategy updates for each player, $\bar{\sigma}^i_s[a] \leftarrow \bar{\sigma}^i_s[a] + \sigma^t_i(s,a).$
 
-After all simulations, the strategy to play in state $s$ is defined by the mean strategy used in the corresponding node similarly to Exp3.
+After all simulations, the strategy to play in state $s$ is defined by the mean strategy used in the corresponding node (Equation~\ref{eq:avg_strat}).
 
 \reviewchangeT{
 \subsubsection{Theoretical Properties}\label{sec:algs:mcts:theory}
@@ -578,9 +579,9 @@ The only known theoretical result about SM-MCTS directly applicable to the algor
 There are games, in which SM-MCTS instantiated by any regret minimizing selection function with a constant exploration $\gamma$ cannot converge to a strategy that would be an $\epsilon$-Nash equilibrium for an $\epsilon < \gamma D$, where $D$ is the depth of the game tree.
 \end{theorem}
 
-The main idea of the proof is to define a specific class of games (see Example~2 in \cite{Kovarik2015Analysis}), in which the exploration in a greater depth of the game tree causes a bias in the values observed in the higher levels of the tree, consequently leading to a wrong decision in the root.
+The main idea of the proof is to define a specific class of games (see Example~2 in \cite{Kovarik2015Analysis}), in which the exploration in a greater depth of the game tree causes a bias in the values observed in the higher levels of the tree, consequently leading to an incorrect decision in the root.
 
-In order to obtain positive formal results about the convergence of SM-MCTS-like algorithms, the authors in \cite{Kovarik2015Analysis} either add an additional averaging step to the algorithm (that makes it significantly slower in practical games used in benchmarks), or assume additional non-trivial technical properties about the selection function, which are not know to hold for any of the selection functions above. %Since there is no known finite-time bound, there is no known guarantee for the quality of the solution if SM-MCTS is terminated early.
+In order to obtain positive formal results about the convergence of SM-MCTS-like algorithms, the authors in \cite{Kovarik2015Analysis} either add an additional averaging step to the algorithm (that makes it significantly slower in practical games used in benchmarks), or assume additional non-trivial technical properties about the selection function, which are not known to hold for any of the selection functions above. %Since there is no known finite-time bound, there is no known guarantee for the quality of the solution if SM-MCTS is terminated early.
 
 As for computational complexity, the time cost per node is linear in $|\cA_i|$ for UCT and RM. The time cost per node is quadratic in the case of Exp3 due to the numerically stable update rule (Equation~\ref{eq:exp3:stable}). 
 The memory required per node is linear for UCT and Exp3, and quadratic in $|\cA_i|$ for RM due to storing estimates of each child subgame. This can be easily avoided by storing the mean estimates directly in the children.
