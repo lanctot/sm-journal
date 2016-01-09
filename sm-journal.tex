@@ -293,34 +293,36 @@ Today, agent interactions occur in many diverse situations, such as e-commerce, 
 general-purpose robotics, each of which creates complex problems that arise from conflicting agent
 preferences.
 
-Much research has been devoted to developing algorithms that reason about or learn in sequential (or multi-step)
+Much research has been devoted to developing algorithms that reason about or learn in sequential (multi-step)
 interactions. As an example, adversarial search has been a central topic of artificial intelligence
 since the inception of the field itself, leading to very strong rational behaviors in
 Chess~\cite{Campbell02deepblue} and Checkers~\cite{Schaeffer96chinook}. Advances in machine learning for multi-step interactions
 (\eg reinforcement learning) have led to self-play learning of evaluation functions achieving master level play
 in Backgammon~\cite{Tesauro95TDGammon} and super-human level in Atari~\cite{mnih-dqn-2015}.
 
-The most common model for these multistage environments is one with strictly {\it sequential}
-interactions. That is, each player chooses an action when it is their turn to act, the environment then
-generates a new state with the next player's turn to act, and so on. This model is sufficient in many
+The most common model for these multistage environments is one with strictly sequential
+interactions. 
+%That is, each player chooses an action when it is their turn to act, then the environment 
+%generates a new state, and the process continues.
+This model is sufficient in many
 settings~\cite{AIbook}, such as in the examples used above.
 \reviewchange{On the other hand, it is not a good representation of the environment when agents are allowed to act simultaneously.
-These situations occur in many real-world scenarios like auctions~(\eg~\cite{Keuter1997}) or autonomous driving, and many video
-and board games in the expanding gaming industry are of this nature~(\eg~\cite{Beard12Using,Teytaud11Upper} and games we use for our experiments).
-In all of these scenarios, the simultaneity of the decision-making is crucial and we have to include it directly into the model when computing strategies to play.}
-One of the fundamental differences of simultaneous move games and strictly sequential
+These situations occur in many real-world scenarios such as auctions~(\eg~\cite{Keuter1997}), autonomous driving, and many video
+and board games in the expanding gaming industry (\eg~\cite{Beard12Using,Teytaud11Upper}, including games we use for our experiments).
+In all of these scenarios, the simultaneity of the decision-making is crucial and we have to include it directly into the model when computing strategies.}
+One of the fundamental differences of simultaneous move games versus strictly sequential
 games is that the agents may need to use randomized (or \textit{mixed}) strategies in order to
 play optimally~\cite{Gintis09},
 \ie to maximize their worst-case expected utility.
-\reviewchangeT{This means that agents may need to randomize over several actions in some situations of the game
+\reviewchangeT{This means that agents may need to randomize over several actions in some states of the game
 to guarantee the worst-case expected utility, even though the only information that is hidden is each player's
-action while they play it.} %Chosen actions are revealed publically by each player after they have been played.
+action as they play it.} %Chosen actions are revealed publically by each player after they have been played.
 %Unless some information is hidden, this does not occur in strictly sequential games, where optimal
 %solution always exists in deterministic (or \textit{pure}) strategies.
 
 \reviewchange{This paper focuses specifically on algorithms for decision-making in simultaneous move games.} 
 We cover the offline case, where the computation time is abundant and the optimal strategies are computed and stored, 
-as well as the online case, where the computation time is limited and agents must quickly find a move to perform.
+as well as the online case, where the computation time is limited and agents must choose an action quickly.
 We are concerned both with the quality of strategies based on
 their worst-case expected performance in theory and their observed performance in practice. 
 We compare and contrast the algorithms and parameter choices in the offline and the online cases, and thoroughly evaluate each
@@ -328,24 +330,24 @@ algorithm on a suite of games. Our collection covers Biased Rock-Paper-Scissors,
 Pursuit-Evasion Games, and Tron, all of which have been used for benchmark purposes
 in previous work. We also perform experiments on randomly generated games. These games differ
 in the number of possible actions, the number of moves before the game ends, the variance of the utility values,
-and whether and when the agents need to use mixed strategies in order to play optimally.
+and the proportion of states in which mixed strategies are required for optimal play. % required for optimal play.
 
-Our experimental comparison shows a different performance of the algorithms in both cases.
+Our experimental comparison shows that the algorithms perform differently in each case.
 \reviewchange{The exact algorithms based on the backward induction are significantly better in the offline setting,
 where they are able to find the optimal strategy very quickly compared to the sampling algorithms.}
 In some cases, our novel algorithm ($\doab$) solves the game in less than 2\% of the time required by the standard backward induction algorithm.
 However, the exact algorithms are less competitive in the online setting.
 In contrast, the approximative sampling algorithms can perform very well in the online setting and
-find good strategies to play within a few seconds, however, they are not well suited for offline solving of games.
+find good strategies to play within a few seconds, however, they are not well-suited for offline solving of games.
 
 The paper is structured as follows. \reviewchange{First, we make explicit the contributions of the paper in Subsection~\ref{sec:contrib}.}
 In Section~\ref{sec:smg}, we present a formal introduction of the simultaneous move games that we will use throughout the paper.
-Section~\ref{sec:relwork} follows with a list and a discussion of the existing algorithms in the related work. In
+Section~\ref{sec:relwork} follows with a list and discussion of the existing algorithms in the related work. In
 Section~\ref{sec:offline}, we describe in detail selected exact and approximative algorithms.
 We first describe the algorithms in the offline setting, followed by the necessary modifications used in the online
 case described in Section~\ref{sec:online}.
 %\reviewchange{In Section~\ref{sec:theory}, we discuss the theoretical guarantees and limitations of the algorithms.}
-In Section~\ref{sec:eval}, we turn to the experimental evaluation and present our results of comparing the algorithms.
+In Section~\ref{sec:eval}, we present our experimental results comparing the algorithms.
 Finally, we conclude in Section~\ref{sec:conc}.
 
 %\reviewchange{
@@ -375,17 +377,17 @@ Finally, we conclude in Section~\ref{sec:conc}.
 \subsection{Novel Contributions}
 \label{sec:contrib}
 
-This paper presents detailed descriptions and analysis of the recent state-of-the-art exact~\cite{Bosansky13Using} and approximative
+This paper presents detailed descriptions and analysis of recent state-of-the-art exact~\cite{Bosansky13Using} and approximative
 algorithms~\cite{Lanctot13Goofspiel,lisy2013-nips,15aamas-iioos} that compute strategies for the class of two-player simultaneous move games.
 Furthermore, it presents the following original contributions:
 \begin{itemize}
-\item We present the latest variants of the state-of-the-art algorithms under a single unified framework and combine the offline and online computation perspectives that have been previously analyzed separately.
+\item We present the latest variants of state-of-the-art algorithms under a single unified framework and combine the offline and online computation perspectives that have been previously analyzed separately.
 \item We describe the first adaptation of backward induction and the double-oracle algorithm with serialized bounds~($\doab$)~\cite{Bosansky13Using} to the online search setting in simultaneous move games using iterative deepening and heuristic evaluation functions.
 \item We describe a novel variant of Online Outcome Sampling~\cite{15aamas-iioos} tailored for two-player simultaneous move games~(SM-OOS) and provide its formal analysis.
 \item We provide a wide experimental analysis and a comparison of these and other algorithms on five different specific games and randomly generated games.
-\item We replicate an experimental convergence analysis for approximative algorithms that is often used in the literature as a demonstration that sampling-based algorithms are not guaranteed to converge to an optimal solution~\cite{Shafiei09} and we identify the sensitivity of the existing approximative algorithms to tie-breaking rules.
+\item We replicate an experimental convergence analysis for approximative algorithms that is often used in the literature as a demonstration that sampling-based algorithms are not guaranteed to converge to an optimal solution~\cite{Shafiei09}, and we identify the sensitivity of the existing approximative algorithms to tie-breaking rules.
 \end{itemize}
-Our algorithms thus allow computing offline strategies in larger games than before (using $\doab$) and provide a good performance in the online game-playing that is less sensitive to chosen parameters (SM-MCTS-RM) or guarantees to closely approximate the optimal strategies given enough time (SM-OOS). Since we describe each algorithm in a domain independent manner, they can be further tailored to a specific domain and additional improvements in the scalability and/or the game-playing performance can be achieved.
+Our algorithms thus allow computing offline strategies in larger games than previously possible (using $\doab$). In online game-playing, our algorithms are less sensitive to chosen parameters (SM-MCTS-RM) or guarantee to closely approximate the optimal strategies given enough time (SM-OOS). Since we describe each algorithm in a domain-independent manner, they can be further tailored to specific domains to achieve additional improvements in the scalability and/or game-playing performance.
 }
 
 
