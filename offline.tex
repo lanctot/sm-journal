@@ -754,7 +754,7 @@ $O(\frac{(|\cA||\cS|^2 \Delta^2_{u,i}}{p \delta^2 \epsilon^2})$ iterations, wher
 \begin{proof}
 The proof is composed of two observations. 
 First, the whole game tree is eventually built by the algorithm.
- A direct consequence of \cite[Lemma 43]{Kovarik2015Analysis} is that the tree of depth $D$ is built with probability $(1-p_1)$ in less than
+ A direct consequence of \cite[Lemma 40]{Kovarik2015Analysis} is that the tree of depth $D$ is built with probability $(1-p_1)$ in less than
  \begin{equation}
  16 D \left(\frac{|\cA|}{\gamma}\right)^{2D} \max(D,4 \log p_1^{-1} + 4)
  \end{equation}
@@ -769,7 +769,7 @@ It states that with probability $(1-p_2)$ an $\epsilon$-NE is reached after $O(\
 % we don't need to redefine these as they are in the theorem statement.
 % where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest probability of sampling any leaf. 
 
-We can see that the OS bound dominates the time required to build the tree, because $\frac{1}{\delta^2}=(\frac{|\cA|}{\gamma})^{2D}$ for a leaf visited only because of the exploration, $D^2 < |\cA|^{2D} \in O(|\cS|)$ for any $\cA$, and we can set $p_1=p_2=p/2$. Then the probability that both the tree will be built and the convergence will be achieved can be bounded by $(1-p_1)(1-p_2) \geq (1-p)$. \qed
+We can see that the OS bound dominates the time required to build the tree, because $\frac{1}{\delta}=(\frac{|\cA|}{\gamma})^{2D}$ for a leaf visited only because of the exploration, $D^2 < |\cA|^{2D} \in O(|\cS|)$ for any $\cA$, and we can set $p_1=p_2=p/2$. Then the probability that both the tree will be built and the convergence will be achieved can be bounded by $(1-p_1)(1-p_2) \geq (1-p)$. \qed
 \end{proof}
 As for computational complexity, the time cost as well as the memory required per node is linear in $|\cA_i|$ in SM-OOS.
 
