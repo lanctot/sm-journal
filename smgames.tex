@@ -15,8 +15,7 @@ The values shown in the matrices correspond to the values of subgames (e.g., cal
 \label{fig:example}}
 \end{figure}
 
-A finite two-player game with simultaneous moves and chance events (also called \emph{Markov games}, or \emph{stacked matrix games}) can be described
-by a tuple $(\cN, \cS, \cA, \cT, \Delta_\star, u_i, s_0)$, where $\cS = \cD\cup\cC\cup\cZ$.
+A finite two-player game with simultaneous moves and chance events (also called \emph{Markov games}, or \emph{stacked matrix games}) is a tuple $(\cN, \cS, \cA, \cT, \Delta_\star, u_i, s_0)$, where $\cS = \cD\cup\cC\cup\cZ$.
 The player set $\cN = \{ 1, 2, \star \}$ contains player labels, where
 $\star$ denotes the chance player, and by convention a player is denoted $i \in \cN$.
 $\cS$ is a set of states, with $\cZ$ denoting the terminal states, $\cD$ the states where players make decisions,
@@ -33,11 +32,11 @@ $\cP_\star(s, r, c, s')$ as the probability of transitioning to $s'$ after choos
 simply $1$ when $\cT(s, r, c) \not\in \cC$.}
 The utility function $u_i : \cZ \mapsto [v_{\min}, v_{\max}] \subseteq \mathbb{R}$ gives the utility of player $i$, with
 $v_{min}$ and $v_{\max}$ denoting the minimum and maximum possible utility respectively. We assume zero-sum
-games: $\forall z \in \cZ, u_1(z) = k - u_2(z)$. 
+games: $\forall z \in \cZ, u_1(z) = -u_2(z)$. 
 The game begins in an initial state $s_0$ \reviewchange{and a subset of a game that starts in some node $s$ is called a \emph{subgame}}.
 An example of such a game is depicted in Figure~\ref{fig:example}, more examples can be found in \cite[Chapter 5]{Saffidine2013thesis}.
 
-In two-player zero-sum games a (subgame perfect) Nash equilibrium strategy is often considered to be optimal (the formal definition follows).
+In two-player zero-sum games, a (subgame perfect) Nash equilibrium strategy is often considered to be optimal (the formal definition follows).
 It guarantees an expected payoff of at least $V$ against any opponent. Any non-equilibrium strategy has its nemesis, which makes it gain less
 than $V$ in expectation. Moreover, a subgame perfect Nash equilibrium strategy can earn more than $V$ against weak opponents. After the
 opponent makes a sub-optimal move, the strategy will never allow it to gain the loss back.
@@ -118,7 +117,7 @@ and $\sigma_{-i} \in BR_{-i}(\sigma_i)$.
 \end{definition}
 
 In other words, in a Nash equilibrium profile each strategy is a best response to the opponent's strategy. In two-player zero-sum
-games the set of Nash equilibria corresponds to the set of minimax-optimal strategies. That is,} a Nash equilibrium profile is
+games, the set of Nash equilibria corresponds to the set of minimax-optimal strategies. That is,} a Nash equilibrium profile is
 also a pair of behavioral strategies optimizing
 \begin{equation}\label{eq:ne}
 V = \max_{\sigma_1 \in \Sigma_1} \min_{\sigma_2 \in \Sigma_2} \bE_{z \sim \sigma}[u_1(z)]
@@ -132,19 +131,19 @@ Note that using a mixed strategy is necessary in this game to achieve the guaran
 Any pure strategy of one player can be exploited by the opponent; \reviewchange{so while a pure best response to a fixed strategy always
 exists, it is not always possible to find a Nash equilibrium for which both strategies are pure.}
 For the same reason, randomized strategies are often necessary also in the multi-step simultaneous move games.
-If the strategies also optimize Equation (\ref{eq:ne}) in each subgame starting in an arbitrary state, the equilibrium strategy
+If the strategies also optimize Equation (\ref{eq:ne}) in every subgame, the equilibrium strategy
 is termed {\it subgame perfect.}
 
-Finally, a two-player simultaneous move game is a specific type of two-player imperfect information extensive-form game.
+Finally, a two-player simultaneous move game is a specific type of two-player extensive-form game with imperfect information.
 In imperfect information
 %\footnote{In this paper, we use the term {\it imperfect information} to refer to games that have situations
 %where one player knows something that some of the other players do not know. However, every player knows which game they are playing,
 %the distribution of chance event outcomes, and every player's utility function. This is in contrast to
 %{\it imcomplete information} games in which players may also not know (or be fully certain of) the utility functions of their opponents
 %or precisely how nature affects the game.}
-games, states are grouped into {\it information sets}: two states $s, s'$ are grouped in information set $I$ if the player
-to act at $I$ cannot distinguish in which of these states she is. Any simultaneous move game can be modeled
-using information sets to represent a half-completed transition, \ie $\cT(s, a_1, ?)$ or $\cT(s, ?, a_2)$.
+games, states are grouped into {\it information sets}: two states $s, s'$ are in an information set $I$ if the player
+to act at $I$ cannot distinguish whether she is in $s$ or $s'$. Any simultaneous move game can be modeled
+using information sets to represent half-completed transitions, \ie $\cT(s, a_1, ?)$ or $\cT(s, ?, a_2)$.
 The matrix game of Rock, Paper, Scissors can also be thought of as a two-step process where the first player commits
 to a choice, writing it on a face-down piece of paper, and then the second player responds. Figure~\ref{fig:rps-equiv} shows this
 transformation, which can generally be applied to every state in a simultaneous move game.
