@@ -45,8 +45,7 @@ The following algorithms try to prune some of the branches of the game tree in o
 
 \subsection{Backward Induction with Serialized Alpha-Beta Bounds}\label{sec:algs:biab}
 
-The backward induction algorithm can be easily enhanced by using bounds on the values of subgames.
-These bounds can be computed efficiently by transforming the simultaneous move game into a perfect information extensive-form 
+Solving the computationally expensive linear programs in backward induction is necessary in game states that require mixed strategies. However, many realistic games include subgames that can be solved using only pure strategies. These subgames can be found efficiently by transforming the simultaneous move game into a perfect information extensive-form 
 game with sequential moves and subsequently using some of the algorithms developed for this more standard setting.
 \reviewchange{We call this purely alternating form a {\it serialization} of the original simultaneous move game.}
 Consider a matrix game representing a single joint action of both players.
@@ -187,7 +186,7 @@ However, this case was very rarely encountered during our experiments.
 
 \subsection{Backward Induction with Double Oracle and Serialized Bounds}\label{sec:algs:doab}
 
-Solving a matrix game can be further improved by using the iterative double-oracle algorithm~\cite{McMahan03Planning}.
+The computational complexity of solving a matrix game by linear programming can be reduced by their incremental construction using the iterative double-oracle algorithm~\cite{McMahan03Planning}. The following algorithm incorporates this idea to $\biab$, which leads to additional pruning of the search tree.
 First of all, we describe the main principles of the double-oracle algorithm for matrix games, followed by the description of the integration of the double-oracle algorithm in simultaneous move games~\cite{Bosansky13Using} (denoted $\doab$).
 
 \subsubsection{Double-oracle Algorithm for Matrix Games}\label{sec:doab}
@@ -495,7 +494,7 @@ and in Tron~\cite{Perick12Comparison}.
 
 \subsubsection{Exponential-weight algorithm for Exploration and Exploitation}\label{sec:exp3}
 
-Another common choice of a selection function is to use the Exponential-weight algorithm for Exploration and Exploitation (Exp3)~\cite{Auer2003Exp3} independently for each of the players.
+Another common choice of a selection function is to use the Exponential-weight algorithm for Exploration and Exploitation (Exp3)~\cite{Auer2003Exp3} independently for each of the players. Unlike with UCT, two players using Exp3 in a single stage matrix game are guaranteed to converge to a Nash equilibrium; hence, we can expect a good performance of this selection function even in multi-stage games.
 In Exp3, each player maintains an estimate of the sum of rewards for each action, denoted $\hat{X}_{a_i}$.
 The joint action produced by \textsc{Select} is composed of an action independently selected for each player.
 An action is selected by sampling from a probability distribution over actions.
@@ -540,7 +539,8 @@ normalized to sum to one.
 
 \subsubsection{Regret Matching} \label{sec:rm}
 
-This variant applies regret matching \cite{Hart00} to the current estimated matrix game at each stage and was first used in~\cite{Lanctot13Goofspiel}. The statistics stored by this algorithm in each node are the visit count of each joint action ($n_{a_1a_2}$) and the sum of rewards for each joint action ($X_{a_1a_2}$).\footnote{Note that $n_{a_1a_2}$ and $X_{a_1a_2}$ correspond to $n_{s'}$ and $X_{s'}$ from Figure~\ref{fig:smmcts-example}.}
+The last selection function we propose is inspired by regret matching \cite{Hart00}, which forms the bases of the successful algorithms for solving imperfect information games \cite{CFR}.
+This variant applies regret matching to the current estimated matrix game at each stage and was first used in~\cite{Lanctot13Goofspiel}. The statistics stored by this algorithm in each node are the visit count of each joint action ($n_{a_1a_2}$) and the sum of rewards for each joint action ($X_{a_1a_2}$).\footnote{Note that $n_{a_1a_2}$ and $X_{a_1a_2}$ correspond to $n_{s'}$ and $X_{s'}$ from Figure~\ref{fig:smmcts-example}.}
 Furthermore, the algorithm for each player $i$ maintains a cumulative regret $r^i_{a_i}$ for having played $\sigma_i^t$ instead of $a_i \in \cA_i(s)$ on iteration $t$, initially set to 0. The regret values $r^i_{a_i}$ are maintained separately by each player. However, the updates use a value that is a function of the joint action space.
 
 On iteration $t$, function \textsc{Select} first builds
@@ -590,7 +590,7 @@ The memory required per node is linear for UCT and Exp3, and quadratic in $|\cA_
 
 \subsection{Counterfactual Regret Minimization and Outcome Sampling} \label{sec:algs:cfros}
 
-Finally, we describe algorithms based on Counterfactual Regret (CFR, a notion of regret at the information set level),
+Finally, we describe algorithms based directly on Counterfactual Regret (CFR, a notion of regret at the information set level),
 first designed for extensive-form games with imperfect information~\cite{CFR}.
 
 \reviewchange{Recall from Section~\ref{sec:smg} the set of histories $\cH$. Here we also use $\cZ$ defined previously as the set of terminal states,

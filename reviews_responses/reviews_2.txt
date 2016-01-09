@@ -16,7 +16,7 @@
 
 We thank all of the reviewers for their valuable feedback. Please find enclosed our resubmission. For ease of re-review, we have also submitted a version with highlighted significantly added/changed text.
 We have added an additional level of detail regarding the theoretical results and provided Lemmas and Theorems about the correctness and convergence for both the exact and the approximate algorithms.
-However, we believe that the focus of the paper should remain on the description of the algorithms and the experimental evaluation. The complete analysis of the theoretical concepts of the approximate SM-MCTS algorithms require additional theoretical background that would further extend and dissolve the focus of the submission. We cover most of the theoretical aspects of the convergence of SM-MCTS in an additional submission in full detail [59] (one of the co-authors, V. Lisy, is a co-author of [59]).
+However, we believe that the focus of the paper should remain on the description of the algorithms and the experimental evaluation. The complete analysis of the theoretical concepts of the approximate SM-MCTS algorithms require additional theoretical background that would further extend and dissolve the focus of the submission. We cover most of the theoretical aspects of the convergence of SM-MCTS in a separate paper in full detail [59] (one of the co-authors, V. Lisy, is a co-author of [59]).
 
 
 > All the best, looking forward to your response
@@ -77,7 +77,7 @@ However, we believe that the focus of the paper should remain on the description
 > correctness issues or running time should be increased.
 
 We have added an additional level of detail regarding the theoretical results and provided Lemmas and Theorems about the correctness and convergence for both the exact and the approximate algorithms.
-However, we believe that the focus of the paper should remain on the description of the algorithms and the experimental evaluation. The complete analysis of the theoretical concepts of the approximate SM-MCTS algorithms require additional theoretical background that would further extend and dissolve the focus of the submission. We cover most of the theoretical aspects of the convergence of SM-MCTS in an additional submission in full detail [59] (one of the co-authors, V. Lisy, is a co-author of [59]).
+However, we believe that the focus of the paper should remain on the description of the algorithms and the experimental evaluation. The complete analysis of the theoretical concepts of the approximate SM-MCTS algorithms require additional theoretical background that would further extend and dissolve the focus of the submission. We cover most of the theoretical aspects of the convergence of SM-MCTS in a separate paper in full detail [59] (one of the co-authors, V. Lisy, is a co-author of [59]).
 
 > Does anything need to be added or deleted?
 > ------------------------------------------
@@ -416,7 +416,7 @@ other, so each subsection depends on the previous one. In the Monte Carlo case, 
 is a general algorithm and several instantiations which mostly only change the
 selection and update functions. We believe that one of the contributions of the paper
 is to collect these algorithms, that were independently developed and presented in
-separate papers, into one place under a consistent notation. We have related the
+separate papers, into one place under a consistent notation. We have improved the links between the descriptions of the algorithms and related the
 techniques where possible (e.g., OOS is based on regret matching.)
 
 >
@@ -451,7 +451,7 @@ In each experiment we are trying to provide the interpretation based on the meas
 >
 > * Sec. 6.5.6, parameter tuning. I don't quite understand what to take home from this section.
 
-This section is provided to show the empirical robustness (or sensitivity) of each algorithm to its experimental context, and to justify our choice of parameters for the experiments. It is also useful to inform practitioners who intend to implement these algorithms.
+This section is provided to show the empirical robustness (or sensitivity) of each algorithm to its experimental context, and to justify our choice of parameters for the experiments. It is also useful to inform practitioners who intend to implement these algorithms. We tied to make this message more clear in the text.
 
 >
 > * Authors' vitae:
