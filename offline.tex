@@ -748,7 +748,7 @@ Since SM-OOS is designed to update each node of the game in the same way as the 
 
 \begin{theorem}
 When SM-OOS is run from the root of the game, with probability $(1-p)$ an $\epsilon$-NE is reached after
-$O(\frac{(|\cA||\cS|^2 \Delta^2_{u,i}}{p \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$, $\Delta_{u,i} = \max_{z,z' \in \cZ}|u_i(z') - u_i(z)|$, and $\delta$ is the smallest probability of sampling any single leaf in the subtree of the root node. 
+$O(\frac{|\cA||\cS|^2 \Delta^2_{u,i}}{p \delta^2 \epsilon^2})$ iterations, where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$, $\Delta_{u,i} = \max_{z,z' \in \cZ}|u_i(z') - u_i(z)|$, and $\delta$ is the smallest probability of sampling any single leaf in the subtree of the root node. 
 \end{theorem}
 
 \begin{proof}
@@ -765,7 +765,7 @@ Second, during these and the following iterations, the algorithm performs exactl
 If some nodes below a state were not added to the tree yet, a uniform strategy is assumed in these states for the regret updates.
 Since CFR minimizes the counterfactual regret in an individual information set regardless of the strategies in other information sets, the samples acquired during the tree building cannot have a negative impact on the rate of regret minimization in individual states.
 Therefore, we can use \cite[Theorem 4]{lanctot13phdthesis} that bounds the number of iterations needed for OS as an offline solver with the complete game in the memory, starting after the tree has been built with a high probability.
-It states that with probability $(1-p_2)$ an $\epsilon$-NE is reached after $O(\frac{(|\cA||\cS|^2 \Delta^2_{u,i}}{p_2 \delta^2 \epsilon^2})$ iterations.
+It states that with probability $(1-p_2)$ an $\epsilon$-NE is reached after $O(\frac{|\cA||\cS|^2 \Delta^2_{u,i}}{p_2 \delta^2 \epsilon^2})$ iterations.
 % we don't need to redefine these as they are in the theorem statement.
 % where $|\cA| = \max_{s \in \cS, i \in \{1,2 \}}{|\cA_i(s)|}$ and $\delta$ is the smallest probability of sampling any leaf. 
 
